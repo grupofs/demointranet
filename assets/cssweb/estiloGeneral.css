@@ -1,0 +1,421 @@
+/********************************************************************/
+/*               CSS ESTILO GENERAL                                 */
+/********************************************************************/  
+
+/*DISEÑO PLANTILLA*/  
+.content-header{
+    padding: 10px .5rem 0.5px !important; 
+} 
+.content-header .container-fluid h1 {
+    font-size: 1.5rem !important;
+}  
+.content-wrapper>.content {
+    padding: .5rem !important;
+}
+.content{
+    background-color: #e2e4e3 !important; 
+}  
+.card-footer{
+    background-color: #E0F4ED !important; 
+} 
+
+
+/*** PANEL TABS PRIMARY ***/
+.with-nav-tabs.panel-tabfs .nav-tabs > li > a,
+.with-nav-tabs.panel-tabfs .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > li > a:focus {
+    color: #fff;
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > .open > a,
+.with-nav-tabs.panel-tabfs .nav-tabs > .open > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > .open > a:focus,
+.with-nav-tabs.panel-tabfs .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > li > a:focus {
+    color: #fff;
+    background-color: #188E58;
+    border-color: transparent;
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > li.active > a,
+.with-nav-tabs.panel-tabfs .nav-tabs > li.active > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > li.active > a:focus {
+    color: #0BBC6B;
+    background-color: #fff;
+    border-color: #0BBC6B;
+    border-bottom-color: transparent;
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu {
+    background-color: #0BBC6B;
+    border-color: #00a65a;
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > li > a {
+    color: #fff;   
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+    background-color: #00a65a;
+}
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+.with-nav-tabs.panel-tabfs .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+    background-color: #10D27A;
+}
+/*** FIN PANEL TABS PRIMARY ***/
+    tab {
+        display: inline-block; 
+        margin-left: 30px; 
+    }
+    tr.subgroup,
+    tr.subgroup:hover {
+        background-color: #F2F2F2 !important;
+        /* color: blue; */
+        font-weight: bold;
+    }
+    .group{
+            background-color:#D5D8DC !important;
+            font-size:15px;
+            color:#000000!important;
+            opacity:0.7;
+    }
+    .subgroup{
+        cursor: pointer;
+    }
+
+    .btn-circle {
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+        padding: 0;
+        border-radius: 50%;
+    }
+    
+    .btn-circle i {
+        position: relative;
+        top: -1px;
+    }
+
+    .btn-circle-sm {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .btn-circle-lg {
+        width: 55px;
+        height: 55px;
+        line-height: 55px;
+        font-size: 1.1rem;
+    }
+
+    .btn-circle-xl {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 1.3rem;
+    }
+
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+        margin: 0px;
+    }
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    
+    .dropdown-item:hover{
+        border-color: #0067ab;
+        background-color: #e83e8c !important;
+    }
+
+    td.details-control {
+        background: url('<?php echo public_base_url(); ?>assets/images/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+    tr.details td.details-control {
+        background: url('<?php echo public_base_url(); ?>assets/images/details_close.png') no-repeat center center;
+    }
+
+
+/*DISEÑO SUBIR ARCHIVO*/ 
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+        margin: 0px;
+    }
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+/*DISEÑO PLANTILLA*/ 
+
+
+
+    .inline {
+        display: inline;
+    }
+
+    button.nav-link{
+        background: none !important;
+        border: none !important; 
+        overflow: visible !important;
+        width: 100% !important;
+        text-align: -webkit-match-parent !important;
+    }
+
+    button.nav-link:focus {
+        outline: none !important;
+    }
+
+    button.nav-link:hover {
+        background-color: rgba(255,255,255,.1) !important;
+    }
+
+    table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:before, table.dataTable thead .sorting_desc_disabled:after {
+        bottom: 0;
+        font-size: 1.2rem;
+    }
+
+    
+
+/*DISEÑO CONTROLES*/
+    /*Radio*/ 
+    .clearfix {
+        padding: 0.5rem !important;
+    }
+    .clearfix .icheck-primary {
+        padding-left: 10px;
+    }
+
+/*COLORES DE TEXTO*/
+    .text-requerido {
+        color: #FD0202;
+        font-weight:bold;
+    }
+
+/*COLORES CRICULOS*/
+    .circle-red {
+        color: #F44336 !important;
+    }
+    .circle-green {
+        color: #4CAF50 !important;
+    }
+    .circle-yellow {
+        color: #eff31d !important;
+    }
+    .circle-blue {
+        color: #0019f7 !important;
+    }
+
+/*MARCO DE FORMULARIOS CON TITULO*/
+    fieldset.scheduler-border{
+        border: 2px groove #2DC87B !important;
+        padding: 0 0.8em 1.4em 0.8em !important;
+        margin: 0 0.8em 1.5em 0.8em !important;
+        box-shadow: 0px 0px 0px 0px #000 !important;
+    }
+    fieldset.scheduler-border-fsc{
+        border: 2px groove #2875A7 !important;
+        padding: 0 0.8em 1.4em 0.8em !important;
+        margin: 0 0.8em 1.5em 0.8em !important;
+        box-shadow: 0px 0px 0px 0px #000 !important;
+    }
+    legend.scheduler-border-fsc{
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+        font-family: Verdana;
+    }
+    legend.scheduler-border{
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+        font-family: Verdana;
+    } 
+    .labelcol{
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+/*TAMAÑO DE LAS COLUMNAS EN DATATABLE*/
+    .col-xxl{
+        min-width: 400px !important;
+    }
+    .col-xl{
+        min-width: 320px !important;
+    }
+    .col-l{
+        min-width: 280px !important;
+    }
+    .col-lm{
+        min-width: 220px !important;
+    }
+    .col-m{
+        min-width: 180px !important;
+    }
+    .col-sm{
+        min-width: 120px !important;
+    }
+    .col-s{
+        min-width: 80px !important;
+    }
+    .col-xs{
+        min-width: 10px !important;
+    }
+
+/*SOMBREAR FILA DE UNA DATATABLE*/
+    table.dataTable tbody tr:hover {
+        background-color:#C1DDE7 !important;
+    }
+
+    table.dataTable thead {background-color:#CED3E3}
+
+/* PAGINACION DATATABLE*/
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 1.5em;
+    padding: 0.05em 0.05em !important;
+    margin: 0;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    *cursor: hand;
+    color: #333 !important;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    Color: white !important;
+    border: 1px solid #111 !important;
+    background-color: #585858 !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));
+    background: -webkit-linear-gradient(top, #585858 0%, rgb(36, 36, 36) 100%) !important;
+    background: -moz-linear-gradient(top, #585858 0%, rgb(36, 36, 36) 100%) !important;
+    background: -ms-linear-gradient(top, #585858 0%, rgb(36, 36, 36) 100%) !important;
+    background: -o-linear-gradient(top, #585858 0%, rgb(36, 36, 36) 100%) !important;
+    background: linear-gradient(to bottom, #585858 0%, rgb(36, 36, 36) 100%) !important;
+}
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+.dataTables_wrapper .dataTables_filter {
+    float: right !important;
+    text-align: right !important;
+}
+div.dataTables_wrapper div.dataTables_filter input {
+    margin-left: 0.5em !important;
+    display: inline-block !important;
+    width: auto !important;
+}
+div.dataTables_wrapper div.dataTables_filter label {
+    font-weight: normal !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+}
+
+/**/
+.dropdown-menu > li {
+    position: relative !important;
+    margin-bottom: 1px !important;
+}
+.dropdown-menu {    
+    padding: 10px 10px !important;
+}
+.dropdown-menu > li > a {
+    padding: 8px 15px !important;
+    outline: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {    
+    display: block !important;
+    text-decoration: none !important;
+    color: black !important;
+    background-color: #CCD1D8 !important;
+}
+ul {
+    list-style-type: none !important;
+}
+/**/
+
+body.swal2-toast-shown .swal2-container.swal2-shown {
+    background: #28a745;
+}
+
+.swal2-toast {
+    background: #ffffff;
+}
+
+.swal2-popup.swal2-toast .swal2-icon {
+    margin-right: 10px;
+}
+
+.swal2-popup.swal2-toast.swal2-show {
+    padding: 10px;
+}
+
+.evaluar-estado-proceso-background {
+    color: #000;
+}
+
+.evaluar-estado-aprobado-background {
+    background-color: #0af501;
+}
+
+.evaluar-estado-rechazado-background {
+    background-color: #ff0700;
+    color: #fff;
+}
+
+.evaluar-estado-observado-background {
+    background-color: #fff200;
+    color: #333;
+}
+
+.evaluar-estado-pendiente-background {
+    background-color: #ff6900;
+    color: #fff;
+}
+
+.evaluar-estado-proceso-color, .select2-results__options[id*="cbostatus"] .select2-results__option:nth-child(1) {
+    color: white;
+}
+.evaluar-estado-aprobado-color, .select2-results__options[id*="cbostatus"] .select2-results__option:nth-child(2) {
+    color: #0af501;
+}
+.evaluar-estado-rechazado-color, .select2-results__options[id*="cbostatus"] .select2-results__option:nth-child(3) {
+    color: #ff0700;
+}
+.evaluar-estado-observado-color, .select2-results__options[id*="cbostatus"] .select2-results__option:nth-child(4) {
+    color: #fff200;
+}
+.evaluar-estado-pendiente-color, .select2-results__options[id*="cbostatus"] .select2-results__option:nth-child(5) {
+    color: #ff6900;
+}
+
+table.table table.tbl-tramites tr.ar-content-buttons:hover > td div.ar-content-options {
+	display: block !important;
+}
