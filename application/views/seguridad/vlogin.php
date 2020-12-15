@@ -46,7 +46,7 @@
 
       <div class="card <?php echo $colorWind;?>">
         <div class="card-header text-right">
-          <h4> INICIAR SESIÓN  eder</h4>
+          <h4> INICIAR SESIÓN</h4>
         </div> 
 
         <div class="card-body login-card-body">      
