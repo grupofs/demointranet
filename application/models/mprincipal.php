@@ -8,10 +8,10 @@ class Mprincipal extends CI_Model{
     
    /** MENU **/
 	public function getareasacceso($idcia,$idrol) { //Recuperar Areas del Usuario
-        $sql = "select distinct c.carea, c.darea, c.dcorta
+        $sql = "select distinct c.carea, c.darea, c.dcorta, b.ccompania as 'ccia'
                 from segu_rol_permisos a join sist_modulo b on b.id_modulo = a.id_modulo
                 join adm_area c on c.ccompania = b.ccompania and c.carea = b.carea
-                where a.id_rol = ".$idrol." and b.CCOMPANIA = '".$idcia."' and b.clase_modulo = 'W' and b.tipo_modulo = 'M' order by c.carea;";
+                where a.id_rol = ".$idrol." and (b.CCOMPANIA = '".$idcia."' or '".$idcia."' = '0') and b.clase_modulo = 'W' and b.tipo_modulo = 'M' order by c.carea;";
 		$query = $this->db-> query($sql);
 
 		if ($query->num_rows() > 0) {
