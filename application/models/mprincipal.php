@@ -37,7 +37,7 @@ class Mprincipal extends CI_Model{
 		}	
     }
 	public function getmenuopciones($idrol,$idmodulo) { //Recuperar Opciones del Usuario
-        $sql = "select a.id_opcion, c.desc_opcion, c.vista_opcion, c.script_opcion
+        $sql = "select distinct a.id_opcion, c.desc_opcion, c.vista_opcion, c.script_opcion, c.posicion
 				from segu_rol_permisos a 
 					join sist_modulo b on b.id_modulo = a.id_modulo
 					join sist_opcion c on c.id_opcion = a.id_opcion and c.id_modulo = a.id_modulo  

@@ -6,6 +6,7 @@
     $infousuario = $this->session->userdata('s_infodato');
     $imgperfil = $this->session->userdata('s_druta'); 
     $nombperfil = $this->session->userdata('s_usu'); 
+    $dircliente = $this->session->userdata('s_dircliente'); 
 
     if($imgperfil == ''):
         $imgperfil = 'avatar5.png';
@@ -117,7 +118,7 @@
                                 &nbsp;<?php echo $nombres ?>
                             </h4>
                             <div style="font-weight:bold; font-size:14px; margin-left:5px;">
-                                &nbsp;&nbsp;Carretera a Siquinalá, Km. 58.5
+                                &nbsp;&nbsp;<?php echo $dircliente ?>
                             </div>
                             <div style="font-size:14px; margin-left:5px;">
                                 <!-- &nbsp;&nbsp;FCE: 23456&nbsp;&nbsp;&nbsp;FFR#-->

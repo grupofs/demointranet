@@ -54,7 +54,9 @@
                 <input type="hidden" name="hdnccliente" class="form-control" id="hdnccliente" value="<?php echo $ccliente ?>">
                 <div class="row">                    
                     <div class="col-sm-6">
-                        <!-- radio -->
+                        <div>
+                        </div>
+                        <!-- radio 
                         <div class="form-group clearfix">
                         <div class="icheck-primary d-inline">
                             <input type="radio" id="rdPProducto" name="rtipo" checked>
@@ -68,7 +70,7 @@
                                 Por Estuche
                             </label>
                         </div>
-                        </div>
+                        </div>-->
                     </div>           
                     <div class="col-sm-6">
                         <!-- radio -->
