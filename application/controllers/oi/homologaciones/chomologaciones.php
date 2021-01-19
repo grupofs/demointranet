@@ -54,15 +54,12 @@ class Chomologaciones extends CI_Controller {
     }
 
     public function getbuscarproductoxespediente(){
-        $expediente = $this->input->post('expediente');
-
-        $parametros = array(
-            '@expediente'   => $expediente
-            
-        );
+       
+        $parametros['@expediente'] = $this->input->post('expediente');
 
         $resultado = $this->mhomologaciones->getbuscarproductoxespediente($parametros);
         echo json_encode($resultado);
+       // var_dump($resultado);
     }
 
     public function getClienteDetallado(){

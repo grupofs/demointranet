@@ -419,7 +419,7 @@
                                                     <th>Monto</th>
                                                     <th>Pago Cliente</th>
                                                     <th>Fec. Cobro</th>
-                                                    <th class="col-md-1">Acciones</th>
+                                                    <th>Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
