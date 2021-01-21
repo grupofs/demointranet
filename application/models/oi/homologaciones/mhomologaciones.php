@@ -102,10 +102,10 @@ class Mhomologaciones extends CI_Model {
 
     public function getbuscarproductoxespediente($parametros){
         $procedure = "call sp_appweb_oi_buscar_productoxexpediente(?)";
-		$query = $this->db->query($procedure,$parametros);
+		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
-            return $query->result();
+			return $query->result();
 		}{
 			return false;
 		}	

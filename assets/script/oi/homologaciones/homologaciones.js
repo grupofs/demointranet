@@ -149,11 +149,11 @@ $(document).ready(function(){
                                 render:function(data, type, row){                
                                     return  '<div>'+    
                                     ' <a onClick="javascript:detallExpediente(\''+expediente+'\');"><i class="fas fa-eye" style="color:#088A08; cursor:pointer;"> </i> </a>'+
-                                    '</div>';
+                                    '</div>'
                                 }
-                            ,targets: 0
+                            
                            },
-                            {"orderable": false, data: 'PRODUCTO'},
+                            {"orderable": false, data: 'PRODUCTO', targets: 1},
                             {"orderable": false, data: 'MARCA', targets:2},
                             {"orderable": false, data: 'SANITARIO', targets: 3},
                             {"orderable": false, data: 'EMISION', targets: 4},
@@ -245,18 +245,18 @@ $(document).ready(function(){
 
         ListDetProducto = function(exp){
             $("#tblDetProducto").DataTable({
-                'responsive': true,
-                'bJQueryUI': true,
-                'scrollY': '400px',
-                'scrollX': true,
-                'paging': true,
-                'processing': true,
-                'bDestroy': true,
-                "AutoWidth": false,
-                'info': true,
-                'filter': true,
-                "ordering": false,
-                'stateSave': true,
+                'responsive'    : true,
+                'bJQueryUI'     : true,
+                'scrollY'     	: '300px',
+                'scrollX'     	: true, 
+                'paging'      	: true,
+                'processing'  	: true,      
+                'bDestroy'    	: true,
+                "AutoWidth"     : false,
+                'info'        	: true,
+                'filter'      	: true, 
+                "ordering"		: false,  
+                'stateSave'     : true,
                 'ajax'        : {
                     "url"   : baseurl+"oi/homologaciones/chomologaciones/getbuscarproductoxespediente",
                     "type"  : "POST", 
