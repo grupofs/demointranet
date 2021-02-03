@@ -26,8 +26,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">  
-        <div class="card card-success">
-        <form class="form-horizontal" id="frmbuscahomo" name="frmbuscahomo" action="<?= base_url('pt/cpropuesta/excelpropu')?>" method="POST" enctype="multipart/form-data" role="form"> 
+        <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">BUSQUEDA</h3>
                 <div class="card-tools">
@@ -36,44 +35,63 @@
             </div>
           
             <div class="card-body">
-                <input type="hidden" name="mtxtidusupropu" class="form-control" id="mtxtidusupropu" value="<?php echo $idusu ?>"></div>                
+                <input type="hidden" name="mtxtidusupropu" class="form-control" id="mtxtidusupropu" value="<?php echo $idusu ?>">
+                <div class="row"> 
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Clientes</label>
+                            <select class="form-control select2bs4" id="cboclieserv" name="cboclieserv" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>   
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tipo Consulta</label>
+                            <select class="form-control select2bs4" id="cbotipobuscar" name="cbotipobuscar" style="width: 100%;">
+                                <option value="C" selected="selected">Por Cotizacion</option>
+                                <option value="T">Por OT</option>
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label>&nbsp;&nbsp;</label> 
+                            <input type="text" class="form-control" id="txtbuscar" name="txtbuscar" placeholder="...">
+                        </div>
+                    </div>      
+                </div>
+            </div>                
                         
             <div class="card-footer justify-content-between"> 
                 <div class="row">
-                    <div class="col-md-2"> 
-                        <div id="console-event"></div>                   
-                        <input type="checkbox" name="swVigencia" id="swVigencia" data-toggle="toggle" checked data-bootstrap-switch  data-on-text="Activos" data-off-text="Inactivos">
-                    </div>
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div class="text-right">
                             <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
-                            <button type="button" class="btn btn-outline-info" id="btnNuevo" data-toggle="modal" data-target="#modalCreaPropu"><i class="fas fa-plus"></i> Crear Nuevo</button>
-                            <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="card card-outline card-success">
+                <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Listado de Propuestas</h3>
+                        <h3 class="card-title">Listado </h3>
                     </div>
                 
                     <div class="card-body">
-                        <table id="tblListPropuesta" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListconsinf" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
                                 <th></th>
-                                <th>N° Propuesta</th>
-                                <th>Cliente</th>
-                                <th>Detalle Propuesta</th>
-                                <th>Costo</th>
-                                <th>Fecha</th>
-                                <th>Establecimiento</th>
-                                <th></th>
+                                <th>CLIENTE</th>
+                                <th>NRO COTIZACION</th>
+                                <th>FECHA COTIZACION</th>
+                                <th>NRO OT</th>
+                                <th>FECHA OT</th>
+                                <th>INFORMES</th>
+                                <th>USUARIO CREACION</th>
                                 <th></th>
                             </tr>
                             </thead>
