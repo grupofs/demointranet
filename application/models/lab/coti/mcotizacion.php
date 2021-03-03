@@ -146,7 +146,7 @@ class Mcotizacion extends CI_Model {
         $sql = "select a.cinternocotizacion as 'IDCOTI', a.nversioncotizacion as 'NVERSION', a.nordenproducto as 'IDPROD', '' as 'SPACE', 
                         if isnull(b.dcortaestablecimiento,'0') = '0' or b.dcortaestablecimiento = '' then '' else b.dcortaestablecimiento+ ' - ' end if +  b.destablecimiento + ' - ' +  b.ddireccion   as 'LOCALCLIE', 
                         a.dproducto as 'PRODUCTO', c.dregistro as 'CONDI', a.nmuestra as 'NMUESTRA', b.ccliente as 'CCLIENTE' , a.imonto as 'IMONTO',
-                        a.clocalcliente as 'CLOCALCLIE', a.zctipocondicionpdto as 'CCONDI', a.zctipoprocedencia as 'CPROCEDE', a.dcantidadminima as 'CANTMIN', a.setiquetanutri as 'ETIQUETA', a.ctipoproducto as 'CTIPOPROD', a.ntamanoporcion as 'PORCION', a.umporcion as 'CUM'  
+                        a.clocalcliente as 'CLOCALCLIE', a.zctipocondicionpdto as 'CCONDI', a.zctipoprocedencia as 'CPROCEDE', a.dcantidadminima as 'CANTMIN', a.setiquetanutri as 'ETIQUETA', a.ctipoproducto as 'CTIPOPROD', isnull(a.ntamanoporcion,0) as 'PORCION', a.umporcion as 'CUM'  
                 from pproductoxcotizacion a
                     join mestablecimientocliente b on b.cestablecimiento = a.clocalcliente
                     join ttabla c on c.ctipo = a.zctipocondicionpdto
