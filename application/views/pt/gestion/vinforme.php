@@ -1768,6 +1768,8 @@
 
         <div class="modal-body">          
             <input type="hidden" id="mhdnIdTram" name="mhdnIdTram"> <!-- ID -->
+            <input type="hidden" id="mhdnIdccliente" name="mhdnIdccliente"> 
+            <input type="hidden" id="mcboTipotram" name="mcboTipotram">
             <input type="hidden" id="mhdnAccionTram" name="mhdnAccionTram">
                         
             <div class="form-group">
@@ -1808,7 +1810,7 @@
                     <div class="col-sm-4">
                         <div class="text-info">Tipo de Tramite</div>
                         <div>
-                            <select class="form-control select2bs4" id="mcboTipotram" name="mcboTipotram">
+                            <select class="form-control select2bs4" id="mcboTipotramite" name="mcboTipotramite">
                             <option value="">Cargando...</option>
                             </select>
                         </div>
@@ -1860,14 +1862,14 @@
                             <span class="input-group-append">                                
                                 <div class="fileUpload btn btn-secondary">
                                     <span>Subir Archivo</span>
-                                    <input type="file" class="upload" id="mtxtArchivotram" name="mtxtArchivotram" onchange="escogerArchivo()"/>                      
+                                    <input type="file" class="upload" id="mtxtArchivotram" name="mtxtArchivotram" onchange="escogerArchivoSID()"/>                      
                                 </div> 
                             </span>  
                         </div>
                         <span style="color: red; font-size: 13px;">+ Los archivos deben estar en formato pdf, docx o xlsx y no deben pesar mas de 60 MB</span>                        
                         <input type="hidden" name="mtxtRutaarch" id="mtxtRutaarch">
                         <input type="hidden" name="mtxtarchivo" id="mtxtarchivo">
-                        <input type="hidden" name="sArchivo" id="sArchivo" value="N"> 
+                        <input type="hidden" name="sArchivoSID" id="sArchivoSID" value="N"> 
                     </div> 
                 </div>
             </div>

@@ -39,14 +39,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<br>
 				<strong> Nota:</strong>
 				<p class="text-muted">
-					Si desea ingresar a Plataforma de Grupo FS click en el siguiente Link <a href="<?php echo base_url() ?>clogin/fs">GrupoFS</a>. <br/>
-					Si desea ingresar a Plataforma de FS Certificaciones click en el siguiente Link <a href="<?php echo base_url() ?>clogin/fsc">FSC</a>. 
+					Si desea ingresar a Plataforma de Grupo FS click en el siguiente Link <a href="<?php echo base_url() ?>fs">GrupoFS</a>. <br/>
+					Si desea ingresar a Plataforma de FS Certificaciones click en el siguiente Link <a href="<?php echo base_url() ?>fsc">FSC</a>. 
 				</p>
 				<br>
 				<strong> Note:</strong>
 				<p class="text-muted">
-					If you wish to join the FS Group Platform click on the following Link <a href="<?php echo base_url() ?>clogin/fs">GrupoFS</a>. <br/>
-					If you want to enter FS Certifications Platform click on the following FSC Link <a href="<?php echo base_url() ?>clogin/fsc">FSC</a>. 
+					If you wish to join the FS Group Platform click on the following Link <a href="<?php echo base_url() ?>fs">GrupoFS</a>. <br/>
+					If you want to enter FS Certifications Platform click on the following FSC Link <a href="<?php echo base_url() ?>cfsc">FSC</a>. 
 				</p>
 			</div>
 		</div>

@@ -9,7 +9,7 @@ class Msistemas extends CI_Model {
     
    /** SISTEMAS **/
     public function getlistarmodulos() { // Visualizar listado de modulos
-        $procedure = "call sp_appweb_sistemas_getlistamodulos();";
+        $procedure = "call usp_segu_sistema_getlistamodulos();";
 		$query = $this->db-> query($procedure);
 
 		if ($query->num_rows() > 0) { 
@@ -21,7 +21,7 @@ class Msistemas extends CI_Model {
     public function setmodulo($parametros) { // Guardar modulo
         $this->db->trans_begin();
 
-        $procedure = "call sp_appweb_sistemas_guardarmodulo(?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_segu_sistema_guardarmodulo(?,?,?,?,?,?,?,?);";
         $this->db-> query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -36,7 +36,7 @@ class Msistemas extends CI_Model {
     }    
           
     public function getmodulo($parametros) { // Muestra los modulos del sistema
-        $procedure = "call sp_appweb_sistemas_getmodulo(?);";
+        $procedure = "call usp_segu_sistema_getmodulo(?);";
         $query = $this->db-> query($procedure,$parametros);
 
         if ($query->num_rows() > 0) { 
@@ -46,7 +46,7 @@ class Msistemas extends CI_Model {
         }		
     }
     public function getlistaropciones() { // Visualizar listado de opciones
-        $procedure = "call sp_appweb_sistemas_getlistaopciones();";
+        $procedure = "call usp_segu_sistema_getlistaopciones();";
 		$query = $this->db-> query($procedure);
 
 		if ($query->num_rows() > 0) { 
@@ -58,7 +58,7 @@ class Msistemas extends CI_Model {
     public function setopcion($parametros) { // Registra el opcion del menu
 		$this->db->trans_begin();
 
-		$procedure = "call sp_appweb_sistemas_guardaropcion(?,?,?,?,?,?);";
+		$procedure = "call usp_segu_sistema_guardaropcion(?,?,?,?,?,?);";
 		$this->db-> query($procedure,$parametros);
 
 		if ($this->db->trans_status() === FALSE)
@@ -72,7 +72,7 @@ class Msistemas extends CI_Model {
 		}   
 	}   
     public function getmoduloxcia($parametros) { // Recuperar opciones por compañia
-        $procedure = "call sp_appweb_sistemas_getmoduloxcia(?);";
+        $procedure = "call usp_segu_sistema_getmoduloxcia(?);";
         $query = $this->db-> query($procedure,$parametros);
             
         if ($query->num_rows() > 0) {
@@ -86,7 +86,7 @@ class Msistemas extends CI_Model {
         }	
     }
     public function getlistarroles() { // Visualizar listado de roles
-        $procedure = "call sp_appweb_sistemas_getlistaroles();";
+        $procedure = "call usp_segu_sistema_getlistaroles();";
 		$query = $this->db-> query($procedure);
 
 		if ($query->num_rows() > 0) { 
@@ -98,7 +98,7 @@ class Msistemas extends CI_Model {
     public function setrol($parametros) { // Registra el opcion del menu
 		$this->db->trans_begin();
 
-		$procedure = "call sp_appweb_sistemas_guardarrol(?,?,?,?,?);";
+		$procedure = "call usp_segu_sistema_guardarrol(?,?,?,?,?,?);";
 		$this->db-> query($procedure,$parametros);
 
 		if ($this->db->trans_status() === FALSE)
@@ -112,7 +112,7 @@ class Msistemas extends CI_Model {
 		}   
 	}  
     public function getrolxcia($parametros) { // Recuperar opciones por compañia
-        $procedure = "call sp_appweb_sistemas_getrolxcia(?);";
+        $procedure = "call usp_segu_sistema_getrolxcia(?);";
         $query = $this->db-> query($procedure,$parametros);
             
         if ($query->num_rows() > 0) {
@@ -127,7 +127,7 @@ class Msistemas extends CI_Model {
     }
 
     public function getlistarperm($parametros) { // Visualizar listado de permisos
-        $procedure = "call sp_appweb_sistemas_getlistapermisos(?);";
+        $procedure = "call usp_segu_sistema_getlistapermisos(?);";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -137,7 +137,7 @@ class Msistemas extends CI_Model {
 		}		
     }
     public function getcborol() { // Visualizar cbo de roles
-        $procedure = "call sp_appweb_sistemas_getlistaroles();";
+        $procedure = "call usp_segu_sistema_getlistaroles();";
 		$query = $this->db-> query($procedure);
             
         if ($query->num_rows() > 0) {
@@ -151,7 +151,7 @@ class Msistemas extends CI_Model {
         }			
     }  
     public function getrolpermisos($parametros) { // Recuperar opciones por compañia
-        $procedure = "call sp_appweb_sistemas_getrolpermisos(?,?,?);";
+        $procedure = "call usp_segu_sistema_getrolpermisos(?,?,?);";
         $query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -163,7 +163,7 @@ class Msistemas extends CI_Model {
     public function setasignarperm($parametros) { // Registra el opcion del menu
 		$this->db->trans_begin();
 
-		$procedure = "call sp_appweb_sistemas_setasignarperm(?,?,?,?);";
+		$procedure = "call usp_segu_sistema_setasignarperm(?,?,?,?);";
 		$this->db-> query($procedure,$parametros);
 
 		if ($this->db->trans_status() === FALSE)
@@ -175,6 +175,20 @@ class Msistemas extends CI_Model {
 			$this->db->trans_commit();
 			return 'Guardo Correctamente';
 		}   
-	}  
+	}   
+    public function gethomexcia($parametros) { // Recuperar opciones por compañia
+        $procedure = "call usp_segu_sistema_gethomexcia(?);";
+        $query = $this->db-> query($procedure,$parametros);
+            
+        if ($query->num_rows() > 0) {
+            $listas = '<option value="">::Elejir</option>';            
+            foreach ($query->result() as $row) {
+                $listas .= '<option value="'.$row->id_opcion.'">'.$row->desc_opcion.'</option>';  
+            }
+            return $listas;
+        }{
+            return false;
+        }
+    }
 }
 ?>

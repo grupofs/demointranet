@@ -17,6 +17,64 @@ class Cperfilcliente extends CI_Controller {
 		echo json_encode($resultado);
 	}
 	
+	public function imagen_cliente() {	// Subir Imagen Cliente
+
+		$newfilename = $this->input->post('hdnCcliente');
+
+		$config['upload_path'] 		= 'FTPfileserver/Imagenes/clientes';
+		$config['allowed_types'] 	= 'gif|jpg|png|jpeg';
+		$config['max_size'] 		= '60048';
+		$config['overwrite'] 		= TRUE;
+		$config['file_name']        = $newfilename;
+		$config["width"]    		= 215;
+		$config["height"]   		= 215;
+
+		$this->load->library('upload',$config);
+		$this->upload->initialize($config);
+
+		if (!($this->upload->do_upload('file-inputclie'))) {
+			//si al subirse hay algun error 
+			$data['uploadError'] = $this->upload->display_errors();
+			$error = '';
+			return $error;					
+		}else{			
+			
+			$data = $this->upload->data();
+			$datos = array(
+				"ccliente" => $_POST['hdnCcliente'],
+				"druta" => $data['file_name']
+			);
+			//Image Resizing 
+			$config_img['image_library'] = 'gd2';
+			$config_img['source_image'] = 'FTPfileserver/Imagenes/clientes/'.$data['file_name'];
+			$config_img['new_image'] =  'FTPfileserver/Imagenes/clientes/'.$data['file_name'];
+			$config_img['maintain_ratio'] = FALSE;
+			$config_img['width'] = 215;
+			$config_img['height'] = 215; 
+
+			$this->load->library('image_lib', $config_img); 
+			if ( ! $this->image_lib->resize()){				
+				//si al cambiar tamaño hay algun error 
+				$data['uploadError'] = $this->image_lib->display_errors();
+				$error = '';
+				return $error;	
+			}else{
+				if ($this->mperfilcliente->setimagen_cliente($datos)) {				
+					$path = array(
+						$nombreArch = $data['file_name'],
+						$rutaArch = $config['upload_path'],
+						$estado = '1',
+					);
+				}else{
+					$path = array(
+						$estado = '0',
+					);
+				}
+			}
+			echo json_encode($path);
+		}	
+	}
+	
 	public function imagen_perfil() {	// Subir Imagen Perfil
 
 		$newfilename = $this->input->post('hdnCusuario');
@@ -97,7 +155,7 @@ class Cperfilcliente extends CI_Controller {
 		date_default_timezone_set('America/Lima');
 		$parametros = array(
 			"clave_web"			=>	password_hash($this->input->post("conf_password"),PASSWORD_DEFAULT),
-			"user_id"			=>	$this->input->post("hdnIdusu"),
+			"user_id"			=>	$this->input->post("hdnIdusupsw"),
 			"fcambiopwd"		=>	date('Y-m-d H:i:sa'),
 			"change_clave"		=>	'1',
 			"tipo_acceso"		=>	'N',

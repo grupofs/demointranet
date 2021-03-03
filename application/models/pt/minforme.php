@@ -73,6 +73,24 @@ class Minforme extends CI_Model {
             return false;
         }	
     }	
+    public function getproputramsid($parametros) { // Visualizar NRO propuestas a evaluaren CBO	
+        
+        $procedure = "call sp_appweb_pt_getproputramsid(?)";
+		$query = $this->db-> query($procedure,$parametros);
+        
+        if ($query->num_rows() > 0) {
+
+            $listas = '<option value="" selected="selected">::Elegir</option>';
+            
+            foreach ($query->result() as $row)
+            {
+                $listas .= '<option value="'.$row->IDPTPROPU.'">'.$row->NROPROPU.'</option>';  
+            }
+               return $listas;
+        }{
+            return false;
+        }	
+    }	
     public function getservicioevaluar($parametros) { // Visualizar servicios a evaluaren CBO	
         
         $procedure = "call sp_appweb_pt_getservicioevaluar(?)";

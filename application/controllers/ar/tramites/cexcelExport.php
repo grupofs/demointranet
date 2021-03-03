@@ -17,7 +17,15 @@ class CexcelExport extends CI_Controller {
 		parent:: __construct();
 		$this->load->model('ar/tramites/mconstramdigesa');	
 		$this->load->model('ar/tramites/mbusctramdigemid', 'mconstramdigemid');
-    }
+	}
+	 
+    public function viewtramite() { // COCINADOR-SECADOR-HORNO		
+		
+		$this->layout->js(array(public_url('script/ar/tramitedigesa/constramdigesa.js')));
+
+		$data['content_for_layout'] = 'ar/tramitedigesa/vconstramdigesa';
+        $this->parser->parse('seguridad/vprincipalClie',$data);
+    }   
 
 	public function exceltramardigesa() {
 		/*Estilos */

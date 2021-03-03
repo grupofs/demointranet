@@ -135,7 +135,7 @@ class Clogin extends CI_Controller {
 		$data['dmail'] = $this-> session-> userdata('s_dmail');
 		$data['tipo'] = '2';
 
-		if ($cia  == 'fs' or $cia  == 'fsc') :
+		if ($cia  == 'fs' or $cia  == 'fsc' or $cia  == '0') :
 			$this->load->view("seguridad/vlogin_changepwd", $data);
 		else:
 			$this->load->view('welcome_message');
@@ -151,9 +151,12 @@ class Clogin extends CI_Controller {
 				'@USUARIO' =>  $this-> session -> userdata('s_dmail'),
 				'@CIA' =>  $this->input->post('cia')
 			);
-	
-			$respuesta = $this->mlogin->validarpass($parametros);
-	
+			if($cia == '0'){
+				$respuesta = $this->mlogin->validarpass_services($parametros);
+			}else{
+				$respuesta = $this->mlogin->validarpass($parametros);
+			}
+			
 			if ($respuesta != 1) {				
 				$retorno = array(
 					'respuesta' =>  "Debe de ingresar bien su contraseña actual.",
@@ -251,12 +254,19 @@ class Clogin extends CI_Controller {
 	}
 	
 	private function sendMailRecoveryPass($userdata, $comp) { // Envio de Email
+		
+        $from = "plataforma@grupofs.com";
+        $namfrom = "PLATAFORMA SOPORTE TI";		
+
+        $replyto = "plataforma@grupofs.com";
+		$replynam = "PLATAFORMA SOPORTE TI";
+		
         //cargamos la libreria email de ci
 		$this->load->library("email");
 		
 		$iduser = $userdata->id_usuario;
 
-		$emailData = $this->mlogin->getconfigemail('000');
+		$emailData = $this->mlogin->getconfigemail('001');
 		if($emailData){
 			$mailhost = $emailData->DSERVER;
 			$mailport = $emailData->NPUERTO;
@@ -267,30 +277,30 @@ class Clogin extends CI_Controller {
 		//configuracion para grupofs
 		$configGrupofs = array(
 			'protocol' => 'smtp',
+			'smtp_crypto' => 'tls',
 			'smtp_host' => $mailhost,
 			'smtp_port' => $mailport,
 			'smtp_user' => $mailuser ,
 			'smtp_pass' => $mailpass,
 			'mailtype' => 'html',
 			'charset' => 'utf-8',
-			'newline' => "\r\n"
+			'newline' => "\r\n",
+			'crlf' => "\r\n",
 		);	
- 
-        //cargamos la configuración para enviar con gmail
-        $this->email->initialize($configGrupofs);
- 
-        $this->email->from('sistemas@grupofs.com');
-        $this->email->to($userdata->email_acceso);
-        $this->email->subject('Recuperación de contraseña de plataforma');
-		$VarToken = $userdata->token;
 		
+		$VarToken = $userdata->token;
+
+		$to = $userdata->email_acceso;
+        $cc = 'sistemas@grupofs.com';
+
+        $asunto = "Recuperación de Contraseña. ";
 			
-		$html = '<h3>Estimado(a),</h3><br>';
-		$html .= '<table><tr><td align="justify" colspan="3">La presente es para dar atención a la solicitud de recuperación de contraseña para su cuenta de acceso a nuestra plataforma. Para continuar con el procedimiento haz click en el el boton de enlace.
-			<br><h3><small>Si no haz solicitado recuperar tu contraseña, solo ignora este mensaje.</small></h3></td></tr>';
-		$html .= '<tr><td colspan="3"></td></tr>';
-		$html .= '<tr ><td></td><td align="center" >';
-		$html .= '<table cellpadding="0" cellmargin="0" border="0" height="44" width="320" style="border-radius: 8px; border:5px solid #0080FF">
+		$mensaje = 'Hola '.$to.'.<br>';
+		$mensaje .= '<table><tr><td align="justify" colspan="3">Hemos detectado que necesita recuperar su  <b>contraseña</b>, para acceder a tu cuenta de nuestra plataforma. <br> Puedes continuar con el cambio de tu contraseña haciendo click en el el boton del enlace.
+			<br></td></tr>';
+		$mensaje .= '<tr><td colspan="3"></td></tr>';
+		$mensaje .= '<tr ><td></td><td align="center" >';
+		$mensaje .= '<table cellpadding="0" cellmargin="0" border="0" height="44" width="320" style="border-radius: 8px; border:5px solid #0080FF">
 			<tr>
 		  		<td bgcolor="#0080FF" valign="middle" align="center" width="320">
 					<div style="font-size: 18px; color: #ffffff; line-height: 1; margin: 0; padding: 0; mso-table-lspace:0; mso-table-rspace:0;">
@@ -299,12 +309,20 @@ class Clogin extends CI_Controller {
 		  		</td>
 			</tr>
 	  	</table>'; 
-	  	$html .= '</td><td></td></tr></table>';
-		$html .= '<br><b>Recuerda :: </b>Si tienes dudas nos puedes contactar en el siguiente email - sistemas@grupofs.com<br><br>Atentamente,<br><br> Area de Sistemas.<br><br>';
+	  	$mensaje .= '</td><td></td></tr></table><br>Si tienes dudas nos puedes contactar en el siguiente email - sistemas@grupofs.com';
+		$mensaje .= '<br><br>Saludos,<br> Equipo de sistemas - GrupoFS.<br>';
+		$mensaje .= '<br><small><b>Recuerda :: </b><br>Si no haz solicitado recuperar tu contraseña, solo ignora este mensaje.</small>';
 		
+ 
+        //cargamos la configuración para enviar con gmail
+        $this->email->initialize($configGrupofs); 
+        $this->email->from($from, $namfrom);
+        $this->email->to($to);
+        $this->email->cc($cc);
+        $this->email->reply_to($replyto, $replynam);
+		$this->email->subject($asunto);
+		$this->email->message($mensaje);
 		
-		$this->email->message($html);
-
         if($this->email->send())
         {
         	return TRUE;
@@ -339,6 +357,8 @@ class Clogin extends CI_Controller {
 			$ccia = 'fs';
 		}else if($cia  == 2){
 			$ccia = 'fsc';
+		}else if($cia  == 0){
+			$ccia = '0';
 		}
 
 		$data = array();		
@@ -351,7 +371,7 @@ class Clogin extends CI_Controller {
 		
 		$this->session->set_userdata("id_user_recovery_pass", $this->checkIsLiveToken($token)->id_usuario);
 		
-		if ($cia  == 1 or $cia  == 2) :
+		if ($cia  == 1 or $cia  == 2 or $cia  == 0) :
 			$this->load->view("seguridad/vlogin_changepwd", $data);
 		else:
 			$this->load->view('welcome_message');

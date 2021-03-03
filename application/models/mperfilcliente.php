@@ -34,6 +34,21 @@ class Mperfilcliente extends CI_Model{
       }	
     }
 
+    public function setimagen_cliente($datos = array()) { // Guardar multiples archivos
+      $this->db->where("ccliente",$datos["ccliente"]);
+      
+      if($this->db->update("mcliente", $datos)){
+        
+	   		$s_usuario = array(
+          's_logocliente'		=> $datos["druta"],
+        );             
+        $this -> session -> set_userdata($s_usuario);
+        return TRUE;
+      }else{
+        return FALSE;
+      }
+    }
+
     public function setimagen_perfil($datos = array()) { // Guardar multiples archivos
       $this->db->where("id_usuario",$datos["id_usuario"]);
       

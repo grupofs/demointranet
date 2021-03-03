@@ -39,18 +39,41 @@ class Cprincipal extends CI_Controller
         }
         $this->session->time = time();
 
-        $this->layout->js(array(public_url('script/analytics/dashboard.js')));
+        $idrol = $this->session->userdata('s_idrol');
+        $homeData = $this->mprincipal->gethome($idrol);
+		if($homeData){
+			$vista = $homeData->vista_opcion;
+			$script = $homeData->script_opcion;
+        }else{
+            $vista = 'blank_page';
+            $script = '';
+        }
+        
+        $imprimitScripts = [];
+        if (!empty($script)) {
+            $scripts = explode(';', $script);
+            if (is_array($scripts)) {
+                foreach ($scripts as $script) {
+                    $rutaScript = versionar_archivo('script/' . $script, '.js');
+                    if (!empty($rutaScript)) {
+                        $imprimitScripts[] = $rutaScript;
+                    } else {
+                        log_message('error', "Acceso a javascript no encontrada. {$script}");
+                    }
+                }
+            }
+        }
+        $this->layout->js($imprimitScripts);
 
-        $idempleado = $this->session->userdata('s_idempleado');
-        $parametros = array(
-            '@idempleado' => $idempleado
-        );
-        $this->load->model('analytics/mdashboard');
-        $resumenpermisos = $this->mdashboard->getresumenpermisos($parametros);
+        $data['vista'] = 'Ventana';
 
-        $data['vista'] = 'DInternos';
-        $data['datos_resumenpermisos'] = $resumenpermisos;
-        $data['content_for_layout'] = 'analytics/dashboardCliePT';
+        if (!empty($vista) && file_exists(VIEWPATH . $vista . '.php')) {
+            $data['content_for_layout'] = $vista;
+        } else {
+            log_message('error', "Acceso a la vista no encontrada. {$vista}");
+            $data['content_for_layout'] = 'errors/html/error_view';
+        }
+
         $this->parser->parse('seguridad/vprincipalClie', $data);
 
     }
@@ -172,7 +195,7 @@ class Cprincipal extends CI_Controller
             $data['content_for_layout'] = $vista;
         } else {
             log_message('error', "Acceso a la vista no encontrada. {$vista}");
-            $data['content_for_layout'] = 'errors/html/error_view';
+            $data['content_for_layout'] = 'errors/html/error_view_clie';
         }
 
         $this->parser->parse('seguridad/vprincipalClie', $data);

@@ -29,7 +29,7 @@ class Cconstramdigesa extends CI_Controller {
         $ffin = 		$this->input->post('ff');
         $ccliente = 	$this->input->post('ccliente'); 
         $numexpdiente = ($this->input->post('numexpdiente') == $varnull) ? '%' : '%'.$this->input->post('numexpdiente').'%';
-        $ccategoria = 	($this->input->post('ccategoria') == $varnull) ? '%' : '%'.$this->input->post('ccategoria').'%';
+        $ccategoria = 	($this->input->post('ccategoria') == $varnull) ? '0' : $this->input->post('ccategoria');
         $est = 			($this->input->post('est') == $varnull) ? '%' : '%'.$this->input->post('est').'%';	
         $tipoest = 		($this->input->post('tipoest') == $varnull) ? '%' : $this->input->post('tipoest');
         $tiporeporte = 	'G'; 
@@ -103,8 +103,9 @@ class Cconstramdigesa extends CI_Controller {
 	}
 
     public function getbuscartramite(){
+        $parametros['@codaarr'] = $this->input->post('codaarr');
+        $parametros['@codrsnso'] = $this->input->post('codrsnso');
         $parametros['@codprod'] = $this->input->post('codprod');
-        $parametros['@tipo'] = $this->input->post('tipo');
         
         $resultado = $this->mconstramdigesa->getbuscartramite($parametros);
         echo json_encode($resultado);

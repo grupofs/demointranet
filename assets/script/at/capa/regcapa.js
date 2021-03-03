@@ -220,7 +220,7 @@ $("#btnBuscar").click(function (){
             {responsivePriority: 1, "orderable": false, "class": "col-s", 
                 render:function(data, type, row){
                     return '<div>'+
-                    '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selCapa(\''+row.id_capa+'\',\''+row.ccliente+'\',\''+row.cestablecimiento+'\',\''+row.comentarios+'\',\''+row.fini+'\',\''+row.ffin+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
+                    '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selCapa(\''+row.id_capa+'\',\''+row.ccliente+'\',\''+row.cestablecimiento+'\',\''+row.comentarios+'\',\''+row.fini+'\',\''+row.tipocerti+'\',\''+row.modelcerti+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
                     '&nbsp;'+
                     '<a id="aDelCapa" href="'+row.id_capadet+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                     '</div>'
@@ -506,13 +506,14 @@ $('#btnNuevo').click(function(){
     $('#btnParticiopantes').hide();
 });
 
-selCapa= function(id_capa,ccliente,cestablecimiento,comentarios,fini,ffin){  
+selCapa= function(id_capa,ccliente,cestablecimiento,comentarios,fini,tipocerti,modelcerti){  
     $('#tabcapa a[href="#tabcapa-reg"]').tab('show'); 
     $('#frmRegCapa').trigger("reset");
     $('#hdnAccionregcapa').val('A'); 
     $('#mtxtidcapa').val(id_capa); 
     $('#mtxtFinicio').val(fini); 
-    $('#mtxtFfin').val(ffin);  
+    $('#cbotipocerti').val(tipocerti).trigger("change"); 
+    $('#cbomodelcerti').val(modelcerti).trigger("change");  
     $('#mtxtComentarios').val(comentarios);    
 
     document.getElementById('addcurso').style.visibility = 'visible';
@@ -630,6 +631,50 @@ $('#frmRegCapa').submit(function(event){
 });
 
 //
+$('#btnVercertificados').click(function(){
+    var idcapa      = $('#mtxtidcapa').val();
+    var tipocerti   = $('#cbotipocerti').val();
+    var modelcerti  = $('#cbomodelcerti').val();
+
+    if(tipocerti == 'E' && modelcerti == 'A'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpApro/"+idcapa);
+    }else if(tipocerti == 'E' && modelcerti == 'P'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpParti/"+idcapa);
+    }else if(tipocerti == 'E' && modelcerti == 'AN'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpAproNota/"+idcapa);
+    }else if(tipocerti == 'E' && modelcerti == 'AD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpAproDni/"+idcapa);
+    }else if(tipocerti == 'E' && modelcerti == 'AT'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpAproNotadni/"+idcapa);
+    }else if(tipocerti == 'E' && modelcerti == 'PD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiEmpPartiDni/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'A'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgApro/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'P'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgParti/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'AN'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgAproNota/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'AD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgAproDni/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'AT'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgAproNotaDni/"+idcapa);
+    }else if(tipocerti == 'IP' && modelcerti == 'PD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivProgPartiDni/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'A'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurApro/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'P'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurParti/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'AN'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurAproNota/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'AD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurAproDni/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'AT'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurAproNotaDni/"+idcapa);
+    }else if(tipocerti == 'IC' && modelcerti == 'PD'){
+        window.open(baseurl+"at/capa/cgendoccapa/pdfcertiIndivCurPartiDni/"+idcapa);
+    }
+});
+
 $('#btnParticiopantes').click(function(){
     $('#tabcapa a[href="#tabcapa-parti"]').tab('show');
     var vidcapa = $('#mtxtidcapa').val();
@@ -643,19 +688,23 @@ $('#btnParticiopantes').click(function(){
 recuperaListcapadet = function(){
     //document.querySelector('#lblInforme').innerText = '';
 
+    var groupColumn = 1;  
     otblListRegcapadet = $('#tblListRegcapadet').DataTable({ 
-        'responsive'    : true,
+        'responsive'    : false,
         'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
+        "scrollResize"  : false,
+        'scrollY'     	: '300px',
         'scrollX'     	: true, 
-        'paging'      	: true,
+        "scrollCollapse": false, 
+        'paging'      	: false,
         'processing'  	: true,     
         'bDestroy'    	: true,
         'AutoWidth'     : false,
-        'info'        	: true,
+        'info'        	: false,
         'filter'      	: true, 
-        'ordering'		: false,  
+        'ordering'		: false,
         'stateSave'     : true,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"at/capa/cregcapa/getlistcapadet/",
             "type"  : "POST", 
@@ -666,9 +715,9 @@ recuperaListcapadet = function(){
         },
         'columns'	: [
             {
-                "class"     :   "index",
+                "class"     :   "col-xxs",
                 orderable   :   false,
-                data        :   null,
+                data        :   "id_capadet",
                 targets     :   0
             },
             {"orderable": false, data: 'desc_curso', targets: 1},
@@ -676,22 +725,52 @@ recuperaListcapadet = function(){
             {"orderable": false, 
               render:function(data, type, row){                
                   return  '<div>'+
-                  '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalCreacurso" onClick="javascript:selCapadet(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\',\''+row.id_capacurso+'\',\''+row.id_capamodulo+'\',\''+row.ruta_presentacion+'\',\''+row.ruta_taller+'\',\''+row.ruta_examen+'\',\''+row.nomb_presentacion+'\',\''+row.nomb_taller+'\',\''+row.nomb_examen+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
+                  '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalCreacurso" onClick="javascript:selCapadet(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\',\''+row.id_capacurso+'\',\''+row.id_capamodulo+'\',\''+row.ruta_presentacion+'\',\''+row.ruta_taller+'\',\''+row.ruta_examen+'\',\''+row.nomb_presentacion+'\',\''+row.nomb_taller+'\',\''+row.nomb_examen+'\',\''+row.fechasrealizado+'\',\''+row.duracionhoras+'\',\''+row.notaminima+'\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
                   '&nbsp;'+
-                  '<a id="aDelCapadet" href="'+row.id_capadet+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
+                  '<a id="aDelCapadet" href="'+row.id_capadet+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
+                  '&nbsp;'+
+                  '<a title="Ver Programacion" onClick="javascript:recuperaListprograma(\''+row.id_capadet+'\');"><i class="fas fa-angle-double-right fa-2x" style="cursor:pointer; color:#3c003d;"></i></a>'+      
                   '</div>'
               }
             },
-            {"orderable": false, 
-              render:function(data, type, row){                
-                  return  '<div>'+    
+            /*{"orderable": false, 
+              render:function(data, type, row){  
+                return '';' <ul class="icons-list" style="align-items: center; margin-bottom: 0;">'+
+                        '<li class="dropdown">'+
+                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'+
+                                '<i class="fas fa-bars"></i>'+
+                            '</a>'+
+                            '<ul class="dropdown-menu dropdown-menu-right">'+
+                                '<li><a data-toggle="modal" title="Registrar" style="cursor:pointer;" data-target="#modalPrograma" onClick="javascript:insertProgram(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-plus-circle" style="cursor:pointer;"> Agregar Programacion </i></a></li>'+
+                                '<li><a onClick="javascript:recuperaListprograma(\''+row.id_capadet+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-eye" style="cursor:pointer;"> Ver Programacion </i>  </a></li>'+
+                            '</ul>'+
+                        '</li>'+
+                    '</ul>'; */              
+                  /*return  '<div>'+    
                     ' <a data-toggle="modal" title="Registrar" style="cursor:pointer;" data-target="#modalPrograma" onClick="javascript:insertProgram(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-plus-circle" style="cursor:pointer;"> Agregar Programacion </i>  </a>'+
                     ' <a onClick="javascript:recuperaListprograma(\''+row.id_capadet+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-eye" style="cursor:pointer;"> Ver Programacion </i>  </a>'+
                   '</div>'
               }
-            }
-        ]
+            }*/
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'all'} ).nodes();
+            var last = null;
+			var grupo;
+ 
+            api.column([1], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(1).data()[i];
+                if ( last !== ctra ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="3"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+                    ); 
+                    last = ctra;
+                }
+            } );
+        },
     });  
+    otblListRegcapadet.column(1).visible( false );  
     // Enumeracion 
     otblListRegcapadet.on( 'order.dt search.dt', function () { 
         otblListRegcapadet.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -704,11 +783,40 @@ $("#addcurso").click(function (){
     var v_mIdcapa = $('#mtxtidcapa').val();
     $('#mhdnAccionCapa').val('N'); 
     $('#mhdnIdCapa').val(v_mIdcapa);
-    iniRegCapadet(0,0);      	
+
+    iniRegCapadet(0,0);
+
+    $('#msolotxtHini, #msolotxtHfin').datetimepicker({
+        format: 'hh:mm A',
+        locale:'es',
+        stepping: 15
+    });
+    
+    $('#msolotxtHini').datetimepicker('minDate', moment('08:00 AM', 'hh:mm A') );
+    $('#msolotxtHini').datetimepicker('maxDate', moment('05:45 PM', 'hh:mm A') );
+    $('#msolotxtHini').datetimepicker('date', moment('08:00 AM', 'hh:mm A') );
+    $('#msolotxtHfin').datetimepicker('date', moment('08:15 AM', 'hh:mm A') );
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/capa/cregcapa/getexpositorcapa",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcbosoloexpo').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error');
+        }
+    });      	
 });
 
-selCapadet = function(id_capa,id_capadet,id_capacurso,id_capamodulo,ruta_presentacion,ruta_taller,ruta_examen,nomb_presentacion,nomb_taller,nomb_examen){
+selCapadet = function(id_capa,id_capadet,id_capacurso,id_capamodulo,ruta_presentacion,ruta_taller,ruta_examen,nomb_presentacion,nomb_taller,nomb_examen,fechasrealizado,duracionhoras,notaminima){
     $('#mhdnAccionCapa').val('A'); 
+
+    $('#divSolo').hide();
 
     $('#mhdnIdCapa').val(id_capa);
     $('#mhdnIdCapaDet').val(id_capadet);
@@ -718,6 +826,9 @@ selCapadet = function(id_capa,id_capadet,id_capacurso,id_capamodulo,ruta_present
     $('#mtxtNomarchpresent').val(nomb_presentacion);
     $('#mtxtNomarchtaller').val(nomb_taller);
     $('#mtxtNomarchexamen').val(nomb_examen);
+    $('#mtxtfrealiza').val(fechasrealizado);
+    $('#mtxthduracion').val(duracionhoras);
+    $('#mtxtnotamin').val(notaminima);
 
     iniRegCapadet(id_capacurso,id_capamodulo);
 }
@@ -753,6 +864,7 @@ $("body").on("click","#aDelCapadet",function(event){
 $('#modalCreacurso').on('shown.bs.modal', function (e) { 
     var v_mClie = $('#cboregClie').val();
     $('#mhdnIdCliente').val(v_mClie);
+    $('#divProductos').hide();
     
 });
 
@@ -962,6 +1074,19 @@ subirExamen=function(){
     });
 };
 
+$("#chkSolo").on("change", function () {
+    if($("#chkSolo").is(":checked") == true){
+        $('#divProductos').show();
+        $('#mhdnchecksolo').val('1'); 
+        $('#mhdnfechacapasolo').val($('#mtxtFinicio').val()); 
+        
+    }else if($("#chkSolo").is(":checked") == false){ 
+        $('#divProductos').hide();
+        $('#mhdnchecksolo').val('0'); 
+
+    }; 
+});
+
 //
 recuperaListprograma = function(idcapadet){
     //document.querySelector('#lblInforme').innerText = '';
@@ -969,14 +1094,14 @@ recuperaListprograma = function(idcapadet){
     otblListRegprogr = $('#tblListRegprogr').DataTable({ 
         'responsive'    : true,
         'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
+        'scrollY'     	: '300px',
         'scrollX'     	: true, 
-        'paging'      	: true,
+        'paging'      	: false,
         'processing'  	: true,     
         'bDestroy'    	: true,
         'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
+        'info'        	: false,
+        'filter'      	: false, 
         'ordering'		: false,  
         'stateSave'     : true,
         'ajax'	: {
@@ -988,33 +1113,21 @@ recuperaListprograma = function(idcapadet){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-                "class"     :   "index",
-                orderable   :   false,
-                data        :   null,
-                targets     :   0
-            },
-            {"orderable": false, data: 'datosrazonsocial', targets: 1},
-            {"orderable": false, data: 'fecha_capa', targets: 2},
-            {"orderable": false, data: 'hora_inicapa', targets: 3},
+            {"orderable": false, data: 'datosrazonsocial', targets: 0, "class" : "col-sm"},
+            {"orderable": false, data: 'fecha_capa', targets: 1, "class" : "col-s"},
+            {"orderable": false, data: 'hora_inicapa', targets: 2},
             {"orderable": false, data: 'hora_fincapa', targets: 3},
             {"orderable": false, 
               render:function(data, type, row){                
                   return  '<div>'+
-                  '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalPrograma" onClick="javascript:selprogram(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\',\''+row.id_capaprogra+'\',\''+row.id_capaexpo+'\',\''+row.fecha_capa+'\',\''+row.hora_inicapa+'\',\''+row.hora_fincapa+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
+                  '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalPrograma" onClick="javascript:selprogram(\''+row.id_capacitacion+'\',\''+row.id_capadet+'\',\''+row.id_capaprogra+'\',\''+row.id_capaexpo+'\',\''+row.fecha_capa+'\',\''+row.hora_inicapa+'\',\''+row.hora_fincapa+'\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
                   '&nbsp;'+
-                  '<a id="aDelProgram" href="'+row.id_capaprogra+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
+                  '<a id="aDelProgram" href="'+row.id_capaprogra+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                   '</div>'
               }
             }
         ]
     });  
-    // Enumeracion 
-    otblListRegprogr.on( 'order.dt search.dt', function () { 
-        otblListRegprogr.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-          cell.innerHTML = i+1;
-          } );
-    }).draw();
 };
 
 insertProgram = function(id_capa,id_capadet){
@@ -1344,7 +1457,21 @@ $('#frmRegParti').submit(function(event){
 
 //
 $('#btnRetornarLista').click(function(){
-    $('#tabcapa a[href="#tabcapa-list"]').tab('show');  
+    $('#tabcapa a[href="#tabcapa-list"]').tab('show'); 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/capa/cregcapa/getclientecapa",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboClie').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error');
+        }
+    });
     $('#btnBuscar').click();
 });
 

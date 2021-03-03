@@ -11,12 +11,22 @@
             $colorgrupo = '#73AD21';
             $idbuttongrupo = 'button-fs';
             $cia = 1;
+            $vcia = 'fs';
         elseif ($ccia == 'fsc'):
             $grupo = 'FS Certificaciones';
             $idgrupo = 'rcornersfsc';
             $colorgrupo = '#122F99';
             $idbuttongrupo = 'button-fsc';
             $cia = 2;
+            $vcia = 'fsc';
+        elseif ($ccia == '0'):
+                $grupo = 'FS - FSC';
+                $idgrupo = 'rcornersfs';
+                $colorgrupo = '#73AD21';
+                $cia = 0;
+                $colorWind = 'card-secondary';
+                $idbuttongrupo = 'button-fs';
+                $vcia = 'services'; 
         endif;
         
         $set_email = $dmail;
@@ -43,7 +53,11 @@
     <?php elseif ($cia == 2): ?>
             <link rel="stylesheet" href="<?php echo public_url(); ?>cssweb/loginfsc.css">
             <link rel="shortcut icon" href="<?php echo public_url(); ?>images/ico-fsc.ico" type="image/x-icon" />
+    <?php elseif ($cia == 2): ?>
+           <link href="<?php echo public_url(); ?>cssweb/loginext.css" rel="stylesheet"/>
+           <link rel="shortcut icon" href="<?php echo public_url(); ?>images/favicon.png" type="image/x-icon"/>
     <?php endif; ?>
+	
 </head>
 
 <body class="hold-transition login-page">
@@ -90,7 +104,7 @@
             <div class="form-group">
                 <div class="text-right">  
                     <button id="idbtnsave" type="submit" class="btn btn-success" disabled="true"><i class="fa fa-floppy-o"></i>Cambiar contraseña</button>
-                    <a id="btnreturn" href="<?php echo base_url('clogin/'.$ccia) ?>" class="btn btn-warning">Regresar</a>
+                    <a id="btnreturn" href="<?php echo base_url($vcia) ?>" class="btn btn-warning">Regresar</a>
                 </div>
             </div>
             <br> 

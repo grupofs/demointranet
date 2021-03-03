@@ -145,7 +145,7 @@ class Mcotizacion extends CI_Model {
     public function getlistarproducto($idcoti,$nversion) { // Listar Productos	
         $sql = "select a.cinternocotizacion as 'IDCOTI', a.nversioncotizacion as 'NVERSION', a.nordenproducto as 'IDPROD', '' as 'SPACE', 
                         if isnull(b.dcortaestablecimiento,'0') = '0' or b.dcortaestablecimiento = '' then '' else b.dcortaestablecimiento+ ' - ' end if +  b.destablecimiento + ' - ' +  b.ddireccion   as 'LOCALCLIE', 
-                        a.dproducto as 'PRODUCTO', c.dregistro as 'CONDI', a.nmuestra as 'NMUESTRA', b.ccliente as 'CCLIENTE' ,
+                        a.dproducto as 'PRODUCTO', c.dregistro as 'CONDI', a.nmuestra as 'NMUESTRA', b.ccliente as 'CCLIENTE' , a.imonto as 'IMONTO',
                         a.clocalcliente as 'CLOCALCLIE', a.zctipocondicionpdto as 'CCONDI', a.zctipoprocedencia as 'CPROCEDE', a.dcantidadminima as 'CANTMIN', a.setiquetanutri as 'ETIQUETA', a.ctipoproducto as 'CTIPOPROD', a.ntamanoporcion as 'PORCION', a.umporcion as 'CUM'  
                 from pproductoxcotizacion a
                     join mestablecimientocliente b on b.cestablecimiento = a.clocalcliente
@@ -153,7 +153,8 @@ class Mcotizacion extends CI_Model {
                 where ( a.cinternocotizacion =  '".$idcoti."'  ) and  
                         ( a.nversioncotizacion =  ".$nversion."  ) and  
                         ( c.ctabla = '37' ) and
-                        ( a.sregistro = 'A'  );";
+                        ( a.sregistro = 'A'  )
+                order by a.nordenproducto;";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 
@@ -244,7 +245,7 @@ class Mcotizacion extends CI_Model {
     public function getlistarensayo($idcoti,$nversion,$idproduc) { // Listar Ensayos	
         $sql = "select a.cinternocotizacion, a.nversioncotizacion, a.nordenproducto, a.censayo as 'CENSAYO', b.censayofs as 'CODIGO', b.densayo as 'DENSAYO', b.naniopublicacion as 'ANIO', b.dnorma as 'NORMA',
                     a.icostoclienteparcial as 'CONSTOENSAYO', a.nvias as 'NVIAS', a.ncantidad as 'CANTIDAD', a.icostorealparcial as 'COSTO', a.ctipoproducto as 'TIPOPROD',
-                    if sacnoac = 'N' then 'NO AC' ELSE 'AC' end if as 'ACRE', c.dproducto, a.claboratorio, '' as 'SPACE'
+                    if sacnoac = 'N' then 'NO AC' ELSE 'AC' end if as 'ACRE', c.dproducto, a.claboratorio, '' as 'SPACE', number(*) as 'ENUMERAR'
                 from pensayoproducto a   
                     join mensayo b on b.censayo = a.censayo
                     join pproductoxcotizacion c on c.cinternocotizacion = a.cinternocotizacion and c.nversioncotizacion = a.nversioncotizacion and c.nordenproducto = a.nordenproducto   
@@ -323,6 +324,17 @@ class Mcotizacion extends CI_Model {
         }   
     }
 
+    public function precioxcoti($cinternocotizacion,$nversioncotizacion,$smostrarprecios) { // Recuperar Password
+		
+		$data = array("smostrarprecios" => $smostrarprecios);
+
+        $this->db->where("cinternocotizacion", $cinternocotizacion)
+                 ->where("nversioncotizacion", $nversioncotizacion);
+		if($this->db->update("pcotizacionlaboratorio", $data)){
+			return TRUE;
+		}
+	}
+
     public function deleteprodxcoti($parametros) { // Buscar Cotizacion
         $this->db->trans_begin();
 
@@ -342,7 +354,7 @@ class Mcotizacion extends CI_Model {
 
     public function getbuscarensayos($parametros) { // Visualizar Clientes con propuestas en CBO	
         
-        $procedure = "call usp_lab_coti_getbuscarensayos(?,?)";
+        $procedure = "call usp_lab_coti_getbuscarensayos(?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -419,5 +431,24 @@ class Mcotizacion extends CI_Model {
             return $query->result(); 
         }   
     }
+
+    public function getmcbobustipoensayo() { // Visualizar Clientes con propuestas en CBO	
+        
+        $sql = "select ctipo as 'idtipoensayo' , dregistro as 'dtipoensayo'  from ttabla where ctabla = '18' and ncorrelativo <> 0 order by ncorrelativo asc;";
+		$query  = $this->db->query($sql);
+        
+        if ($query->num_rows() > 0) {
+
+            $listas = '<option value="%" selected="selected">::Elegir</option>';
+            
+            foreach ($query->result() as $row)
+            {
+                $listas .= '<option value="'.$row->idtipoensayo.'">'.$row->dtipoensayo.'</option>';  
+            }
+               return $listas;
+        }{
+            return false;
+        }	
+    }	
 }
 ?>

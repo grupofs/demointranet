@@ -208,8 +208,7 @@
 						<div class="mt-3 d-block" style="display: block;">
 								<input type="hidden" id="showRecoverInput"/>
 
-								<form id="frmlogin" action="<?= base_url('clogin/ingresar') ?>" class="form-horizontal"
-									method="post" role="form">
+								<form id="frmlogin" action="<?= base_url('clogin/ingresar') ?>" class="form-horizontal" method="post" role="form">
 									<hr class="clear"/>
 									<input name="cia" type="hidden" id="cia" value="<?php echo $cia; ?>">
 

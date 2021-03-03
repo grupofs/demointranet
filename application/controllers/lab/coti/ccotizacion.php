@@ -589,7 +589,7 @@ class Ccotizacion extends CI_Controller {
 
         $html .= '</div></body></html>';
 		$filename = 'coti';
-		$this->pdfgenerator->generate($html, $filename);
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
         //echo $html;
 	}
 
@@ -606,6 +606,16 @@ class Ccotizacion extends CI_Controller {
             '@nordenproducto'   	=>  $nordenproducto
         );
         $retorna = $this->mcotizacion->setduplicarprodxcoti($parametros);
+        echo json_encode($retorna);		
+	}
+
+    public function precioxcoti() { // Registrar informe PT
+		
+		$cinternocotizacion 	= $this->input->post('idcotizacion');
+		$nversioncotizacion 	= $this->input->post('nversion');
+		$smostrarprecios 	= $this->input->post('smostrarprecios');
+        
+        $retorna = $this->mcotizacion->precioxcoti($cinternocotizacion,$nversioncotizacion,$smostrarprecios);
         echo json_encode($retorna);		
 	}
 
@@ -630,10 +640,12 @@ class Ccotizacion extends CI_Controller {
 
 		$descripcion   = $this->input->post('descripcion');
 		$sacnoac       = $this->input->post('sacnoac');
+		$tipoensayo       = $this->input->post('tipoensayo');
         
         $parametros = array(
 			'@descripcion'		=> ($this->input->post('descripcion') == '') ? '%' : '%'.$descripcion.'%',
 			'@sacnoac'          => ($this->input->post('sacnoac') == '') ? '%' : $sacnoac,
+			'@tipoensayo'       => $tipoensayo,
         );
         $retorna = $this->mcotizacion->getbuscarensayos($parametros);
         echo json_encode($retorna);		
@@ -736,5 +748,10 @@ class Ccotizacion extends CI_Controller {
         $retorna = $this->mcotizacion->abrircotizacion($parametros);
         echo json_encode($retorna);		
 	}
+    
+    public function getmcbobustipoensayo() {	// Visualizar Servicios en CBO
+        $resultado = $this->mcotizacion->getmcbobustipoensayo();
+        echo json_encode($resultado);
+    }  
 }
 ?>

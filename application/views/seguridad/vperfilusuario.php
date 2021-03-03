@@ -216,7 +216,7 @@
                                 <div class="card-body">
                                     <h2><i class="fa fa-key"></i>  Cambiar Contraseña</h2>
                                 
-                                    <input type="hidden" id="hdnIdusu" name="hdnIdusu"> <!-- ID -->
+                                    <input type="hidden" id="hdnIdusupsw" name="hdnIdusupsw" value="<?php echo $idusu ?>">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">

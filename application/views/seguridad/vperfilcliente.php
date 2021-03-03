@@ -3,6 +3,7 @@
     $cliente = $this -> session -> userdata('s_ccliente');
     $idadm = $this -> session -> userdata('s_idadministrado');
     $usu = $this -> session -> userdata('s_usuario');
+    $dmail= $this -> session -> userdata('s_dmail');
     $cusuario = $this -> session -> userdata('s_cusuario');
     $imgperfil = $this->session->userdata('s_druta'); 
     $ccliente = $this->session->userdata('s_ccliente'); 
@@ -30,6 +31,10 @@
     #file-input{
         display: none;
     }
+    #file-inputclie{
+        display: none;
+    }
+    
     .text-center img{     
         cursor: pointer; 
         text-align: center;       
@@ -76,16 +81,39 @@
                     <div class="col-md-4">
                         <div class="card card-gray-dark card-outline">
                             <div class="card-body box-profile">
-                                <h2><i class="fa fa-user"></i> Mi Empresa</h2>
+                                
+                                <h2><i class="far fa-user"></i>  Perfil de Acceso</h2>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <form id="frmFileinput" name="frmFileinput" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" id="hdnIdusu" name="hdnIdusu" value="<?php echo $idusu ?>">
+                                                <input type="hidden" id="hdnCusuario" name="hdnCusuario" value="<?php echo $cusuario ?>">  
+                                                 <label for="file-input"> 
+                                                    <img src="<?php echo public_url_ftp(); ?>Imagenes/user/<?php echo $imgperfil ?>" alt="Foto de Perfil" class="profile-user-img img-fluid img-circle img-perfil" style="border: 3px solid #adb5bd; padding: 3px;" title="Click para cambiar de foto ">
+                                                    </label>
+                                                <input id="file-input" name="file-input" type="file" onchange="changeFiles()" ref="image"/> 
+                                            </form>
+                                        </div>
+                                        <div class="col-md-8" style="display: flex; align-items: center;">
+                                            <div class="text-info"><?php echo $dmail ?></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                        
+                        <div class="card card-gray-dark card-outline">
+                            <div class="card-body box-profile">
+                                <h2><i class="fas fa-building"></i> Empresa</h2>
                                 <div class="text-center">
-                                    <form id="frmFileinput" name="frmFileinput" method="post" enctype="multipart/form-data">
+                                    <form id="frmFileinputclie" name="frmFileinputclie" method="post" enctype="multipart/form-data">
                                         <input type="hidden" id="hdnCcliente" name="hdnCcliente" value="<?php echo $ccliente ?>">  
-                                        <label for="file-input"> 
+                                        <label for="file-inputclie"> 
                                             <img src="<?php echo public_url_ftp(); ?>Imagenes/clientes/<?php echo $logocliente ?>" alt="Logo Empresa" class="profile-user-img img-fluid img-circle img-empresa" style="border: 3px solid #adb5bd; padding: 3px;" title="Click para cambiar Logo Empresa ">
                                         </label>
-                                        <input id="file-input" name="file-input" type="file" onchange="changeFilesClie
-                                        
-                                        ()" ref="image"/> 
+                                        <input id="file-inputclie" name="file-inputclie" type="file" onchange="changeFilesClie()" ref="image"/> 
                                     </form>
                                 </div> 
                                 <h3 class="profile-username text-center"><?php echo $usu ?></h3>             
@@ -94,17 +122,14 @@
                                         <li class="list-group-item li-perfil">
                                             <div class="row text-center">
                                                 <div class="col-12">
-                                                    <a><?php echo $dcliente ?></a>
+                                                    <h3><a><?php echo $dcliente ?></a></h3>
                                                 </div>
                                             </div>
                                         </li>
                                         <li class="list-group-item li-perfil">
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <b># </b>
-                                                </div> 
-                                                <div class="col-9">
-                                                    <a><?php echo $ruccliente ?></a>
+                                            <div class="row text-center">
+                                                <div class="col-12">
+                                                    <h5><a><?php echo $ruccliente ?></a></h5>
                                                 </div>
                                             </div>
                                         </li>
@@ -125,23 +150,14 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card card-gray-dark card-outline">
-                            <form class="form-horizontal" id="frmDatosPersonales" action="<?= base_url('cperfilusuario/setperfil')?>" method="POST" enctype="multipart/form-data" role="form">
-                                <div class="card-body">
+                            <form class="form-horizontal" id="frmDatosPersonales" action="<?= base_url('cperfilcliente/setperfil')?>" method="POST" enctype="multipart/form-data" role="form">
+                                
+                                <div class="card-body">                                
                                     <h2><i class="fa fa-id-card"></i>  Datos Personales</h2>
                                     <input type="hidden" id="hdnIdadm" name="hdnIdadm" value="<?php echo $idadm ?>"> <!-- ID -->
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-md-2 text-center">
-                                                <form id="frmFileinput" name="frmFileinput" method="post" enctype="multipart/form-data">
-                                                    <input type="hidden" id="hdnIdusu" name="hdnIdusu" value="<?php echo $idusu ?>">
-                                                    <input type="hidden" id="hdnCusuario" name="hdnCusuario" value="<?php echo $cusuario ?>">  
-                                                    <label for="file-input"> 
-                                                        <img src="<?php echo public_url_ftp(); ?>Imagenes/user/<?php echo $imgperfil ?>" alt="Foto de Perfil" class="profile-user-img img-fluid img-circle img-perfil" style="border: 3px solid #adb5bd; padding: 3px;" title="Click para cambiar de foto ">
-                                                    </label>
-                                                    <input id="file-input" name="file-input" type="file" onchange="changeFiles()" ref="image"/> 
-                                                </form>
-                                            </div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-12">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="text-info">Apellido Paterno</div>
@@ -213,11 +229,11 @@
                             </form>
                         </div>
                         <div class="card card-gray-dark card-outline">
-                            <form class="form-horizontal" id="frmCambiarpws" action="<?= base_url('cperfilusuario/setclave')?>" method="POST" enctype="multipart/form-data" role="form">
+                            <form class="form-horizontal" id="frmCambiarpws" action="<?= base_url('cperfilcliente/setclave')?>" method="POST" enctype="multipart/form-data" role="form">
                                 <div class="card-body">
                                     <h2><i class="fa fa-key"></i>  Cambiar Contraseña</h2>
                                 
-                                    <input type="hidden" id="hdnIdusu" name="hdnIdusu"> <!-- ID -->
+                                    <input type="hidden" id="hdnIdusupsw" name="hdnIdusupsw" value="<?php echo $idusu ?>">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">

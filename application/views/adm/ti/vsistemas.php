@@ -100,6 +100,7 @@
                                     <select id="cbotipo" name="cbotipo" class="form-control" style="width: 100%;">
                                         <option value="M" selected="selected">MODULAR</option>
                                         <option value="D">DASHBOARD</option> 
+                                        <option value="H">HOME</option> 
                                     </select>
                                 </div>
                               </div> 
@@ -237,7 +238,9 @@
                               <tr>     
                                 <th>#</th> 
                                 <th>CIA</th>
+                                <th>ID</th>
                                 <th>DESCRIPCION</th> 
+                                <th>OPCION</th> 
                                 <th></th> 
                               </tr>
                               </thead>
@@ -270,6 +273,12 @@
                                   <input class="form-control" id="mtxtDescRol" name="mtxtDescRol" type="text" value="" />
                               </div>
                             </div>
+                            <div class="form-group">
+                              <div class="col-sm-12">
+                                  <div class="text-light-blue">Home</div>                
+                                  <select id="cboHome" name="cboHome" class="form-control select2bs4" style="width: 100%;"></select>
+                              </div>
+                            </div> 
                             <div class="form-group">
                               <div class="col-sm-12"> 
                                   <div class="text-light-blue">Comentario</div> 

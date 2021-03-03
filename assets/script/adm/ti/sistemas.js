@@ -187,16 +187,11 @@ $(document).ready(function () {
         listarOpciones();
     });
 
-    $('#cboCiaopc').change(function(){ 
-        var v_idcia = $( "#cboCiaopc option:selected").attr("value");
-        var v_idmodulo = "";        
+    iniModulo = function(ccompania,id_modulo){
+        var params = { "ccia" : ccompania};
         
-        cambiarCboModuloCia(v_idcia,v_idmodulo);
-    });
+        $('#cboCiaopc').val(ccompania).trigger("change");
 
-    cambiarCboModuloCia = function(v_idcia,v_idmodulo){
-        var params = { "ccia" : v_idcia};
-        
         $.ajax({
             type: 'ajax',
             method: 'post',
@@ -207,7 +202,7 @@ $(document).ready(function () {
             success:function(result)
             {
                 $('#cboModulo').html(result);
-                $("#cboModulo").val(v_idmodulo).trigger("change");   
+                $("#cboModulo").val(id_modulo).trigger("change");   
             },
             error: function(){
             alert('Error, No se puede autenticar por error');
@@ -215,17 +210,42 @@ $(document).ready(function () {
         }); 
     };
 
+    $('#cboCiaopc').change(function(){ 
+        var v_idcia = $( "#cboCiaopc option:selected").attr("value");
+               
+        if ($('#mhdnAccionOpc').val() == 'N'){
+            var params = { "ccia" : v_idcia};
+
+            $.ajax({
+                type: 'ajax',
+                method: 'post',
+                url: baseurl+"adm/ti/csistemas/getmoduloxcia",
+                dataType: "JSON",
+                async: true,
+                data: params,
+                success:function(result)
+                {
+                    $('#cboModulo').html(result); 
+                },
+                error: function(){
+                alert('Error, No se puede autenticar por error');
+                }
+            }); 
+        };
+        
+    });
+
     seleOpcion = function(id_opcion,id_modulo,desc_opcion,ccompania,vista_opcion,script_opcion){
-        $('#mhdnIdopcion').val(id_opcion);
-        $('#mhdnAccionOpc').val('A');                     
-        $('#cboModulo').val(id_modulo).trigger("change");                   
+        $('#frmRegOpcion').trigger("reset");
+        $('#mhdnAccionOpc').val('A');  
+ 
+        $('#mhdnIdopcion').val(id_opcion);               
         $('#mtxtDescOpc').val(desc_opcion);        
         $('#mtxtVentana').val(vista_opcion);     
         $('#mtxtJavascript').val(script_opcion);
-        $('#cboCiaopc').val(ccompania).trigger("change");
+
+        iniModulo(ccompania,id_modulo);
         
-        
-        cambiarCboModuloCia(ccompania,id_modulo);
     };
 
     $('#frmRegOpcion').submit(function(event){
@@ -252,10 +272,13 @@ $(document).ready(function () {
 
     $('#btnNuevoOpc').click(function(){
         $('#frmRegOpcion').trigger("reset");
-        $('#mhdnIdopcion').val('');
         $('#mhdnAccionOpc').val('N'); 
+
+        $('#mhdnIdopcion').val('');
         $('#cboCiaopc').val('0').change();
         $('#cboModulo').val('').change();
+
+        iniModulo("0","0");
     });
 
 /*ROLES*/
@@ -286,11 +309,13 @@ $(document).ready(function () {
                 targets     :   0
                 },
                 {data: 'CIA', targets: 1},
-                {data: 'desc_rol', targets: 2},                         
+                {data: 'id_rol', targets: 2},  
+                {data: 'desc_rol', targets: 3},  
+                {data: 'desc_opcion', targets: 4},                        
                 {"orderable": false, 
                     render:function(data, type, row){
                         return '<div>' +
-                                '<a title="Editar" style="cursor:pointer; color:#3c763d;" onclick="javascript:seleRol(\''+row.id_rol+'\',\''+row.desc_rol+'\',\''+row.ccompania+'\',\''+row.comentarios+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>' +
+                                '<a title="Editar" style="cursor:pointer; color:#3c763d;" onclick="javascript:seleRol(\''+row.id_rol+'\',\''+row.desc_rol+'\',\''+row.ccompania+'\',\''+row.id_home+'\',\''+row.comentarios+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>' +
                                 '</div>' ; 
                     }
                 }
@@ -308,12 +333,35 @@ $(document).ready(function () {
         listarRol();
     });
 
-    seleRol = function(id_rol,desc_rol,ccompania,comentarios){
+    iniRol = function(ccompania,id_home){
+        var params = { "ccia" : ccompania};
+        
+        $('#cboCiarol').val(ccompania).trigger("change");
+
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            url: baseurl+"adm/ti/csistemas/gethomexcia",
+            dataType: "JSON",
+            async: true,
+            data: params,
+            success:function(result)
+            {
+                $('#cboHome').html(result);
+                $("#cboHome").val(id_home).trigger("change");   
+            },
+            error: function(){
+            alert('Error, No se puede autenticar por error');
+            }
+        }); 
+    };
+
+    seleRol = function(id_rol,desc_rol,ccompania,id_home,comentarios){
         $('#mhdnIdrol').val(id_rol);
         $('#mhdnAccionRol').val('A');                                     
         $('#mtxtDescRol').val(desc_rol);        
-        $('#mtxtComentario').val(comentarios);    
-        $('#cboCiarol').val(ccompania).trigger("change");
+        $('#mtxtComentario').val(comentarios);  
+        iniRol(ccompania,id_home);  
         
     };
 
@@ -343,7 +391,32 @@ $(document).ready(function () {
         $('#frmRegRol').trigger("reset");
         $('#mhdnIdrol').val('');
         $('#mhdnAccionRol').val('N'); 
-        $('#cboCiarol').val('0').change();
+        iniRol('0',0); 
+    });
+
+    $('#cboCiarol').change(function(){ 
+        var v_idcia = $( "#cboCiarol option:selected").attr("value");
+               
+        if ($('#mhdnAccionOpc').val() == 'N'){
+            var params = { "ccia" : v_idcia};
+
+            $.ajax({
+                type: 'ajax',
+                method: 'post',
+                url: baseurl+"adm/ti/csistemas/gethomexcia",
+                dataType: "JSON",
+                async: true,
+                data: params,
+                success:function(result)
+                {
+                    $('#cboHome').html(result); 
+                },
+                error: function(){
+                alert('Error, No se puede autenticar por error');
+                }
+            });  
+        };
+        
     });
 
 /*PERMISOS*/

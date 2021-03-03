@@ -3,11 +3,29 @@ var otblListctrlprov;
 var varfdesde = '%', varfhasta = '%';
 
 $(document).ready(function() {
+    $('#tabctrlprov a[href="#tabctrlprov-list-tab"]').attr('class', 'disabled');
+    $('#tabctrlprov a[href="#tabctrlprov-det-tab"]').attr('class', 'disabled active');
+
+    $('#tabctrlprov a[href="#tabctrlprov-list-tab"]').not('#store-tab.disabled').click(function(event){
+        $('#tabctrlprov a[href="#tabctrlprov-list"]').attr('class', 'active');
+        $('#tabctrlprov a[href="#tabctrlprov-det"]').attr('class', '');
+        return true;
+    });
+    $('#tabctrlprov a[href="#tabctrlprov-det-tab"]').not('#bank-tab.disabled').click(function(event){
+        $('#tabctrlprov a[href="#tabctrlprov-det"]').attr('class' ,'active');
+        $('#tabctrlprov a[href="#tabctrlprov-list"]').attr('class', '');
+        return true;
+    });
     
-    $('#txtFDesde,#txtFHasta').datetimepicker({
+    $('#tabctrlprov a[href="#tabctrlprov-list"]').click(function(event){return false;});
+    $('#tabctrlprov a[href="#tabctrlprov-det"]').click(function(event){return false;});
+
+    $('#txtFDesde,#txtFHasta,#txtFInspeccion').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
-        locale:'es'
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
     });
     fechaActual();
 
@@ -40,18 +58,140 @@ $(document).ready(function() {
             alert('Error, No se puede autenticar por error = cboestado');
         }
     })
+    var params = { "sregistro":'T'};
     $.ajax({
         type: 'ajax',
         method: 'post',
         url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspector",
         dataType: "JSON",
         async: true,
+        data: params,
         success:function(result)
         {
             $('#cboinspector').html(result);
         },
         error: function(){
             alert('Error, No se puede autenticar por error = cboinspector');
+        }
+    });
+
+    //
+    $('#frmCreactrlprov').validate({
+        rules: {
+          cboregClie: {
+            required: true,
+          },
+          cboregprovclie: {
+            required: true,
+          },
+          cboregestable: {
+            required: true,
+          },
+          cboregareaclie: {
+            required: true,
+          },
+        },
+        messages: {
+          cboregClie: {
+            required: "Por Favor escoja un Cliente"
+          },
+          cboregprovclie: {
+            required: "Por Favor escoja un Proveedor"
+          },
+          cboregestable: {
+            required: "Por Favor escoja un Establecimiento"
+          },
+          cboregareaclie: {
+            required: "Por Favor escoja un Area"
+          },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGCreactrl');
+            var request = $.ajax({
+                url:$('#frmCreactrlprov').attr("action"),
+                type:$('#frmCreactrlprov').attr("method"),
+                data:$('#frmCreactrlprov').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    $('#mhdnregIdinsp').val(this.cauditoriainspeccion);
+                    
+                    Vtitle = 'Inspección Guardada!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);   
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                });
+            });
+            return false;
+        }
+    });
+    $('#frmRegInsp').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#btnRegistrar');
+            var request = $.ajax({
+                url:$('#frmRegInsp').attr("action"),
+                type:$('#frmRegInsp').attr("method"),
+                data:$('#frmRegInsp').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    //$('#mhdnregIdinsp').val(this.cauditoriainspeccion);
+                    
+                    Vtitle = 'Inspección Guardada!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);   
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                });
+            });
+            return false;
         }
     });
 });
@@ -119,7 +259,13 @@ $("#cboclieserv").change(function(){
         error: function(){
             alert('Error, No se puede autenticar por error = cboprovxclie');
         }
-    });    
+    });   
+    
+    /*if(v_cboclieserv != 0){
+        $("#btnNuevo").prop("disabled",false);
+    }else{
+        $("#btnNuevo").prop("disabled",true);
+    }*/
 });
 
 $("#cboprovxclie").change(function(){
@@ -187,7 +333,7 @@ $("#btnBuscar").click(function (){
             {"orderable": false, 
               render:function(data, type, row){
                 return  '<div>'+  
-                    ' <a title="Presentacion" style="cursor:pointer; color:#1646ec;" href="" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-download-alt" aria-hidden="true"> </span> Presentacion</a>'+
+                    //' <a title="Presentacion" style="cursor:pointer; color:#1646ec;" href="" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-download-alt" aria-hidden="true"> </span> Presentacion</a>'+
                     ' &nbsp; &nbsp;'+
                 '</div>' 
               }
@@ -195,7 +341,7 @@ $("#btnBuscar").click(function (){
             {responsivePriority: 1, "orderable": false, "class": "col-s", 
                 render:function(data, type, row){
                     return '<div>'+
-                    '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selCapa(\''+row.id_capa+'\',\''+row.ccliente+'\',\''+row.cestablecimiento+'\',\''+row.comentarios+'\',\''+row.fini+'\',\''+row.ffin+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
+                    '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selInspe(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.cusuarioconsultor+'\',\''+row.periodo+'\',\''+row.finspeccion+'\',\''+row.cnorma+'\',\''+row.csubnorma+'\',\''+row.cchecklist+'\',\''+row.cmodeloinforme+'\',\''+row.cvalornoconformidad+'\',\''+row.cformulaevaluacion+'\',\''+row.ccriterioresultado+'\',\''+row.dcomentario+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
                     '&nbsp;'+
                     '<a id="aDelCapa" href="'+row.id_capadet+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                     '</div>'
@@ -234,6 +380,454 @@ $("#btnBuscar").click(function (){
         
     } ); 
 });
+
+$("#btnNuevo").click(function (){
+    $("#modalCreactrlprov").modal('show');
+
+    $('#frmCreactrlprov').trigger("reset");
+    $('#mhdnAccionctrlprov').val('N'); 
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboclieserv",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboregClie').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboregClie');
+        }
+    });
+    
+});
+
+$("#cboregClie").change(function(){
+    var v_cboregClie = $('#cboregClie').val();
+    var params = { "ccliente":v_cboregClie };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboprovxclie",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cboregprovclie").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboregprovclie');
+        }
+    });
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboareaclie",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cboregareaclie").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboregareaclie');
+        }
+    });
+});
+
+$("#cboregprovclie").change(function(){
+
+    var v_cboclie = $('#cboregClie').val();
+    var v_cboprov = $('#cboregprovclie').val();
+
+    var params = { "cproveedor":v_cboprov };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomaqxprov",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cboregmaquiprov").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboregmaquiprov');
+        }
+    }); 
+    cboEstablecimiento(v_cboclie,v_cboprov,'','P'); 
+    $('#mtxtregdirestable').val('');  
+});
+
+$("#cboregmaquiprov").change(function(){
+    
+    var v_cboclie = $('#cboregClie').val();
+    var v_cboprov = $('#cboregprovclie').val();    
+    var v_cbomaqui = $('#cboregmaquiprov').val();
+    var v_tipo = 'M'
+
+    if(v_cbomaqui == ''){
+        v_tipo = 'P'
+    }
+
+    cboEstablecimiento(v_cboclie,v_cboprov,v_cbomaqui,v_tipo);  
+    $('#mtxtregdirestable').val('');
+});
+
+$("#cboregestable").change(function(){
+    var v_cboclie = $('#cboregClie').val();
+    var v_cboestable = $('#cboregestable').val();
+
+    var params = { 
+        "cestablecimiento"  :   v_cboestable
+    };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbolineaproc",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cboreglineaproc").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboreglineaproc');
+        }
+    });
+
+    var parametros = { 
+        "cestablecimiento":v_cboestable
+    };
+    var request = $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getdirestable",
+        dataType: "JSON",
+        async: true,
+        data: parametros,
+        error: function(){
+            alert('Error, No se puede autenticar por error = getdirestable');
+        }
+    });      
+    request.done(function( respuesta ) {            
+        $.each(respuesta, function() {
+            $('#mtxtregdirestable').val(this.DIRESTABLE);   
+        });
+    });
+});
+
+cboEstablecimiento = function(cboclie,cboprov,cbomaqui,vtipo){
+
+    var params = { 
+        "ccliente":cboclie, 
+        "cproveedor":cboprov,
+        "cmaquilador":cbomaqui,
+        "tipo":vtipo
+
+    };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboregestable",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cboregestable").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = getcboregestable');
+        }
+    }); 
+};
+
+$('#mbtnCCreactrl').click(function(){  
+    $('#btnBuscar').click();
+});
+
+iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,ccliente,cvalornoconformidad,cmodeloinforme,cformulaevaluacion,ccriterioresultado){
+    var params = { "sregistro":consultsreg};
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspector",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#cboinspinspector').html(result);
+            $('#cboinspinspector').val(cusuarioconsultor).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspinspector');
+        }
+    });
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbosistemaip",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboinspsistema').html(result);
+            //$('#cboinspsistema').val(cnorma).trigger("change");
+            document.getElementById("cboinspsistema").value = cnorma;
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspsistema');
+        }
+    });
+    var paramsrubro = { "cnorma":cnorma};
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            url: baseurl+"at/ctrlprov/cregctrolprov/getcborubroip",
+            dataType: "JSON",
+            async: true,
+            data: paramsrubro,
+            success:function(result)
+            {
+                $('#cboinsprubro').html(result);
+                document.getElementById("cboinsprubro").value = csubnorma;
+            },
+            error: function(){
+                alert('Error, No se puede autenticar por error = cboinsprubro');
+            }
+        }); 
+    
+    
+    var paramschecklist = { 
+        "cnorma":cnorma,
+        "csubnorma":csubnorma,
+        "ccliente":ccliente,
+    };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbochecklist",
+        dataType: "JSON",
+        async: true,
+        data: paramschecklist,
+        success:function(result)
+        {
+            $('#cboinspcchecklist').html(result);
+            document.getElementById("cboinspcchecklist").value = cchecklist;
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspcchecklist');
+        }
+    });
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomodinforme",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboinspmodeloinfo').html(result);
+            $('#cboinspmodeloinfo').val(cmodeloinforme).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspmodeloinfo');
+        }
+    });
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspvalconf",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboinspvalconf').html(result);
+            $('#cboinspvalconf').val(cvalornoconformidad).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspvalconf');
+        }
+    });
+    var paramsform= { "cchecklist":cchecklist};
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspformula",
+        dataType: "JSON",
+        async: true,
+        data: paramsform,
+        success:function(result)
+        {
+            $('#cboinspformula').html(result);
+            $('#cboinspformula').val(cformulaevaluacion).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspformula');
+        }
+    });
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspcritresul",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cboinspcritresul').html(result);
+            $('#cboinspcritresul').val(ccriterioresultado).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspcritresul');
+        }
+    });
+};
+
+quitarFecha = function(){
+    $('#txtFInsp').val('Sin Fecha');
+};
+
+$("#cboinspsistema").change(function(){
+    var v_cnorma = $( "#cboinspsistema option:selected").attr("value");
+    
+    var paramsrubro = { "cnorma":v_cnorma};
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            url: baseurl+"at/ctrlprov/cregctrolprov/getcborubroip",
+            dataType: "JSON",
+            async: true,
+            data: paramsrubro,
+            success:function(result)
+            {
+                $('#cboinsprubro').html(result);
+            },
+            error: function(){
+                alert('Error, No se puede autenticar por error = cboinsprubro');
+            }
+        });  
+});
+
+$("#cboinsprubro").change(function(){
+    var v_csubnorma = $( "#cboinsprubro option:selected").attr("value");
+    var v_cnorma = $('#cboinspsistema').val();
+    var v_ccliente = $('#mhdnccliente').val();
+    var paramschecklist = { 
+        "cnorma":v_cnorma,
+        "csubnorma":v_csubnorma,
+        "ccliente":v_ccliente,
+    };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbochecklist",
+        dataType: "JSON",
+        async: true,
+        data: paramschecklist,
+        success:function(result)
+        {
+            $('#cboinspcchecklist').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspcchecklist');
+        }
+    });
+});
+
+$("#cboinspcchecklist").change(function(){
+    var v_cchecklist = $( "#cboinspcchecklist option:selected").attr("value");
+    var paramsform= { "cchecklist":v_cchecklist};
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspformula",
+        dataType: "JSON",
+        async: true,
+        data: paramsform,
+        success:function(result)
+        {
+            $('#cboinspformula').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cboinspformula');
+        }
+    });
+});
+
+selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioconsultor,periodo,fservicio,cnorma,csubnorma,cchecklist,cmodeloinforme,cvalornoconformidad,cformulaevaluacion,ccriterioresultado,dcomentario,zctipoestadoservicio,destado,ccliente){
+    $('#tabctrlprov a[href="#tabctrlprov-det"]').tab('show'); 
+    
+    $('#frmRegInsp').trigger("reset");
+
+    $('#mtxtidinsp').val(cauditoriainspeccion); 
+    $('#mhdnAccioninsp').val('A');
+    $('#mhdnccliente').val(ccliente);  
+
+    iniInspe(cusuarioconsultor,'T',cnorma,csubnorma,cchecklist,ccliente,cvalornoconformidad,cmodeloinforme,cformulaevaluacion,ccriterioresultado);
+
+    $('#mtxtinspdatos').val(desc_gral); 
+    $('#mtxtinsparea').val('AREÁ : '+areacli); 
+    $('#mtxtinsplinea').val('LINEA : '+lineaproc); 
+    
+    $('#cboinspperiodo').val(periodo);
+    $('#mtxtinspcoment').val(dcomentario);
+    $('#mhdnzctipoestado').val(zctipoestadoservicio);
+    $('#txtinspestado').val(destado);
+    
+    $('#txtFInspeccion').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
+    });
+    if(fservicio == '01/01/1900'){        
+        $('#txtFInsp').val('Sin Fecha');
+    }else{
+        $('#txtFInsp').val(fservicio);
+    }
+
+};
+fechaActualinsp = function(fservicio){    
+    var fecha = new Date();		
+    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
+    $('#txtFInspeccion').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );    
+
+};
+
+$('#btnRetornarLista').click(function(){
+    $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
+    $('#btnBuscar').click();
+});
+
+$('#modalCierreespecial').on('shown.bs.modal', function (e) { 
+    $("#txtcierreidinsp").prop({readonly:true}); 
+    $("#txtcierrefservicio").prop({readonly:true});
+        
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbocierreTipo",
+        dataType: "JSON",
+        async: true,
+        success:function(result){
+            $("#cbocierreTipo").html(result); 
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cbocierreTipo');
+        }
+    })
+    
+    $('#txtcierreidinsp').val($('#mtxtidinsp').val());
+});
+
+
+
+
+
 
 verInspeccion = function(id){
     $("#modalCreainsp").modal('show');

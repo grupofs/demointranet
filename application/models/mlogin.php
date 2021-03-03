@@ -170,7 +170,40 @@ class Mlogin extends CI_Model{
 	}
 
 	public function validarpass($parametros) { //Validar usuario y password
-		$procedure = "call sp_appweb_seguridad_acceso_intranet(?,?)";
+		$procedure = "call usp_segu_acceso_intranet(?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+    			   
+		if ($query->num_rows() == 1) {
+	   		$row = $query -> row(); 
+	   		$s_usuario = array(
+				's_idusuario' 	=> $row -> IDUSUARIO, 
+	   			's_cusuario' 	=> $row -> CUSUARIO, 
+	   			's_usuario' 	=> $row -> USUARIO,  
+	   			's_idrol' 		=> $row -> IDROL,
+				's_cia' 		=> $row -> CCOMPANIA,
+				's_dmail' 		=> $row -> DMAIL,
+				's_passw' 		=> $row -> DCLAVE,
+				's_changepassw' => $row -> CHANGEPASS,
+				's_druta'		=> $row -> RUTA,
+				's_tipopwd'		=> $row -> STIPOPWD,
+				's_tipousu'		=> $row -> TIPO_USU,
+	   			'login' 		=> TRUE
+			);
+				   
+			$this -> session -> set_userdata($s_usuario);
+				
+			if(password_verify($this->input->post('txtpassword'), $row -> DCLAVE)){
+				return 1;
+			}else{
+				return 0;
+			}				
+		}else{
+			return -1;
+		}
+	}
+
+	public function validarpass_services($parametros) { //Validar usuario y password
+		$procedure = "call usp_segu_acceso_extranet(?,?)";
 		$query = $this->db-> query($procedure,$parametros);
     			   
 		if ($query->num_rows() == 1) {

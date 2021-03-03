@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 /**
  * Class Cexpediente
  *
@@ -674,10 +676,10 @@ class Cexpediente extends CI_Controller
                     <table width="700px" style="font-family:arial; font-size:10px;">
                         <tr>
                             <td align="left" colspan="2">
-                                <img src="' . base_url('FTPfileserver/Imagenes/formatos/10407/cargo/00005/tottus.png') . '" width="120" height="40" />
+                                <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/00005/tottus.png" width="120" height="40" />
                             </td>
                             <td align="right" colspan="2">
-                                <img src="' . base_url('FTPfileserver/Imagenes/formatos/10407/cargo/00005/gfs_75.png') . '" width="120" height="40" />
+                                <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/00005/gfs_75.png" width="120" height="40" />
                             </td>
                         </tr>
                         <tr>
@@ -767,26 +769,26 @@ class Cexpediente extends CI_Controller
                     <tr>
                         <td width="70px" style="height:10px;">&nbsp;Muestra</td>
                         <td width="15px" align="left">
-                            <?php if($m=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <?php if($m=="1"){ ?>
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" width="15" height="15" align="center">
                             <?php } ?>                   
                         </td>
                         <td width="80px">&nbsp;Ficha Tecnica</td>
                         <td width="15px" align="left">
                             <?php if($f=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" width="15" height="15" align="center">
                             <?php } ?>   
                         </td>
                         <td width="60px">&nbsp;RS/NSO/RD</td>
                         <td width="15px" align="left">
                             <?php if($r=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" width="15" height="15" align="center">
                             <?php } ?>  
                         </td>
                         <td width="60px">&nbsp;Hoja de Seguridad</td>
                         <td width="15px" align="left">
                             <?php if($h=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" width="15" height="15" align="center">
                             <?php } ?>  
                         </td>
                     </tr>
@@ -794,19 +796,19 @@ class Cexpediente extends CI_Controller
                         <td style="height:10px;">&nbsp;Licencia de Func.</td>
                         <td align="left">
                             <?php if($l=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" alt="Smiley face" width="15" height="15" align="center">
                             <?php } ?>  
                         </td>
                         <td colspan="2" >&nbsp;Inspeccion Higienico Sanitaria</td>
                         <td colspan="2" align="left">
                             <?php if($i=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" alt="Smiley face" width="15" height="15" align="center">
                             <?php } ?>  
                         </td>
                         <td>&nbsp;Otros</td>
                         <td  align="left">
                             <?php if($o=="1"){ ?> 
-                            <img src="' . base_url('FTPfileserver\Imagenes\formatos\10407\cargo/correcto.jpg') . '" alt="Smiley face" width="15" height="15" align="center">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/10407/cargo/correcto.jpg" alt="Smiley face" width="15" height="15" align="center">
                             <?php } ?>  
                         </td>
                     </tr>
@@ -854,8 +856,103 @@ Observado / Rechazado). El recojo no aplica para los productos que tienen un tie
 		}
         $html .= '</body></html>';
 		$filename = $expediente;
-		$this->pdfgenerator->generate($html, $filename);
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
         //echo $html;
+	}
+
+	/**
+	 * @throws PHPExcel_Exception
+	 * @throws PHPExcel_Reader_Exception
+	 * @throws PHPExcel_Writer_Exception
+	 */
+	public function exportar()
+	{
+		try {
+			$fdesde = $this->input->get('fdesde');
+			$fhasta = $this->input->get('fhasta');
+			$ccliente = $this->input->get('ccliente');
+			$cproveedor = $this->input->get('cproveedor');
+			$expedientes = $this->input->get('expediente');
+			$ccliente = (empty($ccliente)) ? '00005' : $ccliente;
+			$fdesde = ($fdesde == '') ? null : substr($fdesde, 6, 4) . '-' . substr($fdesde, 3, 2) . '-' . substr($fdesde, 0, 2);
+			$fhasta = ($fhasta == '') ? null : substr($fhasta, 6, 4) . '-' . substr($fhasta, 3, 2) . '-' . substr($fhasta, 0, 2);
+
+			$objPHPExcel = new Spreadsheet();
+			$sheet = $objPHPExcel->getActiveSheet();
+
+			$sheet->setCellValue('A1', 'LISTA DE EXPEDIENTES');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->mergeCells('A1:G1');
+			$sheet->getStyle('A1:B1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+			$sheet
+				->setCellValue('A2', '#')
+				->setCellValue('B2', 'Expediente')
+				->setCellValue('C2', 'Proveedor')
+				->setCellValue('D2', 'Total')
+				->setCellValue('E2', 'Fecha Ingreso')
+				->setCellValue('F2', 'Fecha Limite')
+				->setCellValue('G2', 'Estado');
+
+			$colorTitulo = array(
+				'font' => array(
+					'name' => 'Verdana',
+					'bold' => true,
+					'size' => 10,
+					'color' => array(
+						'rgb' => '000000'
+					)
+				)
+			);
+
+			$fondoTitulo = array(
+				'type' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+				'startcolor' => array(
+					'rgb' => '28a745'
+				)
+			);
+
+			$objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray($colorTitulo);
+			$objPHPExcel->getActiveSheet()->getStyle('A2:G2')->getFill()->applyFromArray($fondoTitulo);
+			$objPHPExcel->getActiveSheet()->setTitle('Expedientes');
+
+			$resultado = $this->mexpediente->lista([
+				'@ccliente' => $ccliente,
+				'@cproveedor' => (empty($cproveedor) || $cproveedor == 'null') ? 0 : $cproveedor,
+				'@expediente' => (empty($expedientes)) ? '%' : "%{$expedientes}%",
+				'@fdesde' => $fdesde,
+				'@fhasta' => $fhasta,
+			]);
+			if (!empty($resultado)) {
+				$pos = 3;
+				foreach ($resultado as $key => $item) {
+					$objPHPExcel->getActiveSheet()->setCellValue('A' . $pos, ($key + 1));
+					$objPHPExcel->getActiveSheet()->setCellValue('B' . $pos, $item->expediente);
+					$objPHPExcel->getActiveSheet()->setCellValue('C' . $pos, $item->proveedor);
+					$objPHPExcel->getActiveSheet()->setCellValue('D' . $pos, $item->total);
+					$objPHPExcel->getActiveSheet()->setCellValue('E' . $pos, $item->fecha);
+					$objPHPExcel->getActiveSheet()->setCellValue('F' . $pos, $item->flimite);
+					$objPHPExcel->getActiveSheet()->setCellValue('G' . $pos, $item->destado);
+					++$pos;
+				}
+			}
+
+			foreach (range('A', 'G') as $columnID) {
+				$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+					->setAutoSize(true);
+			}
+			$objPHPExcel->setActiveSheetIndex(0);
+
+			$nombre = 'expedientes' . date('dmy');
+			$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, "Xlsx");
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment; filename="' . $nombre . '.xlsx"');
+			$writer->save("php://output");
+			exit();
+
+		} catch (Exception $ex) {
+			echo $ex->getMessage();
+		}
 	}
 
 }

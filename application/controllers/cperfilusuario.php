@@ -97,7 +97,7 @@ class Cperfilusuario extends CI_Controller {
 		date_default_timezone_set('America/Lima');
 		$parametros = array(
 			"clave_web"			=>	password_hash($this->input->post("conf_password"),PASSWORD_DEFAULT),
-			"user_id"			=>	$this->input->post("hdnIdusu"),
+			"user_id"			=>	$this->input->post("hdnIdusupsw"),
 			"fcambiopwd"		=>	date('Y-m-d H:i:sa'),
 			"change_clave"		=>	'1',
 			"tipo_acceso"		=>	'N',

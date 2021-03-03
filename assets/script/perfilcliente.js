@@ -161,7 +161,7 @@ tdcex=function(){
     $('#txtTipodoc').val('4');
 };
 
-changeFilesClie = function(){
+changeFiles = function(){
     var archivoInput = document.getElementById('file-input');
     var archivoRuta = archivoInput.value;
     var extPermitidas = /(.gif|.jpg|.png|.jpeg)$/i;
@@ -174,6 +174,40 @@ changeFilesClie = function(){
     else
     {
         var parametrotxt = new FormData($("#frmFileinput")[0]);
+        var request = $.ajax({
+            data: parametrotxt,
+            method: 'post',
+            url: baseurl+"cperfilcliente/imagen_perfil/",
+            dataType: "JSON",
+            async: true,
+            contentType: false,
+            processData: false,
+            error: function(){
+                alert('Error, no se cargó el archivo');
+            }
+        });
+        request.done(function( respuesta ) {            
+          window.location="perfilclie";
+          Vtitle = 'Imagen se actualizo!!';
+          Vtype = 'success';
+          sweetalert(Vtitle,Vtype);
+        });
+    }
+};
+
+changeFilesClie = function(){
+    var archivoInput = document.getElementById('file-inputclie');
+    var archivoRuta = archivoInput.value;
+    var extPermitidas = /(.gif|.jpg|.png|.jpeg)$/i;
+
+    if(!extPermitidas.exec(archivoRuta)){
+        alert('Asegurese de haber seleccionado un GIF, JPG, PNG, JPEG');
+        archivoInput.value = '';
+        return false;
+    }
+    else
+    {
+        var parametrotxt = new FormData($("#frmFileinputclie")[0]);
         var request = $.ajax({
             data: parametrotxt,
             method: 'post',

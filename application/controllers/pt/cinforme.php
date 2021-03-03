@@ -5,6 +5,8 @@ class Cinforme extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
 		$this->load->model('pt/minforme');
+		$this->load->model('pt/mtramites');
+		
 		$this->load->model('mglobales');
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));
@@ -49,6 +51,14 @@ class Cinforme extends CI_Controller {
             '@IDCLIE'   => $this->input->post('ccliente')
         );
 		$resultado = $this->minforme->getpropuevaluar($parametros);
+		echo json_encode($resultado);
+	}
+    public function getproputramsid() {	// Visualizar NRO propuestas a evaluar en CBO	
+		
+		$parametros = array(
+            '@IDCLIE'   => $this->input->post('ccliente')
+        );
+		$resultado = $this->minforme->getproputramsid($parametros);
 		echo json_encode($resultado);
 	}
     public function getservicioevaluar() {	// Visualizar Servicios a evaluar en CBO	
@@ -697,6 +707,56 @@ class Cinforme extends CI_Controller {
 		);
 		$resultado = $this->minforme->cloneregistro05($parametros);
 		echo json_encode($resultado);
+	}
+
+	public function subirArchivoSID() {	// Subir Acrhivo 
+        $CCLIE      = $this->input->post('mhdnIdccliente');
+        $TRAM       = $this->input->post('mcboTipotram');
+        $IDTRAM     = $this->input->post('mhdnIdTram');
+        $ANIO       = substr($this->input->post('mtxtFtram'),-4);
+        
+        $RUTAARCH   = 'FTPfileserver/Archivos/10203/'.$ANIO.'/'.$CCLIE.'/';
+
+        !is_dir($RUTAARCH) && @mkdir($RUTAARCH, 0777, true);
+        
+        if($TRAM == 1){
+            $iniTram = 'REG-FFRN';
+        }elseif($TRAM == 2){
+            $iniTram = 'REG-FCE';
+        }elseif($TRAM == 3){
+            $iniTram = 'REG-SID';
+        }elseif($TRAM == 4){
+            $iniTram = 'REM-ALER-IMP';
+        }
+
+        $NOMBARCH = $iniTram.$CCLIE.substr('0000'.$IDTRAM, -4).$ANIO.'PTFS';
+
+		//RUTA DONDE SE GUARDAN LOS FICHEROS
+		$config['upload_path'] 		= $RUTAARCH;
+		$config['allowed_types'] 	= 'pdf|xlsx|docx|xls|doc';
+		$config['max_size'] 		= '60048';
+		$config['overwrite'] 		= TRUE;
+		$config['file_name']        = $NOMBARCH;
+		
+		$this->load->library('upload',$config);
+		$this->upload->initialize($config);
+		
+		if (!($this->upload->do_upload('mtxtArchivotram'))) {
+			//si al subirse hay algun error 
+			$data['uploadError'] = $this->upload->display_errors();
+			$error = '';
+			return $error;					
+		}else{
+			$data = $this->upload->data();
+			$parametros = array(
+                '@idpttramite'   	=>  $IDTRAM,
+                '@adj_docum'        =>  $data['file_name'],
+                '@ruta_docum'       =>  $config['upload_path'],
+				'@nomb_docum'   	=>  $this->input->post('mtxtNombarch'),
+            );
+            $retorna = $this->mtramites->subirArchivo($parametros);
+            echo json_encode($retorna);
+		}	
 	}
 }
 ?>

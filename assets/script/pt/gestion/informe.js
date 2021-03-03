@@ -701,7 +701,7 @@ recuperaListinforme = function(){
             {"orderable": false, "class": "col-xl", 
               render:function(data, type, row){ 
                 if(row.idptservicio == 2 || row.idptservicio == 4 || row.idptservicio == 3){
-                    v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"> #SID </a>'
+                    v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"> #SID </a>'
                 }else{
                     v_sid = ''
                 }               
@@ -727,8 +727,11 @@ recuperaListinforme = function(){
     });
 };
 
-tramiteSid = function(idptinforme,ccliente){
 
+tramiteSid = function(idptinforme,ccliente,idptpropuesta,idptservicio){
+    $('#mhdnIdccliente').val(ccliente);
+    $('#mcboTipotram').val(3);
+    var params = { "ccliente":ccliente };
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -752,15 +755,32 @@ tramiteSid = function(idptinforme,ccliente){
         async: true,
         success:function(result)
         {
-            $('#mcboTipotram').html(result);
-            $('#mcboTipotram').val(3).trigger("change");
+            $('#mcboTipotramite').html(result);
+            $('#mcboTipotramite').val(3).trigger("change");
         },
         error: function(){
             alert('Error, No se puede autenticar por error == Tipo de Tramite');
         }
     });
+    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"pt/cinforme/getproputramsid",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+          $("#mcboNropropu").html(result); 
+          $('#mcboNropropu').val(idptpropuesta).trigger("change"); 
+        },
+        error: function(){
+          alert('Error, no se puede cargar la lista desplegable de establecimiento');
+        }
+    });
     $("#mcboClienprop").prop({disabled:true});  
-    $("#mcboTipotram").prop({disabled:true});  
+    $("#mcboTipotramite").prop({disabled:true});  
 
     $('#mtxtFregtramite').datetimepicker({
         format: 'DD/MM/YYYY',
@@ -768,7 +788,79 @@ tramiteSid = function(idptinforme,ccliente){
         locale:'es'
     });	
     fechaActualReg();
+    $('#mhdnAccionTram').val('N');
 }
+escogerArchivoSID = function(){    
+    var archivoInput = document.getElementById('mtxtArchivotram');
+    var archivoRuta = archivoInput.value;
+    var extPermitidas = /(.pdf|.docx|.xlsx|.doc|.xls)$/i;
+    
+    var filename = $('#mtxtArchivotram').val().replace(/.*(\/|\\)/, '');
+    $('#mtxtNombarch').val(filename);
+
+    if(!extPermitidas.exec(archivoRuta)){
+        alert('Asegurese de haber seleccionado un PDF, DOCX, XSLX');
+        archivoInput.value = '';  
+        $('#mtxtNombarch').val('');
+        return false;
+    }      
+    $('#sArchivoSID').val('S');
+
+    
+};
+subirArchivoSID=function(){
+    var parametrotxt = new FormData($("#frmCreaTram")[0]);
+    var request = $.ajax({
+        data: parametrotxt,
+        method: 'post',
+        url: baseurl+"pt/cinforme/subirArchivoSID/",
+        dataType: "JSON",
+        async: true,
+        contentType: false,
+        processData: false,
+        error: function(){
+            alert('Error, no se cargó el archivo');
+        }
+    });
+    request.done(function( respuesta ) {
+        $('#btnBuscar').click(); 
+        Vtitle = 'Se guardo el registro y adjunto correctamente!!';
+        Vtype = 'success';
+        sweetalert(Vtitle,Vtype);
+        $('#mbtnCCreaTram').click();
+    });
+}; 
+$('#frmCreaTram').submit(function(event){
+    event.preventDefault();
+    
+    var request = $.ajax({
+        url:$('#frmCreaTram').attr("action"),
+        type:$('#frmCreaTram').attr("method"),
+        data:$('#frmCreaTram').serialize(),
+        error: function(){
+            Vtitle = 'No se puede registrar por error';
+            Vtype = 'error';
+            sweetalert(Vtitle,Vtype);
+        }
+    });
+    request.done(function( respuesta ) {
+        var posts = JSON.parse(respuesta);        
+        $.each(posts, function() {
+            $('#mhdnIdTram').val(this.id_tramite);
+            if($('#sArchivoSID').val() == 'S'){          
+                subirArchivoSID();
+            }else{      
+                Vtitle = 'Se guardo el registro correctamente!!';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);        
+                $('#mbtnCCreaTram').click();
+            }   
+            $('#sArchivoSID').val('N');        
+        });
+    });
+});
+
+
 
 fechaActualReg = function(){
     var fecha = new Date();		
@@ -851,6 +943,7 @@ recuperaListregistro = function(Idinforme,nro_informe){
               render:function(data, type, row){                
                   return  '<div>'+    
                     ' <a onClick="javascript:selRegistro(\''+row.idptregistro+'\',\''+row.idptinforme+'\',\''+row.idptregequipo+'\',\''+row.idptregproducto+'\',\''+row.idptservicio+'\',\''+row.descripcion_serv+'\',\''+row.idptregestudio+'\',\''+row.ESTUDIO+'\',\''+row.idptregrecinto+'\',\''+row.idptregprocestudio+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
+                    ' <a onClick="javascript:dupRegistro(\''+row.idptregistro+'\',\''+row.idptinforme+'\',\''+row.idptregequipo+'\',\''+row.idptregproducto+'\',\''+row.idptservicio+'\',\''+row.descripcion_serv+'\',\''+row.idptregestudio+'\',\''+row.ESTUDIO+'\',\''+row.idptregrecinto+'\',\''+row.idptregprocestudio+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
                   '</div>'
               }
             }
@@ -2564,6 +2657,10 @@ selRegistro= function(idptregistro,idptinforme,idptregequipo,idptregproducto,idp
     
     
     recuperaRegistro(idptregestudio,idptregequipo,idptregproducto,idptregrecinto,idptregprocestudio);
+};
+
+dupRegistro = function(){
+
 };
 
 recuperaRegistro = function(v_RegEstu,idptregequipo,idptregproducto,idptregrecinto,idptregprocestudio){

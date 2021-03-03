@@ -9,14 +9,17 @@
                 $grupo = 'GRUPO FS';
                 $cia = 1;
                 $colorWind = 'card-success';
+                $vcia = 'fs';
             elseif ($ccia == 'fsc'):
                 $grupo = 'FS Certificaciones';
                 $cia = 2;
                 $colorWind = 'card-navy';
+                $vcia = 'fsc';
             elseif ($ccia == '0'):
                 $grupo = 'FS - FSC';
                 $cia = 0;
                 $colorWind = 'card-secondary';
+                $vcia = 'services';
             endif;
 
             $set_tipo = $tipo;
@@ -102,7 +105,7 @@
                     <div class="card-footer" align="right">
                         <div class="text-right">  
                             <button id="idbuttongrupo" type="submit" class="btn btn-success" >Verificar Email</button>
-                            <a id="btnreturn" href="<?php echo base_url($ccia) ?>" class="btn btn-warning">Regresar</a>
+                            <a id="btnreturn" href="<?php echo base_url($vcia) ?>" class="btn btn-warning">Regresar</a>
                         </div>
                     </div>
                 </div>

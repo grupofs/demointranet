@@ -14,6 +14,13 @@ login = function() {
 
 	$('#frmlogin').submit(function(event){
 		event.preventDefault();
+		var vcia = $('#cia').val();
+		
+		if(vcia == '1'){
+			vcia = 'fs';
+		}else if(vcia == '2'){
+			vcia = 'fsc';
+		}
 		
 		var request = $.ajax({
 			url:$('#frmlogin').attr("action"),
@@ -38,11 +45,11 @@ login = function() {
 					confirmButtonText: 'Si, desbloquear!'
 				}).then((result) => {
 					if (result.value) {
-						window.location="unlock_pass/"+myCoolJavascriptVariable[5];
+						window.location="clogin/unlock_pass/"+vcia;
 					}
 				})
 			}else if(posts.valor == 0){
-				window.location="change_pass/"+myCoolJavascriptVariable[5];
+				window.location="clogin/change_pass/"+vcia;
 			}else if(posts.valor == 1){
 				window.location="main";
 			}else if(posts.valor == 99){

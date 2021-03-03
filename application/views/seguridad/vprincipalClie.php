@@ -171,7 +171,7 @@
             <!--  Logo -->
             <a class="brand-link" style="padding: 1rem .5rem;" target="_blank">
                 <img src="<?php echo public_url(); ?>images/logo-servicios.png"  alt="Logo" class="img-circle elevation-2" style="opacity: 1; max-height:50px;">
-                <span class="brand-text font-weight-light">PANEL | DASHBOARD</span>
+                <span class="brand-text font-weight-light">MENU | DASHBOARD</span>
             </a>
 
             <!-- Panel Lateral I -->
@@ -189,6 +189,36 @@
                 <!-- Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">                        
+                        <!-- Dashboard 
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: none;">
+                            ?php
+                                $idmodulo = $mmodulorol->id_modulo;
+                                $opcionrol= $ci->mprincipal->getmenuopciones($idrol,$idmodulo);                                
+                                foreach($opcionrol  as $mopcionrol){
+                                    $vista = $mopcionrol->vista_opcion;
+                                    $script = $mopcionrol->script_opcion;
+                            ?>
+                                <li class="nav-item">
+                                    <form method="post" action="?php echo base_url()?>jobdesk" class="inline">
+                                        <input type="hidden" name="vista" value="?php echo $vista; ?>">
+                                        <input type="hidden" name="script" value="?php echo $script; ?>">
+                                        <button type="submit" name="submit_param" value="submit_value" class="nav-link" >
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>?php echo $mopcionrol->desc_opcion; ?></p>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>-->
+                        <!-- Opciones -->
                         <?php
                             $ci = &get_instance();
                             $ci->load->model("mprincipal");
@@ -259,15 +289,7 @@
         <div class="content-wrapper" id="admin">
             <input type="hidden" id="hdidempleado" value= <?php echo $idempleado; ?> >
             <?php 
-                if($vista == 'DInterno'):
-                    $this->load->view($content_for_layout,$datos_ventana);
-                else:                    
-                    if($vista == 'DPerfil'):
-                        $this->load->view($content_for_layout,$datos_ventana);
-                    else:
-                        $this->load->view($content_for_layout);
-                    endif;
-                endif;
+                $this->load->view($content_for_layout);
             ?>
         </div>
         <!-- /.PAGE  -->

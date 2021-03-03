@@ -57,9 +57,6 @@
                                 <a class="nav-link active" style="color: #000000;" id="tabctrlprov-list-tab" data-toggle="pill" href="#tabctrlprov-list" role="tab" aria-controls="tabctrlprov-list" aria-selected="true">LISTADO</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" style="color: #000000;" id="tabctrlprov-reg-tab" data-toggle="pill" href="#tabctrlprov-reg" role="tab" aria-controls="tabctrlprov-reg" aria-selected="false">INSPECCION</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" style="color: #000000;" id="tabctrlprov-det-tab" data-toggle="pill" href="#tabctrlprov-det" role="tab" aria-controls="tabctrlprov-det" aria-selected="false">PROGRAMACION</a>
                             </li>
                         </ul>
@@ -192,189 +189,73 @@
                                     </div>
                                 </div> 
                             </div>
-                            <div class="tab-pane fade" id="tabctrlprov-reg" role="tabpanel" aria-labelledby="tabctrlprov-reg-tab">
-                                <fieldset class="scheduler-border" id="regInsp">
-                                    <legend class="scheduler-border text-primary">REG. INSPECCION</legend>
-                                    <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('at/capacitaciones/cregcapa/setcapa')?>" method="POST" enctype="multipart/form-data" role="form">
-                                        <input type="hidden" name="mtxtidinsp" id="mtxtidinsp" class="form-control">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">    
-                                                    <label>Clientes</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Nro PTE</label>
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Fecha PTE</label>
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Proveedor</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Maquilador</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Establecimiento</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Dir. Inspeccion</label>                                                    
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Area del Cliente</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label>Linea de Proceso</label>                                                    
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Producto Marca</label>
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12 text-right"> 
-                                                <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>    
-                                                <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </fieldset>
-                                <fieldset class="scheduler-border" id="regDetInsp">
-                                    <legend class="scheduler-border text-primary">PROGRAMACION</legend>
-                                    <div class="row">
-                                        <div class="col-md-12 text-left">
-                                            <div class="form-group">                                                                          
-                                                <a class="btn btn-default btn-sm" data-toggle="modal" data-target="#modalCreaInfor" id="addcurso" name="addcurso"><img src='<?php echo base_url() ?>assets/images/details_open.png' border="0" align="absmiddle"> Agregar Cursos</a> 
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">   
-                                                <table id="tblListRegcapa" class="table table-striped table-bordered" style="width:100%">
-                                                    <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Periodo</th>
-                                                        <th>Fecha</th>
-                                                        <th>Estado</th>
-                                                        <th>Inspector</th>
-                                                        <th>Resultado</th>
-                                                        <th>Informe</th>
-                                                        <th>Quejas</th>
-                                                        <th>AACC</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
                             <div class="tab-pane fade" id="tabctrlprov-det" role="tabpanel" aria-labelledby="tabctrlprov-det-tab">
-                                <fieldset class="scheduler-border" id="regCapa">
-                                    <legend class="scheduler-border text-primary">Reg. Programacion</legend>
-                                    <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('at/capacitaciones/cregcapa/setcapa')?>" method="POST" enctype="multipart/form-data" role="form">
-                                        <input type="hidden" name="mtxtidinsp" id="mtxtidinsp" class="form-control">
+                                <fieldset class="scheduler-border" id="regInspeccion">
+                                    <legend class="scheduler-border text-primary">Reg. Programacion de inspeccion</legend>
+                                    <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('at/ctrlprov/cregctrolprov/setreginspeccion')?>" method="POST" enctype="multipart/form-data" role="form">
+                                        <input type="hidden" name="mtxtidinsp" id="mtxtidinsp">
+                                        <input type="hidden" name="mhdnzctipoestado" id="mhdnzctipoestado">
+                                        <input type="hidden" name="mhdnccliente" id="mhdnccliente">
+                                        <input type="hidden" name="mhdnAccioninsp" id="mhdnAccioninsp"> 
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">    
                                                     <label>DATOS</label>
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" disabled = true>
+                                                    <textarea class="form-control" cols="20" id="mtxtinspdatos" name="mtxtinspdatos" rows="2" disabled = true></textarea>
+                                                    <textarea class="form-control" cols="20" name="mtxtinsparea"id="mtxtinsparea" rows="1" disabled = true></textarea>
+                                                    <textarea class="form-control" cols="20" name="mtxtinsplinea"id="mtxtinsplinea" rows="1" disabled = true></textarea> 
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
-                                                    <label>Inspector</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
+                                                    <label>Periodo</label>
+                                                    <input type="month" name="cboinspperiodo" id="cboinspperiodo" class="form-control" pattern="[0-9]{4}-[0-9]{2}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label>Periodo Inspeccion</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <label>Inspector</label>
+                                                    <select class="form-control select2bs4" id="cboinspinspector" name="cboinspinspector" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">      
                                                 <label>Fecha Inspeccion</label>                      
-                                                <div class="input-group date" id="txtFHasta" data-target-input="nearest">
-                                                    <input type="text" id="txtFFin" name="txtFFin" class="form-control datetimepicker-input" data-target="#txtFHasta" disabled/>
-                                                    <div class="input-group-append" data-target="#txtFHasta" data-toggle="datetimepicker">
+                                                <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text"><a style="cursor:pointer;" onClick="javascript:quitarFecha()"><i class="far fa-calendar-times"></i></a></div>
+                                                    </div>
+                                                    <input type="text" id="txtFInsp" name="txtFInsp" class="form-control datetimepicker-input" data-target="#txtFInspeccion"/>
+                                                    <div class="input-group-append" data-target="#txtFInspeccion" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Estado Inspeccion</label>
+                                                    <input type="text" name="txtinspestado" id="txtinspestado" class="form-control" disabled>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Sistema</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspsistema" name="cboinspsistema" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Rubro</label>                                                    
-                                                    <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
+                                                    <select class="form-control select2bs4" id="cboinsprubro" name="cboinsprubro" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -382,7 +263,7 @@
                                             <div class="col-md-8">
                                                 <div class="form-group">
                                                     <label>Check List</label>
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspcchecklist" name="cboinspcchecklist" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
@@ -390,7 +271,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Modelo Informe</label>                                                    
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspmodeloinfo" name="cboinspmodeloinfo" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
@@ -400,7 +281,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Valor No Conformidad</label>                                                    
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspvalconf" name="cboinspvalconf" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
@@ -408,7 +289,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Formula Evaluacion</label>                                                    
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspformula" name="cboinspformula" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
@@ -416,7 +297,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Criterio Resultado</label>                                                    
-                                                    <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                                    <select class="form-control select2bs4" id="cboinspcritresul" name="cboinspcritresul" style="width: 100%;">
                                                         <option value="" selected="selected">Cargando...</option>
                                                     </select>
                                                 </div>
@@ -426,14 +307,16 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Comentario</label>
-                                                    <textarea class="form-control" cols="20" id="mtxtDetaInfor" name="mtxtDetaInfor" rows="2" ></textarea>
+                                                    <textarea class="form-control" cols="20" id="mtxtinspcoment" name="mtxtinspcoment" rows="2" ></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right"> 
-                                                <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>    
+                                                <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button> 
+                                                <button type="button" class="btn btn-primary" id="btnConvalidar" data-toggle="modal" data-target="#miModal"><i class="fas fa-link"></i> Convalidar</button>    
                                                 <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                                <button type="button" class="btn btn-danger" id="btnCierreEsp" data-toggle="modal" data-target="#modalCierreespecial"><i class="far fa-window-close"></i> Cierre Especial</button> 
                                             </div>
                                         </div>
                                     </form>
@@ -451,40 +334,42 @@
 
 
 <!-- /.modal-crear-inspeccion --> 
-<div class="modal fade" id="modalCreainsp" data-backdrop="static" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalCreactrlprov" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmCreainsp" name="frmCreainsp" action="<?= base_url('at/capa/cregcapa/setinspeccion')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmCreactrlprov" name="frmCreactrlprov" action="<?= base_url('at/ctrlprov/cregctrolprov/setregctrlprov')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Registro de Inspeccion</h4>
+            <h4 class="modal-title w-100 font-weight-bold">Registro de Control de Proveedores</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
         <div class="modal-body">          
-            <input type="hidden" id="mhdnAccionInsp" name="mhdnAccionInsp" value="A">                          
+            <input type="hidden" id="mhdnAccionctrlprov" name="mhdnAccionctrlprov">                          
             <div class="form-group">  
                 <div class="row">
                     <div class="col-md-2"> 
                         <div class="text-info">Codigo</div>
                         <div>    
-                            <input type="text" name="mhdnIdinsp"id="mhdnIdinsp" class="form-control" disabled = true><!-- ID -->
+                            <input type="text" name="mhdnregIdinsp"id="mhdnregIdinsp" class="form-control"><!-- ID -->
                         </div>
                     </div>
                     <div class="col-md-10"> 
-                        <div class="text-info">Clientes</div>
-                        <div>    
-                            <input type="text" name="mtxtDatos"id="mtxtDatos" class="form-control" disabled = true>
+                        <div class="text-info">Clientes <span class="text-requerido">*</span></div>
+                        <div>
+                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">                        
-                        <div class="text-info">Proveedor</div>
+                        <div class="text-info">Proveedor <span class="text-requerido">*</span></div>
                         <div>
-                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                            <select class="form-control select2bs4" id="cboregprovclie" name="cboregprovclie" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
                             </select>
                         </div>
@@ -492,7 +377,7 @@
                     <div class="col-md-6">    
                         <div class="text-info">Maquilador</div>
                         <div>
-                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                            <select class="form-control select2bs4" id="cboregmaquiprov" name="cboregmaquiprov" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
                             </select>
                         </div>
@@ -500,9 +385,9 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="text-info">Establecimiento</div>
+                        <div class="text-info">Establecimiento <span class="text-requerido">*</span></div>
                         <div>
-                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                            <select class="form-control select2bs4" id="cboregestable" name="cboregestable" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
                             </select>
                         </div>
@@ -510,23 +395,23 @@
                     <div class="col-md-8">
                         <div class="text-info">Dir. Inspeccion</div>
                         <div>
-                            <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
+                            <input type="text" name="mtxtregdirestable"id="mtxtregdirestable" class="form-control" disable>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="text-info">Area del Cliente</div>
+                        <div class="text-info">Area del Cliente <span class="text-requerido">*</span></div>
                         <div>
-                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                            <select class="form-control select2bs4" id="cboregareaclie" name="cboregareaclie" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div class="text-info">Linea de Proceso</div>
+                        <div class="text-info">Linea de Proceso </div>
                         <div>
-                            <select class="form-control select2bs4" id="cboregClie" name="cboregClie" style="width: 100%;">
+                            <select class="form-control select2bs4" id="cboreglineaproc" name="cboreglineaproc" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
                             </select>
                         </div>
@@ -534,18 +419,88 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="text-info">Producto Marca</div>
+                        <div class="text-info">Producto / Marca</div>
                         <div>
-                            <input type="text" name="mtxtComentarios"id="mtxtComentarios" class="form-control" >
+                            <input type="text" name="mtxtProdMarca"id="mtxtProdMarca" class="form-control" >
                         </div>
                     </div>
                 </div>
+                <div id="regInspeccion" style="border-top: 1px solid #ccc; padding-top: 10px;">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>
+                                <i class="fas fa-list-alt"></i> INSPECCION
+                            </h4>
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="text-info">Periodo</div>
+                            <input type="month" name="mtxtregPeriodo" id="mtxtregPeriodo" class="form-control" value="2021-02" pattern="[0-9]{4}-[0-9]{2}">
+                        </div> 
+                    </div> 
+                </div> 
             </div>
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreainsp" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGCreainsp">Grabar</button>
+            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-info" id="mbtnGCreactrl">Grabar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-cierre especial --> 
+<div class="modal fade" id="modalCierreespecial" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('at/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form"> 
+
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Cierre Especial</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">          
+            <input type="hidden" id="mhdnAccioncierreesp" name="mhdnAccioncierreesp">                          
+            <div class="form-group">  
+                <div class="row">
+                    <div class="col-md-3"> 
+                        <div class="text-info">Codigo</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control"><!-- ID -->
+                        </div>
+                    </div> 
+                    <div class="col-md-3"> 
+                        <div class="text-info">Fecha</div>
+                        <div>    
+                            <input type="text" name="txtcierrefservicio"id="txtcierrefservicio" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask><!-- ID -->
+                        </div>
+                    </div> 
+                </div> 
+            </div>                         
+            <div class="form-group">  
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-info">Tipo de Cierre </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocierreTipo" name="cbocierreTipo" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+            </div>   
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-info" id="mbtnGCreactrl">Grabar</button>
         </div>
       </form>
     </div>

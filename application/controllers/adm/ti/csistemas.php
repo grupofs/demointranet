@@ -12,11 +12,12 @@ class Csistemas extends CI_Controller {
     }
     
    /** SISTEMAS **/ 	
-    public function getlistarmodulos() { // Visualizar listado de modulos	
+  public function getlistarmodulos() { // Visualizar listado de modulos	
         
 		$resultado = $this->msistemas->getlistarmodulos();
 		echo json_encode($resultado);
 	}	
+
 	public function setmodulo() { // Registra el modulo
 		$parametros = array(
 			'@id_modulo' 	=>  $this->input->post('mhdnIdmodulo'),
@@ -30,13 +31,14 @@ class Csistemas extends CI_Controller {
 		);
 		$retorna = $this->msistemas->setmodulo($parametros);
 		echo $retorna;		
-    }
+  }
 
-    public function getlistaropciones() { // Visualizar listado de opciones	
+  public function getlistaropciones() { // Visualizar listado de opciones	
         
 		$resultado = $this->msistemas->getlistaropciones();
 		echo json_encode($resultado);
 	}	
+
 	public function setopcion() { // Registra el opcion del menu
 	
 		$parametros = array(
@@ -49,8 +51,9 @@ class Csistemas extends CI_Controller {
 		);
 		$retorna = $this->msistemas->setopcion($parametros);
 		echo $retorna;		
-    }
-    public function getmoduloxcia() { // Recuperar opciones por compañia
+	}
+	
+  public function getmoduloxcia() { // Recuperar opciones por compañia
         
 		$parametros = array(
 			'@id_cia' 		=>  $this->input->post('ccia')
@@ -59,23 +62,26 @@ class Csistemas extends CI_Controller {
 		echo json_encode($resultado);
 	}	
 
-    public function getlistarroles() { // Visualizar listado de roles	
+  public function getlistarroles() { // Visualizar listado de roles	
         
 		$resultado = $this->msistemas->getlistarroles();
 		echo json_encode($resultado);
 	}
+
 	public function setrol() { // Registra el modulo
 		$parametros = array(
 			'@id_rol' 		=>  $this->input->post('mhdnIdrol'),
 			'@desc_rol' 	=>  $this->input->post('mtxtDescRol'),
 			'@ccompania' 	=>  $this->input->post('cboCiarol'),
+			'@id_opcion' 	=>  $this->input->post('cboHome'),
 			'@comentario' 	=>  $this->input->post('mtxtComentario'),
 			'@accion' 		=>  $this->input->post('mhdnAccionRol')
 		);
 		$retorna = $this->msistemas->setrol($parametros);
 		echo $retorna;		
-    }
-    public function getrolxcia() { // Recuperar opciones por compañia
+	}
+	
+  public function getrolxcia() { // Recuperar opciones por compañia
         
 		$parametros = array(
 			'@id_cia' 		=>  $this->input->post('ccia')
@@ -84,7 +90,7 @@ class Csistemas extends CI_Controller {
 		echo json_encode($resultado);
 	} 
 
-    public function getlistarperm() { // Visualizar listado de permisos	
+  public function getlistarperm() { // Visualizar listado de permisos	
         
 		$parametros = array(
 			'@id_rol' 		=>  $this->input->post('idrol')
@@ -92,13 +98,14 @@ class Csistemas extends CI_Controller {
 		$resultado = $this->msistemas->getlistarperm($parametros);
 		echo json_encode($resultado);
 	}	
-    public function getcborol() { // Visualizar cbo de roles	
+
+  public function getcborol() { // Visualizar cbo de roles	
         
 		$resultado = $this->msistemas->getcborol();
 		echo json_encode($resultado);
 	}
 
-    public function getrolpermisos() { // Visualizar listado de permisos por roles	
+  public function getrolpermisos() { // Visualizar listado de permisos por roles	
         
 		$parametros = array(
 			'@id_rol' 		=>  $this->input->post('idrol'),
@@ -109,7 +116,7 @@ class Csistemas extends CI_Controller {
 		echo json_encode($resultado);
 	}	
 
-    public function setasignarperm() { // Registrar Permisos	
+  public function setasignarperm() { // Registrar Permisos	
         
 		$parametros = array(
 			'@id_rol' 		=>  $this->input->post('idrol'),
@@ -120,6 +127,15 @@ class Csistemas extends CI_Controller {
 		$resultado = $this->msistemas->setasignarperm($parametros);
 		echo json_encode($resultado);
 	}		
+
+  public function gethomexcia() { // Visualizar listado de permisos	
+        
+		$parametros = array(
+			'@id_cia' 		=>  $this->input->post('ccia')
+		);
+		$resultado = $this->msistemas->gethomexcia($parametros);
+		echo json_encode($resultado);
+	}	
 	
 }
 ?>
