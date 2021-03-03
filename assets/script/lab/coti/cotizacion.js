@@ -163,6 +163,7 @@ $(document).ready(function() {
                     Vtitle = 'Error en Guardar!!!';
                     Vtype = 'error';
                     sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar); 
                 },
                 beforeSend: function() {
                     objPrincipal.botonCargando(botonEvaluar);
