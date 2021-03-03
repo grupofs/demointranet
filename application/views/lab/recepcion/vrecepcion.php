@@ -1,5 +1,6 @@
 <?php
     $idusu = $this -> session -> userdata('s_idusuario');
+    $cusuario = $this -> session -> userdata('s_cusuario');
 ?>
 
 <style>
@@ -213,9 +214,6 @@
                                                     <small id="lblcoti"> </small>
                                                 </h4>
                                             </div> 
-                                            <div class="col-6 text-right">
-                                                <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
-                                            </div> 
                                         </div> 
                                         <div class="row"> 
                                             <div class="col-12">
@@ -224,36 +222,57 @@
                                                         <h3 class="card-title">Listado de Recepcion</h3>
                                                     </div>                                        
                                                     <div class="card-body">
-                                                        <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>N°</th>
-                                                                <th>F. Recepcion</th>
-                                                                <th>Codigo</th>
-                                                                <th>Producto Real</th>
-                                                                <th>Presentacion</th>
-                                                                <th>Temp. Recep.</th>
-                                                                <th>Cant. Muestra</th>
-                                                                <th>Proveedor</th>
-                                                                <th>N° Lote</th>
-                                                                <th>F. Envase</th>
-                                                                <th>F. Muestreo</th>
-                                                                <th>Hora Muestreo</th>
-                                                                <th>Monitoreo</th>
-                                                                <th>Motivo</th>
-                                                                <th>Area</th>
-                                                                <th>Ubicacion</th>
-                                                                <th>Item</th>
-                                                                <th>Tottus</th>
-                                                                <th>Estado</th>
-                                                                <th>Observacion</th>
-                                                                <th>Observacion Otros</th>
-                                                                <th></th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
+                                                    <input type="hidden" name="mtxtcusuario" class="form-control" id="mtxtcusuario" value="<?php echo $cusuario ?>">
+                                                        <div class="row" style="background-color: #dff0d8;">                                                         
+                                                            <div class="col-7 text-left">
+                                                                <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                                            </div>                                                          
+                                                            <div class="col-2 text-right">
+                                                                <button type="button" class="btn btn-success" id="btngenerarOT"><i class="fas fa-clipboard-list"></i> Generar OT</button>
+                                                            </div>                                                                                              
+                                                            <div class="col-3 text-right">            
+                                                                <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text"><a style="cursor:pointer;" onClick="javascript:quitarFecha()"><i class="fas fa-check-circle">Fecha OT</i></a></div>
+                                                                    </div>
+                                                                    <input type="text" id="txtFInsp" name="txtFInsp" class="form-control datetimepicker-input" data-target="#txtFInspeccion"/>
+                                                                    <div class="input-group-append" data-target="#txtFInspeccion" data-toggle="datetimepicker">
+                                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">                                                         
+                                                            <div class="col-12"> 
+                                                            <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                    <th>N°</th>
+                                                                    <th>F. Recepcion</th>
+                                                                    <th>Codigo</th>
+                                                                    <th>Producto Real</th>
+                                                                    <th>Presentacion</th>
+                                                                    <th>Temp. Recep.</th>
+                                                                    <th>Cant. Muestra</th>
+                                                                    <th>Proveedor</th>
+                                                                    <th>N° Lote</th>
+                                                                    <th>F. Envase</th>
+                                                                    <th>F. Muestreo</th>
+                                                                    <th>Hora Muestreo</th>
+                                                                    <th>Observacion</th>
+                                                                    <th>Observacion Otros</th>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                            </div> 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -448,8 +467,6 @@
                         </div>
                     </div>                    
                 </div>                
-            </div>   
-            <div class="form-group">
                 <div class="row"> 
                     <div class="col-sm-6">
                         <div class="text-info">Ubicacion</div>
@@ -499,59 +516,33 @@
 </div> 
 <!-- /.modal-->
 
-<!-- /.modal-EnsayosLab --> 
-<div class="modal fade" id="modalEnsayosLab" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<!-- /.modal-FechaOT --> 
+<div class="modal fade" id="modalFechaOT" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmEnsayosLab" name="frmEnsayosLab" action="<?= base_url('at/auditoria/cconsultauditor/setregchecklist')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmFechaOT" name="frmFechaOT" action="<?= base_url('lab/recepcion/crecepcion/setupdateFechaOT')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Buscar Ensayos por Laboratorio</h4>
+            <h4 class="modal-title w-100 font-weight-bold">Fecha de OT</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
         <div class="modal-body">
-            <input type="hidden" id="mhdnccliente" name="mhdnccliente"> 
-            <input type="hidden" id="mhdncauditoriainspeccion" name="mhdncauditoriainspeccion"> 
-            <input type="hidden" id="mhdnfservicio" name="mhdnfservicio"> 
-            <input type="hidden" id="mhdncchecklist" name="mhdncchecklist"> 
-            <input type="hidden" id="mhdncrequisitochecklist" name="mhdncrequisitochecklist"> 
-            <input type="hidden" id="mhdncdetallevalor" name="mhdncdetallevalor"> 
-            <input type="hidden" id="mhdncestablearea" name="mhdncestablearea" >                         
+            <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">  
+            <input type="hidden" id="mhdnnroordenservicio" name="mhdnnroordenservicio">                       
             <div class="form-group"> 
-                <div class="row">                
-                    <div class="col-sm-12">
-                        <div class="text-info">PRODUCTO </div>  
-                        <input class="form-control" type="text" name="mtxtDescripcion" id="mtxtDescripcion">   
-                    </div> 
-                </div> 
-                <div class="row">
-                    <div class="col-md-6"> 
-                        <div class="text-info">CODIGO</div>
-                        <div>    
-                            <text type="text" name="mtxtrequisito"id="mtxtrequisito" class="form-control"></text>
-                        </div>
-                    </div>
-                    <div class="col-md-6"> 
-                        <div class="text-info">ENSAYO</div>                        
-                        <div>    
-                            <text type="text" name="mtxthallazgo"id="mtxthallazgo" class="form-control"></text>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6"> 
-                        <div class="text-info">Costo</div>
-                        <div>    
-                            <text type="text" name="mtxtrequisito"id="mtxtrequisito" class="form-control"></text>
-                        </div>
-                    </div>
-                    <div class="col-md-6"> 
-                        <div class="text-info">Vias</div>                        
-                        <div>    
-                            <text type="text" name="mtxthallazgo"id="mtxthallazgo" class="form-control"></text>
+                <div class="row">                                                                                              
+                    <div class="col-8 text-right">            
+                        <div class="input-group date" id="txtFOT" data-target-input="nearest">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fas fa-check-circle">Fecha OT</i></div>
+                            </div>
+                            <input type="text" id="txtForden" name="txtForden" class="form-control datetimepicker-input" data-target="#txtFOT"/>
+                            <div class="input-group-append" data-target="#txtFOT" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -559,8 +550,8 @@
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCHallazgo" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGHallazgo">Grabar</button>
+            <button type="reset" class="btn btn-default" id="mbtnCFechaOT" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-info" id="mbtnGFechaOT">Grabar</button>
         </div>
       </form>
     </div>

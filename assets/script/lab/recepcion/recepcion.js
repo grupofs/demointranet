@@ -67,7 +67,6 @@ $(document).ready(function() {
                 var posts = JSON.parse(respuesta);
                 
                 $.each(posts, function() {
-                    alert("ok");
                     otblListProducto.ajax.reload(null,false);
                     Vtitle = 'La Recepcion esta Guardada!!!';
                     Vtype = 'success';
@@ -266,19 +265,22 @@ $('#btnRetornarLista').click(function(){
 });
 
 recuperaListproducto = function(){
-    otblListProducto = $('#tblListProductos').DataTable({  
-        'responsive'    : true,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '500px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
-        'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+    otblListProducto = $('#tblListProductos').DataTable({         
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false,  
         'ajax'	: {
             "url"   : baseurl+"lab/recepcion/crecepcion/getrecepcionmuestra/",
             "type"  : "POST", 
@@ -290,31 +292,28 @@ recuperaListproducto = function(){
         },
         'columns'	: [
             {
-              "class"     :   "index col-xs",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0,
+                "className":        'details-control col-xxs',
+                "orderable":        false,
+                data:               'SPACE',
+                "defaultContent":   '', 
+                targets:            0
             },
-            {"orderable": false, data: 'frecepcionmuestra', targets: 1},
-            {"orderable": false, data: 'cmuestra', targets: 2},
-            {"orderable": false, data: 'drealproducto', targets: 3},
-            {"orderable": false, data: 'dpresentacion', targets: 4},
-            {"orderable": false, data: 'dtemperatura', targets: 5},
-            {"orderable": false, data: 'dcantidad', targets: 6},
-            {"orderable": false, data: 'dproveedorproducto', targets: 7},
-            {"orderable": false, data: 'dlote', targets: 8},
-            {"orderable": false, data: 'fenvase', targets: 9},
-            {"orderable": false, data: 'fmuestra', targets: 10},
-            {"orderable": false, data: 'hmuestra', targets: 11},
-            {"orderable": false, data: 'ntrimestre', targets: 12},
-            {"orderable": false, data: 'zctipomotivo', targets: 13},
-            {"orderable": false, data: 'careacliente', targets: 14},
-            {"orderable": false, data: 'dubicacion', targets: 15},
-            {"orderable": false, data: 'zctipoitem', targets: 16},
-            {"orderable": false, data: 'stottus', targets: 17},
-            {"orderable": false, data: 'dcondicion', targets: 18},
-            {"orderable": false, data: 'dobservacion', targets: 19},
-            {"orderable": false, data: 'dotraobservacion', targets: 20},
+            {"orderable": false, data: 'SPACE', targets: 1},
+            {"orderable": false, data : 'NROORDEN', targets : 2},
+            {"orderable": false, data: 'frecepcionmuestra', targets: 3, "class" : "col-s"},
+            {"orderable": false, data: 'cmuestra', targets: 4},
+            {"orderable": false, data: 'drealproducto', targets: 5, "class" : "col-l"},
+            {"orderable": false, data: 'dpresentacion', targets: 6, "class" : "col-l"},
+            {"orderable": false, data: 'dtemperatura', targets: 7},
+            {"orderable": false, data: 'dcantidad', targets: 8},
+            {"orderable": false, data: 'dproveedorproducto', targets: 9},
+            {"orderable": false, data: 'dlote', targets: 10},
+            {"orderable": false, data: 'fenvase', targets: 11},
+            {"orderable": false, data: 'fmuestra', targets: 12},
+            {"orderable": false, data: 'hmuestra', targets: 13},
+            {"orderable": false, data: 'dobservacion', targets: 14},
+            {"orderable": false, data: 'dotraobservacion', targets: 15},
+            {"orderable": false, data: 'IDORDEN', targets: 16},
             {responsivePriority: 1,"orderable": false, 
                 render:function(data, type, row){
                     return '<div class="text-left" >' +
@@ -322,16 +321,157 @@ recuperaListproducto = function(){
                     '</div>';
                 }
             }
-        ]
+        ],
+        "columnDefs": [
+            {
+                "targets": [1], 
+                "className": 'index select-checkbox',           
+                "checkboxes": {
+                    'selectRow': true
+                },
+                "orderable": false            
+            }
+        ],
+        "select": {
+            style:    'multi',  
+            selector: 'td:nth-child(2)'      
+        },
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'all'} ).nodes();
+            var last = null;
+			var grupo;
+ 
+            api.column([2], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(2).data()[i];                
+                grupo1 = api.column(16).data()[i];
+                if ( last !== ctra ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="1">'+grupo1+'</td><td colspan="8"><strong> OT :: '+ctra.toUpperCase()+'</strong></td></tr>'
+                    ); 
+                    last = ctra;
+                }
+            } );
+        },
     }); 
 
+    otblListProducto.column(2).visible( false );  
+    otblListProducto.column(16).visible( false );  
     // Enumeracion 
     otblListProducto.on( 'order.dt search.dt', function () { 
-        otblListProducto.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListProducto.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
     }).draw();
+
+    $('#tblListProductos tbody').on( 'click', 'tr.group', function () {
+        var val = $(this).closest('tr').find('td:eq(0)').text();
+
+        
+        var nro = $(this).closest('tr').find('td:eq(1)').text().substr(7,17);
+        
+        $('#modalFechaOT').modal({show:true});
+        $('#mhdncinternoordenservicio').val(val);
+        $('#mhdnnroordenservicio').val(nro);
+               
+    } ); 
 };
+$('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
+    var tr = $(this).closest('tr');
+    //var tr = $(this).parents('tr');
+    var row = otblListProducto.row( tr );
+    var rowData = row.data();
+      
+    //get index to use for child table ID
+    var index = row.index();
+
+    if ( row.child.isShown() ) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('details');
+    }
+    else {
+        otblListProducto.rows().every(function(){
+            // If row has details expanded
+            if(this.child.isShown()){
+                // Collapse row details
+                this.child.hide();
+                $(this.node()).removeClass('details');
+            }
+        })
+        // Open this row
+        row.child( 
+           '<table class="display compact" id = "child_details' + index + '"  style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+           '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Codigo</th><th>Ensayo</th><th>Vias</th></tr></thead><tbody>' +
+            '</tbody></table>').show();
+        
+        var childTable = $('#child_details' + index).DataTable({ 
+            "processing"  	: true,
+            "bDestroy"    	: true,
+            "stateSave"     : true,
+            "bJQueryUI"     : true,
+            "scrollResize"  : true,
+            "scrollY"     	: "400px",
+            "scrollX"     	: true,
+            "scrollCollapse": true, 
+            'AutoWidth'     : true,
+            "paging"      	: false,
+            "info"        	: false,
+            "filter"      	: false, 
+            "ordering"		: false,
+            "responsive"    : false,
+            "select"        : false,
+            'ajax'	: {
+                "url"   : baseurl+"lab/coti/ccotizacion/getlistarensayo/",
+                "type"  : "POST", 
+                "data": function ( d ) {
+                    d.idcoti    = rowData.cinternocotizacion; 
+                    d.nversion  = rowData.nversioncotizacion;
+                    d.idproduc  = rowData.nordenproducto;  
+                },     
+                dataSrc : ''        
+            },
+            'columns'	: [
+                {"class" : "col-xs", "orderable": false, data : 'ENUMERAR', targets : 0},
+                {"class" : "col-m", "orderable": false, data: 'CODIGO', targets: 1},
+                {"class" : "col-l", "orderable": false, data: 'DENSAYO', targets: 2},
+                {"class" : "col-xs", "orderable": false, data: 'NVIAS', targets: 3},
+            ]
+        });
+        tr.addClass('details');
+    }
+});
+
+$('#modalFechaOT').on('shown.bs.modal', function (e) {    
+    $('#txtFOT').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es'
+    });
+});
+
+$('#frmFechaOT').submit(function(event){
+    event.preventDefault();
+    
+    var request = $.ajax({
+        url:$('#frmFechaOT').attr("action"),
+        type:$('#frmFechaOT').attr("method"),
+        data:$('#frmFechaOT').serialize(),
+        error: function(){
+            Vtitle = 'No se puede registrar por error';
+            Vtype = 'error';
+            sweetalert(Vtitle,Vtype);
+        },
+        success: function(data) { 
+            Vtitle = 'Grabo Correctamente!!';
+            Vtype = 'success';
+            sweetalert(Vtitle,Vtype);        
+            $('#mbtnGFechaOT').click();
+        }
+    });
+});
+
+
 
 $('#modalRecepcion').on('shown.bs.modal', function (e) {
     
@@ -390,8 +530,18 @@ selCotiprodu = function(cinternocotizacion,nversioncotizacion,nordenproducto,cmu
             locale:'es'
         });
     }
+    
+    if(hmuestra == 'null'){
+        $('#mtxthmuestra').val('');
+    }else{
+        $('#mtxthmuestra').val(hmuestra);
+        $('#mtxthmuestra').datetimepicker({
+            format: 'hh:mm A',
+            locale:'es',
+            stepping: 15
+        });
+    }
 
-    $('#mtxthmuestra').val(hmuestra);
     $('#mcbotottus').val(stottus);
     $('#mcbomonitoreo').val(ntrimestre);
     $('#mcbomotivo').val(zctipomotivo);
@@ -402,4 +552,71 @@ selCotiprodu = function(cinternocotizacion,nversioncotizacion,nordenproducto,cmu
     $('#mtxtObserva').val(dobservacion);
     $('#mtxtObsotros').val(dotraobservacion);
 };
-   
+
+$('#btngenerarOT').click(function(){
+    event.preventDefault();
+    var table = $('#tblListProductos').DataTable();
+    var seleccionados = table.rows({ selected: true });
+
+    var IDPRODUCTO;
+    var varsot = 'N';
+    var CUSU = $('#mtxtcusuario').val();
+
+    Swal.fire({
+        title: 'Confirmar Generar OT',
+        text: "¿Está seguro de Generar su OT?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, generarlo!'
+    }).then((result) => {
+        if (result.value) { 
+                        
+            seleccionados.every(function(key,data){
+                IDCOTIZACION = this.data().cinternocotizacion;
+                NVERSION = this.data().nversioncotizacion;
+                IDPRODUCTO = this.data().nordenproducto;
+                IDMUESTRA = this.data().cmuestra;
+
+                var_NROORDEN = this.data().NROORDEN;
+                
+                if(var_NROORDEN == ''){
+                    if(varsot == 'N'){
+                        generarOT(IDCOTIZACION,NVERSION,CUSU); 
+                        varsot = 'S';
+                    }
+                    generarResult(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU); 
+                }else{
+                    alert("La muestra "+IDMUESTRA+", Seleccionada ya tiene OT");
+                    return;
+                }                
+            });
+            generarOTMensajeOK();
+        }
+    })
+}); 
+generarOT = function(IDCOTIZACION,NVERSION,CUSU){      
+    $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajo", 
+    {
+        cinternocotizacion    : IDCOTIZACION,
+        nversioncotizacion    : NVERSION,
+        cusuario : CUSU,
+    });
+}
+generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU){      
+    $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajoresult", 
+    {
+        cinternocotizacion    : IDCOTIZACION,
+        nversioncotizacion    : NVERSION,
+        nordenproducto  : IDPRODUCTO,
+        cmuestra  : IDMUESTRA,
+        cusuario : CUSU,
+    });
+}
+generarOTMensajeOK = function(){ 
+    otblListProducto.ajax.reload(null,false); 
+    Vtitle = 'Se Genero Correctamente';
+    Vtype = 'success';
+    sweetalert(Vtitle,Vtype);
+}

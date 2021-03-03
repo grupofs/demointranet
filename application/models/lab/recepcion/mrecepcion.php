@@ -48,5 +48,52 @@ class Mrecepcion extends CI_Model {
             return $query->result(); 
         }   
     } 
+
+    public function setordentrabajo($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setordentrabajo(?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+
+    public function setordentrabajoresult($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setordentrabajoresult(?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+
+    public function setupdateFechaOT($mhdncinternoordenservicio,$fordentrabajo,$nordentrabajo) { // Recuperar Password
+		
+        $data = array(
+            "FORDENTRABAJO" => $fordentrabajo,
+            "NORDENTRABAJO" => $nordentrabajo,
+        );
+
+        $this->db->where("cinternoordenservicio", $mhdncinternoordenservicio);
+		if($this->db->update("pordenserviciotrabajo", $data)){
+			return TRUE;
+		}
+	}
 }
 ?>

@@ -503,6 +503,54 @@ class Crecepcion extends CI_Controller {
 		$filename = 'coti';
 		$this->pdfgenerator->generate($html, $filename);
         //echo $html;
+    }
+    
+    public function setordentrabajo() { // Registrar informe PT
+		$varnull = '';
+		
+		$cinternocotizacion 	= $this->input->post('cinternocotizacion');
+		$nversioncotizacion 	= $this->input->post('nversioncotizacion');
+        $cusuario 	            = $this->input->post('cusuario');
+
+        $parametros = array(
+            '@cinternocotizacion'   	=>  $cinternocotizacion,
+            '@nversioncotizacion'   	=>  $nversioncotizacion,
+            '@cusuario'    		        =>  $cusuario,
+        );
+        $retorna = $this->mrecepcion->setordentrabajo($parametros);
+        echo json_encode($retorna);	
+    }
+    
+    public function setordentrabajoresult() { // Registrar informe PT
+		$varnull = '';
+		
+		$cinternocotizacion 	= $this->input->post('cinternocotizacion');
+		$nversioncotizacion 	= $this->input->post('nversioncotizacion');
+		$nordenproducto 	    = $this->input->post('nordenproducto');
+        $cmuestra 	            = $this->input->post('cmuestra');
+        $cusuario 	            = $this->input->post('cusuario');
+
+        $parametros = array(
+            '@cinternocotizacion'   	=>  $cinternocotizacion,
+            '@nversioncotizacion'   	=>  $nversioncotizacion,
+            '@nordenproducto'      		=>  $nordenproducto,
+            '@cmuestra'    		        =>  $cmuestra,
+            '@cusuario'    		        =>  $cusuario,
+        );
+        $retorna = $this->mrecepcion->setordentrabajoresult($parametros);
+        echo json_encode($retorna);	
+    }
+
+    public function setupdateFechaOT() { // Registrar informe PT
+        $varnull = '';
+        $fechaot = $this->input->post('txtForden');
+        
+		$mhdncinternoordenservicio 	= $this->input->post('mhdncinternoordenservicio');
+		$fordentrabajo 	=  ($this->input->post('txtForden') == $varnull) ? NULL : substr($fechaot, 6, 4).'-'.substr($fechaot,3 , 2).'-'.substr($fechaot, 0, 2);
+		$nordentrabajo 	= $this->input->post('mhdnnroordenservicio');
+        
+        $retorna = $this->mrecepcion->setupdateFechaOT($mhdncinternoordenservicio,$fordentrabajo,$nordentrabajo);
+        echo json_encode($retorna);		
 	}
 }
 ?>
