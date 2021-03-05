@@ -224,23 +224,12 @@
                                                     <div class="card-body">
                                                     <input type="hidden" name="mtxtcusuario" class="form-control" id="mtxtcusuario" value="<?php echo $cusuario ?>">
                                                         <div class="row" style="background-color: #dff0d8;">                                                         
-                                                            <div class="col-7 text-left">
+                                                            <div class="col-6 text-left">
                                                                 <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                                             </div>                                                          
-                                                            <div class="col-2 text-right">
+                                                            <div class="col-6 text-right">
                                                                 <button type="button" class="btn btn-success" id="btngenerarOT"><i class="fas fa-clipboard-list"></i> Generar OT</button>
-                                                            </div>                                                                                              
-                                                            <div class="col-3 text-right">            
-                                                                <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
-                                                                    <div class="input-group-prepend">
-                                                                        <div class="input-group-text"><a style="cursor:pointer;" onClick="javascript:quitarFecha()"><i class="fas fa-check-circle">Fecha OT</i></a></div>
-                                                                    </div>
-                                                                    <input type="text" id="txtFInsp" name="txtFInsp" class="form-control datetimepicker-input" data-target="#txtFInspeccion"/>
-                                                                    <div class="input-group-append" data-target="#txtFInspeccion" data-toggle="datetimepicker">
-                                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            </div>    
                                                         </div>
                                                         <br>
                                                         <div class="row">                                                         

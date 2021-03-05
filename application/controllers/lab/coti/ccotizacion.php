@@ -195,12 +195,8 @@ class Ccotizacion extends CI_Controller {
         echo json_encode($resultado);
     } 
 
-	public function pdfCoti($idcoti,$nversion) { // recupera los cPTIZACION
+    public function pdfCoti1($idcoti,$nversion) {
         $this->load->library('pdfgenerator');
-
-        $date = getdate();
-        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
-
         $html = '<html>
                 <head>
                     <title>Cotizacion</title>
@@ -225,9 +221,245 @@ class Ccotizacion extends CI_Controller {
                         img.derecha {
                             float: right;
                         }
+                        div.page_break {
+                            page-break-before: always;
+                        }
+
+                        .page-number {
+                          text-align: center;
+                        }
+                        
+                        .page-number:before {
+                          content: counter(page) " de " counter(pages);
+                        }
                     </style>
                 </head>
-                <body>';
+                <body>                
+                <div>
+                <table  width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                    <tr>
+                        <td width="20%" rowspan="4">
+                            <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
+                        </td>
+                        <td width="60%" align="center" rowspan="4">
+                            <h2>COTIZACION DE SERVICIO DE ENSAYO</h2>
+                        </td>
+                        <td width="20%" align="center" colspan="2">
+                            FSC-F-LAB-07
+                        </td>
+                        <tr>
+                            <td>Versión</td>
+                            <td align="right">02</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td align="right">24/10/2013</td>
+                        </tr>
+                        <tr>
+                            <td>Página</td>
+                            <td id="pagina"><div class="page-number"></div></td>
+                        </tr>
+                    </tr>
+                </table>
+
+                <h2>Section 1</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+
+                    <h2>Section 2</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+
+                    <h2>Section 3</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+                    
+                    <h2>Section 4</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+                    
+                    <h2>Section 5</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+
+                    <h2>Section 1</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+
+                    <h2>Section 2</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+
+                    <h2>Section 3</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+                    
+                    <h2>Section 4</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+                    
+                    <h2>Section 5</h2>
+
+                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
+                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
+                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
+                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
+                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
+                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
+                    Curabitur eu amet.</p>
+                
+                <h2>fin</h2>
+                
+                </body></html>​';
+		$filename = 'coti';
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
+	}
+
+	public function pdfCoti($idcoti,$nversion) { // recupera los cPTIZACION
+        $this->load->library('pdfgenerator');
+
+        $date = getdate();
+        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
+
+        $html = '<html>
+                <head>
+                    <title>Cotizacion</title>
+                    <style>
+                        @page {
+                             margin: 0.3in 0.3in 0.3in 0.3in;
+                        }
+                        .teacherPage {
+                            page: teacher;
+                            page-break-after: always;
+                        }
+                        body{
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 9pt;
+                            margin-top: 2cm;
+                            margin-left: 0cm;
+                            margin-right: 0cm;
+                            margin-bottom: 0cm;
+                        }  
+                        header {
+                            position: fixed;
+                            top: 0cm;
+                            left: 0cm;
+                            right: 0cm;
+                            height: 3cm;
+                        }
+                        .cuerpo {
+                            text-align: justify;
+                        }
+                        img.izquierda {
+                            float: left;
+                        }
+                        img.derecha {
+                            float: right;
+                        }
+                        div.page_break {
+                            page-break-before: always;
+                        }
+                        .page-number {
+                          text-align: center;
+                        }
+                        
+                        .page-number:before {
+                          content: counter(page);
+                        }
+                    </style>
+                </head>
+                <body>
+                <header>
+                    <table  width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                        <tr>
+                            <td width="20%" rowspan="4">
+                                <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
+                            </td>
+                            <td width="60%" align="center" rowspan="4">
+                                <h2>COTIZACION DE SERVICIO DE ENSAYO</h2>
+                            </td>
+                            <td width="20%" align="center" colspan="2">
+                                FSC-F-LAB-07
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Versión</td>
+                            <td align="right">02</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td align="right">24/10/2013</td>
+                        </tr>
+                        <tr>
+                            <td>Página</td>
+                            <td><div class="page-number"></div></td>
+                        </tr>
+                    </table>
+                </header>';
 
         			
         $res = $this->mcotizacion->getpdfdatoscoti($idcoti,$nversion);
@@ -257,35 +489,15 @@ class Ccotizacion extends CI_Controller {
                 $diascoti         = $row->diascoti;
                 $dobservacion         = $row->dobservacion;
                 $usuariocrea         = $row->usuariocrea;
+                $verprecios         = $row->verprecios;
+                $digv         = $row->digv;
+                $ddescuento         = $row->ddescuento;
+                
 			}
 		}
                 
-        $html .= '<div>
-        <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
-                    <tr>
-                        <td width="80px" rowspan="4">
-                            <img src="./FTPfileserver/Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
-                        </td>
-                        <td align="center" rowspan="4">
-                            <h2>COTIZACION DE SERVICIO DE ENSAYO</h2>
-                        </td>
-                        <td width="130px" align="center" colspan="2">
-                            FSC-F-LAB-07
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Versión</td>
-                        <td align="right">02</td>
-                    </tr>
-                    <tr>
-                        <td>Fecha</td>
-                        <td align="right">24/10/2013</td>
-                    </tr>
-                    <tr>
-                        <td>Página</td>
-                        <td align="right">2D</td>
-                    </tr>
-                </table>
+        $html .= '
+            <main>
                 <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
                     <tr>
                         <td colspan="4"><b>N°'.$dcotizacion.'</b></td>
@@ -326,132 +538,154 @@ class Ccotizacion extends CI_Controller {
                         <td><b>II DETERMINACIONES</b></td>
                     </tr>
                 </table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;" FRAME="void" RULES="cols">
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="all">
                     <tr>
-                        <td width="180px" align="center">LOCAL</td>
-                        <td width="340px" align="center">PRODUCTO</td>
-                        <td width="160px" align="center">CONDICIONES DE LA MUESTRA (*)</td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="3" FRAME="void" RULES="rows">';
-                		
-                	
-        $resprod = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
-        if ($resprod){
-            foreach($resprod as $rowprod){
-				$destablecimiento = $rowprod->destablecimiento;
-				$dproducto = $rowprod->dproducto;
-				$condicion = $rowprod->condicion;
-				$procedencia = $rowprod->procedencia;
-                $html .= '<tr>
-                    <td width="180px">'.$destablecimiento.' / '.$procedencia.'</td>
-                    <td>'.$dproducto.'</td>
-                    <td width="160px">'.$condicion.'</td>
-                </tr>';
-			}
-		}        
-        $html .= '</table>
-        <table width="300px" style="margin-left: 15px; height:25px;">
-            <tr>
-                <td>Cantidad de Productos:</td>
-                <td>'.$cantprod.'</td>
-                <td>Suma de Muestras:</td>
-                <td>'.$summuestra.'</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="height:30px;"></td>
-            </tr>
-        </table>
-        <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;"  FRAME="void" RULES="cols">
-            <tr >
-                <td width="40px" align="center">Codigo Metodo</td>
-                <td width="120px" align="center">METODO DE ENSAYO</td>
-                <td width="20px" align="center">AC / NOAC</td>
-                <td width="160px" align="center">NORMA / REFERENCIA</td>
-                <td width="20px" align="center">Cant.</td>
-                <td width="40px" align="center">P.UNI S/.</td>
-                <td width="40px" align="center">Precio Total S/.</td>
-            </tr>';
-        $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
-        if ($resproddet){
-            foreach($resproddet as $rowproddet){
-                $dproductodet = strtoupper($rowproddet->dproducto);
-                $idproduc = $rowproddet->nordenproducto;
-                
-                $html .= '<tr>
-                    <td colspan="7"><h3>'.$dproductodet.'</h3>
-                    </td>
-                </tr>';
-                    $resensadet = $this->mcotizacion->getlistarensayo($idcoti,$nversion,$idproduc);
-                    if ($resensadet){
-                        foreach($resensadet as $rowensadet){
-                            $codigo = $rowensadet->CODIGO;
-                            $densayo = $rowensadet->DENSAYO;
-                            $acre = $rowensadet->ACRE;
-                            $norma = $rowensadet->NORMA;
-                            $cantidad = $rowensadet->CANTIDAD;
-                            $costoensa = $rowensadet->CONSTOENSAYO;
-                            $costo = $rowensadet->COSTO;
+                        <td width="30%" align="center">LOCAL</td>
+                        <td width="35%" align="center">PRODUCTO</td>
+                        <td width="20%" align="center">CONDICIONES DE LA MUESTRA (*)</td>
+                        <td width="15%" align="center">CANTIDAD MUESTRA MINIMA</td>
+                    </tr>';
+                    //</table>
+                    //<table width="700px" align="center" cellspacing="0" cellpadding="3" style="border: 1px solid black;" FRAME="void" RULES="rows">';  
+                    $resprod = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
+                    if ($resprod){
+                        foreach($resprod as $rowprod){
+                            $destablecimiento = $rowprod->destablecimiento;
+                            $dproducto = $rowprod->dproducto;
+                            $condicion = $rowprod->condicion;
+                            $procedencia = $rowprod->procedencia;
+                            $dcantidadminima = $rowprod->dcantidadminima;
                             $html .= '<tr>
-                            <td width="50px">
-                            '.$codigo.'
-                            </td>
-                            <td width="160px">
-                            '.$densayo.'
-                            </td>
-                            <td width="40px" align="center">
-                            '.$acre.'
-                            </td>
-                            <td width="220px">
-                            '.$norma.'
-                            </td>
-                            <td width="40px" align="center">
-                            '.$cantidad.'
-                            </td>
-                            <td width="50px" align="right">
-                            '.$costoensa.'
-                            </td>
-                            <td width="50px" align="right">
-                            '.$costo.'
-                            </td>
+                                <td width="30%">&nbsp;'.$destablecimiento.' <br> &nbsp;'.$procedencia.'</td>
+                                <td width="35%">&nbsp;'.$dproducto.'</td>
+                                <td width="20%">&nbsp;'.$condicion.'</td>
+                                <td width="15%">&nbsp;'.$dcantidadminima.'</td>
                             </tr>';
                         }
+                    }        
+                $html .= '</table>';
+                $html .= '<table width="300px" style="margin-left: 15px; height:25px;">
+                    <tr>
+                        <td>Cantidad de Productos:</td>
+                        <td>'.$cantprod.'</td>
+                        <td>Suma de Muestras:</td>
+                        <td>'.$summuestra.'</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="height:30px;"></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;"  FRAME="void" RULES="all">
+                    <tr >
+                        <td width="10%" align="center">Codigo Metodo</td>
+                        <td width="30%" align="center">METODO DE ENSAYO</td>
+                        <td width="10%" align="center">AC / NOAC</td>
+                        <td width="20%" align="center">NORMA / REFERENCIA</td>
+                        <td width="10%" align="center">Cant.</td>
+                        <td width="10%" align="center">P.UNI S/.</td>
+                        <td width="10%" align="center">Precio Total S/.</td>
+                    </tr>';
+                    $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
+                    if ($resproddet){
+                        foreach($resproddet as $rowproddet){
+                            $dproductodet = strtoupper($rowproddet->dproducto);
+                            $idproduc = $rowproddet->nordenproducto;
+                            $subtotal = $rowproddet->subtotal;
+                            
+                            if ($verprecios  == 'S') :
+                                $var_subtotal = $subtotal;
+                            else:
+                                $var_subtotal = null;
+                            endif;
+                            
+                            $html .= '<tr>
+                                <td colspan="6" ><h3>'.$dproductodet.'</h3>
+                                </td>
+                                <td align="right"><h3>'.$var_subtotal.'</h3>
+                                </td>
+                            </tr>';
+                                $resensadet = $this->mcotizacion->getlistarensayo($idcoti,$nversion,$idproduc);
+                                if ($resensadet){
+                                    foreach($resensadet as $rowensadet){
+                                        $codigo = $rowensadet->CODIGO;
+                                        $densayo = $rowensadet->DENSAYO;
+                                        $acre = $rowensadet->ACRE;
+                                        $norma = $rowensadet->NORMA;
+                                        $cantidad = $rowensadet->CANTIDAD;
+                                        $costoensa = $rowensadet->CONSTOENSAYO;
+                                        $costo = $rowensadet->COSTO;
+                                        
+                                        if ($verprecios  == 'S') :
+                                            $var_costoensa = $costoensa;
+                                        else:
+                                            $var_costoensa = null;
+                                        endif;
+                                        if ($verprecios  == 'S') :
+                                            $var_costo = $costo;
+                                        else:
+                                            $var_costo = null;
+                                        endif;
+
+                                        $html .= '<tr>
+                                        <td width="10%" align="center">
+                                        '.$codigo.'
+                                        </td>
+                                        <td width="25%">
+                                        '.$densayo.'
+                                        </td>
+                                        <td width="5%" align="center">
+                                        '.$acre.'
+                                        </td>
+                                        <td width="35%">
+                                        '.$norma.'
+                                        </td>
+                                        <td width="5%" align="center">
+                                        '.$cantidad.'
+                                        </td>
+                                        <td width="10%" align="right">
+                                        '.$var_costoensa.'
+                                        </td>
+                                        <td width="10%" align="right">
+                                        '.$var_costo.'
+                                        </td>
+                                        </tr>';
+                                    }
+                                }
+                                $html .= '';
+                        }
                     }
-                    $html .= '';
-			}
-		}
-        $html .= '</table>
-        <table width="700px" align="center">
-            <tr>
-                <td width="500px">AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
-                <td width="80px"> Muestreo</td>
-                <td width="80px" align="right">'.$imuestreo.'</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td> SUBTOTAL</td>
-                <td width="80px" align="right">'.$isubtotal.'</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td> DESCUENTOS</td>
-                <td width="80px" align="right">'.$pdescuento.'</td>
-            </tr>
-            <tr>                
-                <td></td>
-                <td> IGV 18%</td>
-                <td width="80px" align="right">'.$pigv.'</td>
-            </tr>
-            <tr>                
-                <td></td>
-                <td> TOTAL</td>
-                <td width="80px" align="right">'.$itotal.'</td>
-            </tr>
-            <tr>
-                <td colspan="3" style="height:10px;">
-                </td>
-            </tr>
-        </table>';
+                    $html .= '</table>
+                    <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;"  FRAME="none" RULES="box">';
+                    $html .= '<tr>
+                            <td width="500px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                            <td width="120px" > Muestreo</td>
+                            <td width="80px" align="right">'.$imuestreo.'</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td> SUBTOTAL</td>
+                            <td align="right">'.$isubtotal.'</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td> DESCUENTOS '.$pdescuento.'% </td>
+                            <td align="right">('.$ddescuento.')</td>
+                        </tr>
+                        <tr>                
+                            <td></td>
+                            <td> IGV 18%</td>
+                            <td align="right">'.$digv.'</td>
+                        </tr>
+                        <tr>                
+                            <td></td>
+                            <td> TOTAL</td>
+                            <td align="right">'.$itotal.'</td>
+                        </tr>
+                        <tr>
+                            <td style="height:10px;">
+                            </td>
+                        </tr>';
+                    $html .= '</table>';
 
         $html .= '<table width="700px" align="center">
             <tr>
@@ -587,7 +821,7 @@ class Ccotizacion extends CI_Controller {
             </tr>
         </table>';
 
-        $html .= '</div></body></html>';
+        $html .= '</main></body></html>';
 		$filename = 'coti';
 		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
         //echo $html;

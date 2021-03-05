@@ -349,6 +349,7 @@
         <script src="<?php echo public_url(); ?>template/DataTable/Checkboxes/js/dataTables.checkboxes.min.js"></script>   
         <script src="<?php echo public_url(); ?>template/DataTable/RowGroup/js/dataTables.rowGroup.min.js"></script>  
         <script src="<?php echo public_url(); ?>template/DataTable/Buttons/js/dataTables.buttons.min.js"></script> 
+        <script src="<?php echo public_url(); ?>template/DataTable/Buttons/js/buttons.html5.min.js"></script> 
         <!-- file input -->
         <script src="<?php echo public_url(); ?>template/plugins/fileinput/fileinput.min.js"></script>
         <!-- AdminLTE App -->
