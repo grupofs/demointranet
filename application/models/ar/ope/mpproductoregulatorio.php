@@ -23,6 +23,8 @@ class mpproductoregulatorio extends CI_Model
 		$this->db->select("
 			MPRODUCTOCLIENTE.*,
 			DATEFORMAT(PPRODUCTOXPTEREGULATORIO.FFECHAESTIMADA, 'DD/MM/YYYY') AS FFECHAESTIMADA,
+			DATEFORMAT(MPRODUCTOCLIENTE.FFINREGSANITARIO, 'DD/MM/YYYY') AS FFINREGSANITARIO,
+			DATEFORMAT(MPRODUCTOCLIENTE.FINICIOREGSANITARIO, 'DD/MM/YYYY') AS FINICIOREGSANITARIO,
 			PPRODUCTOXPTEREGULATORIO.DCOMENTARIO
 		");
 		$this->db->from('PPRODUCTOXPTEREGULATORIO');
@@ -58,8 +60,7 @@ class mpproductoregulatorio extends CI_Model
 	 * @param $CPRODUCTOFS
 	 * @param $FFECHAESTIMADA
 	 * @param $DCOMENTARIO
-	 * @param $CUSUARIOCREA
-	 * @param $CUSUARIOMODIFICA
+	 * @param $CUSUARIO
 	 * @param $SREGISTRO
 	 * @return array
 	 * @throws Exception
@@ -69,8 +70,7 @@ class mpproductoregulatorio extends CI_Model
 		$CPRODUCTOFS,
 		$FFECHAESTIMADA,
 		$DCOMENTARIO,
-		$CUSUARIOCREA,
-		$CUSUARIOMODIFICA,
+		$CUSUARIO,
 		$SREGISTRO
 	)
 	{
@@ -93,9 +93,8 @@ class mpproductoregulatorio extends CI_Model
 			'CPRODUCTOFS' => $CPRODUCTOFS,
 			'FFECHAESTIMADA' => $FFECHAESTIMADA,
 			'DCOMENTARIO' => $DCOMENTARIO,
-			'CUSUARIOCREA' => $CUSUARIOCREA,
+			'CUSUARIOCREA' => $CUSUARIO,
 			'TCREACION' => date('Y-m-d H:i:s'),
-			'CUSUARIOMODIFICA' => $CUSUARIOMODIFICA,
 			'TMODIFICACION' => null,
 			'SREGISTRO' => $SREGISTRO,
 		];
@@ -139,6 +138,8 @@ class mpproductoregulatorio extends CI_Model
 		if (empty($CASUNTOREGULATORIO) || empty($CPRODUCTOFS)) {
 			throw new Exception('Producto: El AR no es valido para actualizar.');
 		}
+		if (isset($datos['CUSUARIOCREA'])) unset($datos['CUSUARIOCREA']);
+		if (isset($datos['TCREACION'])) unset($datos['TCREACION']);
 		$datos['TMODIFICACION'] = date('Y-m-d H:i:s');
 		$res = $this->db->update('PPRODUCTOXPTEREGULATORIO', $datos, [
 			'CASUNTOREGULATORIO' => $CASUNTOREGULATORIO,

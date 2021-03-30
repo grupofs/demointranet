@@ -369,71 +369,9 @@ getListTramGrid = function(param){
     otblListTramGrid.column(0).visible( false );  
 }
 /* DETALLE TRAMITES */
-function format ( d ) {
-    // `d` is the original data object for the row
-    varcodigo = d.codigo;
-    varREGSANIPROD = d.REGSANIPROD;
-    varcproductofs = d.cproductofs;
-    var dato = '';
-    var resultado = '<table id="tblListTramGriddet" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
-        '<thead style="background-color:#FFFFFF;"><tr><th></th><th>F. Ingreso</th><th>Trámite</th><th>Estado</th><th>N° Expediente</th><th>RS</th><th>F. Emisión</th><th>F. Vencimiento</th><th>Archivo</th></tr></thead><tbody>' +
-        '</tbody></table>';
-        otblListTramGriddet = $('#tblListTramGriddet').DataTable({
-            "bJQueryUI": true,
-            'bStateSave': true,
-            'scrollY':        false,
-            'scrollX':        true,
-            'scrollCollapse': false,
-            'bDestroy'    : true,
-            'paging'      : false,
-            'info'        : false,
-            'filter'      : false,   
-            'stateSave'   : true,
-            'ajax'        : {
-                "url"   : baseurl+"ar/tramites/cbusctramdigesa/getbuscartramite",
-                "type"  : "POST", 
-                "data": function ( d ) {
-                    d.codaarr = varcodigo;
-                    d.codrsnso = varREGSANIPROD;
-                    d.codprod = varcproductofs;
-                },     
-                dataSrc : ''        
-            },
-            'columns'     : [
-                {
-                  "class"     :   "index",
-                  orderable   :   false,
-                  data        :   null,
-                  targets     :   0
-                },
-                { "orderable": false,"data": "FINGRESO", targets: 1},
-                { "orderable": false,"data": "TRAMITE", targets: 2},
-                { "orderable": false,"data": "ESTADO", targets: 3},
-                { "orderable": false,"data": "NUMEROEXPE", targets: 4},
-                { "orderable": false,"data": "RSNSO", targets: 5},
-                { "orderable": false,"data": "FEMISION", targets: 6},
-                { "orderable": false,"data": "FVENCIMIENTO", targets: 7},
-                {"orderable": false, 
-                    render:function(data, type, row){
-                        return  '<div>'+  
-                            '<a data-original-title="Listar Documentos" data-toggle="modal" style="cursor:pointer; color:#3c763d;" data-target="#modalListdocumentos" onClick="javascript:selTramdocumento(\''+row.CASUNTOREGULATORIO+'\',\''+row.CENTIDADREGULA+'\',\''+row.CTRAMITE+'\',\''+row.CSUMARIO+'\');"><i class="far fa-folder-open fa-2x" data-original-title="Listar Documentos" data-toggle="tooltip"></i></a>'+                                 
-                        '</div>' 
-                    }
-                },
-                          
-            ], 
-        });
-        // Enumeracion 
-        otblListTramGriddet.on( 'order.dt search.dt', function () { 
-            otblListTramGriddet.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-              cell.innerHTML = i+1;
-              } );
-        }).draw();     
-    return resultado; 
-}
 $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
             
-    //var tr = $(this).closest('tr');
+   // var tr = $(this).closest('tr');
     var tr = $(this).parents('tr');
     var row = otblListTramGrid.row(tr);
     var rowData = row.data();
@@ -443,9 +381,6 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
         tr.removeClass( 'details' );
     }
     else {
-        // Open this row
-        /*row.child( format(row.data()) ).show();*/
-
         otblListTramGrid.rows().every(function(){
             // If row has details expanded
             if(this.child.isShown()){
@@ -510,7 +445,7 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
                   cell.innerHTML = i+1;
                   } );
             }).draw(); 
-        
+
         tr.addClass('details');
     }
 });

@@ -357,11 +357,11 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
     else {
         otblListTramGrid.rows().every(function(){
             // If row has details expanded
-            /*if(this.child.isShown()){
+            if(this.child.isShown()){
                 // Collapse row details
                 this.child.hide();
                 $(this.node()).removeClass('details');
-            }*/
+            }
         })
         row.child( 
            '<table id="tblListTramGriddet" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
