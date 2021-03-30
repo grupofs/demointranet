@@ -69,14 +69,14 @@
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/GUI/plugins/summernote/summernote-bs4.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="<?php echo public_url(); ?>cssweb/fontsgoogleapis.css">
-  <!-- DataTable.net 
-  <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/DataTables/css/dataTables.bootstrap4.min.css"> -->
+  <!-- DataTable.net--> 
+  <!--<link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/DataTables/css/dataTables.bootstrap4.min.css"> -->
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/DataTables/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/Responsive/css/responsive.dataTables.min.css">
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/Select/css/select.dataTables.min.css">
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/Checkboxes/css/dataTables.checkboxes.css">  
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/RowGroup/css/rowGroup.dataTables.min.css" />
-  <link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/buttons/css/buttons.dataTables.min.css" />
+  <!--<link rel="stylesheet" href="<?php echo public_url(); ?>template/DataTable/buttons/css/buttons.dataTables.min.css" />-->
     
   <!-- file input -->
   <link rel="stylesheet" href="<?php echo public_url(); ?>template/plugins/fileinput/fileinput.min.css">

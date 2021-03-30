@@ -16,6 +16,7 @@ class CexcelExport extends CI_Controller {
 	function __construct() {
 		parent:: __construct();
 		$this->load->model('ar/tramites/mconstramdigesa');	
+		$this->load->model('ar/tramites/mconsregporvencer');	
 		$this->load->model('ar/tramites/mbusctramdigemid', 'mconstramdigemid');
 	}
 	 
@@ -501,7 +502,191 @@ class CexcelExport extends CI_Controller {
 		header('Cache-Control: max-age=0');
 
 		$writer->save('php://output');
-    }
+	}
+	
+	public function excelregporvencer() {
+		/*Estilos */
+		   $titulo = [
+			   'font'	=> [
+				   'name' => 'Arial',
+				   'size' =>12,
+				   'color' => array('rgb' => 'FFFFFF'),
+				   'bold' => true,
+			   ], 
+			   'fill'	=>[
+				   'fillType' => Fill::FILL_SOLID,
+				   'startColor' => [
+					   'rgb' => '29B037'
+				   ]
+			   ],
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_CENTER,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+		   $cabecera = [
+			   'font'	=> [
+				   'name' => 'Arial',
+				   'size' =>10,
+				   'color' => array('rgb' => 'FFFFFF'),
+				   'bold' => true,
+			   ], 
+			   'fill'	=>[
+				   'fillType' => Fill::FILL_SOLID,
+				   'startColor' => [
+					   'rgb' => '29B037'
+				   ]
+			   ],
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_CENTER,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+		   $celdastexto = [
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_LEFT,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+		/*Estilos */	
+
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setTitle('Listado - Registros por Vencer');
+
+        $spreadsheet->getDefaultStyle()
+            ->getFont()
+            ->setName('Arial')
+            ->setSize(9);
+		
+		$sheet->setCellValue('A1', 'LISTADO DE REGISTROS POR VENCER')
+			->mergeCells('A1:K1')
+			->setCellValue('A2', 'CLIENTE:')
+			->mergeCells('B2:D2')
+			->setCellValue('A4', 'Nro')
+			->setCellValue('B4', 'Código')
+			->setCellValue('C4', 'Descripcion SAP')
+			->setCellValue('D4', 'Nombre del Producto')
+			->setCellValue('E4', 'Modelo / Tono / Variedades / Sub-Marca')
+			->setCellValue('F4', 'Marca')
+			->setCellValue('G4', 'Categoria')
+			->setCellValue('H4', 'Fabricante(s)')
+			->setCellValue('I4', 'País(es)')
+			->setCellValue('J4', 'NSO')
+			->setCellValue('K4', 'F. Vence');
+
+		$sheet->getStyle('A1:K1')->applyFromArray($titulo);
+		$sheet->getStyle('A4:K4')->applyFromArray($cabecera);
+		
+		$sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(32.10);
+		$sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(55.10);
+		$sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(32.10);
+		$sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(22.10);
+		$sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(55.10);
+		$sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(55.10);
+		$sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(32.10);
+		$sheet->getColumnDimension('I')->setAutoSize(false)->setWidth(22.10);
+		$sheet->getColumnDimension('J')->setAutoSize(false)->setWidth(15.10);
+		$sheet->getColumnDimension('K')->setAutoSize(false)->setWidth(32.10);
+
+			$varnull = '';
+
+			$ccliente       = $this->input->post('cbocliente');
+			$descripcion    = $this->input->post('txtdescripcion');
+			$porvencer    = $this->input->post('rporvencer');
+			
+				
+			if($porvencer == '180'){
+				$varporvencer = 180;
+			}else{
+				$varporvencer = 360;
+			};
+			
+
+			$parametros = array(
+				'@ccliente' 		=>	$ccliente,
+				'@descripcion' 		=>  ($this->input->post('txtdescripcion') == '') ? '%' : '%'.$descripcion.'%',
+				'@porvencer'		=> $varporvencer,				
+			);	
+
+		$rpt = $this->mconsregporvencer->getbuscarregporvencer($parametros);
+		$irow = 5;
+		$ipos = 1;
+        if ($rpt){
+        	foreach($rpt as $row){	
+
+				$CLIENTE = $row->DRAZONSOCIAL;
+				$CPRODUCTOCLIENTE = $row->CPRODUCTOCLIENTE;
+				$DPRODUCTOCLIENTE = $row->DPRODUCTOCLIENTE;
+				$DNOMBREPRODUCTO = $row->DNOMBREPRODUCTO;
+				$DMODELOPRODUCTO = $row->DMODELOPRODUCTO;
+				$DMARCA = $row->DMARCA;
+				$DREGISTRO = $row->DREGISTRO;
+				$FABRICANTES = $row->FABRICANTES;
+				$PAISFABRICANTES = $row->PAISFABRICANTES;
+				$DREGISTROSANITARIO = $row->DREGISTROSANITARIO;
+				$FFINREGSANITARIO = $row->FFINREGSANITARIO;
+
+				$sheet->setCellValue('A'.$irow,$ipos);
+				$sheet->setCellValue('B'.$irow,$CPRODUCTOCLIENTE);
+				$sheet->setCellValue('C'.$irow,$DPRODUCTOCLIENTE);
+				$sheet->setCellValue('D'.$irow,$DNOMBREPRODUCTO);
+				$sheet->setCellValue('E'.$irow,$DMODELOPRODUCTO);
+				$sheet->setCellValue('F'.$irow,$DMARCA);
+				$sheet->setCellValue('G'.$irow,$DREGISTRO);
+				$sheet->setCellValue('H'.$irow,$FABRICANTES);
+				$sheet->setCellValue('I'.$irow,$PAISFABRICANTES);
+				$sheet->setCellValue('J'.$irow,$DREGISTROSANITARIO);
+				$sheet->setCellValue('K'.$irow,$FFINREGSANITARIO);
+				
+				$ipos++;
+				$irow++;
+			}
+		}
+		$sheet->setCellValue('B2',$CLIENTE);
+		$pos = $irow - 1;
+
+		$sheet->getStyle('A5:K'.$pos)->applyFromArray($celdastexto);
+
+		$sheet->setAutoFilter('A4:K'.$pos);
+
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'Report';
+		ob_end_clean();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+	}
 
 }
 ?>

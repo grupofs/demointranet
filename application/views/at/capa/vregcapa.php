@@ -3,6 +3,47 @@
 ?>
 
 <style>
+      
+    
+      [data-title]:hover:after {
+          opacity: 1;
+          transition: all 0.1s ease 0.5s;
+          visibility: visible;
+      }
+  
+      [data-title]:after {
+          content: attr(data-title);
+          background-color: #333;
+          color: #fff;
+          font-size: 14px;
+          font-family: Raleway;
+          position: absolute;
+          padding: 3px 10px;
+          bottom: -1.6em;
+          left: -50%;
+          right: -50%;
+          /*white-space: nowrap;*/
+          box-shadow: 1px 1px 3px #222222;
+          opacity: 0;
+          border: 1px solid #111111;
+          z-index: 99999;
+          visibility: hidden;
+          border-radius: 6px;
+          
+      }
+      [data-title] {
+          position: relative;
+      }
+      .col_ellipsis[data-title][data-title-position="bottom"]:before {
+          bottom: auto;
+          margin-top: .5rem;
+          top: 100%;
+      }
+      .col_ellipsis[data-title][data-title-position="bottom"]:after {
+          bottom: auto;
+          /*top: 100%;*/
+          width: 300px;
+      }
 </style>
 
 <!-- content-header -->
@@ -137,7 +178,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>Cliente</th>
-                                                        <th>Fecha</th>
+                                                        <th>Fecha - Dias de Capacitaciones</th>
                                                         <th>Curso</th>
                                                         <th>Tema</th>
                                                         <th>Expositor</th>
@@ -311,6 +352,7 @@
                                                         <th>DNI</th>
                                                         <th>Participantes</th>
                                                         <th>Nota</th>
+                                                        <th></th>
                                                         <th></th>
                                                         <th></th>
                                                     </tr>

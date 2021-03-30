@@ -492,6 +492,8 @@ class Ccotizacion extends CI_Controller {
                 $verprecios         = $row->verprecios;
                 $digv         = $row->digv;
                 $ddescuento         = $row->ddescuento;
+                $condescuento         = $row->condescuento;
+                
                 
 			}
 		}
@@ -575,7 +577,7 @@ class Ccotizacion extends CI_Controller {
                         <td colspan="4" style="height:30px;"></td>
                     </tr>
                 </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;"  FRAME="void" RULES="all">
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="rows">
                     <tr >
                         <td width="10%" align="center">Codigo Metodo</td>
                         <td width="30%" align="center">METODO DE ENSAYO</td>
@@ -655,10 +657,10 @@ class Ccotizacion extends CI_Controller {
                         }
                     }
                     $html .= '</table>
-                    <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;"  FRAME="none" RULES="box">';
+                    <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;">';
                     $html .= '<tr>
-                            <td width="500px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
-                            <td width="120px" > Muestreo</td>
+                            <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                            <td width="130px" > Muestreo</td>
                             <td width="80px" align="right">'.$imuestreo.'</td>
                         </tr>
                         <tr>
@@ -670,6 +672,11 @@ class Ccotizacion extends CI_Controller {
                             <td></td>
                             <td> DESCUENTOS '.$pdescuento.'% </td>
                             <td align="right">('.$ddescuento.')</td>
+                        </tr>
+                        <tr>                
+                            <td></td>
+                            <td> </td>
+                            <td align="right">'.$condescuento.'</td>
                         </tr>
                         <tr>                
                             <td></td>

@@ -355,6 +355,14 @@ class Cregcapa extends CI_Controller {
 		$resultado = $this->mregcapa->getlistprograma($parametros);
 		echo json_encode($resultado);
 	}
+	public function delcapa(){ // Eliminar detalle propuesta				
+		$id_capa = $this->input->post('id_capa');
+		$parametros = array(
+			'@id_capa'     => $id_capa,
+		);
+		$respuesta = $this->mregcapa->delcapa($parametros);
+		echo json_encode($respuesta);									
+	}
 	public function delcapadet(){ // Eliminar detalle propuesta				
 		$id_capadet = $this->input->post('id_capadet');
 		$parametros = array(
@@ -369,6 +377,14 @@ class Cregcapa extends CI_Controller {
 			'@id_capaprogra'     => $id_capaprogra,
 		);
 		$respuesta = $this->mregcapa->delprogram($parametros);
+		echo json_encode($respuesta);									
+	}
+	public function delparti(){ // Eliminar programa				
+		$id_capaparti = $this->input->post('id_capaparti');
+		$parametros = array(
+			'@id_capaparti'     => $id_capaparti,
+		);
+		$respuesta = $this->mregcapa->delparti($parametros);
 		echo json_encode($respuesta);									
 	}
 	public function adjPresent() {	// Subir Acrhivo 
@@ -611,61 +627,6 @@ class Cregcapa extends CI_Controller {
 
 				$this->db->trans_begin();				
 				$procedure = "call usp_at_capa_migralist_participante(?,?,?,?,?,?,?,?)";
-				$query = $this->db-> query($procedure,$data_excel[$i - 1]);
-				if ($this->db->trans_status() === FALSE){
-					$this->db->trans_rollback();
-				}else{
-					$this->db->trans_commit();
-				} 
-			}
-			
-			$respuesta = 'Importo Correctamente!'; 
-			echo json_encode($respuesta);
-			//redirect('cinsptiendamicro/insptiendamicro');
-		}
-	}
-	public function import_nota() {
-
-		$id_capa    = $this->input->post('mhdnIdCapamigranota');
-		$RUTAARCH   = 'FTPfileserver/Archivos/Temp/';
-
-		!is_dir($RUTAARCH) && @mkdir($RUTAARCH, 0777, true);
-
-		$config['upload_path'] 		= $RUTAARCH;
-		$config['allowed_types'] 	= 'xls';
-		$config['max_size'] 		= '60048';
-		$config['overwrite'] 		= TRUE;
-		
-		$this->load->library('upload',$config);
-		$this->upload->initialize($config);
-		
-		if (!($this->upload->do_upload('fileMigranota'))) {
-			//si al subirse hay algun error 
-			$data['uploadError'] = $this->upload->display_errors();
-			$error = '';
-			return $error;
-			 
-		} else {
-			$data = $this->upload->data();
-			@chmod($data['full_path'], 0777);
-
-			$this->load->library('Spreadsheet_Excel_Reader');
-			$this->spreadsheet_excel_reader->setOutputEncoding('UTF-8');
-
-			$this->spreadsheet_excel_reader->read($data['full_path']);
-			$sheets = $this->spreadsheet_excel_reader->sheets[0];
-			error_reporting(0);
-			
-			$data_excel = array();
-			for ($i = 3; $i <= $sheets['numRows']; $i++) {
-				if ($sheets['cells'][$i][1] == '') break;
-
-				$data_excel[$i - 1]['@id_capa']     = $id_capa;
-				$data_excel[$i - 1]['@nrodni']      = $sheets['cells'][$i][1];
-				$data_excel[$i - 1]['@nota']     	= $sheets['cells'][$i][2];
-
-				$this->db->trans_begin();				
-				$procedure = "call usp_at_capa_migralist_partinotas(?,?,?)";
 				$query = $this->db-> query($procedure,$data_excel[$i - 1]);
 				if ($this->db->trans_status() === FALSE){
 					$this->db->trans_rollback();

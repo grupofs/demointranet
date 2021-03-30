@@ -264,7 +264,7 @@ class Mcotizacion extends CI_Model {
 
     public function getpdfdatoscoti($idcoti,$nversion) { // Listar Ensayos	
         $sql = "select a.dcotizacion, a.fcotizacion, b.drazonsocial, b.nruc, b.ddireccioncliente,  (c.dnombre + ' ' + c.dapepat) as 'dcontacto', isnull(c.dmail,'') as 'dmail', isnull(c.dtelefono,'') as 'dtelefono',
-                        a.imuestreo, a.isubtotal, a.pigv, a.digv, a.pdescuento, a.ddescuento, a.itotal, cast(a.nvigencia as char(50))+ ' días' as 'diascoti', a.dobservacion,
+                        a.imuestreo, a.isubtotal, a.pigv, a.digv, a.pdescuento, a.ddescuento, (a.isubtotal - a.ddescuento) as 'condescuento', a.itotal, cast(a.nvigencia as char(50))+ ' días' as 'diascoti', a.dobservacion,
                         (UPPER(SUBSTRING(d.DNOMBRE, 1, 1 )+''+d.DAPEPAT)) as 'usuariocrea',
                         (cast(a.ntiempoentregainforme as char(50))+' '+if a.stiempoentregainforme = 'C' then 'dias Calendario' else 'dias Utiles' end if) as 'entrega',   
                         (select count(1) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion and z.nversioncotizacion = a.nversioncotizacion) as 'cantprod',

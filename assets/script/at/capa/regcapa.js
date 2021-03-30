@@ -165,17 +165,24 @@ $("#btnBuscar").click(function (){
         },
         'columns'	: [
             {
-              "class"     :   "index col-xs",
+              "class"     :   "col-xxs",
               orderable   :   false,
               data        :   null,
               targets     :   0,
             },
             {"orderable": false, data: 'DATOSCAPA', targets: 1},
-            {"orderable": false, data: 'FCAPACITACION', targets: 2, "class": "col-sm"},
-            {"orderable": false, data: 'DCURSO', targets: 3, "class": "col-lm"},
-            {"orderable": false, data: 'DTEMA', targets: 4, "class": "col-xl"},
-            {"orderable": false, data: 'DEXPOSITOR', targets: 5, "class": "col-m"},
-            {"orderable": false, 
+            {"orderable": false, "class": "col-sm", 
+                render:function(data, type, row){
+                    return '<div>'+
+                        '<h6>'+row.FCAPACITACION+'</h6>'+
+                        '<small>'+row.DIASCAPA+'</small>'
+                    '</div>'
+                }
+            },    
+            {"orderable": false, data: 'DCURSO', targets: 3, "class": "col-xm"},
+            {"orderable": false, data: 'DTEMA', targets: 4, "class": "col-lm"},
+            {"orderable": false, data: 'DEXPOSITOR', targets: 5, "class": "col-xm"},
+            {"orderable": false, "class": "col-lm", 
               render:function(data, type, row){
                   var rpresent, rtaller, rexamen, rlist, rcerti;
                   if(row.ruta_presentacion != null) {
@@ -222,13 +229,21 @@ $("#btnBuscar").click(function (){
                     return '<div>'+
                     '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selCapa(\''+row.id_capa+'\',\''+row.ccliente+'\',\''+row.cestablecimiento+'\',\''+row.comentarios+'\',\''+row.fini+'\',\''+row.tipocerti+'\',\''+row.modelcerti+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
                     '&nbsp;'+
-                    '<a id="aDelCapa" href="'+row.id_capadet+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
+                    '<a id="aDelCapa" href="'+row.id_capa+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                     '</div>'
                 }
             }
         ],  
         "columnDefs": [
-            { "visible": false, "targets": groupColumn }
+            { "visible": false, "targets": groupColumn },
+            {
+                "targets": [4],
+                "render": function ( data, type, row ) {
+                    return type === 'display' && data.length > 80 ?
+                            '<div data-title ="' + data + '">'+data.substr( 0, 80 ) +'…' :
+                            data;
+                }
+            }
         ],
         "drawCallback": function ( settings ) {
             var api = this.api();
@@ -453,7 +468,7 @@ adjCerti=function(){
    
 $("body").on("click","#aDelCapa",function(event){
     event.preventDefault();
-    id_capadet = $(this).attr("href");
+    id_capa = $(this).attr("href");
 
     Swal.fire({
         title: 'Confirmar Eliminación',
@@ -465,9 +480,9 @@ $("body").on("click","#aDelCapa",function(event){
         confirmButtonText: 'Si, bórralo!'
     }).then((result) => {
         if (result.value) {
-            $.post(baseurl+"at/capa/cregcapa/delcapadet/", 
+            $.post(baseurl+"at/capa/cregcapa/delcapa/", 
             {
-                id_capadet   : id_capadet,
+                id_capa   : id_capa,
             },      
             function(data){     
                 otblListCapacita.ajax.reload(null,false); 
@@ -1300,7 +1315,7 @@ recuperaListparti = function(idcapa){
         },
         'columns'	: [
             {
-                "class"     :   "index",
+                "class"     :   "col-xxs",
                 orderable   :   false,
                 data        :   null,
                 targets     :   0
@@ -1311,12 +1326,40 @@ recuperaListparti = function(idcapa){
             {"orderable": false, 
               render:function(data, type, row){                
                   return  '<div>'+
-                  '<a title="Editar" style="cursor:pointer; color:#3c763d;" onClick="javascript:selParti(\''+row.id_capa+'\',\''+row.id_capaparti+'\',\''+row.id_administrado+'\',\''+row.NOMBREPARTI+'\',\''+row.NRODNI+'\',\''+row.fono_celular+'\',\''+row.email+'\',\''+row.NOTA+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
+                  '<a title="Editar" style="cursor:pointer; color:#3c763d;" onClick="javascript:selParti(\''+row.id_capa+'\',\''+row.id_capaparti+'\',\''+row.id_administrado+'\',\''+row.NOMBREPARTI+'\',\''+row.NRODNI+'\',\''+row.fono_celular+'\',\''+row.email+'\',\''+row.NOTA+'\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
                   '&nbsp;'+
-                  '<a id="aDelParti" href="'+row.id_capaparti+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
+                  '<a id="aDelParti" href="'+row.id_capaparti+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                   '</div>'
               }
-            }
+            },   
+            {"orderable": false, 
+              render:function(data, type, row){
+                  var rexamen;
+                  if(row.EXAMEN != null) {
+                    rexamen = ' <a title="Examen" style="cursor:pointer; color:#1646ec;" href="'+baseurl+row.EXAMEN+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-download-alt" aria-hidden="true"> </span> Examen</a>'+
+                    ' &nbsp; &nbsp;'
+                  } else {
+                    rexamen = ' <a data-toggle="modal" title="Examen" style="cursor:pointer; color:#3c763d;" data-target="#modalPresent" onClick="javascript:uploadPresent(\''+row.id_capa+'\',\''+row.id_capadet+'\',\''+row.ccliente+'\',\''+row.fini+'\');"class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-upload-alt" aria-hidden="true"> </span> Examen</a>'+
+                    ' &nbsp; &nbsp;'
+                  }  
+                    return  '<div>'+rexamen+
+                    '</div>'   
+                }
+            }, 
+            {"orderable": false, 
+              render:function(data, type, row){
+                  var rcerti;
+                  if(row.CERTIFICADO != null) {
+                    rcerti = ' <a title="Certificado" style="cursor:pointer; color:#1646ec;" href="'+baseurl+row.CERTIFICADO+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-download-alt" aria-hidden="true"> </span> Certificado</a>'+
+                    ' &nbsp; &nbsp;'
+                  } else {
+                    rcerti = ' <a data-toggle="modal" title="Certificado" style="cursor:pointer; color:#3c763d;" data-target="#modalPresent" onClick="javascript:uploadPresent(\''+row.id_capa+'\',\''+row.id_capadet+'\',\''+row.ccliente+'\',\''+row.fini+'\');"class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-upload-alt" aria-hidden="true"> </span> Certificado</a>'+
+                    ' &nbsp; &nbsp;'
+                  }  
+                  return  '<div>'+rcerti+
+                  '</div>'   
+                }
+            },       
         ]
     });  
     // Enumeracion 
@@ -1340,6 +1383,34 @@ selParti = function(id_capa,id_capaparti,id_administrado,NOMBREPARTI,NRODNI,fono
     $('#mtxtTelparti').val(fono_celular);
 
 }
+   
+$("body").on("click","#aDelParti",function(event){
+    event.preventDefault();
+    id_capaparti = $(this).attr("href");
+
+    Swal.fire({
+        title: 'Confirmar Eliminación',
+        text: "¿Está seguro de eliminar al participante?",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, bórralo!'
+    }).then((result) => {
+        if (result.value) {
+            $.post(baseurl+"at/capa/cregcapa/delparti/", 
+            {
+                id_capaparti   : id_capaparti,
+            },      
+            function(data){     
+                otblListParticipantes.ajax.reload(null,false); 
+                Vtitle = 'Se Elimino Correctamente';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);      
+            });
+        }
+    }) 
+});
 
 $('#modalImportparti').on('shown.bs.modal', function (e) {
     var IdcapaParti = $('#mhdnIdcapacitaparti').val();

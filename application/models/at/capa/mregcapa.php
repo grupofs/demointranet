@@ -240,6 +240,22 @@ class Mregcapa extends CI_Model {
 			return False;
 		}	
     }
+    public function delcapa($parametros) {	// Eliminar de propuesta
+        $this->db->trans_begin();
+
+        $procedure = "call usp_at_capa_deletecapa(?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
     public function delcapadet($parametros) {	// Eliminar de propuesta
         $this->db->trans_begin();
 
@@ -260,6 +276,22 @@ class Mregcapa extends CI_Model {
         $this->db->trans_begin();
 
         $procedure = "call usp_at_capa_deleteprogram(?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+    public function delparti($parametros) {	// Eliminar de propuesta
+        $this->db->trans_begin();
+
+        $procedure = "call usp_at_capa_deleteparticipante(?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
