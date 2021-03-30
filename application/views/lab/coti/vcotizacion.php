@@ -174,7 +174,7 @@
                                             <div class="col-md-12">
                                                 <div class="text-right">
                                                     <button type="submit" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button> 
-                                                    <button type="button" class="btn btn-outline-info" id="btnNuevo" ><i class="fas fa-plus"></i> Nuevo Cotización</button>   
+                                                    <button type="button" class="btn btn-outline-info" id="btnNuevo" ><i class="fas fa-plus"></i> Nueva Cotización</button>   
                                                 </div>
                                             </div>
                                         </div>
@@ -309,10 +309,10 @@
                                                         <input type="number" name="mtxtregentregainf"id="mtxtregentregainf" class="form-control" min="0" pattern="^[0-9]+">
                                                         <div class="input-group-prepend">
                                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                            <span id="btntipodias">Días Calendario</span>
+                                                            <span id="btntipodias">Días Calend.</span>
                                                             </button>
                                                             <div class="dropdown-menu">
-                                                                <a class="dropdown-item" onClick="javascript:calen()">Días Calendario</a>
+                                                                <a class="dropdown-item" onClick="javascript:calen()">Días Calend.</a>
                                                                 <a class="dropdown-item" onClick="javascript:util()">Días Útiles</a>
                                                             </div>
                                                         </div>
@@ -412,6 +412,7 @@
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>   
                                                     <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                                    <button type="button" class="btn btn-danger" id="btnVistaPrevia" onclick="PDFvistaPrevia()"><i class="far fa-file-pdf"></i> Vista Previa</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -627,6 +628,7 @@
                                                                 <th></th>
                                                                 <th>N°</th>
                                                                 <th>Codigo</th>
+                                                                <th>Acred.</th>
                                                                 <th>Ensayo</th>
                                                                 <th>Año</th>
                                                                 <th>Norma</th>

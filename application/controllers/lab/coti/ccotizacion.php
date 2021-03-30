@@ -195,190 +195,6 @@ class Ccotizacion extends CI_Controller {
         echo json_encode($resultado);
     } 
 
-    public function pdfCoti1($idcoti,$nversion) {
-        $this->load->library('pdfgenerator');
-        $html = '<html>
-                <head>
-                    <title>Cotizacion</title>
-                    <style>
-                        @page {
-                             margin: 0.3in 0.3in 0.3in 0.3in;
-                        }
-                        .teacherPage {
-                            page: teacher;
-                            page-break-after: always;
-                        }
-                        body{
-                            font-family: Arial, Helvetica, sans-serif;
-                            font-size: 9pt;
-                        }  
-                        .cuerpo {
-                            text-align: justify;
-                        }
-                        img.izquierda {
-                            float: left;
-                        }
-                        img.derecha {
-                            float: right;
-                        }
-                        div.page_break {
-                            page-break-before: always;
-                        }
-
-                        .page-number {
-                          text-align: center;
-                        }
-                        
-                        .page-number:before {
-                          content: counter(page) " de " counter(pages);
-                        }
-                    </style>
-                </head>
-                <body>                
-                <div>
-                <table  width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
-                    <tr>
-                        <td width="20%" rowspan="4">
-                            <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
-                        </td>
-                        <td width="60%" align="center" rowspan="4">
-                            <h2>COTIZACION DE SERVICIO DE ENSAYO</h2>
-                        </td>
-                        <td width="20%" align="center" colspan="2">
-                            FSC-F-LAB-07
-                        </td>
-                        <tr>
-                            <td>Versión</td>
-                            <td align="right">02</td>
-                        </tr>
-                        <tr>
-                            <td>Fecha</td>
-                            <td align="right">24/10/2013</td>
-                        </tr>
-                        <tr>
-                            <td>Página</td>
-                            <td id="pagina"><div class="page-number"></div></td>
-                        </tr>
-                    </tr>
-                </table>
-
-                <h2>Section 1</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-
-                    <h2>Section 2</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-
-                    <h2>Section 3</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-                    
-                    <h2>Section 4</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-                    
-                    <h2>Section 5</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-
-                    <h2>Section 1</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-
-                    <h2>Section 2</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-
-                    <h2>Section 3</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-                    
-                    <h2>Section 4</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-                    
-                    <h2>Section 5</h2>
-
-                    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-                    fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-                    lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-                    libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-                    suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-                    tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-                    felis magna fermentum augue, et ultricies lacus lorem varius purus.
-                    Curabitur eu amet.</p>
-                
-                <h2>fin</h2>
-                
-                </body></html>​';
-		$filename = 'coti';
-		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
-	}
-
 	public function pdfCoti($idcoti,$nversion) { // recupera los cPTIZACION
         $this->load->library('pdfgenerator');
 
@@ -387,7 +203,7 @@ class Ccotizacion extends CI_Controller {
 
         $html = '<html>
                 <head>
-                    <title>Cotizacion</title>
+                    <title>Cotización</title>
                     <style>
                         @page {
                              margin: 0.3in 0.3in 0.3in 0.3in;
@@ -424,15 +240,21 @@ class Ccotizacion extends CI_Controller {
                             page-break-before: always;
                         }
                         .page-number {
-                          text-align: center;
+                          text-align: right;
                         }
                         
                         .page-number:before {
                           content: counter(page);
                         }
+
+                        th { 
+                            text-align: center; 
+                            border: 1px solid black;
+                        }
                     </style>
                 </head>
                 <body>
+                
                 <header>
                     <table  width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
                         <tr>
@@ -456,7 +278,7 @@ class Ccotizacion extends CI_Controller {
                         </tr>
                         <tr>
                             <td>Página</td>
-                            <td><div class="page-number"></div></td>
+                            <td align="right"><div class="page-number"></div></td>
                         </tr>
                     </table>
                 </header>';
@@ -493,8 +315,16 @@ class Ccotizacion extends CI_Controller {
                 $digv         = $row->digv;
                 $ddescuento         = $row->ddescuento;
                 $condescuento         = $row->condescuento;
+                $namefile         = $row->namefile;
+                $ctipocambio         = $row->ctipocambio;
+                $dtipocambio         = $row->dtipocambio;              
                 
                 
+                if ($ctipocambio  == 'S') :
+                    $var_moneda = 'S/.';
+                else:
+                    $var_moneda = '$';
+                endif;
 			}
 		}
                 
@@ -540,12 +370,12 @@ class Ccotizacion extends CI_Controller {
                         <td><b>II DETERMINACIONES</b></td>
                     </tr>
                 </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="all">
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
                     <tr>
-                        <td width="30%" align="center">LOCAL</td>
-                        <td width="35%" align="center">PRODUCTO</td>
-                        <td width="20%" align="center">CONDICIONES DE LA MUESTRA (*)</td>
-                        <td width="15%" align="center">CANTIDAD MUESTRA MINIMA</td>
+                        <th width="30%" align="center">LOCAL</th>
+                        <th width="35%" align="center">PRODUCTO</th>
+                        <th width="20%" align="center">CONDICIONES DE LA MUESTRA (*)</th>
+                        <th width="15%" align="center">CANTIDAD MUESTRA MINIMA</th>
                     </tr>';
                     //</table>
                     //<table width="700px" align="center" cellspacing="0" cellpadding="3" style="border: 1px solid black;" FRAME="void" RULES="rows">';  
@@ -566,6 +396,7 @@ class Ccotizacion extends CI_Controller {
                         }
                     }        
                 $html .= '</table>';
+                //<table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="rows">
                 $html .= '<table width="300px" style="margin-left: 15px; height:25px;">
                     <tr>
                         <td>Cantidad de Productos:</td>
@@ -577,15 +408,15 @@ class Ccotizacion extends CI_Controller {
                         <td colspan="4" style="height:30px;"></td>
                     </tr>
                 </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="rows">
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
                     <tr >
-                        <td width="10%" align="center">Codigo Metodo</td>
-                        <td width="30%" align="center">METODO DE ENSAYO</td>
-                        <td width="10%" align="center">AC / NOAC</td>
-                        <td width="20%" align="center">NORMA / REFERENCIA</td>
-                        <td width="10%" align="center">Cant.</td>
-                        <td width="10%" align="center">P.UNI S/.</td>
-                        <td width="10%" align="center">Precio Total S/.</td>
+                        <th width="10%" align="center">Codigo Metodo</th>
+                        <th width="30%" align="center">METODO DE ENSAYO</th>
+                        <th width="10%" align="center">AC / NOAC</th>
+                        <th width="20%" align="center">NORMA / REFERENCIA</th>
+                        <th width="10%" align="center">Cant.</th>
+                        <th width="10%" align="center">P.UNI '.$var_moneda.'</th>
+                        <th width="10%" align="center">Precio Total '.$var_moneda.'</th>
                     </tr>';
                     $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
                     if ($resproddet){
@@ -656,8 +487,11 @@ class Ccotizacion extends CI_Controller {
                                 $html .= '';
                         }
                     }
-                    $html .= '</table>
-                    <table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;">';
+                    //<table width="698px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;">';
+                    $html .= '</table>                    
+                    <table width="698px" align="center">';
+                    
+                if ($ctipocambio  == 'S') :
                     $html .= '<tr>
                             <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
                             <td width="130px" > Muestreo</td>
@@ -667,18 +501,20 @@ class Ccotizacion extends CI_Controller {
                             <td></td>
                             <td> SUBTOTAL</td>
                             <td align="right">'.$isubtotal.'</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td> DESCUENTOS '.$pdescuento.'% </td>
-                            <td align="right">('.$ddescuento.')</td>
-                        </tr>
-                        <tr>                
-                            <td></td>
-                            <td> </td>
-                            <td align="right">'.$condescuento.'</td>
-                        </tr>
-                        <tr>                
+                        </tr>';
+                    if($pdescuento > 0){
+                    $html .= '<tr>
+                                <td></td>
+                                <td> DESCUENTOS '.$pdescuento.'% </td>
+                                <td align="right">('.$ddescuento.')</td>
+                            </tr>
+                            <tr>                
+                                <td></td>
+                                <td> </td>
+                                <td align="right">'.$condescuento.'</td>
+                            </tr>';
+                    }
+                    $html .= '<tr>                
                             <td></td>
                             <td> IGV 18%</td>
                             <td align="right">'.$digv.'</td>
@@ -692,12 +528,24 @@ class Ccotizacion extends CI_Controller {
                             <td style="height:10px;">
                             </td>
                         </tr>';
+                else:
+                    $html .= '<tr>
+                        <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                        <td width="130px"> TOTAL $</td>
+                        <td width="80px" align="right">'.$dtipocambio.'</td>
+                    </tr>
+                    <tr>
+                        <td style="height:10px;">
+                        </td>
+                    </tr>';
+                endif;                    
+
                     $html .= '</table>';
 
         $html .= '<table width="700px" align="center">
             <tr>
                 <td><b>III</b></td>
-                <td><b>FORMA DE PAGO</b></td>
+                <td><b>FORMA DE PAGO:</b></td>
                 <td align="left">'.$cforma_pago.'</td>
                 <td>'.$banco.'</td>
             </tr>
@@ -715,26 +563,17 @@ class Ccotizacion extends CI_Controller {
             </tr>
             <tr>
                 <td><b>IV</b></td>
-                <td colspan="2"><b>TIEMPO DE ENTREGA DEL INFORME</b></td>
-                <td>'.$entrega.'</td>
+                <td colspan="2"><b>TIEMPO DE ENTREGA DEL INFORME:</b></td>
+                <td style="text-align: justify;">'.$entrega.'</td>
             </tr>
             <tr>
                 <td colspan="4" style="height:10px;">
                 </td>
             </tr>
             <tr>
-                <td><b>V</b></td>
-                <td colspan="2"><b>CANTIDAD DE MUESTRA MINIMA</b></td>
-                <td>'.$dcantidadminima.'</td>
-            </tr>
-            <tr>
-                <td colspan="4" style="height:10px;">
-                </td>
-            </tr>
-            <tr>
-                <td>(*) </td>
-                <td colspan="3">En caso el cliente incumpla estas condiciones la muestra se considerará muestra no idónea y sólo con su autorización será ensayada y reportará como Informe No Oficial.</td>
-            </tr>
+                <td VALIGN=top><b>V</b></td>
+                <td colspan="4" style="text-align: justify;"><b>CANTIDAD DE MUESTRA MINIMA:</b>  En caso el cliente incumpla estas condiciones la muestra se considerará muestra no idónea y sólo con su autorización será ensayada y reportará como Informe No Oficial.</td>
+            </tr>            
             <tr>
                 <td colspan="4" style="height:10px;">
                 </td>
@@ -744,20 +583,16 @@ class Ccotizacion extends CI_Controller {
         $html .= '<table width="700px" align="center">
             <tr>
                 <td VALIGN=top><b>VI</b></td>
-                <td colspan="2"><b>PERMANENCIA DE LA CONTRA MUESTRA EN EL LABORATORIO:</b>  En caso de que el servicio considere contramuestras, éstas se conservarán en el laboratorio por el período acordado con el cliente, 
-                luego de lo cual serán eliminadas de acuerdo a nuestros procedimientos  internos. En caso el cliente requiera la devolución de la contramuestra, esta deberá ser solicitada antes de la finalización del Tiempo de Custodia(***)</td>
+                <td colspan="2" style="text-align: justify;"><b>PERMANENCIA DE LA CONTRA MUESTRA EN EL LABORATORIO:</b>  En caso de que el servicio considere contramuestras, éstas se conservarán en el laboratorio por el período acordado con el cliente, 
+                luego de lo cual serán eliminadas de acuerdo a nuestros procedimientos  internos. En caso el cliente requiera la devolución de la contramuestra, esta deberá ser solicitada antes de la finalización del Tiempo de Custodia ('.$diaspermanecia.')</td>
             </tr>
             <tr>
                 <td colspan="3" style="height:10px;"></td>
             </tr>
             <tr>
-                <td>(***)</td>
-                <td colspan="2">'.$diaspermanecia.'</td>
-            </tr>
-            <tr>
-                <td><b>VII</b></td>
-                <td><b>VIGENCIA DE COTIZACION</b></td>
-                <td align="left">'.$diascoti.'</td>
+                <td width="10px"><b>VII</b></td>
+                <td width="150px"><b>VIGENCIA DE COTIZACION:</b></td>
+                <td align="left" width="400px">'.$diascoti.'</td>
             </tr>
             <tr>
                 <td colspan="3" style="height:10px;"></td>
@@ -771,38 +606,38 @@ class Ccotizacion extends CI_Controller {
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">En caso de Aceptar la Cotización, favor de enviarla firmada o declaranado su aceptación mediante un correo electronico. Cualquier cambio en la cotización enviada deberá solicitarse antes de iniciado el servicio.</td>
+                <td colspan="2" style="text-align: justify;">En caso de Aceptar la Cotización, favor de enviarla firmada o declaranado su aceptación mediante un correo electronico. Cualquier cambio en la cotización enviada deberá solicitarse antes de iniciado el servicio.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">Al dar su visto bueno, el cliente acepta esta cotización con carácter de contrato.</td>
+                <td colspan="2" style="text-align: justify;">Al dar su visto bueno, el cliente acepta esta cotización con carácter de contrato.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">Toda la información derivada de las actividades del laboratorio obtenidas a través del servicio brindado se conservará de modo confidencial, excepto por la información que el cliente pone a disposición del público, o cuando lo acuerdan el laboratorio y el cliente.</td>
+                <td colspan="2" style="text-align: justify;">Toda la información derivada de las actividades del laboratorio obtenidas a través del servicio brindado se conservará de modo confidencial, excepto por la información que el cliente pone a disposición del público, o cuando lo acuerdan el laboratorio y el cliente.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">Cuando a FS Certificaciones se le solicite por ley o disposiciones contractuales divulgar información confidencial, notificará al cliente salvo que esté prohibido por ley.</td>
+                <td colspan="2" style="text-align: justify;">Cuando a FS Certificaciones se le solicite por ley o disposiciones contractuales divulgar información confidencial, notificará al cliente salvo que esté prohibido por ley.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">La información acerca del cliente, obtenida de fuentes diferentes del cliente se tratará como información confidencial.</td>
+                <td colspan="2" style="text-align: justify;">La información acerca del cliente, obtenida de fuentes diferentes del cliente se tratará como información confidencial.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">La emisión de los Informes de Ensayo se realizará en formato digital (PDF), los cuales serán enviados por correo electrónico al cliente. El envío de los informes físicos tiene un costo adicional que será informado al cliente.</td>
+                <td colspan="2" style="text-align: justify;">La emisión de los Informes de Ensayo se realizará en formato digital (PDF), los cuales serán enviados por correo electrónico al cliente. El envío de los informes físicos tiene un costo adicional que será informado al cliente.</td>
             </tr>
             <tr>
                 <td VALIGN=top>-</td>
-                <td colspan="2">Copias adicionales de los informes y las traducciones de los mismos tendrán un costo adicional.</td>
+                <td colspan="2" style="text-align: justify;">Copias adicionales de los informes y las traducciones de los mismos tendrán un costo adicional.</td>
             </tr>
             <tr>
                 <td colspan="3" style="height:10px;"></td>
             </tr>
             <tr>
-                <td VALIGN=top><b>IX</b></td>
-                <td><b>OBSERVACIONES:</b></td>
+                <td VALIGN=top width="10px"><b>IX</b></td>
+                <td width="150px"><b>OBSERVACIONES:</b></td>
                 <td>'.$dobservacion.'</td>
             </tr>
             <tr>
@@ -816,7 +651,7 @@ class Ccotizacion extends CI_Controller {
             </tr>
             <tr>
                 <td></td>
-                <td align="center">SOLICITANTE</td>
+                <td align="center" style="border-top: 1px solid black;">CLIENTE</td>
                 <td></td>
                 <td align="center">FSC LABORATORIO</td>
             </tr>
@@ -829,7 +664,7 @@ class Ccotizacion extends CI_Controller {
         </table>';
 
         $html .= '</main></body></html>';
-		$filename = 'coti';
+		$filename = 'Cotizacion-'.$namefile;
 		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
         //echo $html;
 	}

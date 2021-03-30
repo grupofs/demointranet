@@ -438,6 +438,12 @@ listarBusqueda = function(){
     }).draw();   
 };
 
+PDFvistaPrevia = function(){
+    var_idcoti = $('#mtxtidcotizacion').val();
+    var_nversion = $('#mtxtnroversion').val();
+    window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+var_idcoti+"/"+var_nversion);
+};
+
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
 };
@@ -621,7 +627,7 @@ dias=function(){
 };
 
 calen=function(){
-    $('#btntipodias').html("Días Calendario");
+    $('#btntipodias').html("Días Calend.");
     $('#txtregtipodias').val('C');
 };
 util=function(){
@@ -647,12 +653,14 @@ otro=function(){
 
 soles=function(){
     $('#btntipopagos').html("S/.");
-    $('#txtregtipopagos').val('S');
+    $('#mtxtregtipopagos').val('S');
+    $('#mtxtregtipocambio').val(0);
     $('#mtxtregtipocambio').hide(); 
 };
 dolares=function(){
     $('#btntipopagos').html("$");
-    $('#txtregtipopagos').val('D');
+    $('#mtxtregtipopagos').val('D');
+    $('#mtxtregtipocambio').val(0);
     $('#mtxtregtipocambio').show(); 
 };
 
@@ -914,7 +922,7 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
         // Open this row
         row.child( 
            '<table class="display compact" id = "child_details' + index + '"  style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
-           '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Codigo</th><th>Ensayo</th><th>Precio S/.</th><th>Vias</th><th>Cantidad</th><th>Costo S/.</th></tr></thead><tbody>' +
+           '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Codigo</th><th>Acred.</th><th>Ensayo</th><th>Precio S/.</th><th>Vias</th><th>Cantidad</th><th>Costo S/.</th></tr></thead><tbody>' +
             '</tbody></table>').show();
         
         var childTable = $('#child_details' + index).DataTable({ 
@@ -946,11 +954,12 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
             'columns'	: [
                 {"class" : "col-xxs", "orderable": false, data : 'ENUMERAR', targets : 0},
                 {"orderable": false, data: 'CODIGO', targets: 1},
-                {"orderable": false, data: 'DENSAYO', targets: 2},
-                {"orderable": false, data: 'CONSTOENSAYO', targets: 3},
-                {"orderable": false, data: 'NVIAS', targets: 4},
-                {"orderable": false, data: 'CANTIDAD', targets: 5},
-                {"orderable": false, data: 'COSTO', targets: 6}
+                {"orderable": false, data: 'ACRE', targets: 2},
+                {"orderable": false, data: 'DENSAYO', targets: 3},
+                {"orderable": false, data: 'CONSTOENSAYO', targets: 4},
+                {"orderable": false, data: 'NVIAS', targets: 5},
+                {"orderable": false, data: 'CANTIDAD', targets: 6},
+                {"orderable": false, data: 'COSTO', targets: 7}
             ]
         });
         tr.addClass('details');
@@ -1218,13 +1227,14 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
             },
             {"orderable": false, data: 'SPACE', targets: 1},
             {"orderable": false, data: 'CODIGO', targets: 2},
-            {"orderable": false, data: 'DENSAYO', targets: 3},
-            {"orderable": false, data: 'ANIO', targets: 4},
-            {"orderable": false, data: 'NORMA', targets: 5, "class": "col-lm"},
-            {"orderable": false, data: 'CONSTOENSAYO', targets: 6},
-            {"orderable": false, data: 'NVIAS', targets: 7},
-            {"orderable": false, data: 'CANTIDAD', targets: 8},
-            {"orderable": false, data: 'COSTO', targets: 9},
+            {"orderable": false, data: 'ACRE', targets: 3},
+            {"orderable": false, data: 'DENSAYO', targets: 4},
+            {"orderable": false, data: 'ANIO', targets: 5},
+            {"orderable": false, data: 'NORMA', targets: 6, "class": "col-lm"},
+            {"orderable": false, data: 'CONSTOENSAYO', targets: 7},
+            {"orderable": false, data: 'NVIAS', targets: 8},
+            {"orderable": false, data: 'CANTIDAD', targets: 9},
+            {"orderable": false, data: 'COSTO', targets: 10},
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div class="text-left" >' +
@@ -1242,7 +1252,7 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
         ], 
         "columnDefs": [
             {
-                "targets": [5],
+                "targets": [6],
                 "render": function ( data, type, row ) {
                     return type === 'display' && data.length > 50 ?
                             '<div data-title ="' + data + '">'+data.substr( 0, 50 ) +'…' :

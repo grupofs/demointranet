@@ -263,9 +263,9 @@ class Mcotizacion extends CI_Model {
     }
 
     public function getpdfdatoscoti($idcoti,$nversion) { // Listar Ensayos	
-        $sql = "select a.dcotizacion, a.fcotizacion, b.drazonsocial, b.nruc, b.ddireccioncliente,  (c.dnombre + ' ' + c.dapepat) as 'dcontacto', isnull(c.dmail,'') as 'dmail', isnull(c.dtelefono,'') as 'dtelefono',
+        $sql = "select a.dcotizacion, DATEFORMAT(a.fcotizacion,'dd/mm/yyyy') as 'fcotizacion', b.drazonsocial, b.nruc, b.ddireccioncliente,  (c.dnombre + ' ' + c.dapepat) as 'dcontacto', isnull(c.dmail,'') as 'dmail', isnull(c.dtelefono,'') as 'dtelefono',
                         a.imuestreo, a.isubtotal, a.pigv, a.digv, a.pdescuento, a.ddescuento, (a.isubtotal - a.ddescuento) as 'condescuento', a.itotal, cast(a.nvigencia as char(50))+ ' días' as 'diascoti', a.dobservacion,
-                        (UPPER(SUBSTRING(d.DNOMBRE, 1, 1 )+''+d.DAPEPAT)) as 'usuariocrea',
+                        (UPPER(SUBSTRING(d.DNOMBRE, 1, 1 )+''+d.DAPEPAT)) as 'usuariocrea', a.ctipocambio, a.dtipocambio,
                         (cast(a.ntiempoentregainforme as char(50))+' '+if a.stiempoentregainforme = 'C' then 'dias Calendario' else 'dias Utiles' end if) as 'entrega',   
                         (select count(1) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion and z.nversioncotizacion = a.nversioncotizacion) as 'cantprod',
                         (select sum(nmuestra) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion and z.nversioncotizacion = a.nversioncotizacion) as 'summuestra',
@@ -273,7 +273,7 @@ class Mcotizacion extends CI_Model {
                         (select z.dregistro from ttabla z WHERE z.ctipo = '553') as 'banco',
                         (select z.dregistro from ttabla z WHERE z.ctipo = '554') as 'detraccion',
                         (select list(' Prod. '+cast(z.nordenproducto as char(3))+' - '+z.dcantidadminima) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion) as 'dcantidadminima',
-                        if a.npermanenciamuestra = 0 then 'NA' else cast(a.npermanenciamuestra as char(50))+ ' días' end if as 'diaspermanecia', a.smostrarprecios as 'verprecios'  
+                        if a.npermanenciamuestra = 0 then 'NO APLICA' else cast(a.npermanenciamuestra as char(50))+ ' días' end if as 'diaspermanecia', a.smostrarprecios as 'verprecios',(SUBSTRING(a.dcotizacion,1,4)+'-'+cast(year(a.fcotizacion) as char(4))) as 'namefile' 
                 from pcotizacionlaboratorio a   
                     join mcliente b on b.ccliente = a.ccliente
                     left join mcontacto c on c.ccontacto = a.ccontacto 
