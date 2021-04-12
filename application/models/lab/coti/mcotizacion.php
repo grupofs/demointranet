@@ -28,7 +28,7 @@ class Mcotizacion extends CI_Model {
     }
 
     public function getbuscarcotizacion($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getbuscarcotizacion(?,?,?,?,?)";
+        $procedure = "call usp_lab_coti_getbuscarcotizacion(?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -128,7 +128,7 @@ class Mcotizacion extends CI_Model {
     public function setcotizacion($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setcotizacion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setcotizacion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -451,5 +451,16 @@ class Mcotizacion extends CI_Model {
             return false;
         }	
     }	
+
+    public function getexcellistcoti($parametros) { // Buscar Cotizacion	
+        $procedure = "call usp_lab_coti_getexcellistcoti(?,?,?,?,?,?,?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
 }
 ?>

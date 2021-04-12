@@ -1,6 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class Ccotizacion extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
@@ -24,6 +35,9 @@ class Ccotizacion extends CI_Controller {
 		$fini       = $this->input->post('fini');
 		$ffin       = $this->input->post('ffin');
 		$descr      = $this->input->post('descr');
+		$estado      = $this->input->post('estado');
+		$tieneot      = $this->input->post('tieneot');
+		$activo      = $this->input->post('activo');
         
         $parametros = array(
 			'@CCIA'         => '2',
@@ -31,6 +45,9 @@ class Ccotizacion extends CI_Controller {
 			'@FINI'         => ($this->input->post('fini') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
 			'@FFIN'         => ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
 			'@DESCR'		=> ($this->input->post('descr') == '') ? '%' : '%'.$descr.'%',
+			'@ESTADO'		=> ($this->input->post('estado') == '%') ? '%' : $estado,
+			'@TIENEOT'		=> ($this->input->post('tieneot') == '%') ? '%' : $tieneot,
+			'@ACTIVO'       => $activo,
         );
         $retorna = $this->mcotizacion->getbuscarcotizacion($parametros);
         echo json_encode($retorna);		
@@ -69,8 +86,8 @@ class Ccotizacion extends CI_Controller {
 		$nvigencia 		        = $this->input->post('mtxtregvigen');
 		$csubservicio 		    = $this->input->post('cboregserv');
 		$ccliente 		        = $this->input->post('cboregclie');
-		$cproveedorcliente 	    = $this->input->post('cboregprov');
-		$ccontacto 	            = $this->input->post('cboregcontacto');
+		$cproveedorcliente 	    = ($this->input->post('cboregprov') == '%') ? '' : $this->input->post('cboregprov');
+		$ccontacto 	            = ($this->input->post('cboregcontacto') == '%') ? '' : $this->input->post('cboregcontacto');
 		$npermanenciamuestra 	= $this->input->post('mtxtcontramuestra');
 		$ntiempoentregainforme 	= $this->input->post('mtxtregentregainf');
 		$stiempoentregainforme 	= $this->input->post('txtregtipodias');
@@ -83,7 +100,8 @@ class Ccotizacion extends CI_Controller {
 		$imuestreo 	            = $this->input->post('txtmontmuestreo');
 		$isubtotal 	            = $this->input->post('txtmontsubtotal');
 		$pdescuento 	        = $this->input->post('txtporcdescuento');
-		$pigv 	                = $this->input->post('txtporctigv');
+		$pigv 	                = 18;
+		$digv 	                = $this->input->post('txtporctigv');
 		$itotal 	            = $this->input->post('txtmonttotal');
         $smostrarprecios 	    = ($this->input->post('chkregverpago') == '') ? 'N' : 'S';
 		$cusuario 			    = $this->input->post('mtxtcusuario');
@@ -114,6 +132,7 @@ class Ccotizacion extends CI_Controller {
             '@isubtotal'                =>  $isubtotal,
             '@pdescuento'               =>  $pdescuento,
             '@pigv'                     =>  $pigv,
+            '@digv'                     =>  $digv,
             '@itotal'                   =>  $itotal,
             '@smostrarprecios'          =>  $smostrarprecios,
             '@cusuario'                 =>  $cusuario,
@@ -530,9 +549,9 @@ class Ccotizacion extends CI_Controller {
                         </tr>';
                 else:
                     $html .= '<tr>
-                        <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
-                        <td width="130px"> TOTAL $</td>
-                        <td width="80px" align="right">'.$dtipocambio.'</td>
+                        <td width="530px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                        <td width="70px"> TOTAL $</td>
+                        <td width="80px" align="right">'.$itotal.'</td>
                     </tr>
                     <tr>
                         <td style="height:10px;">
@@ -578,28 +597,26 @@ class Ccotizacion extends CI_Controller {
                 <td colspan="4" style="height:10px;">
                 </td>
             </tr>
-        </table>';
-        
-        $html .= '<table width="700px" align="center">
             <tr>
                 <td VALIGN=top><b>VI</b></td>
-                <td colspan="2" style="text-align: justify;"><b>PERMANENCIA DE LA CONTRA MUESTRA EN EL LABORATORIO:</b>  En caso de que el servicio considere contramuestras, éstas se conservarán en el laboratorio por el período acordado con el cliente, 
+                <td colspan="4" style="text-align: justify;"><b>PERMANENCIA DE LA CONTRA MUESTRA EN EL LABORATORIO:</b>  En caso de que el servicio considere contramuestras, éstas se conservarán en el laboratorio por el período acordado con el cliente, 
                 luego de lo cual serán eliminadas de acuerdo a nuestros procedimientos  internos. En caso el cliente requiera la devolución de la contramuestra, esta deberá ser solicitada antes de la finalización del Tiempo de Custodia ('.$diaspermanecia.')</td>
-            </tr>
+            </tr>            
             <tr>
-                <td colspan="3" style="height:10px;"></td>
-            </tr>
-            <tr>
-                <td width="10px"><b>VII</b></td>
-                <td width="150px"><b>VIGENCIA DE COTIZACION:</b></td>
-                <td align="left" width="400px">'.$diascoti.'</td>
-            </tr>
-            <tr>
-                <td colspan="3" style="height:10px;"></td>
+                <td colspan="4" style="height:10px;">
+                </td>
             </tr>
         </table>';
         
         $html .= '<table width="700px" align="center">
+            <tr>
+                <td VALIGN=top ><b>VII</b></td>
+                <td ><b>VIGENCIA DE COTIZACION:</b></td>
+                <td align="left">'.$diascoti.'</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:10px;"></td>
+            </tr>
             <tr>
                 <td VALIGN=top><b>VIII</b></td>
                 <td colspan="2"><b>ACEPTACION DE LA COTIZACION:</b></td>
@@ -637,7 +654,7 @@ class Ccotizacion extends CI_Controller {
             </tr>
             <tr>
                 <td VALIGN=top width="10px"><b>IX</b></td>
-                <td width="150px"><b>OBSERVACIONES:</b></td>
+                <td width="180px"><b>OBSERVACIONES:</b></td>
                 <td>'.$dobservacion.'</td>
             </tr>
             <tr>
@@ -829,5 +846,250 @@ class Ccotizacion extends CI_Controller {
         $resultado = $this->mcotizacion->getmcbobustipoensayo();
         echo json_encode($resultado);
     }  
+
+    public function exportexcellistcoti(){
+		/*Estilos */
+		   $titulo = [
+			   'font'	=> [
+				   'name' => 'Arial',
+				   'size' =>12,
+				   'color' => array('rgb' => 'FFFFFF'),
+				   'bold' => true,
+			   ], 
+			   'fill'	=>[
+				   'fillType' => Fill::FILL_SOLID,
+				   'startColor' => [
+					   'rgb' => '042C5C'
+				   ]
+			   ],
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_CENTER,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+		   $cabecera = [
+			   'font'	=> [
+				   'name' => 'Arial',
+				   'size' =>10,
+				   'color' => array('rgb' => 'FFFFFF'),
+				   'bold' => true,
+			   ], 
+			   'fill'	=>[
+				   'fillType' => Fill::FILL_SOLID,
+				   'startColor' => [
+					   'rgb' => '042C5C'
+				   ]
+			   ],
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_CENTER,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+		   $celdastexto = [
+			   'borders'	=>[
+				   'allBorders' => [
+					   'borderStyle' => Border::BORDER_THIN,
+					   'color' => [ 
+						   'rgb' => '000000'
+					   ]
+				   ]
+			   ],
+			   'alignment' => [
+				   'horizontal' => Alignment::HORIZONTAL_LEFT,
+				   'vertical' => Alignment::VERTICAL_CENTER,
+				   'wrapText' => true,
+			   ],
+		   ];
+           $celdastextocentro = [
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                    'wrapText' => true,
+                ],
+           ];			
+           $celdasnumerodec = [
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_RIGHT,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                    'wrapText' => true,
+                ],
+                'numberFormat' => [
+                    'formatCode' => '#,##0.0',
+                ],
+           ];		
+           $celdasnumero = [
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_RIGHT,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                    'wrapText' => true,
+                ],
+                'numberFormat' => [
+                    'formatCode' => '#,##0',
+                ],
+           ];
+        /*Estilos */	
+        
+        $varnull = '';
+
+		$ccliente   = $this->input->post('cboclieserv');
+		$chkFreg       = $this->input->post('chkFreg');
+		$fini       = $this->input->post('txtFIni');
+		$ffin       = $this->input->post('txtFFin');
+		$descr      = $this->input->post('txtdescri');
+		$estado      = $this->input->post('cboestado');
+		$tieneot      = $this->input->post('cbotieneot');
+		$activo      = $this->input->post('swVigencia');
+        
+        $parametros = array(
+			'@CCIA'         => '2',
+			'@CCLIENTE'     => ($this->input->post('cboclieserv') == '') ? '0' : $ccliente,
+			'@FINI'         => ($this->input->post('chkFreg') == NULL) ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
+			'@FFIN'         => ($this->input->post('chkFreg') == NULL) ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
+			'@DESCR'		=> ($this->input->post('txtdescri') == '') ? '%' : '%'.$descr.'%',
+			'@ESTADO'		=> ($this->input->post('cboestado') == '%') ? '%' : $estado,
+			'@TIENEOT'		=> ($this->input->post('cbotieneot') == '%') ? '%' : $tieneot,
+			'@ACTIVO'       => ($this->input->post('swVigencia') == NULL) ? 'I' : 'A',
+        );
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $spreadsheet->getDefaultStyle()
+            ->getFont()
+            ->setName('Arial')
+            ->setSize(9);
+        
+        $sheet->setCellValue('A1', 'LISTADO DE COTIZACIONES')
+			->mergeCells('A1:S1')
+			->setCellValue('A3', 'Fecha Cotización')
+			->setCellValue('B3', 'Nro Cotización')
+			->setCellValue('C3', 'Estado Coti.')
+			->setCellValue('D3', 'Cliente')
+			->setCellValue('E3', 'Proveedor')
+			->setCellValue('F3', 'Contacto')
+			->setCellValue('G3', 'Elaborado por')
+			->setCellValue('H3', 'Tipo de Pago')
+			->setCellValue('I3', 'Moneda')
+			->setCellValue('J3', 'Muestreo')
+			->setCellValue('K3', 'Sub Total')
+			->setCellValue('L3', 'Descuento %')
+			->setCellValue('M3', 'Descuento')
+			->setCellValue('N3', 'Monto sin IGV')
+			->setCellValue('O3', 'IGV')
+			->setCellValue('P3', 'Monto Total')
+			->setCellValue('Q3', 'Nro OT')
+			->setCellValue('R3', 'Fecha OT')
+			->setCellValue('S3', 'Observación');
+
+        $sheet->getStyle('A1:S1')->applyFromArray($titulo);
+        $sheet->getStyle('A3:S3')->applyFromArray($cabecera);
+		
+		$sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(19.10);
+		$sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(10.10);
+		$sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(54.10);
+		$sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(54.10);
+		$sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(35.10);
+		$sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(35.10);
+		$sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(17.10);
+		$sheet->getColumnDimension('I')->setAutoSize(false)->setWidth(9.10);
+		$sheet->getColumnDimension('J')->setAutoSize(false)->setWidth(10.10);
+		$sheet->getColumnDimension('K')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('L')->setAutoSize(false)->setWidth(11.10);
+		$sheet->getColumnDimension('M')->setAutoSize(false)->setWidth(11.10);
+		$sheet->getColumnDimension('N')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('O')->setAutoSize(false)->setWidth(11.10);
+		$sheet->getColumnDimension('P')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('Q')->setAutoSize(false)->setWidth(19.10);
+		$sheet->getColumnDimension('R')->setAutoSize(false)->setWidth(12.10);
+        $sheet->getColumnDimension('S')->setAutoSize(false)->setWidth(72.10);
+        
+        $sheet->getStyle('Q')->getAlignment()->setWrapText(true);
+        $sheet->getStyle('S')->getAlignment()->setWrapText(true);
+
+		$rpt = $this->mcotizacion->getexcellistcoti($parametros);
+		$irow = 4;
+        if ($rpt){
+        	foreach($rpt as $row){
+                $DFECHA     = $row->DFECHA;
+                $NROCOTI = $row->NROCOTI;
+                $DESTADO = $row->DESTADO;
+                $DCLIENTE = $row->DCLIENTE;
+                $CPROVEEDOR = $row->CPROVEEDOR;
+                $CONTACTO = $row->CONTACTO;
+                $ELABORADO = $row->ELABORADO;
+                $TIPOPAGO = $row->TIPOPAGO;
+                $MONEDA = $row->MONEDA;
+                $IMUESTREO = $row->IMUESTREO;
+                $ISUBTOTAL = $row->ISUBTOTAL;
+                $PDESCUENTO = $row->PDESCUENTO;
+                $DDESCUENTO = $row->DDESCUENTO;
+                $MONTOSINIGV = $row->MONTOSINIGV;
+                $DIGV = $row->DIGV;
+                $ITOTAL = $row->ITOTAL;
+                $NROOT = $row->NROOT;
+                $FOT = $row->FOT;
+                $OBSERVA = $row->OBSERVA;
+
+                $sheet->setCellValue('A'.$irow,$DFECHA);
+                $sheet->setCellValue('B'.$irow,$NROCOTI);
+                $sheet->setCellValue('C'.$irow,$DESTADO);
+                $sheet->setCellValue('D'.$irow,$DCLIENTE);
+                $sheet->setCellValue('E'.$irow,$CPROVEEDOR);
+                $sheet->setCellValue('F'.$irow,$CONTACTO);
+                $sheet->setCellValue('G'.$irow,$ELABORADO);
+                $sheet->setCellValue('H'.$irow,$TIPOPAGO);
+                $sheet->setCellValue('I'.$irow,$MONEDA);
+                $sheet->setCellValue('J'.$irow,$IMUESTREO);
+                $sheet->setCellValue('K'.$irow,$ISUBTOTAL);
+                $sheet->setCellValue('L'.$irow,$PDESCUENTO);
+                $sheet->setCellValue('M'.$irow,$DDESCUENTO);
+                $sheet->setCellValue('N'.$irow,$MONTOSINIGV);
+                $sheet->setCellValue('O'.$irow,$DIGV);
+                $sheet->setCellValue('P'.$irow,$ITOTAL);
+                $sheet->setCellValue('Q'.$irow,$NROOT);
+                $sheet->setCellValue('R'.$irow,$FOT);
+                $sheet->setCellValue('S'.$irow,$OBSERVA);
+
+				$irow++;
+			}
+        }
+        $posfin = $irow - 1;
+
+        $sheet->getStyle('A4:S'.$posfin)->applyFromArray($celdastexto);
+        $sheet->getStyle('A4:A'.$posfin)->applyFromArray($celdastextocentro);
+        $sheet->getStyle('J4:K'.$posfin)->applyFromArray($celdasnumerodec);
+        $sheet->getStyle('L4:L'.$posfin)->applyFromArray($celdasnumero);
+        $sheet->getStyle('M4:P'.$posfin)->applyFromArray($celdasnumerodec);
+        $sheet->getStyle('I4:I'.$posfin)->applyFromArray($celdastextocentro);
+        
+		$sheet->setTitle('Listado - Cotización');            
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'listCotizacion-'.time();
+		ob_end_clean();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+    }
 }
 ?>
