@@ -127,7 +127,9 @@
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
-                                    </div>                                
+                                    </div> 
+
+                                    <form class="form-horizontal" id="frmbuscarcoti" name="frmbuscarcoti" action="<?= base_url('lab/coti/ccotizacion/exportexcellistcoti')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -140,7 +142,7 @@
                                             </div>
                                             <div class="col-md-3">    
                                                 <div class="checkbox"><label>
-                                                    <input type="checkbox" id="chkFreg" /> <b>Fecha Cotizacion :: Del</b>
+                                                    <input type="checkbox" id="chkFreg" name="chkFreg" /> <b>Fecha Cotizacion :: Del</b>
                                                 </label></div>                        
                                                 <div class="input-group date" id="txtFDesde" data-target-input="nearest" >
                                                     <input type="text" id="txtFIni" name="txtFIni" class="form-control datetimepicker-input" data-target="#txtFDesde" disabled/>
@@ -163,7 +165,27 @@
                                             <div class="col-md-4"> 
                                                 <label>Nro. Cotizacion/ Producto</label> 
                                                 <div>
-                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control" />
+                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control" onkeypress="pulsarListarCoti(event)"/>
+                                                </div>
+                                            </div>    
+                                            <div class="col-sm-2">
+                                                <label>Estado</label>
+                                                <div>
+                                                    <select class="form-control" id="cboestado" name="cboestado">
+                                                        <option value="%" selected="selected">TODOS</option>
+                                                        <option value="N">ABIERTO</option>
+                                                        <option value="S">CERRADO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>Ver OT</label>
+                                                <div>
+                                                    <select class="form-control" id="cbotieneot" name="cbotieneot">
+                                                        <option value="%" selected="selected">TODOS</option>
+                                                        <option value="N">Sin OT</option>
+                                                        <option value="S">Con OT</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -171,14 +193,20 @@
                                                 
                                     <div class="card-footer justify-content-between"> 
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-2"> 
+                                                <div id="console-event"></div>                   
+                                                <input type="checkbox" name="swVigencia" id="swVigencia" checked data-bootstrap-switch  data-on-text="Activos" data-off-text="Inactivos">
+                                            </div>
+                                            <div class="col-md-10">
                                                 <div class="text-right">
-                                                    <button type="submit" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button> 
-                                                    <button type="button" class="btn btn-outline-info" id="btnNuevo" ><i class="fas fa-plus"></i> Nueva Cotización</button>   
+                                                    <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button> 
+                                                    <button type="button" class="btn btn-outline-info" id="btnNuevo" ><i class="fas fa-plus"></i> Nueva Cotización</button>  
+                                                    <button type="submit" class="btn btn-success" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>  
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -194,7 +222,13 @@
                                                         <th>Cliente</th>
                                                         <th>Cotizacion</th>
                                                         <th>Fecha</th>
-                                                        <th>Precio Total</th>
+                                                        <th>Orden Trabajo</th>
+                                                        <th>Muestreo</th>
+                                                        <th>Sub Total</th>
+                                                        <th>Descuento</th>
+                                                        <th>Monto sin IGV</th>
+                                                        <th>IGV 18%</th>
+                                                        <th>Monto Total</th>
                                                         <th>Elaborado por</th>
                                                         <th></th>
                                                     </tr>
@@ -283,6 +317,69 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <div class="text-info">Moneda </div>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                            <span id="btntipopagos">S/.</span>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" onClick="javascript:soles()">S/.</a>
+                                                                <a class="dropdown-item" onClick="javascript:dolares()">$</a>
+                                                            </div>
+                                                        </div>
+                                                        <input type="number" name="mtxtregtipocambio"id="mtxtregtipocambio" class="form-control" placeholder="0.00" min="0.00">
+                                                    </div>
+                                                    <input type="hidden" name="mtxtregtipopagos" id="mtxtregtipopagos">
+                                                </div>
+                                            </div>                                            
+                                            <div class="col-md-2">
+                                                <div class="form-group">                                                    
+                                                    <div class="checkbox"><div class="text-info">
+                                                    <input type="checkbox" id="chksmuestreo" name="chksmuestreo" />&nbsp;Muestreo </div> </div>   
+                                                    <input type="number" name="txtmontmuestreo"id="txtmontmuestreo" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div> 
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <div class="text-info">Sub Total S/. </div>
+                                                    <input type="number" name="txtmontsubtotal"id="txtmontsubtotal" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div>   
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <div class="text-info">Dscto. (%) </div>
+                                                    <input type="number" name="txtporcdescuento"id="txtporcdescuento" class="form-control" placeholder="0" min="0">
+                                                </div>
+                                            </div>  
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <div class="text-info">Dscto. S/. </div>
+                                                    <input type="number" name="txtdescuento"id="txtdescuento" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div> 
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <div class="text-info">Monto sin IGV S/. </div>
+                                                    <input type="number" name="txtmontsinigv"id="txtmontsinigv" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div>  
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <div class="text-info">IGV. (18%) </div>
+                                                    <input type="number" name="txtporctigv"id="txtporctigv" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div>   
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <div id="divtotal" class="text-info">Total S/.</div>
+                                                    <input type="number" name="txtmonttotal"id="txtmonttotal" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div>  
+                                        </div>
                                         <div class="row">   
                                             <div class="col-md-2">
                                                 <div class="form-group">                                                    
@@ -320,14 +417,6 @@
                                                     <input type="hidden" name="txtregtipodias" id="txtregtipodias">
                                                 </div>
                                             </div> 
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <div class="text-info">Observaciones </div>
-                                                    <input type="text" name="mtxtobserv"id="mtxtobserv" class="form-control" >
-                                                </div>
-                                            </div>  
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Forma de Pago </div>
@@ -347,53 +436,10 @@
                                                     <input type="hidden" name="txtregformapagos" id="txtregformapagos">
                                                 </div>
                                             </div> 
-                                            <div class="col-md-2">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <div class="text-info">Moneda </div>
-                                                    <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">
-                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                            <span id="btntipopagos">S/.</span>
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" onClick="javascript:soles()">S/.</a>
-                                                                <a class="dropdown-item" onClick="javascript:dolares()">$</a>
-                                                            </div>
-                                                        </div>
-                                                        <input type="number" name="mtxtregtipocambio"id="mtxtregtipocambio" class="form-control" placeholder="0.00" min="0.00">
-                                                    </div>
-                                                    <input type="hidden" name="mtxtregtipopagos" id="mtxtregtipopagos">
-                                                </div>
-                                            </div>                                            
-                                            <div class="col-md-2">
-                                                <div class="form-group">                                                    
-                                                    <div class="checkbox"><div class="text-info">
-                                                    <input type="checkbox" id="chksmuestreo" name="chksmuestreo" />&nbsp;Muestreo </div> </div>   
-                                                    <input type="number" name="txtmontmuestreo"id="txtmontmuestreo" class="form-control" placeholder="0.00" min="0.00">
-                                                </div>
-                                            </div> 
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <div class="text-info">Sub Total </div>
-                                                    <input type="number" name="txtmontsubtotal"id="txtmontsubtotal" class="form-control" placeholder="0.00" min="0.00">
-                                                </div>
-                                            </div>   
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <div class="text-info">Dscto. (%) </div>
-                                                    <input type="number" name="txtporcdescuento"id="txtporcdescuento" class="form-control" placeholder="0" min="0">
-                                                </div>
-                                            </div>  
-                                            <div class="col-md-1">
-                                                <div class="form-group">
-                                                    <div class="text-info">IGV. (%) </div>
-                                                    <input type="number" name="txtporctigv"id="txtporctigv" class="form-control" placeholder="0" min="0">
-                                                </div>
-                                            </div>   
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <div class="text-info">Total </div>
-                                                    <input type="number" name="txtmonttotal"id="txtmonttotal" class="form-control" placeholder="0.00" min="0.00">
+                                                    <div class="text-info">Observaciones </div>
+                                                    <textarea type="text" name="mtxtobserv"id="mtxtobserv" class="form-control" rows="3"> </textarea>
                                                 </div>
                                             </div>  
                                         </div>
@@ -403,7 +449,7 @@
                                                     <div class="col-md-5">
                                                         <div class="custom-control custom-checkbox">
                                                             <input type="checkbox" class="custom-control-input" id="chkregverpago" name="chkregverpago" />
-                                                            <label for="chkregverpago" class="custom-control-label">Ver Precios</label>
+                                                            <label for="chkregverpago" class="custom-control-label">Ver Detalle de Precios</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -411,8 +457,8 @@
                                             <div class="col-sm-7 text-right"> 
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>   
-                                                    <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                                     <button type="button" class="btn btn-danger" id="btnVistaPrevia" onclick="PDFvistaPrevia()"><i class="far fa-file-pdf"></i> Vista Previa</button>
+                                                    <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                                 </div>
                                             </div>
                                         </div>
