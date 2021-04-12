@@ -25,7 +25,7 @@ class ctramite extends FS_Controller
 	 * Ruta para el ingreso de FICHA
 	 * @var string
 	 */
-	private $carpetaDocumento = '02779/';
+	private $carpetaDocumento = '1nullnull/';
 
 	/**
 	 * ctramite constructor.
@@ -197,6 +197,7 @@ class ctramite extends FS_Controller
 				}
 			}
 
+
 			// Datos del producto
 			$tramite_producto_id = $this->input->post('tramite_producto_id');
 			$tramite_producto_fecha_estimada = $this->input->post('tramite_producto_fecha_estimada');
@@ -241,8 +242,12 @@ class ctramite extends FS_Controller
 			$archivo_documento_operation = $this->input->post('archivo_documento_operation');
 			// Config archivo
 			$files = $_FILES;
-			$rutaArchivo = $this->carpetaDocumento . date('Y') . '/';
-			$config['upload_path'] = RUTA_ARCHIVOS . $rutaArchivo;
+			// Se verfica la ruta en caso no existe y se crea
+			$rutaArchivo = RUTA_ARCHIVOS . $this->carpetaDocumento . $objAsuntoRegulatorio->CCLIENTE . '/' .  $objAsuntoRegulatorio->CASUNTOREGULATORIO;
+			if (!file_exists($rutaArchivo)) {
+				mkdir($rutaArchivo, '0777', true);
+			}
+			$config['upload_path'] = $rutaArchivo;
 			$config['allowed_types'] = '*';
 			$this->load->library('upload', $config);
 			if (!empty($objTramite) && !empty($documento_tipo)) {
@@ -251,8 +256,7 @@ class ctramite extends FS_Controller
 					$documentoTipo = (isset($documento_tipo[$key])) ? $documento_tipo[$key] : '';
 					$documentoOperation = (isset($documento_operation[$key])) ? $documento_operation[$key] : '';
 					$documentoNombre = (isset($documento_nombre[$key])) ? $documento_nombre[$key] : '';
-					switch($documentoOperation)
-					{
+					switch ($documentoOperation) {
 						// Se crea el documento del tramite
 						case 1:
 							$objDocumento = (new mdocumentoregulatorio)->buscar($objEntidad->CENTIDADREGULA, $objTramite->CTRAMITE, $documentoId);
@@ -274,7 +278,7 @@ class ctramite extends FS_Controller
 								$objDocumento->CDOCUMENTO,
 								$documentoTipo,
 								'',
-								'',
+								null,
 								$s_cusuario,
 								'A'
 							);
@@ -484,12 +488,29 @@ class ctramite extends FS_Controller
 				$documentos = $this->mpdocumentoregulatorio->buscar($objAsuntoRegulatorio->CASUNTOREGULATORIO, $tramitePrimero->CENTIDADREGULA, $tramitePrimero->CTRAMITE);
 				if (!empty($documentos)) {
 					foreach ($documentos as $key => $documento) {
-						$documentos[$key]->archivos = (new mpdocumentoregulatorioarchivo())->buscarDocumentos(
+						$archivos = [];
+						if (!empty($documento->DUBICACIONFILESERVER)) {
+							$archivos[] = (object)[
+								'CDOCUMENTOREGULAARCHIVO' => null,
+								'CASUNTOREGULATORIO' => $objAsuntoRegulatorio->CASUNTOREGULATORIO,
+								'CENTIDADREGULA' => $tramitePrimero->CENTIDADREGULA,
+								'CTRAMITE' => $tramitePrimero->CTRAMITE,
+								'CDOCUMENTO' => null,
+								'DUBICACIONFILESERVER' => $documento->DUBICACIONFILESERVER,
+								'SCARGADOCUMENTO' => 'R',
+								'CUSUARIOCREA' => null,
+								'CUSUARIOMODIFICA' => null,
+								'SREGISTRO' => 'A',
+							];
+						}
+						$otrosArchivos = (new mpdocumentoregulatorioarchivo())->buscarDocumentos(
 							$documento->CASUNTOREGULATORIO,
 							$documento->CENTIDADREGULA,
 							$documento->CTRAMITE,
 							$documento->CDOCUMENTO
 						);
+						$archivos = array_merge($archivos, $otrosArchivos);
+						$documentos[$key]->archivos = $archivos;
 					}
 				}
 			}
@@ -858,6 +879,57 @@ class ctramite extends FS_Controller
 			if (!empty($objDocumentoArchivo->DUBICACIONFILESERVER) && file_exists('./FTPfileserver/Archivos/' . $objDocumentoArchivo->DUBICACIONFILESERVER)) {
 				unlink(RUTA_ARCHIVOS . $objDocumentoArchivo->DUBICACIONFILESERVER);
 			}
+			$this->result['status'] = 200;
+			$this->result['message'] = 'Archivo eliminado correctamnete.';
+		} catch (Exception $ex) {
+			$this->result['message'] = $ex->getMessage();
+		}
+		responseResult($this->result);
+	}
+
+	/**
+	 * Eliminar archivo de un documento
+	 */
+	public function eliminar_archivo_cab()
+	{
+		if (!$this->input->is_ajax_request()) {
+			show_404();
+		}
+		try {
+			$casuntoregula = $this->input->post('casuntoregula');
+			$centidadregula = $this->input->post('centidadregula');
+			$ctramite = $this->input->post('ctramite');
+			$cdocumento = $this->input->post('cdocumento');
+
+			if (empty($cdocumento)) {
+				throw new Exception('Falta de parametros para eliminar el archivo.');
+			}
+
+			$mdocumentoregula = $this->mpdocumentoregulatorio->buscar(
+				$casuntoregula,
+				$centidadregula,
+				$ctramite,
+				$cdocumento
+			);
+
+			if (empty($mdocumentoregula)) {
+				throw new Exception('El archivo no pudo ser encontrado.');
+			}
+
+			if (!empty($mdocumentoregula->DUBICACIONFILESERVER)) {
+				$data = ['DUBICACIONFILESERVER' => ''];
+				$this->mpdocumentoregulatorio->actualizar(
+					$casuntoregula,
+					$centidadregula,
+					$ctramite,
+					$cdocumento,
+					$data
+				);
+				if (file_exists('./FTPfileserver/Archivos/' . $mdocumentoregula->DUBICACIONFILESERVER)) {
+					unlink(RUTA_ARCHIVOS . $mdocumentoregula->DUBICACIONFILESERVER);
+				}
+			}
+
 			$this->result['status'] = 200;
 			$this->result['message'] = 'Archivo eliminado correctamnete.';
 		} catch (Exception $ex) {
