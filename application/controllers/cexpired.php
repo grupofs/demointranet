@@ -7,7 +7,7 @@ class Cexpired extends CI_Controller {
 		$this->load->library('session');		
     }
 
-    public function session_expired($cia = "") { // Restablecer Cuenta Bloqueada
+    public function session_expired($cia = "") { // Restablecer Cuenta Bloqueada //
 		$data = array();
 		$data["ccia"] = $cia;
 		$data['idusuario'] = $this-> session-> userdata('s_idusuario');
@@ -22,6 +22,7 @@ class Cexpired extends CI_Controller {
 			$this->load->view('welcome_message');
 		endif;		
 	}
+
     
 	public function validarAcceso(){ // Valida el tiempo de expiracion de session
 		$parametros = array(

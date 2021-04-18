@@ -7,7 +7,7 @@ class Cglobales extends CI_Controller {
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));
 		$this->load->library('form_validation');
-    }
+    } 
 
     public function getmeses() { // recupera meses del año    				
         $resultado = $this->mglobales->getmeses();
