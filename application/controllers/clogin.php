@@ -266,7 +266,7 @@ class Clogin extends CI_Controller {
 		
 		$iduser = $userdata->id_usuario;
 
-		$emailData = $this->mlogin->getconfigemail('001');
+		$emailData = $this->mlogin->getconfigemail('011');
 		if($emailData){
 			$mailhost = $emailData->DSERVER;
 			$mailport = $emailData->NPUERTO;

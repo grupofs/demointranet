@@ -140,7 +140,8 @@ $(document).ready(function() {
                     
                     Vtitle = 'Inspección Guardada!!!';
                     Vtype = 'success';
-                    sweetalert(Vtitle,Vtype);   
+                    sweetalert(Vtitle,Vtype); 
+                    otblListctrlprov.ajax.reload(null,false);   
                     objPrincipal.liberarBoton(botonEvaluar);    
                 });
             });
@@ -295,7 +296,7 @@ $("#btnBuscar").click(function (){
      
     var groupColumn = 0;   
     otblListctrlprov = $('#tblListctrlprov').DataTable({  
-        'responsive'    : true,
+        'responsive'    : false,
         'bJQueryUI'     : true,
         'scrollY'     	: '400px',
         'scrollX'     	: true, 
@@ -307,6 +308,7 @@ $("#btnBuscar").click(function (){
         'filter'      	: true, 
         'ordering'		: false,  
         'stateSave'     : true,
+		"dom": 'lfTrtip',
         'ajax'	: {
             "url"   : baseurl+"at/ctrlprov/cregctrolprov/getbuscarctrlprov/",
             "type"  : "POST", 
@@ -324,21 +326,30 @@ $("#btnBuscar").click(function (){
             {"orderable": false, data: 'desc_gral', targets: 0,"visible": false},
             {"orderable": false, data: 'areacli', targets: 1,"visible": false},
             {"orderable": false, data: 'lineaproc', targets: 2,"visible": false},
-            {"orderable": false, data: 'periodo', targets: 3},
-            {"orderable": false, data: 'destado', targets: 4},
-            {"orderable": false, data: 'finspeccion', targets: 5},
-            {"orderable": false, data: 'inspector', targets: 6},
-            {"orderable": false, data: 'dinformefinal', targets: 7},
-            {"orderable": false, data: 'resultado', targets: 8},
-            {"orderable": false, 
+            {"orderable": false, data: 'periodo', "class" : "col-s", targets: 3},
+            {"orderable": false, data: 'destado', "class" : "col-sm", targets: 4},
+            {"orderable": false, data: 'finspeccion', "class" : "col-s", targets: 5},
+            {"orderable": false, data: 'inspector', "class" : "col-xm", targets: 6},
+            {"orderable": false, data: 'dinformefinal', "class" : "col-m", targets: 7},
+            {"orderable": false, data: 'resultado', "class" : "col-m", targets: 8},
+            {"orderable": false, "class": "col-s", 
               render:function(data, type, row){
-                return  '<div>'+  
-                    //' <a title="Presentacion" style="cursor:pointer; color:#1646ec;" href="" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-cloud-download-alt" aria-hidden="true"> </span> Presentacion</a>'+
-                    ' &nbsp; &nbsp;'+
-                '</div>' 
+                if(row.zctipoestadoservicio == '028'){
+                    return  '<div class="dropdown">'+
+                            '<a class="btn btn-default" data-toggle="dropdown" href="#">Acciones <span class="fas fa-caret-up"></span></a>'+
+                            '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
+                                '<li><a title="Programar" style="cursor:pointer; color:#3c763d;" onClick="javascript:fprogramar(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.cusuarioconsultor+'\',\''+row.periodo+'\',\''+row.finspeccion+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');">Programar</a></li>'+
+                                '<li><a data-toggle="modal" title="Covalidar" style="cursor:pointer; color:#3c763d;" data-target="#" onClick="">Convalidar</a></li>'+
+                                '<li><a data-toggle="modal" title="Cierre" style="cursor:pointer; color:#3c763d;" data-target="#modalCierreespecial" onClick="">Cierres Especiales</a></li>'+
+                            '</ul>'+
+                    '</div>'
+                }else{
+                    return '<div>'+
+                    '</div>'
+                } 
               }
             },
-            {responsivePriority: 1, "orderable": false, "class": "col-s", 
+            {responsivePriority: 1, "orderable": false, "class" : "col-s", 
                 render:function(data, type, row){
                     return '<div>'+
                     '<a title="Registro" style="cursor:pointer; color:#3c763d;" onClick="javascript:selInspe(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.cusuarioconsultor+'\',\''+row.periodo+'\',\''+row.finspeccion+'\',\''+row.cnorma+'\',\''+row.csubnorma+'\',\''+row.cchecklist+'\',\''+row.cmodeloinforme+'\',\''+row.cvalornoconformidad+'\',\''+row.cformulaevaluacion+'\',\''+row.ccriterioresultado+'\',\''+row.dcomentario+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="fas fa-external-link-alt fa-2x" aria-hidden="true"> </span> </a>'+
@@ -363,7 +374,7 @@ $("#btnBuscar").click(function (){
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
                         '<tr class="group"><td colspan="10" class="subgroup"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'+
-                        '<tr class="group"><td colspan="10">Area : '+grupo+'<tab><tab>Linea : '+grupo01+'</td></tr>'
+                        '<tr class="group"><td colspan="10" class="expand">Area : '+grupo+'<tab><tab>Linea : '+grupo01+'</td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -372,13 +383,23 @@ $("#btnBuscar").click(function (){
     }); 
     otblListctrlprov.column( 1 ).visible( false );   
     otblListctrlprov.column( 2 ).visible( false ); 
+
     $('#tblListctrlprov tbody').on( 'click', 'tr.group', function () {
+        var rowsCollapse = $(this).nextUntil('.group');
         var id = $(this).find("td.subgroup:first-child").text().substr(1,8);
+
         if(id != ''){
-            verInspeccion(id);
+            verInspeccion(id);            
+        }else{
+            $(rowsCollapse).toggleClass('hidden');
         }
         
     } ); 
+    
+    /*$('#tblListctrlprov tbody').on( 'click', 'td.expand', function () {
+        var rowsCollapse = $(this).nextUntil('.group');
+        $(rowsCollapse).toggleClass('hidden');
+    } ); */
 });
 
 $("#btnNuevo").click(function (){
@@ -399,6 +420,21 @@ $("#btnNuevo").click(function (){
         },
         error: function(){
             alert('Error, No se puede autenticar por error = cboregClie');
+        }
+    });
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbotipoestable",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cbotipoestable').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cbotipoestable');
         }
     });
     
@@ -457,6 +493,20 @@ $("#cboregprovclie").change(function(){
             alert('Error, No se puede autenticar por error = cboregmaquiprov');
         }
     }); 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbocontacprinc",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $("#cbocontacprinc").html(result);           
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cbocontacprinc');
+        }
+    });
     cboEstablecimiento(v_cboclie,v_cboprov,'','P'); 
     $('#mtxtregdirestable').val('');  
 });
@@ -517,6 +567,27 @@ $("#cboregestable").change(function(){
             $('#mtxtregdirestable').val(this.DIRESTABLE);   
         });
     });
+});
+
+$("#cbotipoestable").change(function(){
+
+    var v_cbotipoestable= $('#cbotipoestable').val();
+
+    var params = { "ctipoestable":v_cbotipoestable };
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getmontotipoestable",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            $('#txtcostoestable').val(result);         
+        },
+        error: function(){
+            alert('Error, No se puede recuperar Monto del Costo');
+        }
+    });  
 });
 
 cboEstablecimiento = function(cboclie,cboprov,cbomaqui,vtipo){
@@ -798,9 +869,41 @@ fechaActualinsp = function(fservicio){
 
 };
 
+fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioconsultor,periodo,fservicio,zctipoestadoservicio,destado,ccliente){
+    $('#tabctrlprov a[href="#tabctrlprov-det"]').tab('show'); 
+    
+    $('#frmRegInsp').trigger("reset");
+
+    $('#mtxtidinsp').val(cauditoriainspeccion); 
+    $('#mhdnAccioninsp').val('A');
+    $('#mhdnccliente').val(ccliente);  
+
+    iniInspe(cusuarioconsultor,'T','','','',ccliente,'','','','');
+
+    $('#mtxtinspdatos').val(desc_gral); 
+    $('#mtxtinsparea').val('AREÁ : '+areacli); 
+    $('#mtxtinsplinea').val('LINEA : '+lineaproc); 
+    
+    $('#cboinspperiodo').val(periodo);
+    $('#mhdnzctipoestado').val(zctipoestadoservicio);
+    $('#txtinspestado').val(destado);
+    
+    $('#txtFInspeccion').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
+    });
+    if(fservicio == '01/01/1900'){        
+        $('#txtFInsp').val('Sin Fecha');
+    }else{
+        $('#txtFInsp').val(fservicio);
+    }
+};
+
 $('#btnRetornarLista').click(function(){
     $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
-    $('#btnBuscar').click();
 });
 
 $('#modalCierreespecial').on('shown.bs.modal', function (e) { 
@@ -824,13 +927,8 @@ $('#modalCierreespecial').on('shown.bs.modal', function (e) {
     $('#txtcierreidinsp').val($('#mtxtidinsp').val());
 });
 
-
-
-
-
-
 verInspeccion = function(id){
-    $("#modalCreainsp").modal('show');
+    $("#modalCreactrlprov").modal('show');
 
     var parametros = { 
         "idinspeccion":id 
@@ -861,6 +959,12 @@ verInspeccion = function(id){
         });
     });
 };
+
+
+
+
+
+
 
 cargarInspeccion = function(id, idclie, idprov, idmaq, idestable, idarea, idlinea){
     var params = { 

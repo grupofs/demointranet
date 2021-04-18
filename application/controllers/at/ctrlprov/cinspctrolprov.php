@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cregctrolprov extends CI_Controller {
+class Cinspctrolprov extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
-		$this->load->model('at/ctrlprov/mregctrolprov');
+		$this->load->model('at/ctrlprov/minspctrolprov');
 		$this->load->model('mglobales');
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));
@@ -14,7 +14,7 @@ class Cregctrolprov extends CI_Controller {
    /** CONTROL DE PROVEEDORES **/ 
     public function getcboclieserv() {	// Visualizar Clientes del servicio en CBO	
         
-		$resultado = $this->mregctrolprov->getcboclieserv();
+		$resultado = $this->minspctrolprov->getcboclieserv();
 		echo json_encode($resultado);
 	}
     public function getcboprovxclie() {	// Visualizar Proveedor por cliente en CBO	
@@ -22,7 +22,7 @@ class Cregctrolprov extends CI_Controller {
         $parametros = array(
             '@ccliente'   => $this->input->post('ccliente')
         );
-		$resultado = $this->mregctrolprov->getcboprovxclie($parametros);
+		$resultado = $this->minspctrolprov->getcboprovxclie($parametros);
 		echo json_encode($resultado);
 	}
     public function getcbomaqxprov() {	// Visualizar Maquilador por proveedor en CBO	
@@ -30,20 +30,12 @@ class Cregctrolprov extends CI_Controller {
         $parametros = array(
             '@cproveedor'   => $this->input->post('cproveedor')
         );
-		$resultado = $this->mregctrolprov->getcbomaqxprov($parametros);
-		echo json_encode($resultado);
-	}
-    public function getcboinspector() {	// Visualizar Inspectores en CBO	
-        
-        $parametros = array(
-            '@sregistro'   => $this->input->post('sregistro')
-        );
-		$resultado = $this->mregctrolprov->getcboinspector($parametros);
+		$resultado = $this->minspctrolprov->getcbomaqxprov($parametros);
 		echo json_encode($resultado);
 	}
     public function getcboestado() {	// Visualizar Estado en CBO	
         
-		$resultado = $this->mregctrolprov->getcboestado();
+		$resultado = $this->minspctrolprov->getcboestado();
 		echo json_encode($resultado);
 	}
     public function getcbocalif() {	// Visualizar Calificacion en CBO	
@@ -76,7 +68,7 @@ class Cregctrolprov extends CI_Controller {
 			'@cclientemaq'  => ($this->input->post('cclientemaq') == '') ? '%' : $cclientemaq,
 			'@inspector'	=> ($this->input->post('inspector') == '') ? '%' : $inspector,
 		);		
-		$resultado = $this->mregctrolprov->getbuscarctrlprov($parametros);
+		$resultado = $this->minspctrolprov->getbuscarctrlprov($parametros);
 		echo json_encode($resultado);
 	}
     public function getrecuperainsp() {	// Visualizar Maquilador por proveedor en CBO	
