@@ -334,17 +334,19 @@ getListTramGrid = function(param){
                 $(row).addClass('text-rojo');    
             }
         },
-        "columnDefs": [{
-            "targets": [2], 
-            "data": null, 
-            "render": function(data, type, row) { 
-                if(row.SREGISTROPDTO == "A") {
-                    return '<div class="circulo-verde"> <h3>A</h3> </div>';
-                }else{
-                    return '<div class="circulo-rojo"> <h3>I</h3> </div>';
-                }                      
+        "columnDefs": [
+            {
+                "targets": [2], 
+                "data": null, 
+                "render": function(data, type, row) { 
+                    if(row.SREGISTROPDTO == "A") {
+                        return '<div class="circulo-verde"> <h3>A</h3> </div>';
+                    }else{
+                        return '<div class="circulo-rojo"> <h3>I</h3> </div>';
+                    }                      
+                }
             }
-        }]
+        ]
         /*rowGroup: {
             startRender : function ( rows, group ) {
                 var collapsed = !!collapsedGroups[group];

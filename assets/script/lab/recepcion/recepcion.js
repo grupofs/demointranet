@@ -1,5 +1,5 @@
 
-var otblListRecepcion, otblListProducto;
+var otblListRecepcion, otblListdetrecepcion, otblListProducto;
 var varfdesde = '%', varfhasta = '%';
 
 
@@ -29,6 +29,20 @@ $(document).ready(function() {
 
     fechaAnioActual();
     $('#chkFreg').prop("checked", true);
+    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"lab/coti/ccotizacion/getcboclieserv",
+        dataType: "JSON",
+        async: true,
+        success:function(result){
+            $('#cboclieserv').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error');
+        }
+    });
 
     $('#frmRecepcion').validate({
         rules: {
@@ -96,7 +110,7 @@ fechaAnioActual = function(){
     varfhasta = '';
     
     var fecha = new Date();		
-    var fechatring1 = "01/01/" +fecha.getFullYear() ;
+    var fechatring1 = "01/01/" + (fecha.getFullYear() - 1) ;
     var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
 
     $('#txtFDesde').datetimepicker('date', moment(fechatring1, 'DD/MM/YYYY') );
@@ -128,7 +142,7 @@ $("#chkFreg").on("change", function () {
 
         
         var fecha = new Date();		
-        var fechatring1 = "01/01/" +fecha.getFullYear() ;
+        var fechatring1 = "01/01/" + (fecha.getFullYear() - 1) ;
         var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
         $('#txtFDesde').datetimepicker('date', fechatring1);
         $('#txtFHasta').datetimepicker('date', fechatring2);
@@ -170,9 +184,12 @@ listarBusqueda = function(){
             "url"   : baseurl+"lab/recepcion/crecepcion/getbuscarrecepcion/",
             "type"  : "POST", 
             "data": function ( d ) {
+                d.ccliente  = $('#cboclieserv').val();
                 d.fini      = varfdesde; 
                 d.ffin      = varfhasta;   
-                d.descr     = $('#txtdescri').val();  
+                d.descr     = $('#txtdescri').val(); 
+                d.estado    = $('#cboestado').val(); 
+                d.tieneot   = $('#cbotieneot').val(); 
             },     
             dataSrc : ''        
         },
@@ -184,27 +201,46 @@ listarBusqueda = function(){
               targets     :   0,
             },
             {"orderable": false, data: 'DCLIENTE', targets: 1},
-            {"orderable": false, data: 'NROCOTI', targets: 2},
-            {"orderable": false, data: 'ELABORADO', targets: 3},
+            {"orderable": false, data: null, defaultContent: '', "className":"details-control col-xs", targets: 2},
+            {"orderable": false, data: 'NROCOTI', targets: 3},
             {"orderable": false, data: 'DFECHA', targets: 4},
             {"orderable": false, data: 'ENTREGAINFO', targets: 5},
+            {"orderable": false, data: 'MONTOSINIGV', "class" : "col-s dt-body-right", targets: 6},
+            {"orderable": false, data: 'ITOTAL', "class" : "col-s dt-body-right", targets: 7},
+            {"orderable": false, data: 'ELABORADO', targets: 8},
             {"orderable": false, 
-                render:function(data, type, row){
+                render:function(data, type, row){            
+                    if(row.SCOTIZACION == "S"){
+                        varCerrar = '<a id="aAbrirCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Abrir" style="cursor:pointer; color:blue;"><span class="far fa-folder-open fa-2x" aria-hidden="true"> </span></a>'
+                    }else{
+                        varCerrar = '<a id="aCerrarCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Cerrar" style="cursor:pointer; color:red;"><span class="far fa-folder fa-2x" aria-hidden="true"> </span></a>'
+                    };
                     return '<div class="text-left" >' +
                         '<a title="Recepcion" style="cursor:pointer; color:green;" onClick="selRecep(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\',\'' + row.DCLIENTE + '\',\'' + row.NROCOTI + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
+                        '&nbsp;&nbsp;'+
+                        varCerrar
                     '</div>';
                 }
             }
         ],  
-        "columnDefs": [{
-            "targets": [2], 
-            "data": null, 
-            "render": function(data, type, row) {
-                return '<div>'+
-                '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
-                '</div>';
+        "columnDefs": [
+            {
+                "targets": [2], 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                        if (rowData.TIENEOT == 'N') {
+                            $(td).removeClass( 'details-control' );
+                        }
+                }
+            },{
+                "targets": [3], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                    '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
+                    '</div>';
+                }
             }
-        }],
+        ],
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'all'} ).nodes();
@@ -215,7 +251,7 @@ listarBusqueda = function(){
                 grupo = api.column(1).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="7"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+                        '<tr class="group"><td colspan="8"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -231,6 +267,90 @@ listarBusqueda = function(){
           } );
     }).draw();   
 };
+/* DETALLE RECEPCION */
+$('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
+    var tr = $(this).parents('tr');
+    var row = otblListRecepcion.row(tr);
+    var rowData = row.data();
+    
+        if ( row.child.isShown() ) {                    
+            row.child.hide();
+            tr.removeClass( 'details' );
+        }
+        else {
+            otblListRecepcion.rows().every(function(){
+                // If row has details expanded
+                if(this.child.isShown()){
+                    // Collapse row details
+                    this.child.hide();
+                    $(this.node()).removeClass('details');
+                }
+            })
+            row.child( 
+            '<table id="tblListdetrecepcion" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Nro OT</th><th>Fecha OT</th><th>Archivo</th><th></th></tr></thead><tbody>' +
+                '</tbody></table>').show();
+
+                otblListdetrecepcion = $('#tblListdetrecepcion').DataTable({
+                    "bJQueryUI": true,
+                    'bStateSave': true,
+                    'scrollY':        false,
+                    'scrollX':        true,
+                    'scrollCollapse': false,
+                    'bDestroy'    : true,
+                    'paging'      : false,
+                    'info'        : false,
+                    'filter'      : false,   
+                    'stateSave'   : true,
+                    'ajax'        : {
+                        "url"   : baseurl+"lab/recepcion/crecepcion/getlistdetrecepcion",
+                        "type"  : "POST", 
+                        "data": function ( d ) {
+                            d.cinternocotizacion = rowData.IDCOTIZACION;
+                            d.nversioncotizacion = rowData.NVERSION;
+                        },     
+                        dataSrc : ''        
+                    },
+                    'columns'     : [
+                        {
+                          "class"     :   "index col-xxs",
+                          orderable   :   false,
+                          data        :   null,
+                          targets     :   0
+                        },
+                        { "orderable": false,"data": "nordentrabajo", "class" : "col-sm", targets: 1},
+                        { "orderable": false,"data": "fordentrabajo", "class" : "col-sm", targets: 2},
+                        {"orderable": false, "class" : "col-m", 
+                            render:function(data, type, row){
+                                return  '<div>'+                                  
+                                '</div>' 
+                            }
+                        },
+                        {"orderable": false, "class" : "col-l", 
+                            render:function(data, type, row){
+                                return  '<div>'+                                  
+                                '</div>' 
+                            }
+                        },        
+                    ], 
+                });
+                // Enumeracion 
+                otblListdetrecepcion.on( 'order.dt search.dt', function () { 
+                    otblListdetrecepcion.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                      cell.innerHTML = i+1;
+                      } );
+                }).draw(); 
+
+            tr.addClass('details');
+        }
+});
+
+function pulsarListarCoti(e) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();
+        listarBusqueda();
+    }
+}  
 
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
@@ -258,6 +378,68 @@ selRecep= function(IDCOTIZACION,NVERSION,DCLIENTE,NROCOTI){
     /*$('#btnParticiopantes').show();*/
 };
 
+  
+$("body").on("click","#aCerrarCoti",function(event){
+    event.preventDefault();
+    
+    IDCOTI = $(this).attr("href");
+    NVERSION = $(this).attr("nver");
+    
+    Swal.fire({
+        title: 'Confirmar Cerrar',
+        text: "¿Está seguro de Cerrar la Cotizacion?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, cerrarlo!'
+    }).then((result) => {
+        if (result.value) {
+            $.post(baseurl+"lab/coti/ccotizacion/cerrarcotizacion/", 
+            {
+                idcotizacion    : IDCOTI,
+                nversion        : NVERSION,
+            },      
+            function(data){     
+                otblListCotizacion.ajax.reload(null,false); 
+                Vtitle = 'Se Cerro Correctamente';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);      
+            });
+        }
+    }) 
+});
+   
+$("body").on("click","#aAbrirCoti",function(event){
+    event.preventDefault();
+    
+    IDCOTI = $(this).attr("href");
+    NVERSION = $(this).attr("nver");
+    
+    Swal.fire({
+        title: 'Confirmar Abrir',
+        text: "¿Está seguro de Abrir la Cotizacion?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, abrirlo!'
+    }).then((result) => {
+        if (result.value) {
+            $.post(baseurl+"lab/coti/ccotizacion/abrircotizacion/", 
+            {
+                idcotizacion    : IDCOTI,
+                nversion        : NVERSION,
+            },      
+            function(data){     
+                otblListCotizacion.ajax.reload(null,false); 
+                Vtitle = 'Se Abrio Correctamente';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);      
+            });
+        }
+    }) 
+});
 
 $('#btnRetornarLista').click(function(){
     $('#tablab a[href="#tablab-list"]').tab('show');  

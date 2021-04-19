@@ -137,10 +137,22 @@
                                         <input type="hidden" name="mtxtidcotizacion" class="form-control" id="mtxtidcotizacion" >
                                         <input type="hidden" name="mtxtnroversion" class="form-control" id="mtxtnroversion" >
                                         <div class="row">
-                                            <div class="col-md-6"> 
-                                                <label>Nro. Cotizacion/ Producto</label> 
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Clientes</label>
+                                                    <select class="form-control select2bs4" id="cboclieserv" name="cboclieserv" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>Estado</label>
                                                 <div>
-                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control" />
+                                                    <select class="form-control" id="cboestado" name="cboestado">
+                                                        <option value="%" selected="selected">TODOS</option>
+                                                        <option value="N">ABIERTO</option>
+                                                        <option value="S">CERRADO</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">    
@@ -164,13 +176,32 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-4"> 
+                                                <label>Nro. Cotizacion/ Producto</label> 
+                                                <div>
+                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>Ver OT</label>
+                                                <div>
+                                                    <select class="form-control" id="cbotieneot" name="cbotieneot">
+                                                        <option value="%" selected="selected">TODOS</option>
+                                                        <option value="N">Sin OT</option>
+                                                        <option value="S">Con OT</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>                
                                                 
                                     <div class="card-footer justify-content-between"> 
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="text-right">
-                                                    <button type="submit" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
+                                                    <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button> 
+                                                    <button type="submit" class="btn btn-success" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>    
                                                 </div>
                                             </div>
                                         </div>
@@ -188,10 +219,13 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>Cliente</th>
+                                                        <th></th>
                                                         <th>Cotizacion</th>
-                                                        <th>Elaborado por</th>
                                                         <th>Fecha</th>
                                                         <th>Entrega</th>
+                                                        <th>Monto sin IGV</th>
+                                                        <th>Monto Total</th>
+                                                        <th>Elaborado por</th>
                                                         <th></th>
                                                     </tr>
                                                     </thead>

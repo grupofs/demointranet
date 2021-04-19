@@ -393,7 +393,7 @@ class Ccotizacion extends CI_Controller {
                     <tr>
                         <th width="30%" align="center">LOCAL</th>
                         <th width="35%" align="center">PRODUCTO</th>
-                        <th width="20%" align="center">CONDICIONES DE LA MUESTRA (*)</th>
+                        <th width="20%" align="center">CONDICIONES DE LA MUESTRA</th>
                         <th width="15%" align="center">CANTIDAD MUESTRA MINIMA</th>
                     </tr>';
                     //</table>
@@ -570,11 +570,11 @@ class Ccotizacion extends CI_Controller {
             </tr>
             <tr>
                 <td colspan="3"></td>
-                <td>'.$detraccion.'</td>
+                <td>CCI: 00219400156160801692</td>
             </tr>
             <tr>
                 <td colspan="3"></td>
-                <td>CCI: 00219400156160801692</td>
+                <td>'.$detraccion.'</td>
             </tr>
             <tr>
                 <td colspan="4" style="height:10px;">

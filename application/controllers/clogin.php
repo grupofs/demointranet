@@ -11,7 +11,7 @@ class Clogin extends CI_Controller {
 
 	}
 	
-/*****************************/
+/****************/
 /** LOGEARSE **/ 
 	public function index(){
 		$this->load->view('Error403');

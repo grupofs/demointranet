@@ -25,6 +25,13 @@
     .modal-lg{
         max-width: 1000px !important;
     }
+
+    .dataTables_scrollBody thead{
+        visibility:hidden;
+    }
+    .hidden {
+        display: none;
+    }
 </style>
 
 <!-- content-header -->
@@ -121,7 +128,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Inspector</label>
                                                     <select class="form-control select2bs4" id="cboinspector" name="cboinspector"style="width: 100%;">
@@ -418,16 +425,33 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="text-info">Producto / Marca</div>
+                    <div class="col-md-6">
+                        <div class="text-info">Contacto Principal</div>
                         <div>
-                            <input type="text" name="mtxtProdMarca"id="mtxtProdMarca" class="form-control" >
+                            <select class="form-control select2bs4" id="cbocontacprinc" name="cbocontacprinc" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-info">Tipo de establecimiento</div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbotipoestable" name="cbotipoestable" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-info">Costo</div>
+                        <div>
+                            <input type="number" name="txtcostoestable"id="txtcostoestable" class="form-control" placeholder="0.00" min="0.00">
                         </div>
                     </div>
                 </div>
+                <br>
                 <div id="regInspeccion" style="border-top: 1px solid #ccc; padding-top: 10px;">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <h4>
                                 <i class="fas fa-list-alt"></i> INSPECCION
                             </h4>
@@ -468,6 +492,61 @@
 
         <div class="modal-body">          
             <input type="hidden" id="mhdnAccioncierreesp" name="mhdnAccioncierreesp">                          
+            <div class="form-group">  
+                <div class="row">
+                    <div class="col-md-3"> 
+                        <div class="text-info">Codigo</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control"><!-- ID -->
+                        </div>
+                    </div> 
+                    <div class="col-md-3"> 
+                        <div class="text-info">Fecha</div>
+                        <div>    
+                            <input type="text" name="txtcierrefservicio"id="txtcierrefservicio" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask><!-- ID -->
+                        </div>
+                    </div> 
+                </div> 
+            </div>                         
+            <div class="form-group">  
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-info">Tipo de Cierre </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocierreTipo" name="cbocierreTipo" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+            </div>   
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-info" id="mbtnGCreactrl">Grabar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-convalidacion --> 
+<div class="modal fade" id="modalConvalidacion" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="form-horizontal" id="frmConvalidacion" name="frmConvalidacion" action="<?= base_url('at/ctrlprov/cregctrolprov/setconvalidacion')?>" method="POST" enctype="multipart/form-data" role="form"> 
+
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Convalidacion</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">          
+            <input type="hidden" id="mhdnAccionconvali" name="mhdnAccionconvali">                          
             <div class="form-group">  
                 <div class="row">
                     <div class="col-md-3"> 
