@@ -20,12 +20,17 @@ class Crecepcion extends CI_Controller {
 		$fini       = $this->input->post('fini');
 		$ffin       = $this->input->post('ffin');
 		$descr      = $this->input->post('descr');
+		$estado      = $this->input->post('estado');
+		$tieneot      = $this->input->post('tieneot');
         
         $parametros = array(
 			'@CCIA'         => '2',
+			'@CCLIENTE'     => ($this->input->post('ccliente') == '') ? '0' : $ccliente,
 			'@FINI'         => ($this->input->post('fini') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
 			'@FFIN'         => ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
 			'@DESCR'		=> ($this->input->post('descr') == '') ? '%' : '%'.$descr.'%',
+			'@ESTADO'		=> ($this->input->post('estado') == '%') ? '%' : $estado,
+			'@TIENEOT'		=> ($this->input->post('tieneot') == '%') ? '%' : $tieneot,
         );
         $retorna = $this->mrecepcion->getbuscarrecepcion($parametros);
         echo json_encode($retorna);		
@@ -552,5 +557,12 @@ class Crecepcion extends CI_Controller {
         $retorna = $this->mrecepcion->setupdateFechaOT($mhdncinternoordenservicio,$fordentrabajo,$nordentrabajo);
         echo json_encode($retorna);		
 	}
+    
+    public function getlistdetrecepcion() {	// Visualizar
+        $cinternocotizacion   = $this->input->post('cinternocotizacion');
+        $nversioncotizacion   = $this->input->post('nversioncotizacion');
+        $resultado = $this->mrecepcion->getlistdetrecepcion($cinternocotizacion, $nversioncotizacion);
+        echo json_encode($resultado);
+    }
 }
 ?>

@@ -307,7 +307,7 @@ fechaAnioActual = function(){
     varfhasta = '';
     
     var fecha = new Date();		
-    var fechatring1 = "01/01/" +fecha.getFullYear() ;
+    var fechatring1 = "01/01/" + (fecha.getFullYear() - 1) ;
     var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
 
     $('#txtFDesde').datetimepicker('date', moment(fechatring1, 'DD/MM/YYYY') );
@@ -339,7 +339,7 @@ $("#chkFreg").on("change", function () {
 
         
         var fecha = new Date();		
-        var fechatring1 = "01/01/" +fecha.getFullYear() ;
+        var fechatring1 = "01/01/" + (fecha.getFullYear() - 1) ;
         var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
         $('#txtFDesde').datetimepicker('date', fechatring1);
         $('#txtFHasta').datetimepicker('date', fechatring2);
@@ -423,8 +423,6 @@ listarBusqueda = function(){
                 render:function(data, type, row){                    
                     if(row.SCOTIZACION == "S"){
                         varCerrar = '<a id="aAbrirCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Abrir" style="cursor:pointer; color:blue;"><span class="far fa-folder-open fa-2x" aria-hidden="true"> </span></a>'
-                    }else{
-                        varCerrar = '<a id="aCerrarCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Cerrar" style="cursor:pointer; color:red;"><span class="far fa-folder fa-2x" aria-hidden="true"> </span></a>'
                     };
 
                     return '<div style="text-align: center;">' +

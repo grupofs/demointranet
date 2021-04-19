@@ -10,7 +10,7 @@ class Mrecepcion extends CI_Model {
    /** LISTADO **/ 
 
     public function getbuscarrecepcion($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getbuscarrecepcion(?,?,?,?)";
+        $procedure = "call usp_lab_coti_getbuscarrecepcion(?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -94,6 +94,18 @@ class Mrecepcion extends CI_Model {
 		if($this->db->update("pordenserviciotrabajo", $data)){
 			return TRUE;
 		}
-	}
+    }
+    
+    public function getlistdetrecepcion($cinternocotizacion, $nversioncotizacion) { // Visualizar 
+        $sql = "select nordentrabajo, DATEFORMAT(fordentrabajo, 'DD/MM/YYYY') as 'fordentrabajo', cinternoordenservicio from pordenserviciotrabajo 
+                where cinternocotizacion = '".$cinternocotizacion."' and nversioncotizacion = ".$nversioncotizacion.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}			   
+    }
 }
 ?>
