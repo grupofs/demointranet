@@ -323,9 +323,10 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
                         { "orderable": false,"data": "nordentrabajo", "class" : "col-sm", targets: 1},
                         { "orderable": false,"data": "fordentrabajo", "class" : "col-sm", targets: 2},
                         {"orderable": false, "class" : "col-m", 
-                            render:function(data, type, row){
-                                return  '<div>'+                                  
-                                '</div>' 
+                            render:function(data, type, row){  
+                                return '<div>'+
+                                '    <p><a title="OT" style="cursor:pointer;" onclick="pdfOT(\'' + row.cinternoordenservicio + '\');" class="pull-left"><i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
+                                '</div>';
                             }
                         },
                         {"orderable": false, "class" : "col-l", 
@@ -353,6 +354,10 @@ function pulsarListarCoti(e) {
         listarBusqueda();
     }
 }  
+
+pdfOT = function(cinternoordenservicio){
+    window.open(baseurl+"lab/recepcion/crecepcion/pdfOrderServ/"+cinternoordenservicio);
+};
 
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);

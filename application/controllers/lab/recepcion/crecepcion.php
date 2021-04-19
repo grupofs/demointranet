@@ -122,7 +122,7 @@ class Crecepcion extends CI_Controller {
     } 
     
 
-	public function pdfOrderServ($idcoti,$nversion) { // recupera los cPTIZACION
+	public function pdfOrderServ($icinternoordenservicio) { // recupera los cPTIZACION
         $this->load->library('pdfgenerator');
 
         $date = getdate();
@@ -156,7 +156,7 @@ class Crecepcion extends CI_Controller {
                 </head>
                 <body>';
 
-        			
+        /*			
         $res = $this->mcotizacion->getpdfdatoscoti($idcoti,$nversion);
         if ($res){
             foreach($res as $row){
@@ -212,7 +212,7 @@ class Crecepcion extends CI_Controller {
                         <td>Página</td>
                         <td align="right">2D</td>
                     </tr>
-                </table>
+                </table>';
                 <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
                     <tr>
                         <td colspan="4"><b>N°'.$dcotizacion.'</b></td>
@@ -513,10 +513,11 @@ class Crecepcion extends CI_Controller {
                 <td colspan="4"><b>'.$usuariocrea.'</b></td>
             </tr>
         </table>';
+        */
 
         $html .= '</div></body></html>';
-		$filename = 'coti';
-		$this->pdfgenerator->generate($html, $filename);
+		$filename = 'Cotizacion-';//.$namefile;
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
         //echo $html;
     }
     

@@ -682,8 +682,8 @@ class Ccotizacion extends CI_Controller {
 
         $html .= '</main></body></html>';
 		$filename = 'Cotizacion-'.$namefile;
-		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
-        //echo $html;
+        $this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
+        
 	}
 
     public function setduplicarprodxcoti() { // Registrar informe PT
