@@ -132,7 +132,8 @@
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
-                                    </div>                                
+                                    </div>   
+                                    <form class="form-horizontal" id="frmbuscarcoti" name="frmbuscarcoti" action="<?= base_url('lab/recepcion/crecepcion/exportexcellistcoti')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body">
                                         <input type="hidden" name="mtxtidcotizacion" class="form-control" id="mtxtidcotizacion" >
                                         <input type="hidden" name="mtxtnroversion" class="form-control" id="mtxtnroversion" >
@@ -206,6 +207,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
