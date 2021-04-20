@@ -183,12 +183,14 @@
                             $ci = &get_instance();
                             $ci->load->model("mprincipal");
                             $arearol= $ci->mprincipal->getareasacceso($cia,$idrol);
+                            if ($arearol){
                             foreach($arearol as $marearol){                
                         ?>   
                         <li class="nav-header"><?php echo $marearol->darea; ?></li>                  
                         <?php
                             $carea = $marearol->carea;
                             $modulorol= $ci->mprincipal->getmenumodulo($cia,$idrol,$carea);
+                            if ($modulorol){
                             foreach($modulorol  as $mmodulorol){
                         ?>
                         <li class="nav-item has-treeview">
@@ -202,7 +204,8 @@
                             <ul class="nav nav-treeview">                  
                             <?php
                                 $idmodulo = $mmodulorol->id_modulo;
-                                $opcionrol= $ci->mprincipal->getmenuopciones($idrol,$idmodulo);                                
+                                $opcionrol= $ci->mprincipal->getmenuopciones($idrol,$idmodulo);
+                                if ($opcionrol){                                
                                 foreach($opcionrol  as $mopcionrol){
                                     $vista = $mopcionrol->vista_opcion;
                                     $script = $mopcionrol->script_opcion;
@@ -218,13 +221,13 @@
                                     </form>
                                 </li>              
                             <?php
-                                } 
+                                }} 
                             ?>    
                             </ul>
                         </li>               
                         <?php
-                            } 
-                            } 
+                            }} 
+                            }} 
                         ?>   
                                          
                     </ul>

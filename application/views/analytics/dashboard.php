@@ -2,20 +2,33 @@
   $idusuario = $this -> session -> userdata('s_idusuario');
   $idempleado = $this -> session -> userdata('s_idempleado');
   $datosuser = $this -> session -> userdata('s_name');
-  
-  foreach($datos_resumenpermisos as $mresumenpermisos){ 
-    $nro_horasextras = $mresumenpermisos->nro_horasextras;
-    $nro_permisos = $mresumenpermisos->nro_permisos;
-    $horaspendientes = $mresumenpermisos->horaspendientes;
+  if ($datos_resumenpermisos){
+    foreach($datos_resumenpermisos as $mresumenpermisos){ 
+      $nro_horasextras = $mresumenpermisos->nro_horasextras;
+      $nro_permisos = $mresumenpermisos->nro_permisos;
+      $horaspendientes = $mresumenpermisos->horaspendientes;
 
-    $diasvaca = $mresumenpermisos->diasvaca;
-    $nro_permcuentavaca = $mresumenpermisos->nro_permcuentavaca;
-    $nro_vacaciones = $mresumenpermisos->nro_vacaciones;
-    $diaspendientes = $mresumenpermisos->diaspendientes;
+      $diasvaca = $mresumenpermisos->diasvaca;
+      $nro_permcuentavaca = $mresumenpermisos->nro_permcuentavaca;
+      $nro_vacaciones = $mresumenpermisos->nro_vacaciones;
+      $diaspendientes = $mresumenpermisos->diaspendientes;
 
-    $permestado = $mresumenpermisos->permOpcion;
-    $vacaestado = $mresumenpermisos->vacaOpcion;
-  }   
+      $permestado = $mresumenpermisos->permOpcion;
+      $vacaestado = $mresumenpermisos->vacaOpcion;
+    } 
+  }else{
+    $nro_horasextras = 0;
+    $nro_permisos = 0;
+    $horaspendientes = 0;
+    
+    $diasvaca = 0;
+    $nro_permcuentavaca = 0;
+    $nro_vacaciones = 0;
+    $diaspendientes = 0;
+    
+    $permestado = 0;
+    $vacaestado = 0;
+  }  
 ?>
 <style>
   #cboRecuperahora[readonly]{
