@@ -28,7 +28,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">  
-        <div class="card card-success">
+        <div class="card card-info">
             <div class="card-header">
                 <h3 class="card-title"><b>BUSQUEDA</b></h3>
                 <div class="card-tools">
@@ -38,17 +38,10 @@
           
             <div class="card-body">
                 <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
+                <input type="hidden" class="form-control" id="hdnCUsuario" name="hdnCUsuario" value="<?php echo $cusu ?>">
+                <input type="hidden" class="form-control" id="hdnCCliente" name="hdnCCliente" value="<?php echo $cclie ?>">
 
-
-                <div class="row">     
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label>Proveedor</label>
-                            <select class="form-control select2bs4" id="cboProveedor" name="cboProveedor" style="width: 100%;">
-                                <option value="" selected="selected">Cargando...</option>
-                            </select>
-                        </div>
-                    </div>   
+                <div class="row">      
                     <div class="col-md-3">
                         <label>&nbsp;&nbsp;</label> 
                         <div class="form-group clearfix">
@@ -99,9 +92,35 @@
                                 </div>
                             </div>
                         </div>
-                    </div>              
-                </div> 
-                </div>             
+                    </div> 
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label>Proveedor</label>
+                            <select class="form-control select2bs4" id="cboProveedor" name="cboProveedor" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>               
+                </div>                 
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-info">Área del Cliente <span class="text-requerido">*</span></div>
+                        <div>
+                            <select class="form-control select2bs4" id="cboareaclie" name="cboareaclie" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-info">Calificación de Inspección </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocalificacion" name="cbocalificacion" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>             
                         
             <div class="card-footer justify-content-between"> 
                 <div class="row">
@@ -116,28 +135,25 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="card card-outline card-success">
+                <div class="card card-outline card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><b>LISTADO DE FACTURAS</b></h3>
+                        <h3 class="card-title"><b>LISTADO DE RESULTADOS GENERALES</b></h3>
                     </div>
                 
                     <div class="card-body" style="overflow-x: scroll;">
-                        <table id="tblCdroFactura" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblconsresulgral" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
-                                <th></th>
-                                <th>Cliente</th>
+                                <th>Categoria</th>
                                 <th>Proveedor</th>
-                                <th>N° RUC</th>
-                                <th>Area Cliente</th>
-                                <th>Importe S/. Total (sin IGV)</th>
-                                <th>Mes Facturacion</th>
-                                <th>Direccion de Planta</th>
-                                <th>Linea Inspeccion</th>
-                                <th>Fecha Inspeccion</th>
-                                <th>N° Informe</th>
-                                <th>Estado</th>
-                                <th>Inspector</th>
+                                <th>Dirección de Inspección</th>
+                                <th>Fecha Servicio</th>
+                                <th>Calificación</th>
+                                <th>CheckList</th>
+                                <th>01</th>
+                                <th>02</th>
+                                <th>03</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
