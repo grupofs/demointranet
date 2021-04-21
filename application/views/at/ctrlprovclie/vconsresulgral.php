@@ -167,3 +167,33 @@
     </div>
 </section>
 <!-- /.Main content -->
+
+<!-- /.modal-leyenda--> 
+<div class="modal fade" id="modalLeyenda" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Leyenda</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body"> 
+            <div class="form-group">  
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <div class="text-info"> <label id="nameChkl"></label></div>
+                        <div id="nameLeyenda"></div>
+                    </div> 
+                </div> 
+            </div>           
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->

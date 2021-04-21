@@ -1,6 +1,6 @@
 
 var otblListctrlprov;
-var varfdesde = '%', varfhasta = '%';
+var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
 
@@ -157,6 +157,10 @@ $("#btnBuscar").click(function (){
         v_mes = 0;
     } 
 
+    var select = document.getElementById("cbocalificacion"), 
+    value = select.value, 
+    text_calif = select.options[select.selectedIndex].innerText;
+   
     var parametros = {
         "ccliente"      : $('#hdnCCliente').val(),
         "anio"          : v_anio,
@@ -165,7 +169,7 @@ $("#btnBuscar").click(function (){
         "ffin"          : varfhasta,
         "cclienteprov"  : $('#cboProveedor').val(),
         "area"          : $('#cboareaclie').val(),
-        "dcalificacion" : $('#cbocalificacion').val(),
+        "dcalificacion" : text_calif,
     };  
 
     getListConsresulgral(parametros);
@@ -184,7 +188,7 @@ getListConsresulgral = function(param){
         "paging"      	: false,
         "info"        	: true,
         "filter"      	: true, 
-        "ordering"		: true,
+        "ordering"		: false,
         "responsive"    : false,
         "select"        : true,
         "ajax"	: {
@@ -194,36 +198,61 @@ getListConsresulgral = function(param){
             dataSrc : ''      
         },
         "columns"	: [
-            {data: 'VENTASMARCAS', "class": "col-xs"},
-            {data: 'ANIO', "class": "col-xs"},
-            {data: 'DIVISION', "class": "col-xs"},
-            {data: 'CATEGORIASECCION', "class": "col-sm"},
-            {data: 'RUC', "class": "col-s"},
-            {data: 'PROVEEDOR', "class": "col-xm"},
-            {data: 'LINEADEPRODUCCION', "class": "col-xm"},
-            {data: 'MARCA', "class": "col-xl"},
-            {data: 'DIRECCIONLOCALINSPECCIONADO', "class": "col-l"},
-            {data: 'TIPO', "class": "col-s"},
-            {data: 'PROG', "class": "col-s"},
-            {data: 'MESPROG', "class": "col-s"},
-            {data: 'MESEJE', "class": "col-s"},
-            {data: 'FECHAEJE', "class": "col-s"},
-            {data: 'LABORATORIO', "class": "col-s"},
-            {data: 'ESTADO', "class": "col-s"},
-            {data: 'OBSERVACIONES', "class": "col-l"},
+            {data: 'AREACLIENTE', "class": "col-sm"},
+            {data: 'PROVEEDOR', "class": "col-lm"},
+            {data: 'DIREST', "class": "col-lm"},
+            {data: 'FECHASERVICIO', "class": "col-s"},
             {data: 'CALIFICACION', "class": "col-s"},
-            {data: 'CLASIFICACION', "class": "col-s"},
-            {data: 'COSTOSIGV', "class": "col-s"},
-            {data: 'GASTOSPORVIATICOS', "class": "col-sm"},
-            {data: 'EMAIL', "class": "col-m"},
-        ], 
-        "order": [[ 14, "asc" ]] 
+            {data: 'CHECKLIST', "class": "col-m"},
+            {data: '01', "class": "col-xs"},
+            {data: '02', "class": "col-xs"},
+            {data: '03', "class": "col-xs"},
+            {data: null,
+                render:function(data, type, row){
+                    return '<div style="text-align: center;">'+
+                        '<a data-toggle="modal" title="Leyenda" style="cursor:pointer; color:#3c763d;" data-target="#modalLeyenda" onClick="javascript:verLeyenda(\''+row.CCHECKLIST+'\',\''+row.CHECKLIST+'\');"><span class="fas fa-tags fa-2x" aria-hidden="true"> </span> </a>'+
+                    '</div>';
+                }
+            },
+        ],  
+        /*"columnDefs": [{
+            "targets": [9],
+            "render": function ( data, type, row ) {
+                return '<div>'+
+                    '<a data-title ="' + row.LEYENDA + '"><span class="fas fa-edit fa-2x" aria-hidden="true"></span></a>'
+                    '</div>';
+            }
+        }],
+        createdRow: function ( row, data, index ) {
+            $("td:first", row).attr("title", data.LEYENDA);
+        }*/
     });
     // Enumeracion 
-    otblListConsolcencosud.on( 'order.dt search.dt', function () { 
+    /*otblListConsolcencosud.on( 'order.dt search.dt', function () { 
         otblListConsolcencosud.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
         cell.innerHTML = i+1;
         });
-    } ).draw(); 
+    } ).draw(); */
      
+};
+
+verLeyenda = function(cchecklist,checklist){
+    document.querySelector('#nameChkl').innerText = checklist;
+    
+    var params = {"cchecklist" : cchecklist};    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprovclie/cconsresulgral/getleyendachecklist",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#nameLeyenda').html(result);
+        },
+        error: function(){
+          alert('Error, No se puede autenticar por error :: nameLeyenda');
+        }
+    });
 };
