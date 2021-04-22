@@ -156,27 +156,21 @@ $("#btnBuscar").click(function (){
         v_anio = 0;
         v_mes = 0;
     } 
-   
-    var select = document.getElementById("cbocalificacion"), 
-    value = select.value, 
-    text_calif = select.options[select.selectedIndex].innerText;
-
+     
     var parametros = {
         "ccliente"      : $('#hdnCCliente').val(),
         "anio"          : v_anio,
         "mes"           : v_mes,
         "fini"          : varfdesde,
         "ffin"          : varfhasta,
-        "cclienteprov"  : $('#cboProveedor').val(),
         "area"          : $('#cboareaclie').val(),
-        "dcalificacion" : text_calif,
     };  
 
-    getListConsseguiaaccf(parametros);
+    getListConsseguiaacc(parametros);
     
 });
 
-getListConsseguiaaccf = function(param){       
+getListConsseguiaacc = function(param){       
     otblconsseguiaacc = $('#tblconsseguiaacc').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -192,24 +186,25 @@ getListConsseguiaaccf = function(param){
         "responsive"    : false,
         "select"        : true,
         "ajax"	: {
-            "url"   : baseurl+"at/ctrlprovclie/cconssegiaacc/getconsseguiaacc",
+            "url"   : baseurl+"at/ctrlprovclie/cconsseguiaacc/getconsseguiaacc",
             "type"  : "POST", 
             "data"  : param,     
             dataSrc : ''      
         },
         "columns"	: [
-            {data: 'CALIFICACION', "class": "col-s"},
-            {data: 'AREA', "class": "col-m"},
-            {data: 'NC', "class": "dt-body-center col-sm"},
-            {data: 'NRC', "class": "dt-body-center col-sm"},
-            {data: 'OB', "class": "dt-body-center col-sm"},
-            {data: 'OBR', "class": "dt-body-center col-sm"},
-            {data: 'OM', "class": "dt-body-center col-sm"},
-            {data: 'OL', "class": "dt-body-center col-sm"},
-            {data: 'NCL', "class": "dt-body-center col-sm"},
-            {data: 'OPL', "class": "dt-body-center col-sm"},
-            {data: 'NCPL', "class": "dt-body-center col-sm"},
+            {data: null, "class": "col-xxs"},
+            {data: 'AREACLIENTE', "class": "col-l"},
+            {data: 'NROPROVEEDOR', "class": "dt-body-center col-s"},
+            {data: 'ACRECUPERADAS', "class": "dt-body-center col-sm"},
+            {data: 'TOTALAC', "class": "dt-body-center col-sm"},
+            {data: 'PTOTALACRE', "class": "dt-body-center col-sm"},
         ]
     });
+    // Enumeracion 
+    otblconsseguiaacc.on( 'order.dt search.dt', function () { 
+        otblconsseguiaacc.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw(); 
      
 };
