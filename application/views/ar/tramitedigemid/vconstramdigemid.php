@@ -152,19 +152,19 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Código</label>
-                                <input type="text" class="form-control" id="txtcodprodu" name="txtcodprodu" placeholder="...">
+                                <input type="text" class="form-control" id="txtcodprodu" name="txtcodprodu" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Nro. RS</label>
-                                <input type="text" class="form-control" id="txtnrors" name="txtnrors" placeholder="...">
+                                <input type="text" class="form-control" id="txtnrors" name="txtnrors" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Nombre del producto /Descripción SAP</label>
-                                <input type="text" class="form-control" id="txtdescprodu" name="txtdescprodu" placeholder="...">
+                                <input type="text" class="form-control" id="txtdescprodu" name="txtdescprodu" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Modelo /tono /variedad /submarca</label>
-                                <input type="text" class="form-control" id="txtcaractprodu" name="txtcaractprodu" placeholder="...">
+                                <input type="text" class="form-control" id="txtcaractprodu" name="txtcaractprodu" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -186,7 +186,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Nº de Expediente</label>
-                                <input type="text" class="form-control" id="txtnroexpe" name="txtnroexpe" placeholder="...">
+                                <input type="text" class="form-control" id="txtnroexpe" name="txtnroexpe" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
                     </div>

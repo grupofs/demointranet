@@ -265,7 +265,6 @@ class Ccotizacion extends CI_Controller {
                         .page-number:before {
                           content: counter(page);
                         }
-
                         th { 
                             text-align: center; 
                             border: 1px solid black;
