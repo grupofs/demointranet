@@ -181,7 +181,7 @@
                                             <div class="col-md-4"> 
                                                 <label>Nro. Cotizacion/ Producto</label> 
                                                 <div>
-                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control" />
+                                                    <input type="text" id="txtdescri" name="txtdescri" class="form-control"  onkeypress="pulsarListarCoti(event)"/>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
