@@ -136,7 +136,7 @@
                                         <li class="list-group-item li-perfil">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <b>Dirección : </b>
+                                                    <b>Dirección: </b>
                                                 </div> 
                                                 <div class="col-9">
                                                     <a><?php echo $dircliente ?></a>

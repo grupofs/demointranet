@@ -311,6 +311,7 @@ getListTramGrid = function(param){
             {"class":"col-sm", "data": "FABRIPROD"},    
             {"class":"col-sm", "data": "PAISPROD"},  
             {"class":"col-sm", "data": "REGSANIPROD"},  
+            {"class":"col-sm", "data": "VIDAUTIL"},
             {"class":"col-s", "data": "FECHAVENCE"}
         ],
         "drawCallback": function ( settings ) {

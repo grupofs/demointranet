@@ -279,6 +279,7 @@
 									<th>Fabricante</th>
 									<th>Pais</th>
 									<th>RS</th>
+									<th>Tiempo Vida Util</th>
 									<th>Fec. Vence</th>
 								</tr>
 								</thead>

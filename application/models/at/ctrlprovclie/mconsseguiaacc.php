@@ -55,6 +55,28 @@ class Mconsseguiaacc extends CI_Model {
             return False;
         }		   
     }
+    public function getdetseguiaacc($parametros)
+    {
+        $procedure = "call usp_at_ctrlprov_getdetseguiaacc(?,?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros);
+
+        if ($query->num_rows() > 0) { 
+            return $query->result();
+        }{
+            return False;
+        }		   
+    }
+    public function getaacc($parametros)
+    {
+        $procedure = "call usp_at_ctrlprov_getaacc(?,?)";
+        $query = $this->db-> query($procedure,$parametros);
+
+        if ($query->num_rows() > 0) { 
+            return $query->result();
+        }{
+            return False;
+        }		   
+    }
 
 }
 ?>

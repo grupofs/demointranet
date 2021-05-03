@@ -83,16 +83,13 @@
                         <table id="tblconscertifprov" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Categoria</th>
-                                <th>Proveedor</th>
-                                <th>Dirección de Inspección</th>
-                                <th>Fecha Servicio</th>
-                                <th>Calificación</th>
-                                <th>CheckList</th>
-                                <th>01</th>
-                                <th>02</th>
-                                <th>03</th>
-                                <th></th>
+                                <th>Certificadora</th>
+                                <th>Certificación</th>
+                                <th>No Aplica</th>
+                                <th>No Tiene</th>
+                                <th>Si Tiene</th>
+                                <th>Convalidado</th>
+                                <th>Total</th>
                             </tr>
                             </thead>
                             <tbody>

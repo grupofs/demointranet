@@ -300,8 +300,8 @@
         max-width: 30px !important;
     }
 
-    .dt-body-right {text-align: right;}
-    .dt-body-center {text-align: center;}
+    .dt-body-right > td  {text-align: right;}
+    .dt-body-center > td  {text-align: center;}
 
     .index {
         vertical-align: inherit !important;
