@@ -20,6 +20,18 @@ class Mconscertifprov extends CI_Model {
             return False;
         }		   
     }
+    
+    public function getcertidet($parametros)
+    {
+        $procedure = "call usp_at_ctrlprov_getcertidet(?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros);
+
+        if ($query->num_rows() > 0) { 
+            return $query->result();
+        }{
+            return False;
+        }		   
+    }
 
 }
 ?>

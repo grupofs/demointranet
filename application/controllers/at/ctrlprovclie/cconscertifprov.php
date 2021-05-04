@@ -33,9 +33,23 @@ class Cconscertifprov extends CI_Controller {
         $resultado = $this->mconscertifprov->getconscertifprov($parametros);
         echo json_encode($resultado);
     } 
-    public function getleyendachecklist() {	// Visualizar 	
-        $cchecklist = $this->input->post('cchecklist');
-		$resultado 	= $this->mconsresulgral->getleyendachecklist($cchecklist);
+    public function getcertidet() {	// Visualizar 	
+		$varnull    =   '';
+
+        $CCLIENTE       = $this->input->post('CCLIENTE');
+        $ANIO           = $this->input->post('ANIO');
+        $MES            = $this->input->post('MES');
+		$CERTI          = $this->input->post('CERTI');
+		$ESTADO         = $this->input->post('ESTADO');
+        
+        $parametros = array(
+			'@CCLIENTE'		=>  $CCLIENTE,
+			'@ANIO'		    =>  $ANIO,
+			'@MES'		    =>  $MES,
+			'@CERTI'		=>  ($this->input->post('CERTI') == $varnull) ? NULL : $CERTI,//$CERTI,
+			'@ESTADO'	    =>  $ESTADO,
+        );
+		$resultado 	= $this->mconscertifprov->getcertidet($parametros);
 		echo json_encode($resultado);
 	}
 }

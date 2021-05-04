@@ -181,6 +181,63 @@
                                 </div> 
                             </div>
                             <div class="tab-pane fade" id="tabhallazgocalif-det" role="tabpanel" aria-labelledby="tabhallazgocalif-det-tab">
+                                <div class="card card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title">BUSQUEDA</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                                        </div>
+                                    </div>                        
+                                    <div class="card-body">                                        
+                                        <div class="row">                    
+                                        </div>   
+                                    </div>
+                                    <div class="card-footer justify-content-between" style="background-color: #E0F4ED;">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="text-right">
+                                                    <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                                    <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card card-outline card-success">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Detalle de Hallazgos por calificación</h3>
+                                            </div>                                       
+                                            <div class="card-body" style="overflow-x: scroll;">
+                                                <table id="tbldetseguiaacc" class="table table-striped table-bordered compact" style="width:100%">
+                                                    <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Proveedor</th>
+                                                        <th>Establecimiento / Maquilador</th>
+                                                        <th>Linea de Proceso</th>
+                                                        <th>Nro. de Informe</th>
+                                                        <th>Fecha Servicio</th>
+                                                        <th>No conformidad (NC)</th>
+                                                        <th>No conformidad reiterativa (NCR)</th>
+                                                        <th>Observacion (OB)</th>
+                                                        <th>Observacion reiterativa (OBR)</th>
+                                                        <th>Oportunidades de mejora (OM)</th>
+                                                        <th>Observacion levantada (OL)</th>
+                                                        <th>No conformidad levantada (NCL)</th>
+                                                        <th>Observacion parc. Levantada (OPL)</th>
+                                                        <th>No conform. Parc. Levantada (NCPL)</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>                

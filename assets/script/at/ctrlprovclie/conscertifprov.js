@@ -1,5 +1,5 @@
 
-var otblconscertifprov;
+var otblconscertifprov, otbllistcertidet;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
@@ -79,61 +79,111 @@ getListConscertifprov = function(param){
             dataSrc : ''      
         },
         "columns"	: [
-            {data: 'AREACLIENTE', "class": "col-sm"},
-            {data: 'PROVEEDOR', "class": "col-lm"},
-            {data: 'DIREST', "class": "col-lm"},
-            {data: 'FECHASERVICIO', "class": "col-s"},
-            {data: 'CALIFICACION', "class": "col-s"},
-            {data: 'CHECKLIST', "class": "col-m"},
-            {data: '01', "class": "col-xs"},
-            {data: '02', "class": "col-xs"},
-            {data: '03', "class": "col-xs"},
-            {data: null,
-                render:function(data, type, row){
-                    return '<div style="text-align: center;">'+
-                        '<a data-toggle="modal" title="Leyenda" style="cursor:pointer; color:#3c763d;" data-target="#modalLeyenda" onClick="javascript:verLeyenda(\''+row.CCHECKLIST+'\',\''+row.CHECKLIST+'\');"><span class="fas fa-tags fa-2x" aria-hidden="true"> </span> </a>'+
+            {data: 'CERTIFICADORA', "class": "col-sm"},
+            {data: 'CERTIFICACION', "class": "col-lm"},
+            {data: 'NOAPLICA', "class": "dt-body-center col-s"},
+            {data: 'NOTIENE', "class": "col-s"},
+            {data: 'SITIENE', "class": "col-s"},
+            {data: 'CONVALIDADO', "class": "col-s"},
+            {data: 'TOTAL', "class": "col-s"},
+        ], 
+        "columnDefs": [
+            {
+                "targets": [2], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NA\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOAPLICA+'</a>'+
                     '</div>';
                 }
             },
-        ],  
-        /*"columnDefs": [{
-            "targets": [9],
-            "render": function ( data, type, row ) {
-                return '<div>'+
-                    '<a data-title ="' + row.LEYENDA + '"><span class="fas fa-edit fa-2x" aria-hidden="true"></span></a>'
+            {
+                "targets": [3], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.SITIENE+'</a>'+
                     '</div>';
-            }
-        }],
-        createdRow: function ( row, data, index ) {
-            $("td:first", row).attr("title", data.LEYENDA);
-        }*/
+                }
+            },
+            {
+                "targets": [4], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NT\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOTIENE+'</a>'+
+                    '</div>';
+                }
+            },
+            {
+                "targets": [5], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a>'+
+                    '</div>';
+                }
+            },
+        ], 
     });
-    // Enumeracion 
-    /*otblListConsolcencosud.on( 'order.dt search.dt', function () { 
-        otblListConsolcencosud.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-        cell.innerHTML = i+1;
-        });
-    } ).draw(); */
      
 };
 
-verLeyenda = function(cchecklist,checklist){
-    document.querySelector('#nameChkl').innerText = checklist;
+mostrarDetalle = function(ccliente,varver,varestado,varanio,varmes,varcerti,varcondi){     
+    parametros = paramListdet(ccliente,varver,varestado,varanio,varmes,varcerti,varcondi);
+    getListdet(parametros);
+};
+
+
+paramListdet = function (ccliente,varver,varestado,varanio,varmes,varcerti,varcondi){    
+         
+    var parametros = {
+        "CCLIENTE" : ccliente,
+        "ANIO"     : varanio,
+        "MES"     : varmes,
+        "CERTI"     : varcerti,
+        "ESTADO"     : varestado
+    };  
+
+    return parametros;
     
-    var params = {"cchecklist" : cchecklist};    
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprovclie/cconsresulgral/getleyendachecklist",
-        dataType: "JSON",
-        async: true,
-        data: params,
-        success:function(result)
-        {
-            $('#nameLeyenda').html(result);
+};
+
+getListdet = function(param){       
+    otbllistcertidet = $('#tbllistcertidet').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconscertifprov/getcertidet",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
         },
-        error: function(){
-          alert('Error, No se puede autenticar por error :: nameLeyenda');
-        }
+        "columns"	: [
+            {data: null, "class": "col-xxs"},
+            {data: 'PROVEEDOR', "class": "col-m"},
+            {data: 'MAQUILADOR', "class": "col-m"},
+            {data: 'ESTABLECIMIENTO', "class": "col-m"},
+            {data: 'LINEAPROCESO', "class": "col-m"},
+            {data: 'DIRESTABLECIMIENTO', "class": "col-m"},
+        ]
     });
+    // Enumeracion 
+    otbllistcertidet.on( 'order.dt search.dt', function () { 
+        otbllistcertidet.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw(); 
+     
 };

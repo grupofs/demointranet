@@ -322,9 +322,6 @@
 
         </div>
                 
-      </form>
-    </div>
-    <div class="modal-content" id="contenedorEditarensayo">
     </div>
   </div>
 </div> 

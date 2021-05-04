@@ -104,32 +104,44 @@
 </section>
 <!-- /.Main content -->
 
-<!-- /.modal-leyenda--> 
-<div class="modal fade" id="modalLeyenda" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Leyenda</h4>
+<!-- /.Modal-Listado-AACC --> 
+<div class="modal fade" id="modalDet" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg fullModal">
+    <div class="modal-content" id="contenedorListdet">      
+
+        <div class="modal-header text-center bg-lightblue">
+            <h4 class="modal-title w-100 font-weight-bold">Detalle</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
-        <div class="modal-body"> 
-            <div class="form-group">  
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <div class="text-info"> <label id="nameChkl"></label></div>
-                        <div id="nameLeyenda"></div>
-                    </div> 
-                </div> 
-            </div>           
+        <div class="modal-body">         
+            <div class="row"> 
+                <div class="col-12" style="overflow-x: scroll;">
+                    <table id="tbllistcertidet" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Proveedor</th>
+                            <th>Maquilador</th>
+                            <th>Establecimiento</th>
+                            <th>Linea de Proceso</th>
+                            <th>Dir. Establecimiento</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cerrar</button>
+        <div class="modal-footer">  
+
         </div>
+                
     </div>
   </div>
 </div> 
-<!-- /.modal-->
+<!-- /.Modal-->

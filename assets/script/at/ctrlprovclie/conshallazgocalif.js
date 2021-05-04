@@ -176,7 +176,9 @@ $("#btnBuscar").click(function (){
     
 });
 
-getListConshallazgocalif = function(param){       
+getListConshallazgocalif = function(param){    
+    var groupColumn = 0;    
+
     otblconshallazgocalif = $('#tblconshallazgocalif').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -209,7 +211,36 @@ getListConshallazgocalif = function(param){
             {data: 'NCL', "class": "dt-body-center col-sm"},
             {data: 'OPL', "class": "dt-body-center col-sm"},
             {data: 'NCPL', "class": "dt-body-center col-sm"},
-        ]
+        ],  
+        "columnDefs": [
+            { "visible": false, "targets": groupColumn },
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="10">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
     });
+
+    otblconshallazgocalif.column(0).visible( false );
      
 };
+
+$('#tblconshallazgocalif tbody').on('dblclick', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblconshallazgocalif.row(tr);
+    var rowData = row.data();
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').tab('show');
+    //parametros = paramListDetseguiaacc(rowData.CAREACLIENTE);
+    //getListDetseguiaacc(parametros);
+} );
