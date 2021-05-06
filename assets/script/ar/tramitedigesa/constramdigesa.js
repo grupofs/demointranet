@@ -324,7 +324,7 @@ getListTramGrid = function(param){
                 grupo = api.column(0).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="8"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+                        '<tr class="group"><td colspan="14"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -420,7 +420,7 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
                 },
                 'columns'     : [
                     {
-                      "class"     :   "index",
+                      "class"     :   "col-xxs",
                       orderable   :   false,
                       data        :   null,
                       targets     :   0

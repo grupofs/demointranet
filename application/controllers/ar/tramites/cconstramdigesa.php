@@ -22,7 +22,7 @@ class Cconstramdigesa extends CI_Controller {
         $regsan = 		($this->input->post('regsan') == $varnull) ? '%' : '%'.$this->input->post('regsan').'%';
         $tono = 		($this->input->post('tono') == $varnull) ? '%' : '%'.$this->input->post('tono').'%';
         $estado = 		($this->input->post('estado') == $varnull) ? '%' : '%'.$this->input->post('estado').'%';
-        $marca = 		($this->input->post('marca') == $varnull) ? '%' : '%'.$this->input->post('marca').'%';
+        $marca = 		($this->input->post('marca') == $varnull) ? '0' : $this->input->post('marca');
         $tramite = 		($this->input->post('tramite') == $varnull) ? '%' : '%'.$this->input->post('tramite').'%';
         $allf = 		$this->input->post('allf');
         $fini = 		$this->input->post('fi');

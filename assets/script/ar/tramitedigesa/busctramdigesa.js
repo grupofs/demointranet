@@ -392,7 +392,7 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
                 },
                 'columns'     : [
                     {
-                      "class"     :   "index",
+                      "class"     :   "col-xxs",
                       orderable   :   false,
                       data        :   null,
                       targets     :   0
