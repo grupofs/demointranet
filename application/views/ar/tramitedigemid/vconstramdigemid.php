@@ -25,7 +25,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">CONSULTAS TRAMITES
-            <small>Digesa</small>
+            <small>Digemid</small>
         </h1>
       </div>
       <div class="col-sm-6">
@@ -49,7 +49,7 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                 </div>
             </div>
-            <form class="form-horizontal" id="frmexceltramar" name="frmexceltramar" action="<?= base_url('ar/tramites/cexcelExport/exceltramardigesa')?>" method="POST" enctype="multipart/form-data" role="form">  
+            <form class="form-horizontal" id="frmexceltramar" name="frmexceltramar" action="<?= base_url('ar/tramites/cexcelExport/exceltramardigemid')?>" method="POST" enctype="multipart/form-data" role="form">  
             <div class="card-body">
                 <input type="hidden" name="hdnccliente" class="form-control" id="hdnccliente" value="<?php echo $ccliente ?>">
                 <div class="row">                    
@@ -157,7 +157,7 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label>Nro. RS</label>
+                                <label>Nro. NSO</label>
                                 <input type="text" class="form-control" id="txtnrors" name="txtnrors" placeholder="..." onkeypress="pulsarListTramite(event)">
                             </div>
                         </div>
@@ -179,7 +179,13 @@
                             <div class="form-group">
                                 <label>Estado de Trámite</label>
                                 <select class="form-control select2bs4" id="cboesttramite" name="cboesttramite" style="width: 100%;">
-                                    <option value="" selected="selected">Cargando...</option>
+                                    <option value="" selected="selected">Todos</option>
+									<option value="P">En proceso</option>
+									<option value="V">En trámite en la entidad</option>
+									<option value="O">Observado DG</option>
+									<option value="R">Aprobado</option>
+									<option value="T">Trunco</option>
+									<option value="C">Rechazado DG</option>
                                 </select>
                             </div>
                         </div>
@@ -241,12 +247,14 @@
                         <h3 class="card-title">Listado  - Tipo <label id="lblCia"></label></h3>
                     </div>                
                     <div class="card-body" id="divtblGrid" style="overflow-x: scroll;">
-                        <table id="tblListTramGrid" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListTramGrid" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Nro.</th>
+                                <th>grupo</th>
+                                <th>N°</th>
                                 <th></th>
                                 <th>Código</th>
+                                <th>Código Formula ILN</th>
                                 <th>Descripción SAP</th>
                                 <th>Nombre del Producto</th>
                                 <th>Marca</th>
@@ -255,9 +263,8 @@
                                 <th>Modelo</th>
                                 <th>Fabricante</th>
                                 <th>Pais</th>
-                                <th>RS</th>
-                                <th>Nro. DR</th>
-                                <th>F. Vencimiento</th>
+                                <th>NSO</th>
+                                <th>Fec. Vence</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -265,11 +272,12 @@
                         </table>
                     </div>               
                     <div class="card-body" id="divtblExcel" style="overflow-x: scroll;">
-                        <table id="tblListTramExcel" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListTramExcel" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Nro.</th>
+                                <th>N°</th>
                                 <th>Código</th>
+                                <th>Código Formula ILN</th>
                                 <th>Descripción SAP</th>
                                 <th>Nombre del Producto</th>
                                 <th>Marca</th>
@@ -282,7 +290,7 @@
                                 <th>Trámite</th>
                                 <th>Estado</th>
                                 <th>N° Expediente</th>
-                                <th>RS</th>
+                                <th>NSO</th>
                                 <th>Nro. DR</th>
                                 <th>F. Emisión</th>
                                 <th>F. Vencimiento</th>

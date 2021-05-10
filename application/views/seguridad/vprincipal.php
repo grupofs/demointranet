@@ -9,8 +9,13 @@
     $usuario = $this->session->userdata('s_usuario');
     $sessionAct = $this->session->userdata('sessionAct');  
 
-    if($imgperfil == ''):
-        $imgperfil = 'avatar5.png';
+    $rutaimagen = public_url_ftp()."Imagenes/user/".$imgperfil;
+    if($imgperfil == '' || $imgperfil == false):
+        $imgperfil = 'unknown.png';
+    elseif(file_exists($rutaimagen)):
+        $imgperfil = $imgperfil;
+    else:        
+        $imgperfil = 'unknown.png';
     endif;
     
     if($cia == '1'):

@@ -15,14 +15,27 @@
     $logocliente = $this->session->userdata('s_logocliente'); 
     $colortext = $this->session->userdata('s_colortext'); 
     $colorfondo = $this->session->userdata('s_colorfondo'); 
+        
 
-    if($logocliente == ''):
+    $rutalogocliente = public_url_ftp()."Imagenes/clientes/".$logocliente;
+    if($logocliente == '' || $logocliente == false):
+        $logocliente = 'unknown.png';
+    elseif(file_exists($rutalogocliente)):
+        $logocliente = $logocliente;
+    else:        
         $logocliente = 'unknown.png';
     endif;
-    if($imgperfil == ''):
+
+    $rutaimgperfil = public_url_ftp()."Imagenes/user/".$imgperfil;
+    if($imgperfil == '' || $imgperfil == false):
+        $imgperfil = 'unknown.png';
+    elseif(file_exists($rutaimgperfil)):
+        $imgperfil = $imgperfil;
+    else:        
         $imgperfil = 'unknown.png';
     endif;
     
+
     $grupo = 'GRUPO FS | FSC';
     $cia = 0;
     $ccia = 'ext';
