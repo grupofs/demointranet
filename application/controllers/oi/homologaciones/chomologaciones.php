@@ -258,6 +258,14 @@ class Chomologaciones extends CI_Controller {
         if ($this->form_validation->run() == TRUE){
             $accion = $this->input->post('txtAccion');
 
+            $idCliente = $this->input->post('cboCliente');
+            $ExpedienteReq = $this->input->post('txtExpRequisito');
+            $idProdcutoFile = $this->input->post('txtIdProducto');
+            $name_file = $this->input->post('txtFileRequisito');
+    
+            //RUTA DONDE SE GUARDAN LOS FICHEROS
+            $ruta = '20106/'.$idCliente.'/'.$ExpedienteReq.'/'.$idProdcutoFile.'/'.$name_file;
+    
             $parametros = array(
                 '@exp'           => $this->input->post('txtExpRequisito'),
                 '@idprod'        => $this->input->post('txtIdProducto'),
@@ -266,7 +274,7 @@ class Chomologaciones extends CI_Controller {
                 '@nota'          => $this->input->post('txtNotaReq'),
                 '@fecha'         => $this->input->post('FecRegistroRequ'),
                 '@descripcion'   => $this->input->post('txtDescripcionRequisito'),
-                '@archivo'       => $this->input->post('txtFileRequisito'),
+                '@archivo'       => $ruta,
                 '@usereg'        => $this-> session-> userdata('s_usuario')
             );
 
@@ -294,35 +302,44 @@ class Chomologaciones extends CI_Controller {
 
         $response = $this->mhomologaciones->deleteRequisitoProd($parametros);
         echo json_encode($response);
-        /* CAMMBIA EL ESTADO DEL REQUISITO PARA NO VISUALIZARLO, MAS NO ELIMINA */
     }
 
     // Subir Archivos	
 	public function subirArchivo(){
+        $idCliente = $this->input->post('cboCliente');
+        $ExpedienteReq = $this->input->post('txtExpRequisito');
+        $idProdcutoFile = $this->input->post('txtIdProducto');
+
 		//RUTA DONDE SE GUARDAN LOS FICHEROS
-	   $config['upload_path'] = 'FTPfileserver/Archivos/Homologaciones/';
-	   $config['allowed_types'] = 'pdf|xlsx|docx|doc|xls|rar|zip';
-	   $config['max_size'] = '90048';
-	   $this->load->library('upload',$config);
-	   $this->upload->initialize($config);
-	   //if (!($this->upload->do_upload('mtxtArchivopropu') || $this->upload->do_upload('mtxtArchivo'))) {
+        $ruta = 'FTPfileserver/Archivos/20106/'.$idCliente.'/'.$ExpedienteReq.'/'.$idProdcutoFile.'/';
 
-	   if (!($this->upload->do_upload('fileRequisito') )) {
-		   //si al subirse hay algun error 
-		   $data['uploadError'] = $this->upload->display_errors();
-		   $error = '';
-		   return $error;
-			
-	   } else {
+        if (!file_exists($ruta)) {
+            mkdir($ruta, 0777, true);
+        }
+        
+        $config['upload_path'] = $ruta;
+        $config['allowed_types'] = 'pdf|xlsx|docx|doc|xls|rar|zip';
+        $config['max_size'] = '90048';
+        $this->load->library('upload',$config);
+        $this->upload->initialize($config);
+        //if (!($this->upload->do_upload('mtxtArchivopropu') || $this->upload->do_upload('mtxtArchivo'))) {
 
-		   $data = $this->upload->data();
+        if (!($this->upload->do_upload('fileRequisito') )) {
+            //si al subirse hay algun error 
+            $data['uploadError'] = $this->upload->display_errors();
+            $error = '';
+            return $error;
+                
+        } else {
 
-		   $path = array(
-					$prueba1 = $data['file_name'],
-				   $prueba2 = $config['upload_path'],
-		   );
-		   echo json_encode($path);
-	   }
+            $data = $this->upload->data();
+
+            $path = array(
+                        $prueba1 = $data['file_name'],
+                    $prueba2 = $config['upload_path'],
+            );
+            echo json_encode($path);
+        }
 	   
 	}	
 }

@@ -503,7 +503,7 @@ $(document).ready(function(){
                         if (row.RUTA == null || row.RUTA == '') {
                             return '<p class="text-muted">NO HAY ARCHIVO</p>';
                         } else {
-                            return '<a href="'+baseurl+'FTPfileserver/Archivos/Homologaciones/'+row.RUTA+'" target="_blank"><img src="'+baseurl+'assets/images/pdf.png" class="img-fluid"/></a>'
+                            return '<a href="'+baseurl+'FTPfileserver/Archivos/'+row.RUTA+'" target="_blank"><img src="'+baseurl+'assets/images/pdf.png" class="img-fluid"/></a>'
                         }
                     }
                 },
@@ -709,10 +709,8 @@ $(document).ready(function(){
     $("#checkTodos").change(function(){
         if($("#checkTodos").is(":checked") == true){ 
             $("#cboEstado").prop("disabled",true);
-            
         }else if($("#checkTodos").is(":checked") == false){ 
             $("#cboEstado").prop("disabled",false);
-            
         }; 
     })
 
@@ -1002,8 +1000,10 @@ $("#btnCerrarRequisitos").click(function(){
 })
 
 $("#btnSaveReqiusitoProd").click(function(){
-    var datos = $("#frmSaveRequisitoProducto").serialize();
-
+    var cliente_id = $("#cboCliente").val();
+    var datos = $("#frmSaveRequisitoProducto").serialize()+'&cboCliente='+cliente_id;
+    console.log('datos', datos)
+   
     $.ajax({
         type : 'ajax',
         method : 'post',
@@ -1087,6 +1087,7 @@ function SelDeleteReqProd (exp,idprod,idreq){
 }
 
 $("#btnAddRequisito").click(function(){
+    $('#fileRequisito,#txtFileRequisito').val('');
     var params = {
         'tipoProd' : $("#txtIdRequisito").val()
         
@@ -1127,6 +1128,10 @@ $("#fileRequisito").fileinput({
 });
 
 function registrar_archivo() {
+    var idCliente = $("#cboCliente").val();
+    var expediente = $("#txtExpRequisito").val();
+    var idProducto = $("#txtIdProducto").val();
+
 	var archivoInput = document.getElementById('fileRequisito');
 	var archivoRuta = archivoInput.value;
 	var extPermitidas = /(.pdf|.docx|.xlsx|.doc|.xls|.rar|.zip)$/i;
@@ -1137,6 +1142,10 @@ function registrar_archivo() {
 		return false;
 	} else {
 		var parametrotxt = new FormData($("#frmSaveRequisitoProducto")[0]);
+        parametrotxt.append('cboCliente', idCliente);
+        parametrotxt.append('txtExpRequisito', expediente);
+        parametrotxt.append('txtIdProducto', idProducto);
+        console.log('parametrotxt', parametrotxt)
 
 		$.ajax({
 			data: parametrotxt,
