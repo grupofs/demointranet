@@ -1,6 +1,7 @@
 var otblListTramGrid, otblListTramExcel, otblListTramGriddet, otblListTramDocum;
 var tiporeporte = 'G', tipotramite = 'V', tipofind = 'S';
 var varfdesde, varfhasta;
+var collapsedGroups = {};
 
 $(document).ready(function() {
     $('#busAvanzada').hide();
@@ -15,6 +16,40 @@ $(document).ready(function() {
 
     $('#divtblGrid').show(); 
     $('#divtblExcel').hide();
+
+    var v_cboClie = $('#hdnccliente').val();
+    var params = { "ccliente":v_cboClie };
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"ar/tramites/cbusctramdigemid/getcbomarcaxclie",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $("#cbomarca").html(result);           
+        },
+        error: function(){
+            alert('Error, no se puede cargar la lista desplegable de establecimiento');
+        }
+    });
+          
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"ar/tramites/cbusctramdigemid/getcbotipoprodxentidad",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#cbotipoprod').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error');
+        }
+    });
 });
 
 fechaActual = function(){
@@ -109,7 +144,32 @@ $('#swTipoLista').on('switchChange.bootstrapSwitch',function (event, state) {
     $('#btnBuscar').click();
 });
 
-$("#btnBuscar").click(function (){    
+$("#cbotipoprod").change(function(){
+    var v_cbotipoprod = $('#cbotipoprod').val();
+
+    var params = { "ctipoProducto":v_cbotipoprod };
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"ar/tramites/cbusctramdigemid/getcbotramitextipoproducto",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $("#cbotramite").html(result);           
+        },
+        error: function(){
+            alert('Error, no se puede cargar la lista desplegable de establecimiento');
+        }
+    });
+    
+});
+
+$("#btnBuscar").click(function (){ 
+    var vClie;  
+    vClie = $('#hdnccliente').val(); 
     
     varfdesde = $('#txtFIni').val();
     varfhasta = $('#txtFFin').val(); 
@@ -121,7 +181,7 @@ $("#btnBuscar").click(function (){
         "tono"        : $('#txtcaractprodu').val(),
         "estado"      : $('#cboesttramite').val(),
         "marca"       : $('#cbomarca').val(),
-        "tramite"     : '001',
+        "tramite"     : '002',
         "allf"        : tipofind,
         "fi"          : varfdesde,
         "ff"          : varfhasta,
@@ -129,7 +189,7 @@ $("#btnBuscar").click(function (){
         "ccategoria"  : null,
         "est"         : $('#cboestproducto').val(),
         "tipoest"     : tipotramite, 
-        "ccliente"    : $('#hdnccliente').val(),
+        "ccliente"    : vClie,
         "tiporeporte" : tiporeporte,    
         "iln"        : null
     };  
@@ -139,24 +199,28 @@ $("#btnBuscar").click(function (){
     }else{
         getListTramExcel(parametros);
     }
+    if($('#chkBusavanzada').prop('checked') == true){
+        $('#chkBusavanzada').prop("checked", false);
+        $('#busAvanzada').hide();
+    }
     
 });
 
 getListTramGrid = function(param){
     otblListTramGrid = $('#tblListTramGrid').DataTable({  
-        'responsive'    : false,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '400px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
-        'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
-        'select'        : true,
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "560px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"ar/tramites/cconstramdigesa/getconsulta_grid_tr/",
             "type"  : "POST", 
@@ -164,41 +228,64 @@ getListTramGrid = function(param){
             dataSrc : ''       
         },
         'columns'	: [
-            {
-              "class"     :   "index",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0
-            },
-            {
-              "class"     :   "details-control",
-              orderable   :   false,
-              data        :   'SPACE',
-              targets     :   1
-            },
-            {"orderable": false, data: 'CODIGOPROD', targets: 2},
-            {"orderable": false, data: 'DES_SAP', targets: 3},
-            {"orderable": false, data: 'NOMBREPROD', targets: 4},
-            {"orderable": false, data: 'MARCAPROD', targets: 5},
-            {"orderable": false, data: 'DCATEGORIACLIENTE', targets: 6},
-            {"orderable": false, data: 'DPRESENTACION', targets: 7},
-            {"orderable": false, data: 'TONOPROD', targets: 8},
-            {"orderable": false, data: 'FABRIPROD', targets: 9},    
-            {"orderable": false, data: 'PAISPROD', targets: 10},  
-            {"orderable": false, data: 'REGSANIPROD', targets: 11},  
-            {"orderable": false, data: 'DNUMERODR', targets: 12},  
-            {"orderable": false, data: 'FECHAVENCE', targets: 13}
+            {"data": "grupo"},
+            {"class":"index details-control col-xs", "data": "SPACE", orderable:false},
+            {"class":"col-xxs", "data": "SREGISTROPDTO"},
+            {"class":"col-s", "data": "CODIGOPROD"},
+            {"class":"col-s", "data": "dcodigoformula"},
+            {"class":"col-m", "data": "DES_SAP"},
+            {"class":"col-lm", "data": "NOMBREPROD"},
+            {"class":"col-xm", "data": "MARCAPROD"},
+            {"class":"col-sm", "data": "DCATEGORIACLIENTE"},
+            {"class":"col-xxl", "data": "DPRESENTACION"},
+            {"class":"col-sm", "data": "TONOPROD"},
+            {"class":"col-sm", "data": "FABRIPROD"},    
+            {"class":"col-sm", "data": "PAISPROD"},  
+            {"class":"col-sm", "data": "REGSANIPROD"}, 
+            {"class":"col-s", "data": "FECHAVENCE"}
         ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'all'} ).nodes();
+            var last = null;
+			var grupo;
+ 
+            api.column([0], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(0).data()[i];
+                if ( last !== ctra ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="14"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+                    ); 
+                    last = ctra;
+                }
+            } );
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if ( data.CADUCO == 1 ) {
+                $(row).addClass('text-rojo');    
+            }
+        },
         "columnDefs": [
+            {
+                "targets": [2], 
+                "data": null, 
+                "render": function(data, type, row) { 
+                    if(row.SREGISTROPDTO == "A") {
+                        return '<div class="circulo-verde"> <h3>A</h3> </div>';
+                    }else{
+                        return '<div class="circulo-rojo"> <h3>I</h3> </div>';
+                    }                      
+                }
+            }
         ],
-        'order' : [[3, "asc"],[4, "asc"]] 
     });   
     // Enumeracion 
     otblListTramGrid.on( 'order.dt search.dt', function () { 
-        otblListTramGrid.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListTramGrid.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
     }).draw(); 
+    otblListTramGrid.column(0).visible( false );  
 }
 /* DETALLE TRAMITES */
 $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
@@ -241,26 +328,27 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
                     "url"   : baseurl+"ar/tramites/cconstramdigesa/getbuscartramite",
                     "type"  : "POST", 
                     "data": function ( d ) {
-                        d.codprod = rowData.codigo;
-                        d.tipo = rowData.tipo;
+                        d.codaarr = rowData.codigo;
+                        d.codrsnso = rowData.REGSANIPROD;
+                        d.codprod = rowData.cproductofs;
                     },     
                     dataSrc : ''        
                 },
                 'columns'     : [
                     {
-                      "class"     :   "index",
+                      "class"     :   "col-xxs",
                       orderable   :   false,
                       data        :   null,
                       targets     :   0
                     },
-                    { "orderable": false,"data": "FINGRESO", targets: 1},
+                    { "orderable": false,"data": "FINGRESO","class":"col-s", targets: 1},
                     { "orderable": false,"data": "TRAMITE", targets: 2},
                     { "orderable": false,"data": "ESTADO", targets: 3},
                     { "orderable": false,"data": "NUMEROEXPE", targets: 4},
-                    { "orderable": false,"data": "RS-NSO", targets: 5},
+                    { "orderable": false,"data": "RSNSO", targets: 5},
                     { "orderable": false,"data": "FEMISION", targets: 6},
                     { "orderable": false,"data": "FVENCIMIENTO", targets: 7},
-                    {"orderable": false, 
+                    {"orderable": false,"class": "col-lm", 
                         render:function(data, type, row){
                             return  '<div>'+  
                                 '<a data-original-title="Listar Documentos" data-toggle="modal" style="cursor:pointer; color:#3c763d;" data-target="#modalListdocumentos" onClick="javascript:selTramdocumento(\''+row.CASUNTOREGULATORIO+'\',\''+row.CENTIDADREGULA+'\',\''+row.CTRAMITE+'\',\''+row.CSUMARIO+'\');"><i class="far fa-folder-open fa-2x" data-original-title="Listar Documentos" data-toggle="tooltip"></i></a>'+                                 
@@ -282,19 +370,20 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
 });
 
 getListTramExcel = function(param){
-    otblListTramExcel = $('#tblListTramExcel').DataTable({  
-        'responsive'    : false,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '400px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
-        'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+    otblListTramExcel = $('#tblListTramExcel').DataTable({ 
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "560px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"ar/tramites/cconstramdigesa/getconsulta_excel_tr/",
             "type"  : "POST", 
@@ -303,28 +392,29 @@ getListTramExcel = function(param){
         },
         'columns'	: [
             {
-              "class"     :   "index",
+              "class"     :   "col-xxs",
               orderable   :   false,
               data        :   null,
               targets     :   0
             },
-            {"orderable": false, data: 'CODIGOPROD', targets: 1},
-            {"orderable": false, data: 'DES_SAP', targets: 2},
-            {"orderable": false, data: 'NOMBREPROD', targets: 3},
-            {"orderable": false, data: 'MARCAPROD', targets: 4},
-            {"orderable": false, data: 'DCATEGORIACLIENTE', targets: 5},
-            {"orderable": false, data: 'DPRESENTACION', targets: 6},
-            {"orderable": false, data: 'TONOPROD', targets: 7},
-            {"orderable": false, data: 'FABRIPROD', targets: 8},    
-            {"orderable": false, data: 'PAISPROD', targets: 9},  
-            {"orderable": false, data: 'tcreacion', targets: 10},  
-            {"orderable": false, data: 'TRAMITEPROD', targets: 11},  
-            {"orderable": false, data: 'ESTADO', targets: 12},
-            {"orderable": false, data: 'NUMEXP', targets: 13},      
-            {"orderable": false, data: 'REGSANIPROD', targets: 14},      
-            {"orderable": false, data: 'DNUMERODR', targets: 15},      
-            {"orderable": false, data: 'FEMI', targets: 16},      
-            {"orderable": false, data: 'FECHAVENCE', targets: 17},         
+            {"class":"col-s", "orderable": false, data: 'CODIGOPROD', targets: 1},
+            {"class":"col-s", "orderable": false, data: 'dcodigoformula', targets: 2},
+            {"class":"col-m", "orderable": false, data: 'DES_SAP', targets: 3},
+            {"class":"col-lm", "orderable": false, data: 'NOMBREPROD', targets: 4},
+            {"class":"col-xm", "orderable": false, data: 'MARCAPROD', targets: 5},
+            {"class":"col-sm", "orderable": false, data: 'DCATEGORIACLIENTE', targets: 6},
+            {"class":"col-xxl", "orderable": false, data: 'DPRESENTACION', targets: 7},
+            {"class":"col-sm", "orderable": false, data: 'TONOPROD', targets: 8},
+            {"class":"col-sm", "orderable": false, data: 'FABRIPROD', targets: 9},    
+            {"class":"col-sm", "orderable": false, data: 'PAISPROD', targets: 10},  
+            {"class":"col-s", "orderable": false, data: 'tcreacion', targets: 11},  
+            {"class":"col-xm", "orderable": false, data: 'TRAMITEPROD', targets: 12},  
+            {"class":"col-sm", "orderable": false, data: 'ESTADO', targets: 13},
+            {"class":"col-sm", "orderable": false, data: 'NUMEXP', targets: 14},      
+            {"class":"col-sm", "orderable": false, data: 'REGSANIPROD', targets: 15},      
+            {"class":"col-s", "orderable": false, data: 'DNUMERODR', targets: 16},      
+            {"class":"col-s", "orderable": false, data: 'FEMI', targets: 17},      
+            {"class":"col-sm", "orderable": false, data: 'FECHAVENCE', targets: 18},         
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div>'+  
@@ -335,7 +425,7 @@ getListTramExcel = function(param){
         ],
         "columnDefs": [
         ],
-        'order' : [[3, "asc"],[4, "asc"]] 
+        'order' : [[4, "asc"],[5, "asc"]] 
     });   
     // Enumeracion 
     otblListTramExcel.on( 'order.dt search.dt', function () { 
@@ -396,3 +486,10 @@ selTramdocumento = function(codar, codent, ctram, csum){
           } );
     }).draw();
 };
+
+function pulsarListTramite(e) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();     
+        $('#btnBuscar').click();
+    }
+}  

@@ -275,10 +275,10 @@ getListTramGrid = function(param){
             {"data": "grupo"},
             {"class":"index details-control col-xs", "data": "SPACE", orderable:false},
             {"class":"col-xxs", "data": "SREGISTROPDTO"},
-            {"class":"col-xs", "data": "CODIGOPROD"},
-            {"class":"col-xm", "data": "DES_SAP"},
+            {"class":"col-s", "data": "CODIGOPROD"},
+            {"class":"col-m", "data": "DES_SAP"},
             {"class":"col-lm", "data": "NOMBREPROD"},
-            {"class":"col-sm", "data": "MARCAPROD"},
+            {"class":"col-xm", "data": "MARCAPROD"},
             {"class":"col-sm", "data": "DCATEGORIACLIENTE"},
             {"class":"col-xxl", "data": "DPRESENTACION"},
             {"class":"col-sm", "data": "TONOPROD"},
@@ -298,7 +298,7 @@ getListTramGrid = function(param){
                 grupo = api.column(0).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="8"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+                        '<tr class="group"><td colspan="14"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -398,14 +398,14 @@ $('#tblListTramGrid tbody').on( 'click', 'td.details-control', function () {
                       targets     :   0
                     },
                     { "orderable": false,"data": "CODAR", targets: 1},
-                    { "orderable": false,"data": "FINGRESO", targets: 2},
+                    { "orderable": false,"data": "FINGRESO","class":"col-s", targets: 2},
                     { "orderable": false,"data": "TRAMITE", targets: 3},
                     { "orderable": false,"data": "ESTADO", targets: 4},
                     { "orderable": false,"data": "NUMEROEXPE", targets: 5},
                     { "orderable": false,"data": "RSNSO", targets: 6},
-                    { "orderable": false,"data": "FEMISION", targets: 7},
-                    { "orderable": false,"data": "FVENCIMIENTO", targets: 8},
-                    {"orderable": false, 
+                    { "orderable": false,"data": "FEMISION","class":"col-s",  targets: 7},
+                    { "orderable": false,"data": "FVENCIMIENTO","class":"col-s",  targets: 8},
+                    {"orderable": false,"class": "col-lm", 
                         render:function(data, type, row){
                             return  '<div>'+  
                                 '<a data-original-title="Listar Documentos" data-toggle="modal" style="cursor:pointer; color:#3c763d;" data-target="#modalListdocumentos" onClick="javascript:selTramdocumento(\''+row.CASUNTOREGULATORIO+'\',\''+row.CENTIDADREGULA+'\',\''+row.CTRAMITE+'\',\''+row.CSUMARIO+'\');"><i class="far fa-folder-open fa-2x" data-original-title="Listar Documentos" data-toggle="tooltip"></i></a>'+                                 
@@ -455,28 +455,30 @@ getListTramExcel = function(param){
         },
         "columns"	: [
             {
-              "class"     :   "index col-xs",
+              "class"     :   "col-xxs",
               orderable   :   false,
               data        :   null,
               targets     :   0
             },
-            {"class":"col-xs", "orderable": false, data: 'CODIGOPROD', targets: 1},
-            {"class":"col-xm", "orderable": false, data: 'DES_SAP', targets: 2},
-            {"class":"col-lm", "orderable": false, data: 'NOMBREPROD', targets: 3},
-            {"class":"col-sm", "orderable": false, data: 'MARCAPROD', targets: 4},
-            {"class":"col-s", "orderable": false, data: 'DCATEGORIACLIENTE', targets: 5},
-            {"class":"col-xxl", "orderable": false, data: 'DPRESENTACION', targets: 6},
-            {"class":"col-sm", "orderable": false, data: 'TONOPROD', targets: 7},
-            {"class":"col-sm", "orderable": false, data: 'FABRIPROD', targets: 8},    
-            {"class":"col-sm", "orderable": false, data: 'PAISPROD', targets: 9},  
-            {"class":"col-s", "orderable": false, data: 'tcreacion', targets: 10},  
-            {"class":"col-sm", "orderable": false, data: 'TRAMITEPROD', targets: 11},  
-            {"class":"col-sm", "orderable": false, data: 'ESTADO', targets: 12},
-            {"class":"col-sm", "orderable": false, data: 'NUMEXP', targets: 13},      
-            {"class":"col-sm", "orderable": false, data: 'REGSANIPROD', targets: 14},      
-            {"class":"col-s", "orderable": false, data: 'DNUMERODR', targets: 15},      
-            {"class":"col-s", "orderable": false, data: 'FEMI', targets: 16},      
-            {"class":"col-s", "orderable": false, data: 'FECHAVENCE', targets: 17},         
+            {"class":"col-s", "orderable": false, data: 'codigo', targets: 1},
+            {"class":"col-s", "orderable": false, data: 'CODIGOPROD', targets: 2},
+            {"class":"col-m", "orderable": false, data: 'DES_SAP', targets: 3},
+            {"class":"col-lm", "orderable": false, data: 'NOMBREPROD', targets: 4},
+            {"class":"col-xm", "orderable": false, data: 'MARCAPROD', targets: 5},
+            {"class":"col-sm", "orderable": false, data: 'DCATEGORIACLIENTE', targets: 6},
+            {"class":"col-xxl", "orderable": false, data: 'DPRESENTACION', targets: 7},
+            {"class":"col-sm", "orderable": false, data: 'TONOPROD', targets: 8},
+            {"class":"col-sm", "orderable": false, data: 'FABRIPROD', targets: 9},    
+            {"class":"col-sm", "orderable": false, data: 'PAISPROD', targets: 10},  
+            {"class":"col-s", "orderable": false, data: 'tcreacion', targets: 11},  
+            {"class":"col-xm", "orderable": false, data: 'TRAMITEPROD', targets: 12},  
+            {"class":"col-sm", "orderable": false, data: 'ESTADO', targets: 13},
+            {"class":"col-sm", "orderable": false, data: 'NUMEXP', targets: 14},      
+            {"class":"col-sm", "orderable": false, data: 'REGSANIPROD', targets: 15},  
+            {"class":"col-sm", "orderable": false, data: 'VIDAUTIL', targets: 16},     
+            {"class":"col-s", "orderable": false, data: 'DNUMERODR', targets: 17},      
+            {"class":"col-s", "orderable": false, data: 'FEMI', targets: 18},      
+            {"class":"col-sm", "orderable": false, data: 'FECHAVENCE', targets: 19},         
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div>'+  
@@ -487,7 +489,7 @@ getListTramExcel = function(param){
         ],
         "columnDefs": [
         ],
-        'order' : [[3, "asc"],[4, "asc"]] 
+        'order' : [[4, "asc"],[5, "asc"]] 
     });   
     // Enumeracion 
     otblListTramExcel.on( 'order.dt search.dt', function () { 
@@ -548,3 +550,10 @@ selTramdocumento = function(codar, codent, ctram, csum){
           } );
     }).draw();
 };
+
+function pulsarListTramite(e) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();     
+        $('#btnBuscar').click();
+    }
+}  

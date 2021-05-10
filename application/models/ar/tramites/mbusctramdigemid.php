@@ -34,26 +34,6 @@ class Mbusctramdigemid extends CI_Model {
             return false;
         }	
 	} 
-	
-    public function getcboempresa() { // Visualizar Clientes del servicio en CBO	
-        
-        $procedure = "call usp_adm_conta_getcboempresa()";
-		$query = $this->db-> query($procedure);
-        
-        if ($query->num_rows() > 0) {
-
-            $listas = '<option value="0" selected="selected">::Elegir</option>';
-            
-            foreach ($query->result() as $row)
-            {
-                $listas .= '<option value="'.$row->CCLIENTE.'">'.$row->DCLIENTE.'</option>';  
-            }
-               return $listas;
-        }{
-            $listas = '<option value="" selected="selected">Sin Datos...</option>';
-            return $listas;
-        }	
-    } 
 
 	public function getcbomarcaxclie($ccliente){
 		$this->db->select('
@@ -164,7 +144,7 @@ class Mbusctramdigemid extends CI_Model {
     }
 
     public function getbuscartramite($parametros) { // Recupera Listado de Propuestas      
-		$procedure = "call sp_appweb_tramdoc_buscartramite(?,?)";
+		$procedure = "call sp_appweb_tramdoc_buscartramite(?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 

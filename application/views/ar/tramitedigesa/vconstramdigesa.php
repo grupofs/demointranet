@@ -69,21 +69,6 @@
 							</div>
 						</div> 
 						<div class="col-sm-3">
-							<!-- radio
-							<div class="form-group clearfix">
-							<div class="icheck-primary d-inline">
-								<input type="radio" id="rdPProducto" name="rtipo" checked>
-								<label for="rdPProducto">
-									Por Producto
-								</label>
-							</div>
-							<div class="icheck-primary d-inline">
-								<input type="radio" id="rdPEstuche" name="rtipo" >
-								<label for="rdPEstuche">
-									Por Estuche
-								</label>
-							</div>
-							</div>-->
 						</div>
 						<div class="col-sm-4">
                         	<label>&nbsp;&nbsp;</label> 
@@ -263,11 +248,11 @@
 							<h3 class="card-title">Listado  - Tipo <label id="lblCia"></label></h3>
 						</div>                
 						<div class="card-body" id="divtblGrid" style="overflow-x: scroll;">
-							<table id="tblListTramGrid" class="table table-striped table-bordered" style="width:100%">
+							<table id="tblListTramGrid" class="table table-striped table-bordered compact" style="width:100%">
 								<thead>
 								<tr>
 									<th>grupo</th>
-									<th>Nro</th>
+									<th>N°</th>
                                 	<th></th>
 									<th>Código</th>
 									<th>Descripción SAP</th>
@@ -288,10 +273,10 @@
 							</table>
 						</div>               
 						<div class="card-body" id="divtblExcel" style="overflow-x: scroll;">
-							<table id="tblListTramExcel" class="table table-striped table-bordered" style="width:100%">
+							<table id="tblListTramExcel" class="table table-striped table-bordered compact" style="width:100%">
 								<thead>
 								<tr>
-									<th>Nro.</th>
+									<th>N°</th>
 									<th>Código</th>
 									<th>Descripción SAP</th>
 									<th>Nombre del Producto</th>
@@ -306,6 +291,7 @@
 									<th>Estado</th>
 									<th>N° Expediente</th>
 									<th>RS</th>
+									<th>Tiempo Vida Util</th>
 									<th>Nro. DR</th>
 									<th>F. Emisión</th>
 									<th>F. Vencimiento</th>

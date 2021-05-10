@@ -101,7 +101,6 @@ class Cconstramdigesa extends CI_Controller {
 		$resultado = $this->mconstramdigesa->getconsulta_excel_tr($parametros);
 		echo json_encode($resultado);
 	}
-
     public function getbuscartramite(){
         $parametros['@codaarr'] = $this->input->post('codaarr');
         $parametros['@codrsnso'] = $this->input->post('codrsnso');
@@ -110,7 +109,6 @@ class Cconstramdigesa extends CI_Controller {
         $resultado = $this->mconstramdigesa->getbuscartramite($parametros);
         echo json_encode($resultado);
     }
-
     public function getdocum_aarr(){
         $parametros['@casuntoregula'] = $this->input->post('casuntoregula');
         $parametros['@centidad'] = $this->input->post('centidad');
