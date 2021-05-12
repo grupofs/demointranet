@@ -148,6 +148,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '%';
         varfhasta = '%';
         varperiodo = '1';
+        $('#hrdbuscar').val('P'); 
     }else if ($('#rdFechas').prop('checked')){     
         $('#divAnio').hide();
         $('#divMes').hide();
@@ -156,6 +157,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '';
         varfhasta = '';
         varperiodo = '0';
+        $('#hrdbuscar').val('F'); 
     } 
 });
 
@@ -229,6 +231,7 @@ getListConsseguiaacc = function(parametros){
         });
     } ).draw(); 
      
+    $("#btnexcel").prop("disabled",false);
 };
 
 $('#tblconsseguiaacc tbody').on('dblclick', 'td', function () {
@@ -245,7 +248,9 @@ $('#btnRetornarLista').click(function(){
 });
 
 paramListDetseguiaacc = function (careacliente){    
-    var v_mes, v_anio
+    var v_mes, v_anio, v_ccliente
+
+    v_ccliente = $('#hdnCCliente').val()
 
     if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
     if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); } 
@@ -257,9 +262,14 @@ paramListDetseguiaacc = function (careacliente){
         v_anio = 0;
         v_mes = 0;
     } 
-     
+        
+    $('#hddnmdetccliente').val(v_ccliente);     
+    $('#hrdbuscar').val('F'); 
+    $('#hrdbuscar').val('F');     
+    $('#hrdbuscar').val('F');
+
     var parametros = {
-        "ccliente"      : $('#hdnCCliente').val(),
+        "ccliente"      : v_ccliente,
         "anio"          : v_anio,
         "mes"           : v_mes,
         "fini"          : varfdesde,
@@ -294,10 +304,10 @@ getListDetseguiaacc = function(param){
         },
         "columns"	: [
             {data: null, "class": "col-xxs"},
+            {data: 'PROVEEDOR', "class": "col-xl"},
             {data: 'LINEACLIENTE', "class": "col-lm"},
-            {data: 'PROVEEDOR', "class": "col-lm"},
             {data: 'NROINFORME', "class": "col-sm"},
-            {data: 'RESULTADO', "class": "dt-body-right col-s"},
+            {data: 'RESULTADO', "class": "dt-body-right col-sm"},
             {data: 'FACEPTACORRECTIVA', "class": "dt-body-center col-s"},
             {data: 'ACRECUPERADAS', "class": "dt-body-center col-s"},
             {data: 'ACPORREALIZAR', "class": "dt-body-center col-s"},
@@ -327,6 +337,8 @@ getListDetseguiaacc = function(param){
         cell.innerHTML = i+1;
         });
     } ).draw(); 
+     
+    $("#btnexcelDet").prop("disabled",false);
      
 };
 

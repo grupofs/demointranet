@@ -87,7 +87,9 @@
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
-                                    </div>                        
+                                    </div>
+
+                                    <form class="form-horizontal" id="frmconsseguiaacc" name="frmconsseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body">
                                         <div class="row">
                                             <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
@@ -112,6 +114,7 @@
                                                     </label>
                                                 </div>
                                                 </div>
+                                                <input type="hidden" class="form-control" id="hrdbuscar" name="hrdbuscar" value="P">
                                             </div>   
                                             <div class="col-md-2">
                                                 <div class="form-group" id="divAnio"> 
@@ -167,6 +170,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div> 
                                 <div class="row">
                                     <div class="col-12">
@@ -201,8 +205,14 @@
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
-                                    </div>                        
-                                    <div class="card-body">                                        
+                                    </div> 
+                                    
+                                    <form class="form-horizontal" id="frmconsseguiaacc" name="frmconsseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    <div class="card-body">
+                                        <input type="hidden" class="form-control" id="hddnmdetccliente" name="hddnmdetccliente">
+                                        <input type="hidden" class="form-control" id="hddnmdetanio" name="hddnmdetanio">
+                                        <input type="hidden" class="form-control" id="hddnmdetmes" name="hrdbuscar">  
+                                        <input type="hidden" class="form-control" id="hddnmdetccliente" name="hrdbuscar" value="P">                                      
                                         <div class="row">      
                                             <div class="col-md-6">
                                                 <label>Archivo de AA.CC.</label> 
@@ -234,11 +244,12 @@
                                             <div class="col-md-12">
                                                 <div class="text-right">
                                                     <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
-                                                    <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                                                    <button type="submit" class="btn btn-info" id="btnexcelDet" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div> 
                                 <div class="row">
                                     <div class="col-12">
@@ -251,8 +262,8 @@
                                                     <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>Linea de Proceso</th>
                                                         <th>Proveedor</th>
+                                                        <th>Linea de Proceso</th>
                                                         <th>Nro. de Informe</th>
                                                         <th>Resultado (%)</th>
                                                         <th>Fecha Envio Acc. Corr.</th>

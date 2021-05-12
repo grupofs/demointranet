@@ -9,11 +9,11 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">CONTROL PERMISOS</h1>
+        <h1 class="m-0 text-dark">CONTROL DE PERMISOS</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>cpanel">Home</a></li>
+          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>main">Home</a></li>
           <li class="breadcrumb-item active">Gestion Recursos Humanos</li>
         </ol>
       </div>
@@ -76,27 +76,27 @@
             <div class="col-12">
                 <div class="card card-outline card-success">
                     <div class="card-header">
-                        <h3 class="card-title">Listado de Permisos</h3>
+                        <h3 class="card-title">LISTADO</h3>
                     </div>
                 
                     <div class="card-body" style="overflow-x: scroll;">
-                        <table id="tblListCtrlPermisos" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListCtrlPermisos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
+                                <th>Area</th>
                                 <th></th>
-                                <th>EMPLEADO</th>
-                                <th>AREA</th>
-                                <th>FECHA INGRESO</th>
-                                <th>FECHA TERMINO</th> 
-                                <th>PERIODO VACACIONES</th>
-                                <th>DIAS VACACIONES</th>
-                                <th>DIAS A CUENTA VACACIONES</th>
-                                <th>DIAS TOMADOS VACACIONES</th>
-                                <th>DIAS PENDIENTES</th>
-                                <th>HORAS EXTRAS</th>
-                                <th>HORAS PERMISOS</th>
-                                <th>HORAS A USAR</th>
-                                <th>DESCANSOS MEDICOS</th>
+                                <th>Empleado</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Fecha Termino</th> 
+                                <th>Periodo Vacaciones</th>
+                                <th>Dias Vacaciones</th>
+                                <th>Dias Cuenta Vacaciones</th>
+                                <th>Dias Tomados Vacaciones</th>
+                                <th>Dias Pendientes</th>
+                                <th>Horas Extras</th>
+                                <th>Horas Permiso</th>
+                                <th>Horas Usar</th>
+                                <th>Descansos Medicos</th>
                                 <th></th> 
                                 <th></th>       
                                 <th></th>       
@@ -118,14 +118,16 @@
 
 <!-- /.modal-vacaciones --> 
 <div class="modal fade" id="modalvacaciones" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+  <div class="modal-dialog modal-lg fullModal">
+    <div class="modal-content" id="contenedorvacaciones">
+
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Vacaciones</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
         <div class="modal-body">        
             <div class="card card-success card-outline card-tabs">
                 <div class="card-header p-0 pt-1 border-bottom-0">            
@@ -142,28 +144,31 @@
                     <div class="tab-content" id="tabvacaciones-tabContent">
                         <div class="tab-pane fade show active" id="tab_listavacaciones" role="tabpanel" aria-labelledby="tab_listavacacionestab"> 
                             <div class="box box-success">
-                                <div class="box-header with-border">
-                                    <div class="input-group mb-3">
-                                        <button type="button" class="btn btn-outline-primary" id="btnNuevoVaca" ><i class="fas fa-plus"></i>Nuevo</button>
+                                <div class="box-header with-border">                                
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-outline-primary" id="btnNuevoVaca" name="btnNuevoVaca"><i class="fas fa-plus">&nbsp;</i>Agregar Vacaciones</button>                    
                                     </div>
-                                </div>                                                
+                                </div>   
+                                <br>                                             
                                 <div class="panel-body"> 
-                                    <input type="hidden" id="mhdnIdEmpleado" name="mhdnIdEmpleado">                               
-                                    <div> 
-                                    <table id="tblVacaciones" class="table" style="width:100%">
-                                        <thead>
-                                        <tr>
-                                            <th>F. SALIDA VACACIONES</th>
-                                            <th>F. RETORNO VACACIONES</th>
-                                            <th>DIAS TOMADOS</th>
-                                            <th>DETALLE</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody></tbody>               
-                                    </table>
-                                    </div>
+                                    <input type="hidden" id="mhdnIdEmpleado" name="mhdnIdEmpleado"> 
+                                    <div class="row"> 
+                                        <div class="col-12" style="overflow-x: scroll;">
+                                            <table id="tblVacaciones" class="table table-striped table-bordered compact" style="width:100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>F. Salida Vacaciones</th>
+                                                    <th>F. Retorno Vacaciones</th>
+                                                    <th>Dias Tomados</th>
+                                                    <th>Detalle</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>  
                                 </div>
                             </div>
                         </div>

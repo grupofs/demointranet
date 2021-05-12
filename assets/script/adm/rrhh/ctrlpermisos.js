@@ -32,15 +32,15 @@ $('#cboCia').change(function(){
 $('#cboArea').change(function(){ 
     var v_ccia = $( "#cboCia option:selected").attr("value");
     var v_carea = $( "#cboArea option:selected").attr("value");
+
     cargarEmpleados(v_ccia,v_carea);
-    cargarListaEmpleadosPerm(-1,v_ccia,v_carea);
+    parametros = paramListCtrlpermiso();
+    getListCtrlpermiso(parametros);
 });
 
 $('#cboEmpleado').change(function(){ 
-    var v_idempleado = $( "#cboEmpleado option:selected").attr("value");
-    var v_ccia = $( "#cboCia option:selected").attr("value");
-    var v_carea = $( "#cboArea option:selected").attr("value");
-    cargarListaEmpleadosPerm(v_idempleado,v_ccia,v_carea);
+    parametros = paramListCtrlpermiso();
+    getListCtrlpermiso(parametros);
 });
 
 cargarEmpleados = function(v_ccia,v_carea){
@@ -66,93 +66,119 @@ cargarEmpleados = function(v_ccia,v_carea){
     });
 }
 
-cargarListaEmpleadosPerm = function(v_idempleado,v_ccia,v_carea){
+paramListCtrlpermiso = function(){      
+    var v_idempleado = $( "#cboEmpleado option:selected").attr("value");
+    var v_ccia = $( "#cboCia option:selected").attr("value");
+    var v_carea = $( "#cboArea option:selected").attr("value");
+     
+    var parametros = {
+        "id_empleado"   : v_idempleado,
+        "ccia"          : v_ccia,
+        "carea"         : v_carea
+    };  
+
+    return parametros;
+}
+
+getListCtrlpermiso = function(parametros){
+    var groupColumn = 0; 
+
     otblListCtrlpermiso = $('#tblListCtrlPermisos').DataTable({
-        'bJQueryUI'   : true,
-        'scrollY'     : '280px',
-        'scrollX'     : true,
-        'processing'  : true,      
-        'bDestroy'    : true,
-        'paging'      : false,
-        'info'        : true,
-        'filter'      : true, 
-        'stateSave'   : true,
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'        : {
             "url"   : baseurl+"adm/rrhh/cctrlpermisos/getlistempleadosperm/",
             "type"  : "POST", 
-            "data": function ( d ) { 
-                d.id_empleado = v_idempleado;  
-                d.ccia = v_ccia;
-                d.carea = v_carea;
-            },     
-            dataSrc : ''        
+            "data"  : parametros,     
+            dataSrc : ''          
         },
-        dom: 'Bfrtip',
-        buttons: [
-            'excel'
-        ],
         'columns'     : [
-            {orderable: false, data: null, targets: 0},
-            {"class": "col-xm", data: 'empleado', targets: 1},
-            {"class": "col-m", data: 'area', targets: 2},  
-            {data: 'fingreso', targets: 3},
-            {data: 'fcumplevaca', targets: 4}, 
-            {data: 'periodovaca', targets: 5}, 
-            {data: 'diasvaca', targets: 6}, 
-            {data: 'nro_permcuentavaca', targets: 7}, 
-            {data: 'nro_vacaciones', targets: 8}, 
-            {data: 'diaspendientes', targets: 9}, 
-            {data: 'nro_horasextras', targets: 10}, 
-            {data: 'nro_permisos', targets: 11},  
-            {data: 'horaspendientes', targets: 12},
-            {data: 'nro_descansomedico', targets: 13},                        
-            {"orderable": false, 
+            {data: 'area', "class": "col-m"},
+            {data: null, "class": "col-xxs"},
+            {data: 'empleado', "class": "col-m"},  
+            {data: 'fingreso', "class": "dt-body-center col-s"},
+            {data: 'fcumplevaca', "class": "dt-body-center col-s"}, 
+            {data: 'periodovaca', "class": "dt-body-right col-s"}, 
+            {data: 'diasvaca', "class": "dt-body-right col-s"}, 
+            {data: 'nro_permcuentavaca', "class": "dt-body-right col-s"}, 
+            {data: 'nro_vacaciones', "class": "dt-body-right col-s"}, 
+            {data: 'diaspendientes', "class": "dt-body-right col-s"}, 
+            {data: 'nro_horasextras', "class": "dt-body-right col-xs"}, 
+            {data: 'nro_permisos', "class": "dt-body-right col-xs"},  
+            {data: 'horaspendientes', "class": "dt-body-right col-xs"},
+            {data: 'nro_descansomedico', "class": "dt-body-right col-s"},                        
+            {"orderable": false, "class": "dt-body-center col-s", 
                 render:function(data, type, row){
                     return '<div>' +
                             '    <a onclick="excelResumen(\''+row.id_empleado+'\');" class="btn btn-outline-primary btn-sm hidden-sm"><span class="fas fa-file-excel fa-2x" aria-hidden="true"> </span> REPORTE</a>' +
                             '</div>' ; 
                 }
             },                        
-            {"orderable": false, 
+            {"orderable": false, "class": "dt-body-center col-s", 
                 render:function(data, type, row){
                     return '<div>' +
                             '    <a  data-original-title="Listar" data-toggle="modal" data-target="#modalvacaciones" onclick="javascript:regVacaciones(\''+row.id_empleado+'\');" class="btn btn-outline-primary btn-sm hidden-sm"><span class="fa fa-briefcase fa-2x" aria-hidden="true"> </span> VACACIONES</a>' +
                             '</div>' ; 
                 }
             },                        
-            {"orderable": false, 
+            {"orderable": false, "class": "dt-body-center col-s", 
                 render:function(data, type, row){
                     return '<div>' +
                             '    <a data-original-title="Listar" data-toggle="modal" data-target="#modalpermisos" onclick="javascript:regPermisos(\''+row.id_empleado+'\');" class="btn btn-outline-primary btn-sm hidden-sm"><span class="fas fa-ticket-alt fa-2x" aria-hidden="true"> </span> PERMISOS</a>' +
                             '</div>' ; 
                 }
             },                        
-            {"orderable": false, 
+            {"orderable": false, "class": "dt-body-center col-s", 
                 render:function(data, type, row){
                     return '<div>' +
                             '    <a data-original-title="Listar" data-toggle="modal" data-target="#modalHorasextras" onclick="javascript:regHorasextras(\''+row.id_empleado+'\');" class="btn btn-outline-primary btn-sm hidden-sm"><span class="fab fa-safari fa-2x" aria-hidden="true"> </span> HORAS-EXT</a>' +
                             '</div>' ; 
                 }
             },                        
-            {"orderable": false, 
+            {"orderable": false, "class": "dt-body-center col-s", 
                 render:function(data, type, row){
                     return '<div>' +
                             '    <a data-original-title="Listar" data-toggle="modal" data-target="#modalDescansomedico" onclick="javascript:regDescansomedico(\''+row.id_empleado+'\');" class="btn btn-outline-primary btn-sm hidden-sm"><span class="fa fa-ambulance fa-2x" aria-hidden="true"> </span> DES-MEDIC</a>' +
                             '</div>' ; 
                 }
             }
-        ], 
+        ],  
         "columnDefs": [
-            {
-                "defaultContent": " ",
-                "targets": "_all"
-            }
+            { "visible": false, "targets": groupColumn },
         ],
-        'order' : [[2, "asc"],[1, "asc"]] 
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="13">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        },
+        'order' : [[0, "asc"],[2, "asc"]] 
     });
+    otblListCtrlpermiso.column(0).visible( false );
+
     // Enumeracion 
     otblListCtrlpermiso.on( 'order.dt search.dt', function () { 
-        otblListCtrlpermiso.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListCtrlpermiso.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
         } );
     }).draw();
@@ -264,29 +290,32 @@ fechaActualvaca= function(){
 
 listarVacaciones = function(){        
     oTable_listavacaciones = $('#tblVacaciones').DataTable({
-        'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: false,
-        'processing'  	: true,      
-        'bDestroy'    	: true,
-        'info'        	: true,
-        'filter'      	: false, 
-        "ordering"		: false,  
-        'stateSave'     : true, 
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "500px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true, 
         'ajax'        : {
-            "url"   : baseurl+"adm/rrhh/cctrlpermisos/getlistvacaciones/",
+            "url"   : baseurl+"adm/rrhh/cctrlpermisos/getlistvacaciones",
             "type"  : "POST", 
             "data": function ( d ) { 
                 d.id_empleado     = $('#mhdnIdEmpleado').val(); 
             },     
             dataSrc : ''        
         },
-        'columns'     : [
-            {"orderable": false, data: 'fsalida', targets: 0},
-            {"orderable": false, data: 'fecha_retorno', targets: 1},
-            {"orderable": false, data: 'diastomados', targets: 2},
-            {"orderable": false, data: 'fundamentacion', targets: 3},                        
+        "columns"     : [
+            {data: 'fsalida', "class": "dt-body-center col-s"},
+            {data: 'fecha_retorno', "class": "dt-body-center col-s"},
+            {data: 'diastomados', "class": "dt-body-right col-s"},
+            {data: 'fundamentacion'},                        
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div>' +
@@ -319,8 +348,8 @@ seleVacaciones = function(id_permisosvacaciones,id_empleado,fecha_registro,fecha
     $('#mtxtFregistrovaca').val(fecha_registro);         
     $('#mtxtFsalvaca').val(fecha_salida);        
     $('#mtxtFretovaca').val(fecha_retorno); 
-    alert(fecha_retorno);       
-    $('#mtxtFundamentovaca').val(fundamentacion);    
+
+    $('#mtxtFundamentovaca').val(fundamentacion); 
 };
     
 $("body").on("click","#aDelVaca",function(event){
