@@ -55,6 +55,17 @@ class Mconshallazgocalif extends CI_Model {
             return False;
         }		   
     }
+    public function getdethallazgocalif($parametros)
+    {
+        $procedure = "call usp_at_ctrlprov_getdethallazgocalif(?,?,?,?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros);
+
+        if ($query->num_rows() > 0) { 
+            return $query->result();
+        }{
+            return False;
+        }		   
+    }
 
 }
 ?>

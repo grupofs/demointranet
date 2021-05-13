@@ -36,6 +36,7 @@
                 </div>
             </div>
           
+            <form class="form-horizontal" id="frmconscertifprov" name="frmconscertifprov" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconscertifprov')?>" method="POST" enctype="multipart/form-data" role="form">
             <div class="card-body">
                 <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
                 <input type="hidden" class="form-control" id="hdnCUsuario" name="hdnCUsuario" value="<?php echo $cusu ?>">
@@ -71,31 +72,30 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><b>LISTADO PROVEEDORES CON CERTIFICACIONES</b></h3>
-                    </div>
-                
-                    <div class="card-body" style="overflow-x: scroll;">
-                        <table id="tblconscertifprov" class="table table-striped table-bordered" style="width:100%">
-                            <thead>
-                            <tr>
-                                <th>Certificadora</th>
-                                <th>Certificación</th>
-                                <th>No Aplica</th>
-                                <th>No Tiene</th>
-                                <th>Si Tiene</th>
-                                <th>Convalidado</th>
-                                <th>Total</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                        <h3 class="card-title"><b>LISTADO PROVEEDORES CON CERTIFICACIONES</b></h3>                
+                    </div>               
+                    
+                    <table id="tblconscertifprov" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Certificadora</th>
+                            <th>Certificación</th>
+                            <th>No Aplica</th>
+                            <th>No Tiene</th>
+                            <th>Si Tiene</th>
+                            <th>Convalidado</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -116,16 +116,29 @@
             </button>
         </div>
 
-        <div class="modal-body">         
+        <form class="form-horizontal" id="frmconsdetcertifprov" name="frmconsdetcertifprov" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsdetcertifprov')?>" method="POST" enctype="multipart/form-data" role="form">
+        <div class="modal-body">
+            <input type="hidden" class="form-control" id="hddnmdetccliente" name="hddnmdetccliente">
+            <input type="hidden" class="form-control" id="hddnmdetanio" name="hddnmdetanio">
+            <input type="hidden" class="form-control" id="hddnmdetmes" name="hddnmdetmes"> 
+            <input type="hidden" class="form-control" id="hddnmdetcerti" name="hddnmdetcerti"> 
+            <input type="hidden" class="form-control" id="hddnmdetestado" name="hddnmdetestado">       
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-left">
+                        <button type="reset" class="btn btn-secondary" id="btnRetornarLista" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Retornar</button>
+                        <button type="submit" class="btn btn-info" id="btnexcelDet" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                    </div>
+                </div>
+            </div>        
             <div class="row"> 
                 <div class="col-12" style="overflow-x: scroll;">
                     <table id="tbllistcertidet" class="table table-striped table-bordered compact" style="width:100%">
                         <thead>
                         <tr>
                             <th></th>
-                            <th>Proveedor</th>
-                            <th>Maquilador</th>
-                            <th>Establecimiento</th>
+                            <th></th>
+                            <th>Proveedor - (Establecimiento/Maquilador)</th>
                             <th>Linea de Proceso</th>
                             <th>Dir. Establecimiento</th>
                         </tr>
@@ -136,6 +149,7 @@
                 </div>
             </div>
         </div>
+        </form>
 
         <div class="modal-footer">  
 

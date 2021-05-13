@@ -153,10 +153,10 @@
                                     <div class="col-12">
                                         <div class="card card-outline card-success">
                                             <div class="card-header">
-                                                <h3 class="card-title">Listado de Hallazgos por Calificación</h3>
+                                                <h3 class="card-title"><b>LISTADO DE HALLAZGOS POR CALIFICACIÓN</b></h3>
                                             </div>                                       
                                             <div class="card-body" style="overflow-x: scroll;">
-                                                <table id="tblconshallazgocalif" class="table table-striped table-bordered" style="width:100%">
+                                                <table id="tblconshallazgocalif" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th>Calificación</th>
@@ -188,7 +188,13 @@
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
                                     </div>                        
-                                    <div class="card-body">                                        
+                                    <form class="form-horizontal" id="frmconsexcelconsdetseguiaacc" name="frmconsexcelconsdetseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsdetseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    <div class="card-body"> 
+                                        <input type="hidden" class="form-control" id="hddnmdetccliente" name="hddnmdetccliente">
+                                        <input type="hidden" class="form-control" id="hddnmdetanio" name="hddnmdetanio">
+                                        <input type="hidden" class="form-control" id="hddnmdetmes" name="hddnmdetmes">  
+                                        <input type="hidden" class="form-control" id="hddnmdetfini" name="hddnmdetfini"> 
+                                        <input type="hidden" class="form-control" id="hddnmdetffin" name="hddnmdetffin">                                        
                                         <div class="row">                    
                                         </div>   
                                     </div>
@@ -197,11 +203,12 @@
                                             <div class="col-md-12">
                                                 <div class="text-right">
                                                     <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
-                                                    <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                                                    <button type="submit" class="btn btn-info" id="btnexcelDet" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div> 
                                 <div class="row">
                                     <div class="col-12">
@@ -210,7 +217,7 @@
                                                 <h3 class="card-title">Detalle de Hallazgos por calificación</h3>
                                             </div>                                       
                                             <div class="card-body" style="overflow-x: scroll;">
-                                                <table id="tbldetseguiaacc" class="table table-striped table-bordered compact" style="width:100%">
+                                                <table id="tbldethallazgocalif" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th></th>

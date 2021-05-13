@@ -18,11 +18,6 @@ class Cconscertifprov extends CI_Controller {
         $ccliente       = $this->input->post('ccliente');
         $anio           = $this->input->post('anio');
         $mes            = $this->input->post('mes');
-		$fini           = $this->input->post('fini');
-		$ffin           = $this->input->post('ffin');
-        $cclienteprov   = $this->input->post('cclienteprov');
-        $area           = $this->input->post('area');
-        $dcalificacion  = $this->input->post('dcalificacion');
         
         $parametros = array(
 			'@CCLIENTE'		=>  $ccliente,

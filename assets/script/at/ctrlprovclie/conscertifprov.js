@@ -57,7 +57,9 @@ $("#btnBuscar").click(function (){
     
 });
 
-getListConscertifprov = function(param){       
+getListConscertifprov = function(param){   
+    var groupColumn = 0;   
+
     otblconscertifprov = $('#tblconscertifprov').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -82,10 +84,10 @@ getListConscertifprov = function(param){
             {data: 'CERTIFICADORA', "class": "col-sm"},
             {data: 'CERTIFICACION', "class": "col-lm"},
             {data: 'NOAPLICA', "class": "dt-body-center col-s"},
-            {data: 'NOTIENE', "class": "col-s"},
-            {data: 'SITIENE', "class": "col-s"},
-            {data: 'CONVALIDADO', "class": "col-s"},
-            {data: 'TOTAL', "class": "col-s"},
+            {data: 'NOTIENE', "class": "dt-body-center col-s"},
+            {data: 'SITIENE', "class": "dt-body-center col-s"},
+            {data: 'CONVALIDADO', "class": "dt-body-center col-s"},
+            {data: 'TOTAL', "class": "dt-body-center col-s"},
         ], 
         "columnDefs": [
             {
@@ -98,7 +100,7 @@ getListConscertifprov = function(param){
                 }
             },
             {
-                "targets": [3], 
+                "targets": [4], 
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
@@ -107,7 +109,7 @@ getListConscertifprov = function(param){
                 }
             },
             {
-                "targets": [4], 
+                "targets": [3], 
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
@@ -124,8 +126,27 @@ getListConscertifprov = function(param){
                     '</div>';
                 }
             },
-        ], 
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="6">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
     });
+
+    otblconscertifprov.column(0).visible( false );
+     
+    $("#btnexcel").prop("disabled",false);
      
 };
 
@@ -136,7 +157,13 @@ mostrarDetalle = function(ccliente,varver,varestado,varanio,varmes,varcerti,varc
 
 
 paramListdet = function (ccliente,varver,varestado,varanio,varmes,varcerti,varcondi){    
-         
+                 
+    $('#hddnmdetccliente').val(ccliente);     
+    $('#hddnmdetanio').val(varanio); 
+    $('#hddnmdetmes').val(varmes);     
+    $('#hddnmdetcerti').val(varcerti);    
+    $('#hddnmdetestado').val(varestado);   
+
     var parametros = {
         "CCLIENTE" : ccliente,
         "ANIO"     : varanio,
@@ -149,7 +176,8 @@ paramListdet = function (ccliente,varver,varestado,varanio,varmes,varcerti,varco
     
 };
 
-getListdet = function(param){       
+getListdet = function(param){    
+    var groupColumn = 0;      
     otbllistcertidet = $('#tbllistcertidet').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -171,19 +199,36 @@ getListdet = function(param){
             dataSrc : ''      
         },
         "columns"	: [
+            {data: 'CERTIFICACION'},
             {data: null, "class": "col-xxs"},
-            {data: 'PROVEEDOR', "class": "col-m"},
-            {data: 'MAQUILADOR', "class": "col-m"},
-            {data: 'ESTABLECIMIENTO', "class": "col-m"},
+            {data: 'PROVEEDOR', "class": "col-lm"},
             {data: 'LINEAPROCESO', "class": "col-m"},
             {data: 'DIRESTABLECIMIENTO', "class": "col-m"},
-        ]
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="4">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
     });
     // Enumeracion 
     otbllistcertidet.on( 'order.dt search.dt', function () { 
-        otbllistcertidet.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otbllistcertidet.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
         cell.innerHTML = i+1;
         });
-    } ).draw(); 
+    } ).draw();  
+
+    otbllistcertidet.column(0).visible( false );   
      
+    $("#btnexcelDet").prop("disabled",false);
 };

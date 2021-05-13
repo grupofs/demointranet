@@ -245,6 +245,7 @@ $('#tblconsseguiaacc tbody').on('dblclick', 'td', function () {
 
 $('#btnRetornarLista').click(function(){
     $('#tabhallazgocalif a[href="#tabhallazgocalif-list"]').tab('show'); 
+    $('#btnBuscar').click();
 });
 
 paramListDetseguiaacc = function (careacliente){    
@@ -264,9 +265,11 @@ paramListDetseguiaacc = function (careacliente){
     } 
         
     $('#hddnmdetccliente').val(v_ccliente);     
-    $('#hrdbuscar').val('F'); 
-    $('#hrdbuscar').val('F');     
-    $('#hrdbuscar').val('F');
+    $('#hddnmdetanio').val(v_anio); 
+    $('#hddnmdetmes').val(v_mes);     
+    $('#hddnmdetfini').val(varfdesde);    
+    $('#hddnmdetffin').val(varfhasta);   
+    $('#hddnmdetarea').val(careacliente);
 
     var parametros = {
         "ccliente"      : v_ccliente,

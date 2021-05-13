@@ -176,7 +176,7 @@
                                     <div class="col-12">
                                         <div class="card card-outline card-success">
                                             <div class="card-header">
-                                                <h3 class="card-title">Listado de Seguimiento de AACC</h3>
+                                                <h3 class="card-title"><b>LISTADO DE SEGUIMIENTO DE AACC</b></h3>
                                             </div>                                       
                                             <div class="card-body" style="overflow-x: scroll;">
                                                 <table id="tblconsseguiaacc" class="table table-striped table-bordered compact" style="width:100%">
@@ -207,12 +207,14 @@
                                         </div>
                                     </div> 
                                     
-                                    <form class="form-horizontal" id="frmconsseguiaacc" name="frmconsseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    <form class="form-horizontal" id="frmconsexcelconsdetseguiaacc" name="frmconsexcelconsdetseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsdetseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body">
                                         <input type="hidden" class="form-control" id="hddnmdetccliente" name="hddnmdetccliente">
                                         <input type="hidden" class="form-control" id="hddnmdetanio" name="hddnmdetanio">
-                                        <input type="hidden" class="form-control" id="hddnmdetmes" name="hrdbuscar">  
-                                        <input type="hidden" class="form-control" id="hddnmdetccliente" name="hrdbuscar" value="P">                                      
+                                        <input type="hidden" class="form-control" id="hddnmdetmes" name="hddnmdetmes">  
+                                        <input type="hidden" class="form-control" id="hddnmdetfini" name="hddnmdetfini"> 
+                                        <input type="hidden" class="form-control" id="hddnmdetffin" name="hddnmdetffin">  
+                                        <input type="hidden" class="form-control" id="hddnmdetarea" name="hddnmdetarea">                                       
                                         <div class="row">      
                                             <div class="col-md-6">
                                                 <label>Archivo de AA.CC.</label> 

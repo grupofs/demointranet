@@ -3,6 +3,22 @@ var otblconshallazgocalif;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-list-tab"]').attr('class', 'disabled');
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-det-tab"]').attr('class', 'disabled active');
+
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-list-tab"]').not('#store-tab.disabled').click(function(event){
+        $('#tabhallazgocalif a[href="#tabhallazgocalif-list"]').attr('class', 'active');
+        $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').attr('class', '');
+        return true;
+    });
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-det-tab"]').not('#bank-tab.disabled').click(function(event){
+        $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').attr('class' ,'active');
+        $('#tabhallazgocalif a[href="#tabhallazgocalif-list"]').attr('class', '');
+        return true;
+    });
+    
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-list"]').click(function(event){return false;});
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').click(function(event){return false;});
 
     $('#divAnio').show();
     $('#divMes').show();
@@ -132,6 +148,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '%';
         varfhasta = '%';
         varperiodo = '1';
+        $('#hrdbuscar').val('P'); 
     }else if ($('#rdFechas').prop('checked')){     
         $('#divAnio').hide();
         $('#divMes').hide();
@@ -140,6 +157,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '';
         varfhasta = '';
         varperiodo = '0';
+        $('#hrdbuscar').val('F'); 
     } 
 });
 
@@ -234,13 +252,118 @@ getListConshallazgocalif = function(param){
 
     otblconshallazgocalif.column(0).visible( false );
      
+    $("#btnexcel").prop("disabled",false);
+     
 };
 
 $('#tblconshallazgocalif tbody').on('dblclick', 'td', function () {
     var tr = $(this).parents('tr');
-    var row = otblconshallazgocalif.row(tr);
+    var row = otblconsseguiaacc.row(tr);
     var rowData = row.data();
     $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').tab('show');
-    //parametros = paramListDetseguiaacc(rowData.CAREACLIENTE);
-    //getListDetseguiaacc(parametros);
+    parametros = paramListDethallazgocalif(rowData.CAREACLIENTE);
+    getListDethallazgocalif(parametros);
 } );
+
+$('#btnRetornarLista').click(function(){
+    $('#tabhallazgocalif a[href="#tabhallazgocalif-list"]').tab('show'); 
+    $('#btnBuscar').click();
+});
+
+paramListDethallazgocalif = function (careacliente){    
+    var v_mes, v_anio, v_ccliente
+
+    v_ccliente = $('#hdnCCliente').val()
+
+    if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
+    if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); } 
+
+    if(varperiodo != '0'){ 
+        v_anio = $('#cboAnio').val(); 
+        v_mes = $('#cboMes').val(); 
+    }else{
+        v_anio = 0;
+        v_mes = 0;
+    } 
+        
+    $('#hddnmdetccliente').val(v_ccliente);     
+    $('#hddnmdetanio').val(v_anio); 
+    $('#hddnmdetmes').val(v_mes);     
+    $('#hddnmdetfini').val(varfdesde);    
+    $('#hddnmdetffin').val(varfhasta);   
+    $('#hddnmdetarea').val(careacliente);
+
+    var parametros = {
+        "ccliente"      : v_ccliente,
+        "anio"          : v_anio,
+        "mes"           : v_mes,
+        "fini"          : varfdesde,
+        "ffin"          : varfhasta,
+        "area"          : careacliente,
+    };  
+
+    return parametros;
+    
+};
+
+getListDethallazgocalif = function(param){       
+    otbldethallazgocalif = $('#tbldethallazgocalif').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconshallazgocalif/getdethallazgocalif",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: null, "class": "col-xxs"},
+            {data: 'PROVEEDOR', "class": "col-xl"},
+            {data: 'LINEACLIENTE', "class": "col-lm"},
+            {data: 'NROINFORME', "class": "col-sm"},
+            {data: 'RESULTADO', "class": "dt-body-right col-sm"},
+            {data: 'FACEPTACORRECTIVA', "class": "dt-body-center col-s"},
+            {data: 'ACRECUPERADAS', "class": "dt-body-center col-s"},
+            {data: 'ACPORREALIZAR', "class": "dt-body-center col-s"},
+            {data: 'TOTALAC', "class": "dt-body-center col-s"},
+            {"orderable": false, 
+              render:function(data, type, row){ 
+                var veraacc, ubicaaacc;
+                ubicaaacc = row.DUBICACIONFILESERVERAC   
+                
+                if(row.DUBICACIONFILESERVERAC == null || ubicaaacc.length == 0 )  {
+                    veraacc = ' <a data-toggle="modal" title="Listado" style="cursor:pointer; color:#3c763d;" data-target="#modalAACC" onClick="javascript:listarAACC(\''+row.CAUDITORIAINSPECCION+'\',\''+row.FSERVICIO+'\');"class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="far fa-window-maximize" aria-hidden="true"> </span> Listado</a>'+
+                        ' &nbsp; &nbsp;'
+                } else {
+                    veraacc = ' <a title="Archivo" style="cursor:pointer; color:#1646ec;" href="'+baseurl+row.DUBICACIONFILESERVERAC+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-download" aria-hidden="true"> </span> Archivo</a>'+
+                        ' &nbsp; &nbsp;'
+                }
+
+                return  '<div>'+veraacc+
+                  '</div>'  
+              }
+            },
+        ]
+    });
+    // Enumeracion 
+    otbldethallazgocalif.on( 'order.dt search.dt', function () { 
+        otbldethallazgocalif.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw(); 
+     
+    $("#btnexcelDet").prop("disabled",false);
+     
+};
+
