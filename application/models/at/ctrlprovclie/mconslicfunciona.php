@@ -44,9 +44,18 @@ class Mconslicfunciona extends CI_Model {
             return false;
         }		
     }
-    public function getconslicfunciona($parametros)
-    {
+    public function getconslicfunciona($parametros){
         $procedure = "call usp_at_ctrlprov_conslicfunciona(?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros);
+
+        if ($query->num_rows() > 0) { 
+            return $query->result();
+        }{
+            return False;
+        }		   
+    }
+    public function getlicprovdet($parametros){
+        $procedure = "call usp_at_ctrlprov_getlicprovdet(?,?,?,?,?,?)";
         $query = $this->db-> query($procedure,$parametros);
 
         if ($query->num_rows() > 0) { 

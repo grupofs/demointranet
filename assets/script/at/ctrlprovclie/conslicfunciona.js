@@ -1,5 +1,5 @@
 
-var otblconslicfunciona;
+var otblconslicfunciona, otbllistlicprovdet;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
@@ -85,6 +85,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '%';
         varfhasta = '%';
         varperiodo = '1';
+        $('#hrdbuscar').val('P'); 
     }else if ($('#rdFechas').prop('checked')){     
         $('#divAnio').hide();
         $('#divMes').hide();
@@ -93,6 +94,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '';
         varfhasta = '';
         varperiodo = '0';
+        $('#hrdbuscar').val('F'); 
     } 
 });
 
@@ -150,4 +152,113 @@ getListConslicfunciona = function(param){
         ]
     });
      
+    $("#btnexcel").prop("disabled",false);
+     
+};
+
+$('#tblconslicfunciona tbody').on('dblclick', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblconslicfunciona.row(tr);
+    var rowData = row.data();
+
+    var v_mes, v_anio, v_cliente, v_estado
+
+    v_cliente = $('#hdnCCliente').val();
+
+    if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
+    if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); } 
+
+    if(varperiodo != '0'){ 
+        v_anio = $('#cboAnio').val(); 
+        v_mes = $('#cboMes').val(); 
+    }else{
+        v_anio = 0;
+        v_mes = 0;
+    } 
+    
+    $("#modalDet").modal('show');
+
+    v_estado = rowData.ESTADO
+
+    parametros = paramListdet(v_cliente,v_anio,v_mes,varfdesde,varfhasta,v_estado);
+    getListdet(parametros);
+} );
+
+paramListdet = function (ccliente,v_anio,v_mes,varfdesde,varfhasta,v_estado){    
+      
+    $('#hddnmdetccliente').val(ccliente);     
+    $('#hddnmdetanio').val(v_anio); 
+    $('#hddnmdetmes').val(v_mes);     
+    $('#hddnmdetfini').val(varfdesde);    
+    $('#hddnmdetffin').val(varfhasta);     
+    $('#hddnmdetestado').val(v_estado);
+
+    var parametros = {
+        "ccliente"  : ccliente,
+        "anio"      : v_anio,
+        "mes"       : v_mes,
+        "fini"     : varfdesde,
+        "ffin"     : varfhasta,
+        "estado"    : v_estado
+    };  
+
+    return parametros;
+    
+};
+
+getListdet = function(param){    
+    var groupColumn = 0;      
+    otbllistlicprovdet = $('#tbllistlicprovdet').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconslicfunciona/getlicprovdet",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: 'ESTADO'},
+            {data: null, "class": "col-xxs"},
+            {data: 'PROVEEDOR', "class": "col-lm"},
+            {data: 'LINEAPROCESO', "class": "col-m"},
+            {data: 'DIRESTABLECIMIENTO', "class": "col-m"},
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="4">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    });
+    // Enumeracion 
+    otbllistlicprovdet.on( 'order.dt search.dt', function () { 
+        otbllistlicprovdet.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw();  
+
+    otbllistlicprovdet.column(0).visible( false );   
+     
+    $("#btnexcelDet").prop("disabled",false);
 };

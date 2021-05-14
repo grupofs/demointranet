@@ -77,6 +77,52 @@ class Cconshallazgocalif extends CI_Controller {
         
         $resultado = $this->mconshallazgocalif->getdethallazgocalif($parametros);
         echo json_encode($resultado);
+	} 
+	 
+    public function getresumeninspeccion() {	// Busqueda	
+		$varnull    =   '';
+
+        $cauditoriainspeccion = $this->input->post('cauditoriainspeccion');
+        $fservicio            = $this->input->post('fservicio');
+                
+        $resultado = $this->mconshallazgocalif->getresumeninspeccion($cauditoriainspeccion,$fservicio);
+        echo json_encode($resultado);
+    } 
+    public function getdetresumen() {	// Busqueda	
+		$varnull    =   '';
+
+        $cauditoriainspeccion = $this->input->post('cauditoriainspeccion');
+        $fservicio            = $this->input->post('fservicio');
+                
+        $resultado = $this->mconshallazgocalif->getdetresumen($cauditoriainspeccion,$fservicio);
+        echo json_encode($resultado);
+    } 
+    public function getreqexcluye() {	// Busqueda	
+		$varnull    =   '';
+
+        $cauditoriainspeccion = $this->input->post('cauditoriainspeccion');
+        $fservicio            = $this->input->post('fservicio');
+                
+        $resultado = $this->mconshallazgocalif->getreqexcluye($cauditoriainspeccion,$fservicio);
+        echo json_encode($resultado);
+    } 
+    public function getproducto() {	// Busqueda	
+		$varnull    =   '';
+
+        $cauditoriainspeccion = $this->input->post('cauditoriainspeccion');
+        $fservicio            = $this->input->post('fservicio');
+                
+        $resultado = $this->mconshallazgocalif->getproducto($cauditoriainspeccion,$fservicio);
+        echo json_encode($resultado);
+    } 
+    public function getcriterio() {	// Busqueda	
+		$varnull    =   '';
+
+        $cauditoriainspeccion = $this->input->post('cauditoriainspeccion');
+        $fservicio            = $this->input->post('fservicio');
+                
+        $resultado = $this->mconshallazgocalif->getcriterio($cauditoriainspeccion,$fservicio);
+        echo json_encode($resultado);
     } 
 }
 ?>

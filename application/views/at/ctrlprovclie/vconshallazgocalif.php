@@ -51,6 +51,7 @@
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
                                     </div>                        
+                                    <form class="form-horizontal" id="frmexcelconshallazgocalif" name="frmexcelconshallazgocalif" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconshallazgocalif')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body">
                                         <div class="row">
                                             <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
@@ -75,6 +76,7 @@
                                                     </label>
                                                 </div>
                                                 </div>
+                                                <input type="hidden" class="form-control" id="hrdbuscar" name="hrdbuscar" value="P">
                                             </div>   
                                             <div class="col-md-2">
                                                 <div class="form-group" id="divAnio"> 
@@ -148,6 +150,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div> 
                                 <div class="row">
                                     <div class="col-12">
@@ -188,13 +191,16 @@
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                                         </div>
                                     </div>                        
-                                    <form class="form-horizontal" id="frmconsexcelconsdetseguiaacc" name="frmconsexcelconsdetseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsdetseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    <form class="form-horizontal" id="frmexcelconsdethallazgocalif" name="frmexcelconsdethallazgocalif" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsdethallazgocalif')?>" method="POST" enctype="multipart/form-data" role="form">
                                     <div class="card-body"> 
                                         <input type="hidden" class="form-control" id="hddnmdetccliente" name="hddnmdetccliente">
                                         <input type="hidden" class="form-control" id="hddnmdetanio" name="hddnmdetanio">
                                         <input type="hidden" class="form-control" id="hddnmdetmes" name="hddnmdetmes">  
                                         <input type="hidden" class="form-control" id="hddnmdetfini" name="hddnmdetfini"> 
-                                        <input type="hidden" class="form-control" id="hddnmdetffin" name="hddnmdetffin">                                        
+                                        <input type="hidden" class="form-control" id="hddnmdetffin" name="hddnmdetffin">  
+                                        <input type="hidden" class="form-control" id="hddnmdetcclienteprov" name="hddnmdetcclienteprov">
+                                        <input type="hidden" class="form-control" id="hddnmdetarea" name="hddnmdetarea">
+                                        <input type="hidden" class="form-control" id="hddnmdetdcalificacion" name="hddnmdetdcalificacion">                                      
                                         <div class="row">                    
                                         </div>   
                                     </div>
@@ -221,6 +227,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th></th>
+                                                        <th></th>
                                                         <th>Proveedor</th>
                                                         <th>Establecimiento / Maquilador</th>
                                                         <th>Linea de Proceso</th>
@@ -235,7 +242,6 @@
                                                         <th>No conformidad levantada (NCL)</th>
                                                         <th>Observacion parc. Levantada (OPL)</th>
                                                         <th>No conform. Parc. Levantada (NCPL)</th>
-                                                        <th></th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -254,4 +260,153 @@
     </div>
 </section>
 <!-- /.Main content -->
+
+
+<!-- /.Modal-Listado-AACC --> 
+<div class="modal fade" id="modalResumen" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg fullModal">
+    <div class="modal-content" id="contenedorListaresumen">      
+
+        <div class="modal-header text-center bg-lightblue">
+            <h4 class="modal-title w-100 font-weight-bold">Resumen de Hallazgos Según fecha de Inspección</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">         
+            <div class="row">
+                <div class="col-md-6"> 
+                    <div class="text-info">Empresa</div>
+                    <div>    
+                        <input type="text" name="mtxtempresa" id="mtxtempresa" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-6"> 
+                    <div class="text-info">Dir. Inspección</div>
+                    <div>    
+                        <input type="text" name="mtxtdirinspeccion" id="mtxtdirinspeccion" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-md-6"> 
+                    <div class="text-info">Línea</div>
+                    <div>    
+                        <input type="text" name="mtxtlinea" id="mtxtlinea" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-2"> 
+                    <div class="text-info">Puntaje (%)</div>
+                    <div>    
+                        <input type="text" name="mtxtpuntaje" id="mtxtpuntaje" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-2"> 
+                    <div class="text-info">Calificación</div>
+                    <div>    
+                        <input type="text" name="mtxtcalificacion" id="mtxtcalificacion" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-2"> 
+                    <div class="text-info">Nro Informe</div>
+                    <div>    
+                        <input type="text" name="mtxtnroinforme" id="mtxtnroinforme" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+            </div>   
+            <div class="row">
+                <div class="col-md-1"> 
+                    <div class="text-info">Estado Lic. Funcionamiento</div>
+                    <div>    
+                        <input type="text" name="mtxtlicfunestado" id="mtxtlicfunestado" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-2"> 
+                    <div class="text-info">Nro. Lic. <br>Funcionamiento</div>
+                    <div>    
+                        <input type="text" name="mtxtlicfunnro" id="mtxtlicfunnro" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-3"> 
+                    <div class="text-info">&nbsp;<br>Municipalidad</div>
+                    <div>    
+                        <input type="text" name="mtxtmunicipalidad" id="mtxtmunicipalidad" class="form-control" disabled><!-- ID -->
+                    </div>
+                </div>
+                <div class="col-md-6"> 
+                    <div class="text-info">&nbsp;<br>Observación</div>
+                    <div>    
+                        <textarea name="mtxtobservacion" id="mtxtobservacion" class="form-control" rows="2" disabled></textarea><!-- ID -->
+                    </div>
+                </div>
+            </div> 
+            <br>
+            <div class="row"> 
+                <div class="col-6" style="overflow-x: scroll;">
+                    <table id="tbldetresumen" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Detalle del Resumen de Inspección</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-6" style="overflow-x: scroll;">
+                    <table id="tblreqexcluye" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Requisitos Excluyentes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br>
+            <div class="row"> 
+                <div class="col-8" style="overflow-x: scroll;">
+                    <table id="tblproducto" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Peligros Identificados por Tottus</th>
+                            <th>Peligros Identificados por el Proveedor</th>
+                            <th>Peligros Adicionales Identificados en la Inspección</th>
+                            <th>Observación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-4" style="overflow-x: scroll;">
+                    <table id="tblcriterio" class="table table-striped table-bordered compact" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Criterios</th>
+                            <th>Nro de Hallazgos</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">  
+            <button type="reset" class="btn btn-default" id="mbtnCerrar" data-dismiss="modal">Cerrar</button>
+        </div>
+                
+    </div>
+  </div>
+</div> 
+<!-- /.Modal-->
 

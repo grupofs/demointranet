@@ -1,5 +1,5 @@
 
-var otblconshallazgocalif;
+var otblconshallazgocalif, otbldetresumen, otbldethallazgocalif, otblproducto, otblcriterio;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
@@ -258,10 +258,10 @@ getListConshallazgocalif = function(param){
 
 $('#tblconshallazgocalif tbody').on('dblclick', 'td', function () {
     var tr = $(this).parents('tr');
-    var row = otblconsseguiaacc.row(tr);
+    var row = otblconshallazgocalif.row(tr);
     var rowData = row.data();
     $('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').tab('show');
-    parametros = paramListDethallazgocalif(rowData.CAREACLIENTE);
+    parametros = paramListDethallazgocalif(rowData.CALIFICACION,rowData.CAREACLIENTE);
     getListDethallazgocalif(parametros);
 } );
 
@@ -270,10 +270,11 @@ $('#btnRetornarLista').click(function(){
     $('#btnBuscar').click();
 });
 
-paramListDethallazgocalif = function (careacliente){    
-    var v_mes, v_anio, v_ccliente
+paramListDethallazgocalif = function (dcalificacion,careacliente){    
+    var v_mes, v_anio, v_ccliente, v_cproveedor
 
-    v_ccliente = $('#hdnCCliente').val()
+    v_ccliente = $('#hdnCCliente').val();
+    v_cproveedor = $('#cboProveedor').val();
 
     if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
     if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); } 
@@ -285,13 +286,15 @@ paramListDethallazgocalif = function (careacliente){
         v_anio = 0;
         v_mes = 0;
     } 
-        
+           
     $('#hddnmdetccliente').val(v_ccliente);     
     $('#hddnmdetanio').val(v_anio); 
     $('#hddnmdetmes').val(v_mes);     
     $('#hddnmdetfini').val(varfdesde);    
     $('#hddnmdetffin').val(varfhasta);   
+    $('#hddnmdetcclienteprov').val(v_cproveedor);
     $('#hddnmdetarea').val(careacliente);
+    $('#hddnmdetdcalificacion').val(dcalificacion);
 
     var parametros = {
         "ccliente"      : v_ccliente,
@@ -299,20 +302,24 @@ paramListDethallazgocalif = function (careacliente){
         "mes"           : v_mes,
         "fini"          : varfdesde,
         "ffin"          : varfhasta,
+        "cclienteprov"  : v_cproveedor,
         "area"          : careacliente,
-    };  
+        "dcalificacion" : dcalificacion,
+    };   
 
     return parametros;
     
 };
 
-getListDethallazgocalif = function(param){       
+getListDethallazgocalif = function(param){     
+    var groupColumn = 0;   
+  
     otbldethallazgocalif = $('#tbldethallazgocalif').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
         "bJQueryUI"     : true,
-        "scrollY"     	: "540px",
+        "scrollY"     	: "500px",
         "scrollX"     	: true, 
         'AutoWidth'     : true,
         "paging"      	: false,
@@ -328,42 +335,281 @@ getListDethallazgocalif = function(param){
             dataSrc : ''      
         },
         "columns"	: [
+            {data: 'AREA'},
             {data: null, "class": "col-xxs"},
             {data: 'PROVEEDOR', "class": "col-xl"},
+            {data: 'ESTABLEMAQUI', "class": "col-lm"},
             {data: 'LINEACLIENTE', "class": "col-lm"},
-            {data: 'NROINFORME', "class": "col-sm"},
-            {data: 'RESULTADO', "class": "dt-body-right col-sm"},
-            {data: 'FACEPTACORRECTIVA', "class": "dt-body-center col-s"},
-            {data: 'ACRECUPERADAS', "class": "dt-body-center col-s"},
-            {data: 'ACPORREALIZAR', "class": "dt-body-center col-s"},
-            {data: 'TOTALAC', "class": "dt-body-center col-s"},
-            {"orderable": false, 
-              render:function(data, type, row){ 
-                var veraacc, ubicaaacc;
-                ubicaaacc = row.DUBICACIONFILESERVERAC   
-                
-                if(row.DUBICACIONFILESERVERAC == null || ubicaaacc.length == 0 )  {
-                    veraacc = ' <a data-toggle="modal" title="Listado" style="cursor:pointer; color:#3c763d;" data-target="#modalAACC" onClick="javascript:listarAACC(\''+row.CAUDITORIAINSPECCION+'\',\''+row.FSERVICIO+'\');"class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="far fa-window-maximize" aria-hidden="true"> </span> Listado</a>'+
-                        ' &nbsp; &nbsp;'
-                } else {
-                    veraacc = ' <a title="Archivo" style="cursor:pointer; color:#1646ec;" href="'+baseurl+row.DUBICACIONFILESERVERAC+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-download" aria-hidden="true"> </span> Archivo</a>'+
-                        ' &nbsp; &nbsp;'
+            {data: 'NROINFORME', "class": "dt-body-center col-sm"},
+            {data: 'FSERVICIO', "class": "dt-body-center col-s"},
+            {data: 'NC', "class": "dt-body-center col-sm"},
+            {data: 'NRC', "class": "dt-body-center col-sm"},
+            {data: 'OB', "class": "dt-body-center col-sm"},
+            {data: 'OBR', "class": "dt-body-center col-sm"},
+            {data: 'OM', "class": "dt-body-center col-sm"},
+            {data: 'OL', "class": "dt-body-center col-sm"},
+            {data: 'NCL', "class": "dt-body-center col-sm"},
+            {data: 'OPL', "class": "dt-body-center col-sm"},
+            {data: 'NCPL', "class": "dt-body-center col-sm"},
+        ], 
+        "columnDefs": [
+            {
+                "targets": [2], 
+                "data": null, 
+                "render": function(data, type, row) {
+                    return '<div>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalResumen" onClick="mostrarResumen(\'' + row.CAUDITORIAINSPECCION + '\', \'' + row.FSERVICIO + '\');">'+row.PROVEEDOR+'</a>'+
+                    '</div>';
                 }
-
-                return  '<div>'+veraacc+
-                  '</div>'  
-              }
             },
-        ]
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="6">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
     });
     // Enumeracion 
     otbldethallazgocalif.on( 'order.dt search.dt', function () { 
-        otbldethallazgocalif.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otbldethallazgocalif.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
         cell.innerHTML = i+1;
         });
-    } ).draw(); 
+    } ).draw();
+
+    otbldethallazgocalif.column(0).visible( false );
      
     $("#btnexcelDet").prop("disabled",false);
      
 };
 
+mostrarResumen = function(cauditoriainspeccion,fservicio){
+    var parametros = { 
+        "cauditoriainspeccion":cauditoriainspeccion,
+        "fservicio":fservicio,
+    };
+    var request = $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprovclie/cconshallazgocalif/getresumeninspeccion",
+        dataType: "JSON",
+        async: true,
+        data: parametros,
+        error: function(){
+            alert('Error, No se puede autenticar por error = getresumeninspeccion');
+        }
+    });      
+    request.done(function( respuesta ) {            
+        $.each(respuesta, function() {
+            $('#mtxtempresa').val(this.EMPRESA);
+            $('#mtxtdirinspeccion').val(this.DIRINSPE);
+            $('#mtxtlinea').val(this.LINEA);
+            $('#mtxtpuntaje').val(this.PUNTAJE);
+            $('#mtxtcalificacion').val(this.CALIFICACION);
+            $('#mtxtnroinforme').val(this.NROINFORME);
+            $('#mtxtlicfunestado').val(this.ESTADOLICENCIA);
+            $('#mtxtlicfunnro').val(this.NROLICENCIA);
+            $('#mtxtmunicipalidad').val(this.MUNICIPALIDAD);
+            $('#mtxtobservacion').val(this.OBSERVACION);   
+        });
+    });     
+    getListdetresumen(cauditoriainspeccion,fservicio);
+    getListreqexcluye(cauditoriainspeccion,fservicio);
+    getListproducto(cauditoriainspeccion,fservicio);
+    getListcriterio(cauditoriainspeccion,fservicio);
+};
+
+getListdetresumen = function(cauditoriainspeccion,fservicio){     
+    var groupColumn = 0; 
+    
+    var param = {
+        "cauditoriainspeccion": cauditoriainspeccion,
+        "fservicio"          : fservicio,
+    };  
+  
+    otbldetresumen= $('#tbldetresumen').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "300px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconshallazgocalif/getdetresumen",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: 'dregistro'},
+            {data: 'dinfoadicional', "class": "col-xl"},
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="1">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    });
+    otbldetresumen.column(0).visible( false );
+     
+     
+};
+
+getListreqexcluye = function(cauditoriainspeccion,fservicio){     
+    var groupColumn = 0; 
+    
+    var param = {
+        "cauditoriainspeccion": cauditoriainspeccion,
+        "fservicio"          : fservicio,
+    };  
+  
+    otblreqexcluye= $('#tblreqexcluye').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "300px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconshallazgocalif/getreqexcluye",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: 'TITULO'},
+            {data: 'DHALLAZGOTEXT', "class": "col-xl"},
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="1">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    });
+    otblreqexcluye.column(0).visible( false );
+     
+     
+};
+
+getListproducto = function(cauditoriainspeccion,fservicio){      
+    var param = {
+        "cauditoriainspeccion": cauditoriainspeccion,
+        "fservicio"          : fservicio,
+    };  
+  
+    otblproducto= $('#tblproducto').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "250px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconshallazgocalif/getproducto",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: 'dproducto', "class": "col-sm"},
+            {data: 'dpeligrocliente', "class": "col-s"},
+            {data: 'dpeligroproveedor', "class": "col-s"},
+            {data: 'dpeligroinspeccion', "class": "col-s"},
+            {data: 'dobservacion', "class": "col-sm"},
+        ]
+    });
+     
+     
+};
+
+getListcriterio = function(cauditoriainspeccion,fservicio){      
+    var param = {
+        "cauditoriainspeccion": cauditoriainspeccion,
+        "fservicio"          : fservicio,
+    };  
+  
+    otblcriterio= $('#tblcriterio').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "250px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconshallazgocalif/getcriterio",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
+        },
+        "columns"	: [
+            {data: 'CDETALLEVALOR', "class": "col-xs"},
+            {data: 'DDETALLEVALOR', "class": "col-sm"},
+            {data: 'NROHALLAZGOS', "class": "col-s"},
+        ]
+    });
+    // Enumeracion 
+    otblcriterio.on( 'order.dt search.dt', function () { 
+        otblcriterio.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw(); 
+     
+     
+};

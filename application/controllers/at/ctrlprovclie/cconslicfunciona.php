@@ -46,5 +46,27 @@ class Cconslicfunciona extends CI_Controller {
         $resultado = $this->mconslicfunciona->getconslicfunciona($parametros);
         echo json_encode($resultado);
     } 
+    public function getlicprovdet() {	// Busqueda	
+		$varnull    =   '';
+
+        $ccliente       = $this->input->post('ccliente');
+        $anio           = $this->input->post('anio');
+        $mes            = $this->input->post('mes');
+		$fini           = $this->input->post('fini');
+		$ffin           = $this->input->post('ffin');
+		$estado         = $this->input->post('estado');
+        
+        $parametros = array(
+			'@CCLIENTE'		=>  $ccliente,
+			'@ANIO'		    =>  $anio,
+			'@MES'		    =>  ($this->input->post('mes') == $varnull) ? 0 : $mes,
+			'@FINI' 		=>  ($this->input->post('fini') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2), 
+			'@FFIN' 		=>  ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
+			'@ESTADO'	    =>  $estado,
+        );
+        
+        $resultado = $this->mconslicfunciona->getlicprovdet($parametros);
+        echo json_encode($resultado);
+    } 
 }
 ?>

@@ -153,7 +153,7 @@
                                 <th>01</th>
                                 <th>02</th>
                                 <th>03</th>
-                                <th></th>
+                                <th>Leyenda</th>
                             </tr>
                             </thead>
                             <tbody>
