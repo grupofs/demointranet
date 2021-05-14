@@ -12,7 +12,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Consulta Resultados Generales</h1>
+        <h1 class="m-0 text-dark">Consulta Proximas Inspecciones</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -36,6 +36,7 @@
                 </div>
             </div>
           
+            <form class="form-horizontal" id="frmexcelconsproxinsp" name="frmexcelconsproxinsp" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsproxinsp')?>" method="POST" enctype="multipart/form-data" role="form">
             <div class="card-body">
                 <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
                 <input type="hidden" class="form-control" id="hdnCUsuario" name="hdnCUsuario" value="<?php echo $cusu ?>">
@@ -58,6 +59,7 @@
                             </label>
                         </div>
                         </div>
+                        <input type="hidden" class="form-control" id="hrdbuscar" name="hrdbuscar" value="P">
                     </div>   
                     <div class="col-md-2">
                         <div class="form-group" id="divAnio"> 
@@ -111,12 +113,10 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label>Calificación</label>
-                            <select class="form-control select2bs4" id="cbocalificacion" name="cbocalificacion" style="width: 100%;">
-                                <option value="" selected="selected">Cargando...</option>
-                            </select>
+                            <label>Linea de Proceso</label>
+                            <input type="text" class="form-control" id="txtlinea" name="txtlinea" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -132,29 +132,25 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-info">
                     <div class="card-header">
-                        <h3 class="card-title"><b>LISTADO DE RESULTADOS GENERALES</b></h3>
+                        <h3 class="card-title"><b>LISTADO DE PROXIMAS INSPECCIONES</b></h3>
                     </div>
                 
                     <div class="card-body" style="overflow-x: scroll;">
-                        <table id="tblconsresulgral" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblconsproxinsp" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Categoria</th>
+                                <th>Nro</th>
+                                <th>Fecha Inspección</th>
                                 <th>Proveedor</th>
-                                <th>Establecimiento/Maquilador</th>
-                                <th>Dirección de Inspección</th>
-                                <th>Fecha Servicio</th>
-                                <th>Calificación</th>
-                                <th>CheckList</th>
-                                <th>01</th>
-                                <th>02</th>
-                                <th>03</th>
-                                <th>Leyenda</th>
+                                <th>Área</th>
+                                <th>Línea</th>
+                                <th>Observación</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -168,33 +164,3 @@
     </div>
 </section>
 <!-- /.Main content -->
-
-<!-- /.modal-leyenda--> 
-<div class="modal fade" id="modalLeyenda" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Leyenda</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        <div class="modal-body"> 
-            <div class="form-group">  
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <div class="text-info"> <label id="nameChkl"></label></div>
-                        <div id="nameLeyenda"></div>
-                    </div> 
-                </div> 
-            </div>           
-        </div>
-
-        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-  </div>
-</div> 
-<!-- /.modal-->

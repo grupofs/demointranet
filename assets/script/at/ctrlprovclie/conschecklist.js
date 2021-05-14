@@ -1,5 +1,5 @@
 
-var otblconschecklist;
+var otblconschecklist, otbllistchecklist;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
@@ -48,32 +48,59 @@ getListConschecklist = function(param){
             {data: null,
                 render:function(data, type, row){
                     return '<div style="text-align: center;">'+
-                        '<a data-toggle="modal" title="Leyenda" style="cursor:pointer; color:#3c763d;" data-target="#modalLeyenda" onClick="javascript:verLeyenda(\''+row.CCHECKLIST+'\',\''+row.CHECKLIST+'\');"><span class="fas fa-tags fa-2x" aria-hidden="true"> </span> </a>'+
+                        '<a data-toggle="modal" title="Detalle" style="cursor:pointer; color:#3c763d;" data-target="#modalDetalle" onClick="javascript:verDetalle(\''+row.cchecklist+'\',\''+row.dchecklist+'\');"><span class="fas fa-tags fa-2x" aria-hidden="true"> </span> </a>'+
                     '</div>';
                 }
             },
         ],  
-    });
+    }); 
+     
+    $("#btnexcel").prop("disabled",false);
      
 };
 
-verLeyenda = function(cchecklist,checklist){
-    document.querySelector('#nameChkl').innerText = checklist;
-    
-    var params = {"cchecklist" : cchecklist};    
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprovclie/cconsresulgral/getleyendachecklist",
-        dataType: "JSON",
-        async: true,
-        data: params,
-        success:function(result)
-        {
-            $('#nameLeyenda').html(result);
+verDetalle = function(cchecklist,checklist){
+    document.querySelector('#nameChkl').innerText = checklist; 
+
+    $('#hddnmdetcchecklist').val(cchecklist); 
+    $('#hddnmdetdchecklist').val(checklist); 
+       
+    var parametros = {
+        "cchecklist"      : cchecklist,
+    };  
+
+    getListchecklist(parametros);
+};
+
+getListchecklist = function(param){       
+    otbllistchecklist = $('#tbllistchecklist').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"at/ctrlprovclie/cconschecklist/getlistchecklist",
+            "type"  : "POST", 
+            "data"  : param,     
+            dataSrc : ''      
         },
-        error: function(){
-          alert('Error, No se puede autenticar por error :: nameLeyenda');
-        }
-    });
+        "columns"	: [
+            {data: 'DNUMERADOR', "class": "col-xs"},
+            {data: 'DREQUISITO', "class": "col-xl"},
+            {data: 'valor_maximo', "class": "col-s"},
+            {data: 'DNORMATIVA', "class": "col-l"},
+        ],  
+    }); 
+     
+    $("#btnexcelDet").prop("disabled",false);
+     
 };

@@ -1,5 +1,5 @@
 
-var otblListctrlprov;
+var otblconsproxinsp;
 var varfdesde = '%', varfhasta = '%', varperiodo = '1';
 
 $(document).ready(function() {
@@ -83,20 +83,6 @@ $(document).ready(function() {
             }
         });
         
-        $.ajax({
-            type: 'ajax',
-            method: 'post',
-            url: baseurl+"at/ctrlprovclie/cconsresulgral/getcbocalifiusuario",
-            dataType: "JSON",
-            async: true,
-            success:function(result)
-            {
-                $('#cbocalificacion').html(result);
-            },
-            error: function(){
-              alert('Error, No se puede autenticar por error :: cbocalificacion');
-            }
-        });
 });
 
 fechaActual = function(){
@@ -132,6 +118,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '%';
         varfhasta = '%';
         varperiodo = '1';
+        $('#hrdbuscar').val('P'); 
     }else if ($('#rdFechas').prop('checked')){     
         $('#divAnio').hide();
         $('#divMes').hide();
@@ -140,11 +127,12 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varfdesde = '';
         varfhasta = '';
         varperiodo = '0';
+        $('#hrdbuscar').val('F'); 
     } 
 });
 
 $("#btnBuscar").click(function (){    
-    var v_mes, v_anio
+    var v_mes, v_anio, v_linea
 
     if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
     if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); } 
@@ -156,11 +144,9 @@ $("#btnBuscar").click(function (){
         v_anio = 0;
         v_mes = 0;
     } 
-
-    var select = document.getElementById("cbocalificacion"), 
-    value = select.value, 
-    text_calif = select.options[select.selectedIndex].innerText;
    
+    v_linea = $('#txtlinea').val();
+
     var parametros = {
         "ccliente"      : $('#hdnCCliente').val(),
         "anio"          : v_anio,
@@ -169,16 +155,16 @@ $("#btnBuscar").click(function (){
         "ffin"          : varfhasta,
         "cclienteprov"  : $('#cboProveedor').val(),
         "area"          : $('#cboareaclie').val(),
-        "dcalificacion" : text_calif,
+        "dlinea" : v_linea,
     };  
 
-    getListConsresulgral(parametros);
+    getListConsproxinsp(parametros);
     
 });
 
-getListConsresulgral = function(param){       
-    var groupColumn = 0;      
-    otblconsresulgral = $('#tblconsresulgral').DataTable({
+getListConsproxinsp = function(param){    
+
+    otblconsproxinsp = $('#tblconsproxinsp').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
@@ -193,69 +179,28 @@ getListConsresulgral = function(param){
         "responsive"    : false,
         "select"        : true,
         "ajax"	: {
-            "url"   : baseurl+"at/ctrlprovclie/cconsresulgral/getconsresulgral",
+            "url"   : baseurl+"at/ctrlprovclie/cconsproxinsp/getconsproxinsp",
             "type"  : "POST", 
             "data"  : param,     
             dataSrc : ''      
         },
         "columns"	: [
-            {data: 'AREACLIENTE'},
-            {data: 'PROVEEDOR', "class": "col-lm"},
-            {data: 'ESTABLEMAQUI', "class": "col-lm"},
-            {data: 'DIREST', "class": "col-lm"},
-            {data: 'FECHASERVICIO', "class": "col-s"},
-            {data: 'CALIFICACION', "class": "col-s"},
-            {data: 'CHECKLIST', "class": "col-m"},
-            {data: '01', "class": "col-xs"},
-            {data: '02', "class": "col-xs"},
-            {data: '03', "class": "col-xs"},
-            {data: null,
-                render:function(data, type, row){
-                    return '<div style="text-align: center;">'+
-                        '<a data-toggle="modal" title="Leyenda" style="cursor:pointer; color:#3c763d;" data-target="#modalLeyenda" onClick="javascript:verLeyenda(\''+row.CCHECKLIST+'\',\''+row.CHECKLIST+'\');"><span class="fas fa-tags fa-2x" aria-hidden="true"> </span> </a>'+
-                    '</div>';
-                }
-            },
-        ],
-        "drawCallback": function ( settings ) {
-            var api = this.api();
-            var rows = api.rows( {page:'current'} ).nodes();
-            var last=null;
- 
-            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-                if ( last !== group ) {
-                    $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="5">'+group+'</td></tr>'
-                    );
- 
-                    last = group;
-                }
-            } );
-        }
-    }); 
-
-    otblconsresulgral.column(0).visible( false );   
-     
-    $("#btnexcelDet").prop("disabled",false);    
-};
-
-verLeyenda = function(cchecklist,checklist){
-    document.querySelector('#nameChkl').innerText = checklist;
-    
-    var params = {"cchecklist" : cchecklist};    
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprovclie/cconsresulgral/getleyendachecklist",
-        dataType: "JSON",
-        async: true,
-        data: params,
-        success:function(result)
-        {
-            $('#nameLeyenda').html(result);
-        },
-        error: function(){
-          alert('Error, No se puede autenticar por error :: nameLeyenda');
-        }
+            {data: null, "class": "col-xxs"},
+            {data: 'FECHAINSPECCION', "class": "col-s"},
+            {data: 'PROVEEDOR', "class": "col-m"},
+            {data: 'AREACLIENTE', "class": "col-sm"},
+            {data: 'LINEA', "class": "col-lm"},
+            {data: 'OBSERVACION', "class": "col-m"},
+        ]
     });
+    // Enumeracion 
+    otblconsproxinsp.on( 'order.dt search.dt', function () { 
+        otblconsproxinsp.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        });
+    } ).draw(); 
+
+     
+    $("#btnexcel").prop("disabled",false);
+     
 };

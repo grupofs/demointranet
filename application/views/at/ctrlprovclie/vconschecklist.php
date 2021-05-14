@@ -36,6 +36,7 @@
                 </div>
             </div>
           
+            <form class="form-horizontal" id="frmconschecklist" name="frmconschecklist" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconschecklist')?>" method="POST" enctype="multipart/form-data" role="form">
             <div class="card-body">
                 <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
                 <input type="hidden" class="form-control" id="hdnCUsuario" name="hdnCUsuario" value="<?php echo $cusu ?>">
@@ -52,6 +53,7 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-12">
@@ -87,29 +89,54 @@
 <!-- /.Main content -->
 
 <!-- /.modal-leyenda--> 
-<div class="modal fade" id="modalLeyenda" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="modalDetalle" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg fullModal">
     <div class="modal-content">
         <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Leyenda</h4>
+            <h4 class="modal-title w-100 font-weight-bold">Vista del Checklist</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
+        <form class="form-horizontal" id="frmdetchecklist" name="frmdetchecklist" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/exceldetchecklist')?>" method="POST" enctype="multipart/form-data" role="form">
         <div class="modal-body"> 
+            <input type="hidden" class="form-control" id="hddnmdetcchecklist" name="hddnmdetcchecklist">
+            <input type="hidden" class="form-control" id="hddnmdetdchecklist" name="hddnmdetdchecklist">
             <div class="form-group">  
                 <div class="row">
                     <div class="col-md-12"> 
-                        <div class="text-info"> <label id="nameChkl"></label></div>
-                        <div id="nameLeyenda"></div>
+                        <div class="text-info text-center"> <label id="nameChkl" name="nameChkl"></label></div>
                     </div> 
-                </div> 
+                </div>     
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-left">
+                            <button type="reset" class="btn btn-secondary" id="btnCerrar" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Retornar</button>
+                            <button type="submit" class="btn btn-info" id="btnexcelDet" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                        </div>
+                    </div>
+                </div>        
+                <div class="row"> 
+                    <div class="col-12" style="overflow-x: scroll;">
+                        <table id="tbllistchecklist" class="table table-striped table-bordered compact" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Aspecto Evaluado</th>
+                                <th>Valor Maximo</th>
+                                <th>Normativa</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>           
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cerrar</button>
         </div>
     </div>
   </div>

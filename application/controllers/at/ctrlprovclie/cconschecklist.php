@@ -24,9 +24,9 @@ class Cconschecklist extends CI_Controller {
         $resultado = $this->mconschecklist->getconschecklist($parametros);
         echo json_encode($resultado);
     } 
-    public function getleyendachecklist() {	// Visualizar 	
+    public function getlistchecklist() {	// Visualizar 	
         $cchecklist = $this->input->post('cchecklist');
-		$resultado 	= $this->mconschecklist->getleyendachecklist($cchecklist);
+		$resultado 	= $this->mconschecklist->getlistchecklist($cchecklist);
 		echo json_encode($resultado);
 	}
 }

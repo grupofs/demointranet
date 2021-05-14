@@ -19,20 +19,17 @@ class Mconschecklist extends CI_Model {
             return False;
         }		   
     }
-    public function getleyendachecklist($cchecklist) { // Listar Ensayos	
-        $sql = "select dordenlista+' - '+drequisito as 'REQUISITO' 
-                from MREQUISITOCHECKLIST where cchecklist = '".$cchecklist."' and SREQUISITO = 'P' and  LENGTH(DORDENLISTA) = 2 and DORDENLISTA <> '00';";
+    public function getlistchecklist($cchecklist) { // Listar Ensayos	
+        $sql = "select MR.SREQUISITO, MR.DNUMERADOR, MR.DREQUISITO, MR.DNORMATIVA, 
+                        (SELECT max(M.ndetallevalor) FROM MDETALLEVALOR M WHERE M.cvalor = mr.CVALOR ) as 'valor_maximo'
+                FROM MREQUISITOCHECKLIST MR 
+                WHERE mr.cchecklist = '".$cchecklist."'
+                    and MR.DNUMERADOR <> '0'
+                ORDER BY MR.DORDENLISTA ASC ;";
         $query  = $this->db->query($sql);
         
         if ($query->num_rows() > 0) {
-
-            $listas = '<br>';
-            
-            foreach ($query->result() as $row)
-            {
-                $listas .= $row->REQUISITO.'<br>';  
-            }
-               return $listas;
+            return $query->result();
         }{
             return false;
         }		
