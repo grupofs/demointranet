@@ -246,7 +246,7 @@ $('#modalvacaciones').on('show.bs.modal', function (e) {
 		$('#frmMantVacaciones').trigger("reset");
 		$('#mhdnIdVaca').val('');
 		$('#mhdnAccionVaca').val('N');
-		$('#mhdnIdEmpvaca').val($('#mhdnIdEmpleado').val());
+		$('#mhdnEmpVaca').val($('#mhdnIdEmpleado').val());
         fechaActualvaca();
 
 	});
@@ -282,8 +282,9 @@ $('#modalvacaciones').on('show.bs.modal', function (e) {
 fechaActualvaca= function(){
     var fecha = new Date();		
     var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-    
+    alert(fechatring);
     $('#mtxtFregistrovaca').val(fechatring);
+    alert("1");
     $('#mtxtFsalidavaca').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );		
     $("#mtxtFsalidavaca").trigger("change.datetimepicker");
 };
@@ -464,12 +465,19 @@ $('#modalpermisos').on('show.bs.modal', function (e) {
 	
 });
 
-fechaActualperm= function(){
+fechaActualperm = function(){
     var fecha = new Date();		
     var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-    
+
     $('#mtxtFregistroperm').val(fechatring);
-    $('#mtxtFsalidaperm').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );		
+    $('#mtxtFsalidaperm').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
+
+    $('#mtxtHsalidaperm').datetimepicker('minDate', moment('08:00 AM', 'hh:mm A') );
+    $('#mtxtHsalidaperm').datetimepicker('maxDate', moment('05:45 PM', 'hh:mm A') );
+    $('#mtxtHsalidaperm').datetimepicker('date', moment('08:00 AM', 'hh:mm A') );
+    
+    $('#mtxtHretornoperm').datetimepicker('date', moment('08:15 AM', 'hh:mm A') );
+    
     $("#mtxtFsalidaperm").trigger("change.datetimepicker");
 };
 

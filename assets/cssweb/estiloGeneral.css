@@ -341,8 +341,6 @@
 
     table.dataTable thead {background-color:#CED3E3}
 
-
-
     select.custom-select {
         width: 50% !important;
     }
@@ -422,8 +420,8 @@
       }
       @media (min-width: 1200px) {
         .fullModal {
-            width: 1300px !important;
-            max-width: 1300px !important;
+            width: 1220px !important;
+            max-width: 1220px !important;
         }
       }
       @media (min-width: 1500px) {

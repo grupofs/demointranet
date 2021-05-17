@@ -74,6 +74,7 @@ class Mctrlpermisos extends CI_Model {
             return False;
         }
     }
+
 	public function getlistvacaciones($parametros) { //Listado dedias de vacaciones x empleado
         $procedure = "call usp_adm_rrhh_getlistarvacaciones(?)";
 		$query = $this->db->query($procedure,$parametros);
@@ -115,6 +116,24 @@ class Mctrlpermisos extends CI_Model {
 		}{
 			return False;
 		}	
+    }
+	public function setpermisos($parametros) { // Registrar Vacaciones		
+        $this->db->trans_begin();
+    
+        $procedure = "call usp_adm_rrhh_setpermisos(?,?,?,?,?,?,?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros); 
+           
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }
+        else{
+            $this->db->trans_commit();
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            }{
+                return False;
+            }	
+        }   
     }
 
 	public function delPermisos($parametros) { //Eliminar Registro		

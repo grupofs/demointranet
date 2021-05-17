@@ -31,7 +31,6 @@ class Cctrlpermisos extends CI_Controller {
 		$resultado = $this->mctrlpermisos->getempleados($ccia,$carea);
 		echo json_encode($resultado);
 	}
-
 	public function getlistempleadosperm() { // Recupera listado empleados
 		$parametros = array( 
 			'@id_empleado'	=> $this->input->post('id_empleado'),
@@ -41,7 +40,6 @@ class Cctrlpermisos extends CI_Controller {
 		$resultado = $this->mctrlpermisos->getlistempleadosperm($parametros);		
 		echo json_encode($resultado);
 	}
-
 	public function excellistempleadosperm() { // Recupera listado empleados en excel	
 		$id_empleado = $this->input->post('cboEmpleado');
 		$carea = $this->input->post('cboArea');
@@ -236,7 +234,6 @@ class Cctrlpermisos extends CI_Controller {
 			$writer->save('php://output');
 			
 	}
-
 	public function excelresumenperm($id_empleado) { // Recupera resumen de permisos por empleados en excel	
 		
 	 /*Estilos*/ 
@@ -530,7 +527,6 @@ class Cctrlpermisos extends CI_Controller {
 		$resultado = $this->mctrlpermisos->getlistvacaciones($parametros);
 		echo json_encode($resultado);
 	}
-
 	public function setvacaciones() {	// Registrar Vacaciones		
 		$varnull = 	'';	
 
@@ -557,7 +553,29 @@ class Cctrlpermisos extends CI_Controller {
 		);		
 		$resultado = $this->mctrlpermisos->getlistpermisos($parametros);
 		echo json_encode($resultado);
-	}
+	}	
+	public function setpermisos() {	// Registrar Permisos		
+		$varnull 			= 	'';
+		
+		$fecharegistro = $this->input->post('mtxtFregistroperm');
+		$fechasalida = $this->input->post('mtxtFsalperm');
+		$fecharecupera = $this->input->post('mtxtFrecuperm');
+		
+        $parametros['@idpermiso'] 		= $this->input->post('mhdnIdpermiso');
+        $parametros['@fregistro'] 		= ($fecharegistro == $varnull) ? NULL : substr($fecharegistro, 6, 4).'-'.substr($fecharegistro,3 , 2).'-'.substr($fecharegistro, 0, 2);
+    	$parametros['@fsalida'] 		= ($fechasalida == $varnull) ? NULL : substr($fechasalida, 6, 4).'-'.substr($fechasalida,3 , 2).'-'.substr($fechasalida, 0, 2);
+        $parametros['@hsalida'] 		= $this->input->post('mtxtHsalperm');
+        $parametros['@hretorno'] 		= $this->input->post('mtxtHretorperm');
+        $parametros['@motivo'] 			= $this->input->post('mcboMotivo');
+        $parametros['@recuperahora'] 	= $this->input->post('cboRecuperahora');
+        $parametros['@frecupera'] 		= ($fecharecupera == $varnull) ? NULL : substr($fecharecupera, 6, 4).'-'.substr($fecharecupera,3 , 2).'-'.substr($fecharecupera, 0, 2);
+        $parametros['@fundamento'] 		= $this->input->post('mtxtFundamentoperm');
+		$parametros['@idempleado'] 		= $this->input->post('mhdnEmpPerm');
+		$parametros['@accion'] 			= $this->input->post('mhdnAccionPerm');
+			
+		$respuesta = $this->mctrlpermisos->setpermisos($parametros);
+		echo json_encode($respuesta);
+	}	
 
 	public function delPermisos(){
 		$parametros['@id_permisosvacaciones'] = $this->input->post('vidpermisosvacaciones');		
@@ -578,29 +596,8 @@ class Cctrlpermisos extends CI_Controller {
 		);		
 		$resultado = $this->mctrlpermisos->getlistpermisos($parametros);
 		echo json_encode($resultado);
-	}		
-	public function guardarpermiso() {	// Registrar Permisos		
-		$varnull 			= 	'';
-		
-		$fecharegistro = $this->input->post('mtxtFregistroperm');
-		$fechasalida = $this->input->post('mtxtFsalperm');
-		$fecharecupera = $this->input->post('mtxtFrecuperm');
-		
-        $parametros['@idpermiso'] 		= $this->input->post('mhdnIdpermiso');
-        $parametros['@fregistro'] 		= ($fecharegistro == $varnull) ? NULL : substr($fecharegistro, 6, 4).'-'.substr($fecharegistro,3 , 2).'-'.substr($fecharegistro, 0, 2);
-    	$parametros['@fsalida'] 		= ($fechasalida == $varnull) ? NULL : substr($fechasalida, 6, 4).'-'.substr($fechasalida,3 , 2).'-'.substr($fechasalida, 0, 2);
-        $parametros['@hsalida'] 		= $this->input->post('mtxtHsalperm');
-        $parametros['@hretorno'] 		= $this->input->post('mtxtHretorperm');
-        $parametros['@motivo'] 			= $this->input->post('mcboMotivo');
-        $parametros['@recuperahora'] 	= $this->input->post('cboRecuperahora');
-        $parametros['@frecupera'] 		= ($fecharecupera == $varnull) ? NULL : substr($fecharecupera, 6, 4).'-'.substr($fecharecupera,3 , 2).'-'.substr($fecharecupera, 0, 2);
-        $parametros['@fundamento'] 		= $this->input->post('mtxtFundamentoperm');
-		$parametros['@accion'] 			= $this->input->post('mhdnAccionperm');
-		$parametros['@idempleado'] 		= $this->input->post('hdregIdempleadoperm');
-			
-		$respuesta = $this->mctrlpermisos->guardarpermiso($parametros);
-		echo json_encode($respuesta);
-	}		
+	}	
+
 	public function sendEmailValidar() {  // Envio de Email para visto bueno  
 		$emailrespomsable = $this->input->post('emailrespomsable');
 		$tipo = $this->input->post('tipo');

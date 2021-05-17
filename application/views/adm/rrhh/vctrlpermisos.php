@@ -76,7 +76,7 @@
             <div class="col-12">
                 <div class="card card-outline card-success">
                     <div class="card-header">
-                        <h3 class="card-title">LISTADO</h3>
+                        <h3 class="card-title"><b>LISTADO</b></h3>
                     </div>
                 
                     <div class="card-body" style="overflow-x: scroll;">
@@ -182,7 +182,7 @@
                                         <div class="col-sm-4">
                                             <div class="text-light-black">Fecha Registro</div>
                                             <div>
-                                                <input class="form-control" id="mtxtFregistrovaca" name="mtxtFregistrovaca" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask type="text" readonly>
+                                                <input class="form-control" id="mtxtFregistrovaca" name="mtxtFregistrovaca" type="text" readonly>
                                             </div>
                                         </div>                             
                                     </div>                
@@ -265,11 +265,11 @@
                     <div class="tab-content" id="tabpermisos-tabContent">
                         <div class="tab-pane fade show active" id="tab_listapermisos" role="tabpanel" aria-labelledby="tab_listapermisostab"> 
                             <div class="box box-success">
-                                <div class="box-header with-border">
-                                    <div class="input-group mb-3">
-                                        <button type="button" class="btn btn-outline-primary" id="btnNuevoPerm" ><i class="fas fa-plus"></i>Nuevo</button>
+                                <div class="box-header with-border">                                
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-outline-primary" id="btnNuevoPerm" name="btnNuevoPerm"><i class="fas fa-plus">&nbsp;</i>Agregar Permisos</button>                    
                                     </div>
-                                </div>                                                
+                                </div>                                                 
                                 <div class="panel-body"> 
                                     <input type="hidden" id="mhdnIdEmpleado" name="mhdnIdEmpleado">                               
                                     <div> 
@@ -299,7 +299,7 @@
                                     <div class="col-sm-4">
                                         <div class="text-light-black">Fecha Registro</div>
                                         <div>
-                                        <input class="form-control" id="mtxtFregistroperm" name="mtxtFregistroperm" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask type="text" readonly>
+                                        <input class="form-control" id="mtxtFregistroperm" name="mtxtFregistroperm" type="text" readonly>
                                         </div>
                                     </div>
                                     <div class="col-sm-8">
