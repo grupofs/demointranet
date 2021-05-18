@@ -18,21 +18,21 @@
         
 
     $rutalogocliente = public_url_ftp()."Imagenes/clientes/".$logocliente;
-    if($logocliente == '' || $logocliente == false):
+    if($logocliente == '' || $logocliente == false){
         $logocliente = 'unknown.png';
-    elseif(file_exists($rutalogocliente)):
+    }
+    else {
         $logocliente = $logocliente;
-    else:        
-        $logocliente = 'unknown.png';
-    endif;
+    }
 
     $rutaimgperfil = public_url_ftp()."Imagenes/user/".$imgperfil;
     if($imgperfil == '' || $imgperfil == false):
         $imgperfil = 'unknown.png';
-    elseif(file_exists($rutaimgperfil)):
-        $imgperfil = $imgperfil;
+    //elseif(file_exists($rutaimgperfil)):
+        //$imgperfil = $imgperfil;
     else:        
-        $imgperfil = 'unknown.png';
+        //$imgperfil = 'unknown.png';
+        $imgperfil = $imgperfil;
     endif;
     
 
