@@ -52,6 +52,55 @@ $(document).ready(function() {
             alert('Error, No se puede autenticar por error');
         }
     });
+    
+
+    $('#frmMantprod').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGManteprod');
+            var request = $.ajax({
+                url:$('#frmMantprod').attr("action"),
+                type:$('#frmMantprod').attr("method"),
+                data:$('#frmMantprod').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Producto Actualizado!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                    otblListTramGrid.ajax.reload(null,false);   
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCManteprod').click();    
+                });
+            });
+            return false;
+        }
+    });
 });
 
 fechaActual = function(){
@@ -418,7 +467,7 @@ manteProducto = function(idproducto, codigoprod, nombreprod, modeloprod, codform
     $('#mhdnmantCodigoprod').val(codigoprod);
     $('#mhdnmantCodformula').val(codformulaprod);
     $('#mhdnmantNombprod').val(nombreprod);
-    $('#mhdnmantodeloprod').val(modeloprod);
+    $('#mhdnmantModeloprod').val(modeloprod);
 }
 
 getListTramExcel = function(param){

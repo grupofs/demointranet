@@ -118,8 +118,6 @@ class Mbusctramdigemid extends CI_Model {
             return $listas;
         }	
     }
-    
-        
 
     public function getconsulta_grid_tr($parametros) { // Recupera Listado de Propuestas      
 		$procedure = "call usp_ar_tramite_getconsulta_grid_tr(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -164,6 +162,23 @@ class Mbusctramdigemid extends CI_Model {
 			return False;
 		}	
     }
+
+    public function setregproducto($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_ar_tramite_setproducto(?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
 
 }
 ?>

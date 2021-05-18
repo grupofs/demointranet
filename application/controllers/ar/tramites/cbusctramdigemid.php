@@ -144,6 +144,26 @@ class Cbusctramdigemid extends CI_Controller {
         echo json_encode($resultado);
     }	
 
+    public function setregproducto() {	// Visualizar Inspectores en CBO
+		$varnull = '';
+		
+		$cproductofs    = $this->input->post('mhdncproductofs');	
+		$codigoprod     = $this->input->post('mhdnmantCodigoprod');	
+		$codformula     = $this->input->post('mhdnmantCodformula');	
+		$nombprod       = $this->input->post('mhdnmantNombprod');	
+		$modeloprod     = $this->input->post('mhdnmantModeloprod');
+        
+        $parametros = array(
+            '@cproductofs'  => $cproductofs,
+            '@codigoprod'   => $codigoprod,
+            '@codformula'   => $codformula,
+            '@nombprod'     => $nombprod,
+            '@modeloprod'   => $modeloprod,
+        );
+		$resultado = $this->mbusctramdigemid->setregproducto($parametros);
+		echo json_encode($resultado);
+	}
+
 }
 ?>
 

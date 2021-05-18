@@ -575,8 +575,8 @@ class Cctrlpermisos extends CI_Controller {
 			
 		$respuesta = $this->mctrlpermisos->setpermisos($parametros);
 		echo json_encode($respuesta);
-	}	
-
+	}
+	
 	public function delPermisos(){
 		$parametros['@id_permisosvacaciones'] = $this->input->post('vidpermisosvacaciones');		
 		$resultado = $this->mctrlpermisos->delPermisos($parametros);

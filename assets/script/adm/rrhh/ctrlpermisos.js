@@ -483,16 +483,19 @@ fechaActualperm = function(){
 
 listarPermisos = function(){        
     oTable_listapermisos = $('#tblPermisos').DataTable({
-        'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: false,
-        'processing'  	: true,      
-        'bDestroy'    	: true,
-        'info'        	: true,
-        'filter'      	: false, 
-        "ordering"		: false,  
-        'stateSave'     : true, 
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "500px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true, 
         'ajax'        : {
             "url"   : baseurl+"adm/rrhh/cctrlpermisos/getlistpermisos/",
             "type"  : "POST", 
@@ -502,9 +505,9 @@ listarPermisos = function(){
             dataSrc : ''        
         },
         'columns'     : [
-            {"orderable": false, data: 'fsalida', targets: 0},
-            {"orderable": false, data: 'horapermisos', targets: 1},
-            {"orderable": false, data: 'horasuso', targets: 2},                        
+            {data: 'fsalida', "class": "dt-body-center col-s"},
+            {data: 'horapermisos', "class": "dt-body-center col-s"},
+            {data: 'horasuso', "class": "dt-body-center col-s"},                        
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div>' +
@@ -533,11 +536,13 @@ selePermisos = function(id_permisosvacaciones,id_empleado,fecha_registro, fecha_
     $('#mhdnIdpermiso').val(id_permisosvacaciones)
     $('#mhdnAccionperm').val('A'); 
     $('#mhdnEmpPerm').val(id_empleado);
+
     $('#mtxtFregistroperm').val(fecha_registro);
 	$('#mtxtFsalperm').val(fecha_salida);
 	$('#mtxtHsalperm').val(hora_salida);
 	$('#mtxtHretorperm').val(hora_retorno);
-	$('#mcboMotivo').val(motivo).trigger("change");
+    $('#mcboMotivo').val(motivo).trigger("change");
+    
 	$('#mtxtFundamentoperm').val(fundamentacion);
 	$('#cboRecuperahora').val(recupera_hora).trigger("change");
 	$('#mtxtFrecuperm').val(fecha_recuperacion);    
@@ -549,10 +554,14 @@ $("body").on("click","#aDelPerm",function(event){
     
     $.post(baseurl+"adm/rrhh/cctrlpermisos/delPermisos", 
     {
-        vidpermisosvacaciones   : idvacaciones,
+        vidpermisosvacaciones   : idpermiso,
     },      
     function(data){   	
-        oTable_listavacaciones.ajax.reload(null,false); 	
+        oTable_listapermisos.ajax.reload(null,false); 	
     });
 }); 
+
+$('#modalpermisos').on('hidden.bs.modal', function (e) {
+    otblListCtrlpermiso.ajax.reload(null,false);
+});
 

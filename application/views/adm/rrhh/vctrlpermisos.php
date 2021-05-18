@@ -241,7 +241,7 @@
 
 <!-- /.modal-permisos --> 
 <div class="modal fade" id="modalpermisos" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-lg fullModal">
     <div class="modal-content">
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Permisos</h4>
@@ -393,6 +393,134 @@
   </div>
 </div> 
 <!-- /.modal-->
+
+<!-- /.modal-horasextras --> 
+<div class="modal fade" id="modalhorasextras" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg fullModal">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Horas Extras</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">        
+            <div class="card card-success card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">            
+                    <ul class="nav nav-tabs" id="tabhorasextras" style="background-color: #28a745;" role="tablist">                    
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: #000000;" id="tab_listahorasextrastab" data-toggle="pill" href="#tab_listahorasextras" role="tab" aria-controls="tab_listahorasextras" aria-selected="true">LISTADO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: #000000;" id="tab_newhorasextrastab" data-toggle="pill" href="#tab_newhorasextras" role="tab" aria-controls="tab_newhorasextras" aria-selected="false">REGISTRO</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="tabhorasextras-tabContent">
+                        <div class="tab-pane fade show active" id="tab_listahorasextras" role="tabpanel" aria-labelledby="tab_listahorasextrastab"> 
+                            <div class="box box-success">
+                                <div class="box-header with-border">                                
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-outline-primary" id="btnNuevohextras" name="btnNuevohextras"><i class="fas fa-plus">&nbsp;</i>Agregar Horas Extras</button>                    
+                                    </div>
+                                </div>                                                 
+                                <div class="panel-body"> 
+                                    <input type="hidden" id="mhdnIdEmpleado" name="mhdnIdEmpleado">                               
+                                    <div> 
+                                    <table id="tblHorasextras" class="table" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>FECHA H. EXTRAS</th>
+                                            <th>HORA ENTRADA</th>
+                                            <th>HORA SALIDA</th>
+                                            <th>MOTIVO</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>               
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_newhorasextras" role="tabpanel" aria-labelledby="tab_newhorasextrastab"> 
+                            <form class="form-horizontal" id="frmMantHorasextras" name="frmMantHorasextras" action="<?= base_url('adm/rrhh/cctrlpermisos/sethorasextras')?>" method="POST" enctype="multipart/form-data" role="form"> 
+                                <input type="hidden" id="mhdnIdHextra" name="mhdnIdHextra"> <!-- ID -->
+                                <input type="hidden" id="mhdnAccionHextra" name="mhdnAccionHextra">
+                                <input type="hidden" id="mhdnEmpHextra" name="mhdnEmpHextra">
+                                <div class="form-group">
+                                    <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="text-light-black">Fecha Registro</div>
+                                        <div>
+                                        <input class="form-control" id="mtxtFregistrohextra" name="mtxtFregistrohextra" type="text" readonly>
+                                        </div>
+                                    </div>
+                                    </div>                
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="text-light-blue">Fecha Horas Extras</div>
+                                        <div class="input-group date" id="mtxtFsalidahextra" data-target-input="nearest">
+                                        <input type="text" id="mtxtFsalhextra" name="mtxtFsalhextra" class="form-control datetimepicker-input" data-target="#mtxtFsalidahextra"/>
+                                        <div class="input-group-append" data-target="#mtxtFsalidahextra" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                        </div>
+                                    </div>  
+                                    <div class="col-sm-4">
+                                        <div class="text-light-blue">Hora Entrada</div>
+                                        <div class="input-group date" id="mtxtHsalidahextra" data-target-input="nearest">
+                                        <input type="text" id="mtxtHsalhextra" name="mtxtHsalhextra" class="form-control datetimepicker-input" data-target="#mtxtHsalidahextra"/>
+                                        <div class="input-group-append" data-target="#mtxtHsalidahextra" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                        </div>
+                                        </div>
+                                    </div>  
+                                    <div class="col-sm-4">
+                                        <div class="text-light-blue">Hora Salida</div>
+                                        <div class="input-group date" id="mtxtHretornohextra"  data-target-input="nearest">
+                                        <input type="text" id="mtxtHretorhextra" name="mtxtHretorhextra" class="form-control datetimepicker-input" data-target="#mtxtHretornohextra"/>
+                                        <div class="input-group-append" data-target="#mtxtHretornohextra" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                        </div>
+                                        </div>
+                                    </div> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                    <div class="col-sm-12"> 
+                                        <div class="text-light-blue">Motivo</div> 
+                                        <textarea type="text" class="form-control" id="mtxtMotivohextra" name="mtxtMotivohextra" rows="3" cols="40" data-validation="required"></textarea>
+                                    </div>
+                                    </div> 
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12 text-right"> 
+                                            <button type="button" class="btn btn-default" id="btnRetornarHextra">Retornar</button>
+                                            <button type="submit" class="btn btn-info" id="mbtnGHextra">Grabar</button>
+                                        </div> 
+                                    </div>                
+                                </div>                       
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" id="mbtnCHextra" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
 
 
 <!-- Script Generales -->

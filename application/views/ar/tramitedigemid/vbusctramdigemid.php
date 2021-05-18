@@ -358,6 +358,7 @@
 <div class="modal fade" id="modalMantprod" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+        <form class="form-horizontal" id="frmMantprod" name="frmMantprod" action="<?= base_url('ar/tramites/cbusctramdigemid/setregproducto')?>" method="POST" enctype="multipart/form-data" role="form"> 
         <div class="modal-header text-center bg-info">
             <h4 class="modal-title w-100 font-weight-bold">Mantenimiento Producto</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -393,7 +394,7 @@
                     <div class="col-md-12"> 
                         <div class="text-info">Modelo /tono /variedad /submarca</div>
                         <div>    
-                            <textarea type="text" name="mhdnmantodeloprod"id="mhdnmantodeloprod" class="form-control" rows="2"></textarea><!-- disable -->
+                            <textarea type="text" name="mhdnmantModeloprod"id="mhdnmantModeloprod" class="form-control" rows="2"></textarea><!-- disable -->
                         </div>
                     </div>          
                 </div>                
@@ -409,6 +410,7 @@
                 </div>
             </div>
         </div>
+        </form>
     </div>
   </div>
 </div> 
