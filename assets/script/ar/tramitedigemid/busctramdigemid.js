@@ -352,7 +352,7 @@ getListTramGrid = function(param){
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalMantprod" onClick="manteProducto(\'' + row.cproductofs + '\',\'' + row.CODIGOPROD + '\', \'' + row.NOMBREPROD + '\', \'' + row.TONOPROD + '\', \'' + row.dcodigoformula + '\');">'+row.CODIGOPROD+'</a>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalMantprod" onClick="manteProducto(\'' + row.cproductofs + '\',\'' + row.CODIGOPROD + '\', \'' + row.NOMBREPROD + '\', \'' + row.TONOPROD + '\', \'' + row.dcodigoformula + '\');"><i class="far fa-edit"></i>'+row.CODIGOPROD+'</a>'+
                     '</div>';
                 }
             },
