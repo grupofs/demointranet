@@ -324,7 +324,7 @@ getListDetseguiaacc = function(param){
                     veraacc = ' <a data-toggle="modal" title="Listado" style="cursor:pointer; color:#3c763d;" data-target="#modalAACC" onClick="javascript:listarAACC(\''+row.CAUDITORIAINSPECCION+'\',\''+row.FSERVICIO+'\');"class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="far fa-window-maximize" aria-hidden="true"> </span> Listado</a>'+
                         ' &nbsp; &nbsp;'
                 } else {
-                    veraacc = ' <a title="Archivo" style="cursor:pointer; color:#1646ec;" href="'+baseurl+row.DUBICACIONFILESERVERAC+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-download" aria-hidden="true"> </span> Archivo</a>'+
+                    veraacc = ' <a title="Archivo" style="cursor:pointer; color:#1646ec;" href="'+baseurl+'FTPfileserver/Archivos/'+row.DUBICACIONFILESERVERAC+'" target="_blank" class="btn btn-outline-secondary btn-sm hidden-xs hidden-sm"><span class="fas fa-download" aria-hidden="true"> </span> Archivo</a>'+
                         ' &nbsp; &nbsp;'
                 }
 

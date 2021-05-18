@@ -164,6 +164,7 @@
                                                     <tr>
                                                         <th>Calificación</th>
                                                         <th>Categoria</th>
+                                                        <th>Cant. Líneas</th>
                                                         <th>1. No conformidad (NC)</th>
                                                         <th>2. No conformidad reiterativa (NCR)</th>
                                                         <th>3. Observacion (OB)</th>

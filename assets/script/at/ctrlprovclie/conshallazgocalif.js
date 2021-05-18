@@ -220,6 +220,7 @@ getListConshallazgocalif = function(param){
         "columns"	: [
             {data: 'CALIFICACION', "class": "col-s"},
             {data: 'AREA', "class": "col-m"},
+            {data: 'CANTLINEA', "class": "col-s"},
             {data: 'NC', "class": "dt-body-center col-sm"},
             {data: 'NRC', "class": "dt-body-center col-sm"},
             {data: 'OB', "class": "dt-body-center col-sm"},

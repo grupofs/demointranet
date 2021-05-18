@@ -232,6 +232,7 @@ getListdet = function(param){
             {data: 'ESTADO'},
             {data: null, "class": "col-xxs"},
             {data: 'PROVEEDOR', "class": "col-lm"},
+            {data: 'AREA', "class": "col-sm"},
             {data: 'LINEAPROCESO', "class": "col-m"},
             {data: 'DIRESTABLECIMIENTO', "class": "col-m"},
         ],
@@ -243,7 +244,7 @@ getListdet = function(param){
             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
                 if ( last !== group ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="4">'+group+'</td></tr>'
+                        '<tr class="group"><td colspan="5">'+group+'</td></tr>'
                     );
  
                     last = group;

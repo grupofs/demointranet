@@ -175,6 +175,7 @@
                             <th></th>
                             <th></th>
                             <th>Proveedor - (Establecimiento/Maquilador)</th>
+                            <th>Area</th>
                             <th>Linea de Proceso</th>
                             <th>Dir. Establecimiento</th>
                         </tr>
