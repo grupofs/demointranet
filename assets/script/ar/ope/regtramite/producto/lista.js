@@ -225,11 +225,11 @@ $(function () {
 				row += '</button>';
 				row += '<div class="dropdown-menu dropdown-menu-right">';
 				row += '<h6 class="dropdown-header">Opciones</h6>';
-				row += '<button type="button" role="button" class="dropdown-item option-tramite-producto-eliminar">';
-				row += '<i class="fa fa-trash"></i> Eliminar';
-				row += '</button>';
 				row += '<button type="button" role="button" class="dropdown-item option-tramite-producto-editar" data-id="' + producto.CPRODUCTOFS + '" >';
 				row += '<i class="fa fa-edit"></i> Editar';
+				row += '</button>';
+				row += '<button type="button" role="button" class="dropdown-item option-tramite-producto-eliminar">';
+				row += '<i class="fa fa-trash"></i> Eliminar';
 				row += '</button>';
 				row += '</div>';
 				row += '<input type="hidden" class="d-none" readonly id="tramite_producto_id[' + position + ']" name="tramite_producto_id[' + position + ']" value="' + producto.CPRODUCTOFS + '" />';
@@ -250,12 +250,14 @@ $(function () {
 	objProductoLista.imprimirRS = function(producto) {
 		if (producto && producto.DREGISTROSANITARIO) {
 			$('#carga_registro_nro_rs').val(producto.DREGISTROSANITARIO);
-			const dateInit = $('#carga_registro_fecha_inicio').data('daterangepicker');
-			dateInit.setStartDate(producto.FINICIOREGSANITARIO)
-			dateInit.setEndDate(producto.FINICIOREGSANITARIO);
-			const dateEnd = $('#carga_registro_fecha_final').data('daterangepicker');
-			dateEnd.setStartDate(producto.FFINREGSANITARIO)
-			dateEnd.setEndDate(producto.FFINREGSANITARIO);
+			// const dateInit = $('#carga_registro_fecha_inicio').data('daterangepicker');
+			// dateInit.setStartDate(producto.FINICIOREGSANITARIO)
+			// dateInit.setEndDate(producto.FINICIOREGSANITARIO);
+			$('#carga_registro_fecha_inicio').val(producto.FINICIOREGSANITARIO);
+			// const dateEnd = $('#carga_registro_fecha_final').data('daterangepicker');
+			// dateEnd.setStartDate(producto.FFINREGSANITARIO)
+			// dateEnd.setEndDate(producto.FFINREGSANITARIO);
+			$('#carga_registro_fecha_final').val(producto.FFINREGSANITARIO);
 		}
 	};
 

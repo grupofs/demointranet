@@ -232,7 +232,7 @@
 								<span class="fs-requerido text-danger">*</span>
 							</label>
 							<div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
-								<input type="text" class="form-control datepicker"
+								<input type="text" class="form-control"
 									   id="carga_registro_fecha_inicio"
 									   name="carga_registro_fecha_inicio"
 									   value=""/>
@@ -247,7 +247,7 @@
 								<span class="fs-requerido text-danger">*</span>
 							</label>
 							<div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
-								<input type="text" class="form-control datepicker"
+								<input type="text" class="form-control"
 									   id="carga_registro_fecha_final"
 									   name="carga_registro_fecha_final"
 									   value=""/>
@@ -336,6 +336,9 @@
 									<tr>
 										<th class="text-center" style="width: 50px; min-width: 50px;">
 											N°
+										</th>
+										<th class="text-center" style="min-width: 280px; width: 280px">
+											Tramite
 										</th>
 										<th class="text-center" style="min-width: 150px; width: 150px">
 											Tipo

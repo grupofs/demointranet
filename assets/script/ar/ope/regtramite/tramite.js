@@ -29,8 +29,6 @@ $(function () {
 		if (estado) {
 			$('#carga_registro_estado option[value=' + estado + ']').prop('selected', true);
 		}
-		console.log(fechaEmision);
-		console.log(fechaVencimiento);
 		$('#carga_registro_nro_rs').val(registroSanitario);
 		$('#carga_registro_fecha_inicio').val(fechaEmision);
 		$('#carga_registro_fecha_final').val(fechaVencimiento);
@@ -56,6 +54,7 @@ $(function () {
 		if (activeSelected) {
 			s2TramiteReguladoraEntidad.init($(document.getElementById('tramite_id[' + position + ']')));
 		}
+		// Cargar tramites
 	};
 
 	/**
@@ -68,36 +67,45 @@ $(function () {
 		let esRS = false;
 		let esAmpliacion = false;
 		let esReinscripcionRS = false;
-		$('#tblTramite tbody tr').each(function (pos) {
+		let documentoTramite = '';
+		let countPos = 0;
+		$('#tblTramite tbody tr').each(function () {
 			const row = $(this);
 			const position = row.data('position');
-			const tramite = document.getElementById('tramite_id[' + position + ']').value;
+			const elTramite = $(document.getElementById('tramite_id[' + position + ']'));
+			const tramite = elTramite.val();
 			const operation = parseInt(document.getElementById('tramite_operation[' + position + ']').value);
 			if (operation === 0 || operation === 1) {
 				++total;
 				// Solo se toma el primer tramite, y se verifica el tramite
-				if (pos === 0 && esDigesa && esAlimento) {
+				if (countPos === 0 && esDigesa && esAlimento) {
 					// RS
 					if (tramite === '001') {
 						esRS = true;
 					}
 					// Ampliación
-					if (tramite === '008' ||
-						tramite === '033' ||
-						tramite === '005' ||
-						tramite === '032' ||
-						tramite === '009' ||
-						tramite === '004' ||
-						tramite === '006' ||
+					if (
 						tramite === '002' ||
 						tramite === '003' ||
-						tramite === '031') {
+						tramite === '004' ||
+						tramite === '005' ||
+						tramite === '006' ||
+						tramite === '008' ||
+						tramite === '009' ||
+						tramite === '031' ||
+						tramite === '032' ||
+						tramite === '033' ||
+						tramite === '034' ||
+						tramite === '035' ||
+						tramite === '036'
+					) {
 						esAmpliacion = true;
 					}
 					if (tramite === '012') {
 						esReinscripcionRS = true;
 					}
 				}
+				++countPos;
 			}
 		});
 		// Bloqueo de agregar tramite
@@ -147,6 +155,15 @@ $(function () {
 	objTramite.tramiteEntidadDigesa = function () {
 		const entidad = $('#tramite_entidad_id').val();
 		return (entidad === '001');
+	};
+
+	/**
+	 * Verifica si la entidad es digesa
+	 * @return boolean
+	 */
+	objTramite.tramiteEntidadDigemid = function () {
+		const entidad = $('#tramite_entidad_id').val();
+		return (entidad === '002');
 	};
 
 	/**
@@ -241,15 +258,16 @@ $(function () {
 			objDocumento.eliminarArchivos();
 			objDocumento.obtener(value);
 		}
+		objDocumento.cargarTramites();
 	};
 
 	/**
 	 * Realiza la busqueda de los RS
 	 */
-	objTramite.buscarRS = function() {
+	objTramite.buscarRS = function () {
 		const boton = $('#btnBuscarRS');
 		objProducto.buscar(1, $('#carga_registro_nro_rs').val(), boton)
-			.done(function(res) {
+			.done(function (res) {
 				if (res && res.items) {
 					objProductoLista.productosElegidos = res.items;
 					objProductoLista.calcularProductos();

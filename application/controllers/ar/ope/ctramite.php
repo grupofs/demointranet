@@ -25,7 +25,7 @@ class ctramite extends FS_Controller
 	 * Ruta para el ingreso de FICHA
 	 * @var string
 	 */
-	private $carpetaDocumento = '02779/';
+	private $carpetaDocumento = '1nullnull/';
 
 	/**
 	 * ctramite constructor.
@@ -152,12 +152,11 @@ class ctramite extends FS_Controller
 				$tramiteFechaFinal = Carbon::createFromFormat('d/m/Y', $carga_registro_fecha_final, 'America/Lima')->format('Y-m-d');
 			}
 
-			$objTramite = null;
-
 			// Datos de la entidad y tramite
 			$tramite_id = $this->input->post('tramite_id');
 			$tramite_operation = $this->input->post('tramite_operation');
 			$tramiteItem = 1;
+			$tramites = [];
 			if (!empty($tramite_operation) && is_array($tramite_operation)) {
 				foreach ($tramite_operation as $key => $value) {
 					$tramiteOperation = (isset($tramite_operation[$key])) ? $tramite_operation[$key] : '';
@@ -166,11 +165,9 @@ class ctramite extends FS_Controller
 					if ($tramiteOperation == 0 || $tramiteOperation == 1) {
 						$linea = "Linea Tramite {$tramiteItem}: ";
 						// Solo se toma el primer registro
+						$objTramite = $this->mtramitereguladora->buscarTramite($objEntidad->CENTIDADREGULA, $tramiteId);
 						if (empty($objTramite)) {
-							$objTramite = $this->mtramitereguladora->buscarTramite($objEntidad->CENTIDADREGULA, $tramiteId);
-							if (empty($objTramite)) {
-								throw new Exception("{$linea}Debe elegir el tramite");
-							}
+							throw new Exception("{$linea}Debe elegir el tramite");
 						}
 
 						$objTramiteRegulatorio = new mptramiteregulatoriopte();
@@ -193,9 +190,11 @@ class ctramite extends FS_Controller
 							$carga_registro_nro_dr
 						);
 						++$tramiteItem;
+						$tramites[] = $objTramite;
 					}
 				}
 			}
+
 
 			// Datos del producto
 			$tramite_producto_id = $this->input->post('tramite_producto_id');
@@ -232,6 +231,7 @@ class ctramite extends FS_Controller
 			}
 
 			// Documentos
+			$documento_tramite_id = $this->input->post('documento_tramite_id');
 			$documento_tipo = $this->input->post('documento_tipo');
 			$documento_nombre = $this->input->post('documento_nombre');
 			$documento_id = $this->input->post('documento_id');
@@ -241,31 +241,42 @@ class ctramite extends FS_Controller
 			$archivo_documento_operation = $this->input->post('archivo_documento_operation');
 			// Config archivo
 			$files = $_FILES;
-			$rutaArchivo = $this->carpetaDocumento . date('Y') . '/';
-			$config['upload_path'] = RUTA_ARCHIVOS . $rutaArchivo;
+			// Se verfica la ruta en caso no existe y se crea
+			$rutaArchivoReal = RUTA_ARCHIVOS . $this->carpetaDocumento . $objAsuntoRegulatorio->CCLIENTE . '/' . $objAsuntoRegulatorio->CASUNTOREGULATORIO;
+			if (!file_exists($rutaArchivoReal)) {
+				mkdir($rutaArchivoReal, '0777', true);
+			}
+			$config['upload_path'] = $rutaArchivoReal . '/';
+			$rutaArchivo = $this->carpetaDocumento . $objAsuntoRegulatorio->CCLIENTE . '/' . $objAsuntoRegulatorio->CASUNTOREGULATORIO . '/';
 			$config['allowed_types'] = '*';
 			$this->load->library('upload', $config);
-			if (!empty($objTramite) && !empty($documento_tipo)) {
+			if (!empty($tramites) && !empty($documento_tipo)) {
+				// Se leen los documentos
 				foreach ($documento_tipo as $key => $value) {
+					$documentotramiteid = (isset($documento_tramite_id[$key])) ? $documento_tramite_id[$key] : '';
 					$documentoId = (isset($documento_id[$key])) ? $documento_id[$key] : '';
 					$documentoTipo = (isset($documento_tipo[$key])) ? $documento_tipo[$key] : '';
 					$documentoOperation = (isset($documento_operation[$key])) ? $documento_operation[$key] : '';
 					$documentoNombre = (isset($documento_nombre[$key])) ? $documento_nombre[$key] : '';
-					switch($documentoOperation)
-					{
+
+					$objTramite = $this->mtramitereguladora->buscarTramite($objEntidad->CENTIDADREGULA, $documentotramiteid);
+					if (empty($objTramite)) {
+						throw new Exception("{$linea}Debe elegir el tramite para su documento.");
+					}
+
+					switch ($documentoOperation) {
 						// Se crea el documento del tramite
 						case 1:
-							$objDocumento = (new mdocumentoregulatorio)->buscar($objEntidad->CENTIDADREGULA, $objTramite->CTRAMITE, $documentoId);
-							if (empty($objDocumento)) {
-								$objDocumento = (new mdocumentoregulatorio())->guardar(
-									'',
-									$objEntidad->CENTIDADREGULA,
-									$objTramite->CTRAMITE,
-									$documentoNombre,
-									$s_cusuario,
-									'A'
-								);
-							}
+							// Solo los nuevos se guardan como inactivo
+							$sregistro = (intval($documentoId) >= 900 || empty($documentoId)) ? 'I' : 'A';
+							$objDocumento = (new mdocumentoregulatorio())->guardar(
+								$documentoId,
+								$objEntidad->CENTIDADREGULA,
+								$objTramite->CTRAMITE,
+								$documentoNombre,
+								$s_cusuario,
+								$sregistro
+							);
 							$objDocumentoArchivo = new mpdocumentoregulatorio();
 							$objDocumentoArchivo->guardar(
 								$objAsuntoRegulatorio->CASUNTOREGULATORIO,
@@ -274,17 +285,24 @@ class ctramite extends FS_Controller
 								$objDocumento->CDOCUMENTO,
 								$documentoTipo,
 								'',
-								'',
+								null,
 								$s_cusuario,
 								'A'
 							);
-							if (!empty($archivo_documento_operation) && is_array($archivo_documento_operation)) {
+							if (!empty($archivo_documento_operation[$key]) && is_array($archivo_documento_operation[$key])) {
 								// Lectura de los documentos del archivo
-								foreach ($archivo_documento_operation as $keyArchivo => $valueArchivo) {
+								foreach ($archivo_documento_operation[$key] as $keyArchivo => $valueArchivo) {
 									$archivoDocumentoOperation = (isset($archivo_documento_operation[$key][$keyArchivo]) && isset($archivo_documento_operation[$key][$keyArchivo])) ? $archivo_documento_operation[$key][$keyArchivo] : '';
 									if ($archivoDocumentoOperation == 1) {
-										if (isset($files['archivo_documento']['name'][$key][$keyArchivo]) && !empty($files['archivo_documento']['name'][$key][$keyArchivo])) {
+										if (isset($files['archivo_documento']['name'][$key][$keyArchivo])
+											&& !empty($files['archivo_documento']['name'][$key][$keyArchivo])) {
 											$_FILES['archivo_documento']['name'] = $files['archivo_documento']['name'][$key][$keyArchivo];
+											$archivo = $rutaArchivoReal . '/' . str_replace(' ', '_', $_FILES['archivo_documento']['name']);
+											// Si existe el archivo se elimina para volver a ser cargadp, en caso se desea actualizar el documento
+											if (file_exists($archivo)) {
+												unlink($archivo);
+											}
+											// En caso no exista se crea el archivo
 											$_FILES['archivo_documento']['type'] = $files['archivo_documento']['type'][$key][$keyArchivo];
 											$_FILES['archivo_documento']['tmp_name'] = $files['archivo_documento']['tmp_name'][$key][$keyArchivo];
 											$_FILES['archivo_documento']['error'] = $files['archivo_documento']['error'][$key][$keyArchivo];
@@ -293,36 +311,22 @@ class ctramite extends FS_Controller
 											$this->upload->initialize($config);
 											if (!$this->upload->do_upload('archivo_documento')) {
 												throw new Exception('Error al cargar el documento ' . $originName);
-											} else {
-												$archivo = $rutaArchivo . $this->upload->data('file_name');
-												// El primer archivo se guardara en el documento principal (como siempre lo a estado haciendo.)
-												if ($keyArchivo == 0) {
-													$updateData = [
-														'DUBICACIONFILESERVER' => $archivo,
-													];
-													$objDocumentoArchivoActualizado = new mpdocumentoregulatorio();
-													$objDocumentoArchivoActualizado->actualizar(
-														$objAsuntoRegulatorio->CASUNTOREGULATORIO,
-														$objEntidad->CENTIDADREGULA,
-														$objTramite->CTRAMITE,
-														$objDocumento->CDOCUMENTO,
-														$updateData,
-													);
-												} else {
-													// Los demás archivos se cargan en una tabla detalle de archivos
-													$objArchivo = new mpdocumentoregulatorioarchivo();
-													$objArchivo->guardar(
-														'',
-														$objAsuntoRegulatorio->CASUNTOREGULATORIO,
-														$objEntidad->CENTIDADREGULA,
-														$objTramite->CTRAMITE,
-														$objDocumento->CDOCUMENTO,
-														$archivo,
-														$s_cusuario,
-														'A'
-													);
-												}
 											}
+											$archivo = $rutaArchivo . $this->upload->data('file_name');
+											// El primer archivo se guardara en el documento principal (como siempre lo a estado haciendo.)
+											$updateData = [
+												'SCARGADOCUMENTO' => 'R',
+												'DUBICACIONFILESERVER' => $archivo,
+											];
+											$objDocumentoArchivoActualizado = new mpdocumentoregulatorio();
+											$objDocumentoArchivoActualizado->actualizar(
+												$objAsuntoRegulatorio->CASUNTOREGULATORIO,
+												$objEntidad->CENTIDADREGULA,
+												$objTramite->CTRAMITE,
+												$objDocumento->CDOCUMENTO,
+												$updateData,
+											);
+											break;
 										}
 									}
 								}
@@ -481,15 +485,32 @@ class ctramite extends FS_Controller
 				}
 
 				// Documentos
-				$documentos = $this->mpdocumentoregulatorio->buscar($objAsuntoRegulatorio->CASUNTOREGULATORIO, $tramitePrimero->CENTIDADREGULA, $tramitePrimero->CTRAMITE);
+				$documentos = $this->mpdocumentoregulatorio->buscar($objAsuntoRegulatorio->CASUNTOREGULATORIO, $tramitePrimero->CENTIDADREGULA);
 				if (!empty($documentos)) {
 					foreach ($documentos as $key => $documento) {
-						$documentos[$key]->archivos = (new mpdocumentoregulatorioarchivo())->buscarDocumentos(
+						$archivos = [];
+						if (!empty($documento->DUBICACIONFILESERVER)) {
+							$archivos[] = (object)[
+								'CDOCUMENTOREGULAARCHIVO' => null,
+								'CASUNTOREGULATORIO' => $documento->CASUNTOREGULATORIO,
+								'CENTIDADREGULA' => $documento->CENTIDADREGULA,
+								'CTRAMITE' => $documento->CTRAMITE,
+								'CDOCUMENTO' => null,
+								'DUBICACIONFILESERVER' => $documento->DUBICACIONFILESERVER,
+								'SCARGADOCUMENTO' => 'R',
+								'CUSUARIOCREA' => null,
+								'CUSUARIOMODIFICA' => null,
+								'SREGISTRO' => 'A',
+							];
+						}
+						$otrosArchivos = (new mpdocumentoregulatorioarchivo())->buscarDocumentos(
 							$documento->CASUNTOREGULATORIO,
 							$documento->CENTIDADREGULA,
 							$documento->CTRAMITE,
 							$documento->CDOCUMENTO
 						);
+						$archivos = array_merge($archivos, $otrosArchivos);
+						$documentos[$key]->archivos = $archivos;
 					}
 				}
 			}
@@ -858,6 +879,60 @@ class ctramite extends FS_Controller
 			if (!empty($objDocumentoArchivo->DUBICACIONFILESERVER) && file_exists('./FTPfileserver/Archivos/' . $objDocumentoArchivo->DUBICACIONFILESERVER)) {
 				unlink(RUTA_ARCHIVOS . $objDocumentoArchivo->DUBICACIONFILESERVER);
 			}
+			$this->result['status'] = 200;
+			$this->result['message'] = 'Archivo eliminado correctamnete.';
+		} catch (Exception $ex) {
+			$this->result['message'] = $ex->getMessage();
+		}
+		responseResult($this->result);
+	}
+
+	/**
+	 * Eliminar archivo de un documento
+	 */
+	public function eliminar_archivo_cab()
+	{
+		if (!$this->input->is_ajax_request()) {
+			show_404();
+		}
+		try {
+			$casuntoregula = $this->input->post('casuntoregula');
+			$centidadregula = $this->input->post('centidadregula');
+			$ctramite = $this->input->post('ctramite');
+			$cdocumento = $this->input->post('cdocumento');
+
+			if (empty($cdocumento)) {
+				throw new Exception('Falta de parametros para eliminar el archivo.');
+			}
+
+			$mdocumentoregula = $this->mpdocumentoregulatorio->buscar(
+				$casuntoregula,
+				$centidadregula,
+				$ctramite,
+				$cdocumento
+			);
+
+			if (empty($mdocumentoregula)) {
+				throw new Exception('El archivo no pudo ser encontrado.');
+			}
+
+			if (!empty($mdocumentoregula[0]->DUBICACIONFILESERVER)) {
+				$data = [
+					'DUBICACIONFILESERVER' => null,
+					'SCARGADOCUMENTO' => 'E',
+				];
+				$this->mpdocumentoregulatorio->actualizar(
+					$casuntoregula,
+					$centidadregula,
+					$ctramite,
+					$cdocumento,
+					$data
+				);
+				if (file_exists('./FTPfileserver/Archivos/' . $mdocumentoregula[0]->DUBICACIONFILESERVER)) {
+					unlink(RUTA_ARCHIVOS . $mdocumentoregula[0]->DUBICACIONFILESERVER);
+				}
+			}
+
 			$this->result['status'] = 200;
 			$this->result['message'] = 'Archivo eliminado correctamnete.';
 		} catch (Exception $ex) {

@@ -50,11 +50,13 @@ $(function () {
 		if (data && Array.isArray(data)) {
 			let position = $('table#tblDocumentos > tbody > tr').length;
 			data.forEach(function (item) {
-				row += objDocumento.imprimir(position, 1, item.CDOCUMENTO, item.DDOCUMENTO, item.archivos);
+				let tipo = (item.TIPO) ? parseInt(item.TIPO) : 1;
+				row += objDocumento.imprimir(position, tipo, item.CDOCUMENTO, item.DDOCUMENTO, item.archivos, item.CTRAMITE, item.DTRAMITE);
 				++position;
 			});
 		}
 		$('table#tblDocumentos > tbody').append(row);
+		objDocumento.cargarTramites();
 	};
 
 	/**
@@ -66,8 +68,45 @@ $(function () {
 		const type = (data && data.TIPO) ? parseInt(data.TIPO) : 1;
 		const codigo = (data && data.CDOCUMENTO) ? data.CDOCUMENTO : '';
 		const documento = (data && data.DDOCUMENTO) ? data.DDOCUMENTO : '';
-		const row = objDocumento.imprimir(position, type, codigo, documento, []);
+		const row = objDocumento.imprimir(position, type, codigo, documento, [], null, '');
 		table.append(row);
+		objDocumento.cargarTramites();
+	};
+
+	/**
+	 * Carga los tramites en los documentos
+	 */
+	objDocumento.cargarTramites = function () {
+		// Se busca los tramites
+		const tramites = [];
+		$('#tblTramite tbody tr').each(function () {
+			const row = $(this);
+			const position = row.data('position');
+			const elTramite = $(document.getElementById('tramite_id[' + position + ']'));
+			const tramite = elTramite.val();
+			const txtTramite = elTramite.children("option").filter(":selected").text();
+			const operation = parseInt(document.getElementById('tramite_operation[' + position + ']').value);
+			if (operation === 0 || operation === 1) {
+				tramites.push({id: tramite, text: txtTramite});
+			}
+		});
+
+		// Se imprime los tramites dentro del documento
+		$('table#tblDocumentos > tbody > tr').each(function () {
+			const position = $(this).data('position');
+			const operation = parseInt(document.getElementById('documento_operation[' + position + ']').value);
+			const elDocumentoTramite = $(document.getElementById('documento_tramite_id[' + position + ']'));
+			const tramiteId = parseInt(elDocumentoTramite.val());
+			if (operation === 1) {
+				let opciones = '';
+				tramites.forEach(function (tramite) {
+					let selected = (parseInt(tramite.id) === tramiteId) ? 'selected' : '';
+					opciones += '<option value="' + tramite.id + '" ' + selected + ' >' + tramite.text + '</option>';
+				});
+				elDocumentoTramite.html(opciones);
+			}
+		});
+
 	};
 
 	/**
@@ -77,9 +116,11 @@ $(function () {
 	 * @param codigo
 	 * @param documento
 	 * @param archivos
+	 * @param tramiteId
+	 * @param tramiteText
 	 * @returns {string}
 	 */
-	objDocumento.imprimir = function (position, tipo, codigo, documento, archivos) {
+	objDocumento.imprimir = function (position, tipo, codigo, documento, archivos, tramiteId, tramiteText) {
 		const type1Selected = (parseInt(tipo) === 1) ? 'selected' : '';
 		const type2Selected = (parseInt(tipo) === 2) ? 'selected' : '';
 		const modal = 'document-modal-' + position;
@@ -87,6 +128,13 @@ $(function () {
 		let row = '<tr data-position="' + position + '" >';
 		row += '<td class="text-center" >';
 		row += '<span class="font-weight-bold" >' + (position + 1) + '</span>';
+		row += '</td>';
+		row += '<td class="text-center" >';
+		row += '<select class="custom-select documento-tramite" id="documento_tramite_id[' + position + ']" name="documento_tramite_id[' + position + ']" >';
+		if (tramiteId) {
+			row += '<option value="' + tramiteId + '" selected >' + tramiteText + '</option>';
+		}
+		row += '</select>';
 		row += '</td>';
 		row += '<td class="text-center" >';
 		row += '<select class="custom-select" id="documento_tipo[' + position + ']" name="documento_tipo[' + position + ']" >';
@@ -97,7 +145,9 @@ $(function () {
 		row += '<td class="text-left" >';
 		row += '<div class="input-group" >';
 		if (codigo) {
-			row += '<div class="form-control bg-light" >' + documento + '</div>';
+			let refCodigo = parseInt(codigo);
+			let block = (refCodigo >= 900) ? '' : 'readonly';
+			row += '<input type="text" class="form-control" id="documento_nombre[' + position + ']" name="documento_nombre[' + position + ']" ' + block + ' value="' + documento + '" >';
 		} else {
 			row += '<input type="text" class="form-control" id="documento_nombre[' + position + ']" name="documento_nombre[' + position + ']" value="" >';
 		}
@@ -135,7 +185,8 @@ $(function () {
 		row += '<div class="table-responsive" >';
 		row += '<table class="table table-bordered table-striped tbl-documento-archivos-carga" id="tbl-documento-archivos-' + position + '" >';
 		row += '<thead>';
-		row += '<tr>';1
+		row += '<tr>';
+		1
 		row += '<th class="text-left" style="min-width: 220px;" >Archivo</th>';
 		row += '<th class="text-center" style="width: 130px; min-width: 130px;" >OP</th>';
 		row += '</tr>';
@@ -152,7 +203,7 @@ $(function () {
 				row += '<td class="text-left" >';
 				row += '<div class="input-group" >';
 				row += '<div class="form-control bg-light" >';
-				row += '<a href="' + BASE_URL + 'FTPfileserver/Archivos/' + item.DUBICACIONFILESERVER + '" download="' + realName + '" class="text-primary" ><i class="fa fa-download" ></i> ' + realName + '</a>';
+				row += '<a href="' + BASE_URL + 'FTPfileserver/Archivos/' + item.DUBICACIONFILESERVER + '" target="_blank" class="text-primary" ><i class="fa fa-download" ></i> ' + realName + '</a>';
 				row += '</div>';
 				row += '</div>';
 				row += '</td>';
@@ -196,9 +247,9 @@ $(function () {
 	 * @param position
 	 * @returns {number}
 	 */
-	objDocumento.totalArchivos = function(position) {
+	objDocumento.totalArchivos = function (position) {
 		let total = 0;
-		$("#tbl-documento-archivos-" + position + " > tbody > tr").each(function() {
+		$("#tbl-documento-archivos-" + position + " > tbody > tr").each(function () {
 			const row = $(this);
 			const key = row.data('key');
 			const operation = parseInt(document.getElementById('archivo_documento_operation[' + position + '][' + key + ']').value);
@@ -297,9 +348,9 @@ $(function () {
 	/**
 	 * Realiza el contador de documentos
 	 */
-	objDocumento.verificarDocumentos = function() {
+	objDocumento.verificarDocumentos = function () {
 		objDocumento.rutaDocumentos = [];
-		$('table.tbl-documento-archivos-carga > tbody > tr').each(function() {
+		$('table.tbl-documento-archivos-carga > tbody > tr').each(function () {
 			const row = $(this);
 			const position = row.data('position');
 			const key = row.data('key');
@@ -309,7 +360,8 @@ $(function () {
 			if (archivo && (opoeration === 1 || opoeration === 2)) {
 				objDocumento.agregarRutaDocumento(RutaDocumento);
 			}
-		});	1
+		});
+		1
 		objDocumento.imprimirRutaDocumentos();
 	};
 
@@ -345,24 +397,57 @@ $(function () {
 		const position = button.data('position');
 		const key = row.data('key');
 		const id = button.data('id');
-		$.ajax({
-			url: BASE_URL + 'ar/ope/ctramite/eliminar_archivo',
-			method: 'POST',
-			data: {
-				id: id,
-			},
-			beforeSend: function () {
-				objPrincipal.botonCargando(button);
-			}
-		}).done(function (response) {
-			objPrincipal.notify('success', response.message);
-			objDocumento.confirmarEliminarArchivo(row, position, key);
-		}).fail(function (jqxhr) {
-			const message = (jqxhr && jqxhr.responseJSON && jqxhr.responseJSON.message) ? jqxhr.responseJSON.message : 'Error en la solicitud del servidor.';
-			objPrincipal.notify('error', message);
-		}).always(function () {
-			objPrincipal.liberarBoton(button);
-		});
+		const cdocumento = document.getElementById('documento_id[' + position + ']').value;
+		objDocumento.eliminarRealArchivoDet(button, id, cdocumento)
+			.done(function (response) {
+				objPrincipal.notify('success', response.message);
+				objDocumento.confirmarEliminarArchivo(row, position, key);
+			})
+			.fail(function (jqxhr) {
+				const message = (jqxhr && jqxhr.responseJSON && jqxhr.responseJSON.message) ? jqxhr.responseJSON.message : 'Error en la solicitud del servidor.';
+				objPrincipal.notify('error', message);
+			})
+			.always(function () {
+				objPrincipal.liberarBoton(button);
+			});
+	};
+
+	/**
+	 *
+	 * @param button
+	 * @param id
+	 * @param cdocumento
+	 * @returns {*|jQuery}
+	 */
+	objDocumento.eliminarRealArchivoDet = function (button, id, cdocumento) {
+		if (id) {
+			// Si no es null se elimina el archivo en el detalle
+			return $.ajax({
+				url: BASE_URL + 'ar/ope/ctramite/eliminar_archivo',
+				method: 'POST',
+				data: {
+					id: id,
+				},
+				beforeSend: function () {
+					objPrincipal.botonCargando(button);
+				}
+			});
+		} else {
+			// Si no es null se elimina el archivo en el detalle
+			return $.ajax({
+				url: BASE_URL + 'ar/ope/ctramite/eliminar_archivo_cab',
+				method: 'POST',
+				data: {
+					casuntoregula: objFormularioAR.data.ar.CASUNTOREGULATORIO,
+					centidadregula: objFormularioAR.data.tramite.CENTIDADREGULA,
+					ctramite: objFormularioAR.data.tramite.CTRAMITE,
+					cdocumento: cdocumento,
+				},
+				beforeSend: function () {
+					objPrincipal.botonCargando(button);
+				}
+			});
+		}
 	};
 
 	/**

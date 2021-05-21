@@ -143,7 +143,7 @@ $(function () {
 				const tipoProducto = (data.tipoProducto) ? [{
 					id: data.tipoProducto.id,
 					text: data.tipoProducto.text
-				}] : []
+				}] : [];
 				const nroSeguimiento = (data.tramite && data.tramite.DTRACKIDTRAMITE) ? data.tramite.DTRACKIDTRAMITE : '';
 				const nroDR = (data.tramite && data.tramite.DNUMERODR) ? data.tramite.DNUMERODR : '';
 				const nroExpediente = (data.tramite && data.tramite.DNUMEROEXPEDIENTE) ? data.tramite.DNUMEROEXPEDIENTE : '';
@@ -328,7 +328,7 @@ $(function () {
 			},
 		}).done(function (res) {
 			objPrincipal.notify('success', res.message);
-			objFormularioAR.habilitarCierre();
+			objFormularioAR.editForm(res.data.ar.CASUNTOREGULATORIO , button);
 		}).fail(function (jqxhr) {
 			const message = (jqxhr && jqxhr.responseJSON && jqxhr.responseJSON.message) ? jqxhr.responseJSON.message : 'Error en la solicitud del servidor.';
 			objPrincipal.alert('error', message);

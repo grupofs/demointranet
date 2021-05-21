@@ -17,22 +17,26 @@ class mpdocumentoregulatorio extends CI_Model
 	 * @param string $CENTIDADREGULA
 	 * @param string $CTRAMITE
 	 * @param $CDOCUMENTO
-	 * @return array|int
+	 * @return array
 	 */
 	public function buscar(string $CASUNTOREGULATORIO,
 						   string $CENTIDADREGULA,
-						   string $CTRAMITE,
+						   $CTRAMITE = '',
 						   $CDOCUMENTO = '')
 	{
 		$this->db->select('
 			PDOCUMENTOREGULATORIO.*,
-			MDOCUMENTOTRAMITEREGULA.DDOCUMENTO
+			MDOCUMENTOTRAMITEREGULA.DDOCUMENTO,
+			MTRAMITEREGULADORA.DTRAMITE
 		');
 		$this->db->from('PDOCUMENTOREGULATORIO');
+		$this->db->join('MTRAMITEREGULADORA', 'PDOCUMENTOREGULATORIO.CENTIDADREGULA = MTRAMITEREGULADORA.CENTIDADREGULA AND PDOCUMENTOREGULATORIO.CTRAMITE = MTRAMITEREGULADORA.CTRAMITE', 'inner');
 		$this->db->join('MDOCUMENTOTRAMITEREGULA', 'PDOCUMENTOREGULATORIO.CENTIDADREGULA = MDOCUMENTOTRAMITEREGULA.CENTIDADREGULA AND PDOCUMENTOREGULATORIO.CTRAMITE = MDOCUMENTOTRAMITEREGULA.CTRAMITE AND PDOCUMENTOREGULATORIO.CDOCUMENTO = MDOCUMENTOTRAMITEREGULA.CDOCUMENTO', 'inner');
 		$this->db->where('PDOCUMENTOREGULATORIO.CASUNTOREGULATORIO', $CASUNTOREGULATORIO);
 		$this->db->where('PDOCUMENTOREGULATORIO.CENTIDADREGULA', $CENTIDADREGULA);
-		$this->db->where('PDOCUMENTOREGULATORIO.CTRAMITE', $CTRAMITE);
+		if (!empty($CTRAMITE)) {
+			$this->db->where('PDOCUMENTOREGULATORIO.CTRAMITE', $CTRAMITE);
+		}
 		if (!empty($CDOCUMENTO)) {
 			$this->db->where('PDOCUMENTOREGULATORIO.CDOCUMENTO', $CDOCUMENTO);
 		}
@@ -64,7 +68,7 @@ class mpdocumentoregulatorio extends CI_Model
 							string $CDOCUMENTO,
 							int $documentoTipo,
 							string $DNUEVODOCUMENTO,
-							string $DUBICACIONFILESERVER,
+							$DUBICACIONFILESERVER,
 							string $CUSUARIO,
 							string $SREGISTRO)
 	{
@@ -108,6 +112,11 @@ class mpdocumentoregulatorio extends CI_Model
 			$CENTIDADREGULA,
 			$CTRAMITE,
 			$CDOCUMENTO);
+
+		// solo si el archivo del documento esta vacio y existe el documento se intentara no actualizar el documento
+		if (is_null($DUBICACIONFILESERVER) && !empty($objDocument)) {
+			$data['DUBICACIONFILESERVER'] = $objDocument[0]->DUBICACIONFILESERVER;
+		}
 
 		$res = (empty($objDocument))
 			? $this->crear($data)
