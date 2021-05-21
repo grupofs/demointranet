@@ -25,7 +25,7 @@ class Mctrlpermisos extends CI_Model {
         }		   
     }		
     public function getlistempleadosperm($parametros) { // Recupera listado empleados     
-        $procedure = "call sp_appweb_rrhh_getempleadosperm(?,?,?)";
+        $procedure = "call usp_adm_rrhh_getempleadosperm(?,?,?)";
         $query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) { 

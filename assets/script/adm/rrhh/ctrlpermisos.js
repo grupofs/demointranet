@@ -4,6 +4,7 @@ var otblListCtrlpermiso, oTable_listavacaciones;
 $(document).ready(function() {
     
     cargarEmpleados('0','0');
+        
 });
   
 $('#cboCia').change(function(){ 
@@ -222,69 +223,95 @@ $('#modalvacaciones').on('show.bs.modal', function (e) {
         locale:'es'
     });	
 
-    $('#mtxtFsalidavaca').on('change.datetimepicker',function(e){  
-        
-        $('#mtxtFretornovaca').datetimepicker({
-            format: 'DD/MM/YYYY',
-            daysOfWeekDisabled: [0],
-            locale:'es'
-        });
-
-        var fecha = moment(e.date).format('DD/MM/YYYY');
-        var newDate = moment(e.date); 
-               
-        newDate.add(1, 'days');
-        nfecha = moment(newDate).format('DD/MM/YYYY');
-
-        $('#mtxtFretornovaca').datetimepicker('minDate', fecha);
-        $('#mtxtFretornovaca').datetimepicker('date', nfecha);
-        
-    });
-
-	$('#btnNuevoVaca').click(function(){		
-		$('#tabvacaciones a[href="#tab_newvacaciones"]').tab('show');
-		$('#frmMantVacaciones').trigger("reset");
-		$('#mhdnIdVaca').val('');
-		$('#mhdnAccionVaca').val('N');
-		$('#mhdnEmpVaca').val($('#mhdnIdEmpleado').val());
-        fechaActualvaca();
-
-	});
-
-	$('#btnRetornarVaca').click(function(){
-		$('#tabvacaciones a[href="#tab_listavacaciones"]').tab('show');  
-	});
-
-    $('#frmMantVacaciones').submit(function(event){
-        event.preventDefault();
-
-        $.ajax({
-            url:$('#frmMantVacaciones').attr("action"),
-            type:$('#frmMantVacaciones').attr("method"),
-            data:$('#frmMantVacaciones').serialize(),
-            success: function (respuesta){            
-                Vtitle = 'Se Grabo Correctamente';
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);                
-				listarVacaciones();
-				$('#tabvacaciones a[href="#tab_listavacaciones"]').tab('show'); 
-            },
-            error: function(){
-                Vtitle = 'No se puede Grabar por error';
-                Vtype = 'error';
-                sweetalert(Vtitle,Vtype); 
-            }
-        });
+    $('#frmMantVacaciones').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGVaca');
+            var request = $.ajax({
+                url:$('#frmMantVacaciones').attr("action"),
+                type:$('#frmMantVacaciones').attr("method"),
+                data:$('#frmMantVacaciones').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                    listarVacaciones();   
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#btnRetornarVaca').click();    
+                });
+            });
+            return false;
+        }
     });
 	
+});
+
+$('#mtxtFsalidavaca').on('change.datetimepicker',function(e){  
+        
+    $('#mtxtFretornovaca').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es'
+    });
+
+    var fecha = moment(e.date).format('DD/MM/YYYY');
+    var newDate = moment(e.date); 
+           
+    newDate.add(1, 'days');
+    nfecha = moment(newDate).format('DD/MM/YYYY');
+
+    $('#mtxtFretornovaca').datetimepicker('minDate', fecha);
+    $('#mtxtFretornovaca').datetimepicker('date', nfecha);
+    
+});
+
+$('#btnNuevoVaca').click(function(){		
+    $('#tabvacaciones a[href="#tab_newvacaciones"]').tab('show');
+    $('#frmMantVacaciones').trigger("reset");
+    $('#mhdnIdVaca').val('');
+    $('#mhdnAccionVaca').val('N');
+    $('#mhdnEmpVaca').val($('#mhdnIdEmpleado').val());
+    fechaActualvaca();
+
+});
+
+$('#btnRetornarVaca').click(function(){
+    $('#tabvacaciones a[href="#tab_listavacaciones"]').tab('show');  
 });
 
 fechaActualvaca= function(){
     var fecha = new Date();		
     var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-    alert(fechatring);
+   
     $('#mtxtFregistrovaca').val(fechatring);
-    alert("1");
+   
     $('#mtxtFsalidavaca').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );		
     $("#mtxtFsalidavaca").trigger("change.datetimepicker");
 };
@@ -414,55 +441,81 @@ $('#modalpermisos').on('show.bs.modal', function (e) {
     $('#mtxtHsalidaperm').datetimepicker('maxDate', moment('05:45 PM', 'hh:mm A') );
     $('#mtxtHsalidaperm').datetimepicker('date', moment('08:00 AM', 'hh:mm A') );
 
-    $('#mtxtHretornoperm').datetimepicker('date', moment('08:15 AM', 'hh:mm A') );
+    $('#mtxtHretornoperm').datetimepicker('date', moment('08:15 AM', 'hh:mm A') );  
     
-    $('#mtxtHsalidaperm').on('change.datetimepicker',function(e){
-        $('#mtxtHretornoperm').datetimepicker({
-            format: 'hh:mm A',
-            locale:'es',
-            stepping: 15
-        });	 
-        $('#mtxtHretornoperm').datetimepicker('minDate', e.date.add(15, "minute"));
-        $('#mtxtHretornoperm').datetimepicker('maxDate', moment('06:00 PM', 'hh:mm A') );
-        $('#mtxtHretornoperm').datetimepicker('date', moment(e.date, 'hh:mm A'));    
-    });
-
-	$('#btnNuevoPerm').click(function(){		
-		$('#tabpermisos a[href="#tab_newpermisos"]').tab('show');
-		$('#frmMantPermisos').trigger("reset");
-		$('#mhdnIdPerm').val('');
-		$('#mhdnAccionPerm').val('N');
-		$('#mhdnEmpPerm').val($('#mhdnIdEmpleado').val());
-        fechaActualperm();
-
-	});
-
-	$('#btnRetornarPerm').click(function(){
-		$('#tabpermisos a[href="#tab_listapermisos"]').tab('show');  
-	});
-
-    $('#frmMantPermisos').submit(function(event){
-        event.preventDefault();
-
-        $.ajax({
-            url:$('#frmMantPermisos').attr("action"),
-            type:$('#frmMantPermisos').attr("method"),
-            data:$('#frmMantPermisos').serialize(),
-            success: function (respuesta){            
-                Vtitle = 'Se Grabo Correctamente';
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);                
-				listarPermisos();
-				$('#tabpermisos a[href="#tab_listapermisos"]').tab('show'); 
-            },
-            error: function(){
-                Vtitle = 'No se puede Grabar por error';
-                Vtype = 'error';
-                sweetalert(Vtitle,Vtype); 
-            }
-        });
+    $('#frmMantPermisos').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGPerm');
+            var request = $.ajax({
+                url:$('#frmMantPermisos').attr("action"),
+                type:$('#frmMantPermisos').attr("method"),
+                data:$('#frmMantPermisos').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                    listarPermisos();   
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#btnRetornarPerm').click();    
+                });
+            });
+            return false;
+        }
     });
 	
+});
+
+$('#mtxtHsalidaperm').on('change.datetimepicker',function(e){
+    $('#mtxtHretornoperm').datetimepicker({
+        format: 'hh:mm A',
+        locale:'es',
+        stepping: 15
+    });	 
+    $('#mtxtHretornoperm').datetimepicker('minDate', e.date.add(15, "minute"));
+    $('#mtxtHretornoperm').datetimepicker('maxDate', moment('06:00 PM', 'hh:mm A') );
+    $('#mtxtHretornoperm').datetimepicker('date', moment(e.date, 'hh:mm A'));    
+});
+
+$('#btnNuevoPerm').click(function(){		
+    $('#tabpermisos a[href="#tab_newpermisos"]').tab('show');
+    $('#frmMantPermisos').trigger("reset");
+    $('#mhdnIdPerm').val('');
+    $('#mhdnAccionPerm').val('N');
+    $('#mhdnEmpPerm').val($('#mhdnIdEmpleado').val());
+    fechaActualperm();
+
+});
+
+$('#btnRetornarPerm').click(function(){
+    $('#tabpermisos a[href="#tab_listapermisos"]').tab('show');  
 });
 
 fechaActualperm = function(){
