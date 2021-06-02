@@ -341,7 +341,7 @@ class Minforme extends CI_Model {
     public function setregestudio04($parametros) {  // Registrar estudio 04 PT
         $this->db->trans_begin();
 
-        $procedure = "call sp_appweb_pt_setregistro04(?,?,?,?,?,?,?,?);";
+        $procedure = "call sp_appweb_pt_setregistro04(?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -723,6 +723,54 @@ class Minforme extends CI_Model {
         $this->db->trans_begin();
 
         $procedure = "call sp_appweb_pt_cloneregistro05(?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    }  
+    public function cloneregistro06($parametros) {  // Clonar estudio 05 PT
+        $this->db->trans_begin();
+
+        $procedure = "call sp_appweb_pt_cloneregistro06(?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+    public function delregistrodet06($parametros) {  // Registrar estudio 08 PT
+        $this->db->trans_begin();
+
+        $procedure = "call sp_appweb_pt_delregistrodet06(?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    }   
+    public function delregistro06($parametros) {  // Registrar estudio 08 PT
+        $this->db->trans_begin();
+
+        $procedure = "call sp_appweb_pt_delregistro06(?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)

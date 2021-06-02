@@ -643,7 +643,15 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                    </div>               
+                                                                    </div> 
+                                                                    <div class="row"> 
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-group">
+                                                                                <label>Identificación de Linea Proceso</label>
+                                                                                <input type="text" class="form-control" id="txtIdlineaReg04" name="txtIdlineaReg04">
+                                                                            </div>
+                                                                        </div>              
+                                                                    </div>          
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="row">

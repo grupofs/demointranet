@@ -943,7 +943,8 @@ recuperaListregistro = function(Idinforme,nro_informe){
               render:function(data, type, row){                
                   return  '<div>'+    
                     ' <a onClick="javascript:selRegistro(\''+row.idptregistro+'\',\''+row.idptinforme+'\',\''+row.idptregequipo+'\',\''+row.idptregproducto+'\',\''+row.idptservicio+'\',\''+row.descripcion_serv+'\',\''+row.idptregestudio+'\',\''+row.ESTUDIO+'\',\''+row.idptregrecinto+'\',\''+row.idptregprocestudio+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
-                    ' <a onClick="javascript:dupRegistro(\''+row.idptregistro+'\',\''+row.idptinforme+'\',\''+row.idptregequipo+'\',\''+row.idptregproducto+'\',\''+row.idptservicio+'\',\''+row.descripcion_serv+'\',\''+row.idptregestudio+'\',\''+row.ESTUDIO+'\',\''+row.idptregrecinto+'\',\''+row.idptregprocestudio+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
+                    ' <a onClick="javascript:dupRegistro(\''+row.idptregistro+'\',\''+row.idptregproducto+'\',\''+row.idptservicio+'\',\''+row.idptregestudio+'\');"><i class="fas fa-clone" style="color:#088A08; cursor:pointer;"> </i> </a>'+
+                    ' <a id="delRegistro" href="'+row.idptregistro+'"  regest="'+row.idptregestudio+'" title="Eliminar" style="cursor:pointer; color:#F80606;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
                   '</div>'
               }
             }
@@ -954,6 +955,36 @@ recuperaListregistro = function(Idinforme,nro_informe){
 $('#btnRetornarLista').click(function(){
     $('#btnBuscar').click();
     $('#tabinforme a[href="#tabinforme-list"]').tab('show');  
+});
+
+$("body").on("click","#delRegistro",function(event){
+    event.preventDefault();
+    idptregistro = $(this).attr("href");
+    idptregestudio = $(this).attr("regest");
+
+    Swal.fire({
+        title: 'Confirmar Eliminación',
+        text: "¿Está seguro de eliminar el Registro?",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, bórralo!'
+    }).then((result) => {
+        if (result.value) {
+            $.post(baseurl+"pt/cinforme/delregistro/", 
+            {
+                idptregistro   : idptregistro,
+                idptregestudio   : idptregestudio,
+            },      
+            function(data){     
+                otblListRegitro.ajax.reload(null,false); 
+                Vtitle = 'Se Elimino Correctamente';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);      
+            });
+        }
+    }) 
 });
 
 // REGISTROS POR EVALUACION
@@ -1957,8 +1988,9 @@ mostrarRegistro = function(v_RegEstu){
                 {"orderable": false, 
                 render:function(data, type, row){                
                     return  '<div>'+    
-                        ' <a onClick="javascript:selEquipoadj06(\''+row.idptregequipo+'\',\''+row.idptregistro+'\',\''+row.idptregproducto+'\',\''+row.tipo_estudio+'\',\''+row.descripcion_equipo+'\',\''+row.id_tipoequipo+'\',\''+row.id_equipofabricante+'\',\''+row.dimension+'\',\''+row.diametro+'\',\''+row.altura+'\',\''+row.grosor+'\',\''+row.volumen_llenado+'\',\''+row.modelo_equipo+'\',\''+row.identificacion+'\',\''+row.nro_equipos+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
-                        ' <a onClick="javascript:dupliEquipoadj06(\''+row.idptregequipo+'\',\''+row.idptregistro+'\',\''+row.idptregproducto+'\',\''+row.tipo_estudio+'\');"><i class="fas fa-clone" style="color:#088A08; cursor:pointer;"> </i> </a>'+
+                        ' <a title="Editar" onClick="javascript:selEquipoadj06(\''+row.idptregequipo+'\',\''+row.idptregistro+'\',\''+row.idptregproducto+'\',\''+row.tipo_estudio+'\',\''+row.descripcion_equipo+'\',\''+row.id_tipoequipo+'\',\''+row.id_equipofabricante+'\',\''+row.dimension+'\',\''+row.diametro+'\',\''+row.altura+'\',\''+row.grosor+'\',\''+row.volumen_llenado+'\',\''+row.modelo_equipo+'\',\''+row.identificacion+'\',\''+row.nro_equipos+'\');"><i class="fas fa-edit" style="color:#088A08; cursor:pointer;"> </i> </a>'+
+                        ' <a title="Duplicar" onClick="javascript:dupliEquipoadj06(\''+row.idptregequipo+'\',\''+row.idptregistro+'\',\''+row.idptregproducto+'\',\''+row.tipo_estudio+'\');"><i class="fas fa-clone" style="color:#4C4CFC; cursor:pointer;"> </i> </a>'+
+                        ' <a id="delEquipoadj06" href="'+row.idptregequipo+'" title="Eliminar" style="cursor:pointer; color:#F80606;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
                     '</div>'
                 }
                 }
@@ -2085,7 +2117,7 @@ mostrarRegistro = function(v_RegEstu){
     };
 
     dupliEquipoadj06= function(idptregequipo,idptregistro,idptregproducto,tipo_estudio){
-        alert(tipo_estudio);
+        
         var params = { 
             "idptregequipo"     : idptregequipo,
             "idptregistro"      : idptregistro, 
@@ -2134,8 +2166,36 @@ mostrarRegistro = function(v_RegEstu){
             });
 
         }
-    }
+    };
 
+    $("body").on("click","#delEquipoadj06",function(event){
+        event.preventDefault();
+        idptregequipo = $(this).attr("href");
+
+        Swal.fire({
+            title: 'Confirmar Eliminación',
+            text: "¿Está seguro de eliminar el Equipo?",
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, bórralo!'
+        }).then((result) => {
+            if (result.value) {
+                $.post(baseurl+"pt/cinforme/delregistrodet06/", 
+                {
+                    idptregequipo   : idptregequipo,
+                },      
+                function(data){     
+                    otblListReg06equipo.ajax.reload(null,false); 
+                    Vtitle = 'Se Elimino Correctamente';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);      
+                });
+            }
+        }) 
+    });
+    
     $('#Buscaequipo06').click(function(){
         $('#modalBuscaequipoReg06').modal('show');
     });
@@ -2256,7 +2316,8 @@ mostrarRegistro = function(v_RegEstu){
             "clase_registro"        : 'T', 
             "descripcion_equipo"    : $('#txtDescriequipoReg04').val(), 
             "id_tipoequipo"         : $('#cboTipoequipoReg04').val(), 
-            "id_equipofabricante"   : $('#cboFabricanteReg04').val(), 
+            "id_equipofabricante"   : $('#cboFabricanteReg04').val(),
+            "identificacion"        : $('#txtIdlineaReg04').val(),  
             "cserviaccionio"        : $('#mhdnAccionReg04').val(),
         };
 
@@ -2659,8 +2720,33 @@ selRegistro= function(idptregistro,idptinforme,idptregequipo,idptregproducto,idp
     recuperaRegistro(idptregestudio,idptregequipo,idptregproducto,idptregrecinto,idptregprocestudio);
 };
 
-dupRegistro = function(){
-
+dupRegistro = function(idptregistro,idptregproducto,idptservicio,idptregestudio){
+    if(idptregestudio == '6'){
+        var params = { 
+            "idptregproducto"     : idptregproducto,
+            "idptregistro"      : idptregistro, 
+        };
+    
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            url: baseurl+"pt/cinforme/cloneregistro06",
+            dataType: "JSON",
+            async: true,
+            data: params,
+            success:function(result)
+            {
+                otblListRegitro.ajax.reload(null,false);
+                Vtitle = 'Se duplico Correctamente';
+                Vtype = 'success';
+                sweetalert(Vtitle,Vtype);
+            },
+            error: function(){
+                alert('Error, no se puede cargar la lista desplegable de establecimiento');
+            }
+        });
+    }
+    
 };
 
 recuperaRegistro = function(v_RegEstu,idptregequipo,idptregproducto,idptregrecinto,idptregprocestudio){

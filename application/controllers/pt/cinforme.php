@@ -571,6 +571,7 @@ class Cinforme extends CI_Controller {
 				'@descripcion_equipo'   =>  $this->input->post('descripcion_equipo'),
 				'@id_tipoequipo'    	=>  $this->input->post('id_tipoequipo'),
 				'@id_equipofabricante'  =>  $this->input->post('id_equipofabricante'),
+				'@identificacion'       =>  $this->input->post('identificacion'),
 				'@accion'           	=>  $this->input->post('cserviaccionio'),  
 			);
 			$retorna = $this->minforme->setregestudio04($parametros);
@@ -706,6 +707,34 @@ class Cinforme extends CI_Controller {
 			'@idptregproducto'   => $this->input->post('idptregproducto')
 		);
 		$resultado = $this->minforme->cloneregistro05($parametros);
+		echo json_encode($resultado);
+	}
+	public function cloneregistro06() {	// Clonar estudio 06 PT	
+		 
+		$parametros = array(
+			'@idptregproducto'   => $this->input->post('idptregproducto'),
+			'@idptregistro'   => $this->input->post('idptregistro'),
+		);
+		$resultado = $this->minforme->cloneregistro06($parametros);
+		echo json_encode($resultado);
+	}
+	public function delregistro() {	// Eliminar de Det Servicio 06
+		$idptregestudio = $this->input->post('idptregestudio');
+
+		if($idptregestudio == 6 ){			
+			$parametros = array(
+				'@idptregistro'   => $this->input->post('idptregistro'),
+			);	
+			$resultado = $this->minforme->delregistro06($parametros);
+		}
+		echo json_encode($resultado);
+	}
+	public function delregistrodet06() {	// Eliminar de Det Servicio 06
+		
+		$parametros = array(
+			'@idptregequipo'   => $this->input->post('idptregequipo'),
+		);	
+		$resultado = $this->minforme->delregistrodet06($parametros);
 		echo json_encode($resultado);
 	}
 

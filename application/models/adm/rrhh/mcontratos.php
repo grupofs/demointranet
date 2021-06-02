@@ -18,5 +18,23 @@ class Mcontratos extends CI_Model {
 			return False;
 		}		
     }	
+	public function setregempleado($parametros) { // Registrar Vacaciones		
+        $this->db->trans_begin();
+    
+        $procedure = "call usp_adm_rrhh_setregempleado(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros); 
+           
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }
+        else{
+            $this->db->trans_commit();
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            }{
+                return False;
+            }	
+        }   
+    }
 }
 ?>
