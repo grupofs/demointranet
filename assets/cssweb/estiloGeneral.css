@@ -526,3 +526,15 @@
         display: block !important;
     }
 /**/
+
+/*SELECT CON BOTO NUEVO*/
+    .input-group-button {
+        padding: 0 0 0 2px;
+        border-color: transparent;
+        background: none;
+    }
+    .input-group-select-button{
+        flex-wrap: inherit !important;
+    }
+
+/**/

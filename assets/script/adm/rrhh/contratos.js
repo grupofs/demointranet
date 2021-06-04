@@ -114,52 +114,56 @@ $('#tblListContratos tbody').on('dblclick', 'td', function () {
     var row = otblListContratos.row(tr);
     var rowData = row.data();
     
-    $("#modalCreactrlprov").modal('show');
+    $("#modalMantemple").modal('show');
 
-    $('#frmCreactrlprov').trigger("reset");
-    $('#mhdnAccionctrlprov').val('A'); 
-    /*$('#tabhallazgocalif a[href="#tabhallazgocalif-det"]').tab('show');
-    parametros = paramListDetseguiaacc(rowData.CAREACLIENTE);
-    getListDetseguiaacc(parametros);*/
-} );
+    $('#frmMantemple').trigger("reset");
+    $('#divcia').hide();
+    $('#divcontrato').hide();
+
+    $('#mhdnAccionempleado').val('A'); 
+    $('#mhdnidempleado').val(rowData.id_empleado);
+    $('#mhdnidadministrado').val(rowData.id_administrado);
+    $('#mhdntipodoc').val(rowData.id_tipodoc);
+    $('#mtxtnrodoc').val(rowData.NRODOC);
+    $('#mcbosexo').val(rowData.sexo).trigger("change"); 
+    $('#mtxtapepat').val(rowData.ape_paterno);
+    $('#mtxtapemat').val(rowData.ape_materno);
+    $('#mtxtnombres').val(rowData.nombres);
+    $('#mtxtemail').val(rowData.email);
+    $('#mtxtcelular').val(rowData.fono_celular);
+    $('#mtxttelefono').val(rowData.fono_fijo);
+    $('#mtxtdireccion').val(rowData.direccion);
+    $('#txtFIngre').val(rowData.f_inicio_laboral);
+    $('#mtxtanexo').val(rowData.anexo);
+    $('#mtxtemailempre').val(rowData.emailempresa);
+    $('#mtxtcelularempre').val(rowData.cel_empresa);
+    $('#txtFNace').val(rowData.fecha_nace);
+    $('#mcboestadocivil').val(rowData.estado_civil).trigger("change"); 
+    $('#mtxtnrohijos').val(rowData.hijos);
+    $('#mcbopension').val(rowData.idpension).trigger("change"); 
+    $('#mcboentidadpension').val(rowData.idpensionentidad).trigger("change"); 
+    //$('#mcbobanco').val(rowData.idbanco).trigger("change");     
+    listcboBanco(rowData.idbanco);
+    $('#mtxtnroctasueldo').val(rowData.nroctacte);
+    $('#mtxtccictasueldo').val(rowData.ccictacte);
+    $('#mcboeps').val(rowData.eps).trigger("change");
+    //$('#mcboprofesion').val(rowData.idprofesion).trigger("change");
+    listcboProfesion(rowData.idprofesion); 
+    $('#mtxtnrocoleg').val(rowData.nrocolegio_prof);
+
+});
 
 $("#btnNuevo").click(function (){
     $('#frmMantemple').trigger("reset");
 
     $("#modalMantemple").modal('show');
+ 
+    $('#divcia').show();
 
-    $('#mhdnAccionempleado').val('N'); 
+    $('#mhdnAccionempleado').val('N');
     $('#mhdntipodoc').val(1);
-/*
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboclieserv",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cboregClie').html(result);
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error = cboregClie');
-        }
-    });
-
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbotipoestable",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cbotipoestable').html(result);
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error = cbotipoestable');
-        }
-    });*/
+    listcboBanco(0);
+    listcboProfesion(0);
     
 });
 
@@ -176,8 +180,10 @@ EXT=function(){
 $('input[type=radio][name=rCia]').change(function() {
     if($('#rdFS').prop('checked')){        
         $('#hrdcia').val('1'); 
+        listcboArea('1');
     }else if ($('#rdFSC').prop('checked')){  
-        $('#hrdcia').val('2'); 
+        $('#hrdcia').val('2');
+        listcboArea('2'); 
     } 
 });
 
@@ -200,6 +206,10 @@ $('#modalMantemple').on('show.bs.modal', function (e) {
     $('#txtFInicio').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
 
     $('#hrdcia').val('1'); 
+
+    var vccia = $('#hrdcia').val();
+    listcboArea(vccia);
+    listcboCargo();
 
     $('#frmMantemple').validate({
         rules: {
@@ -253,6 +263,401 @@ $('#modalMantemple').on('show.bs.modal', function (e) {
     });
 });
 
+$('#mcbopension').change(function(){ 
+    var v_cpension = $( "#mcbopension option:selected").attr("value");
+    listcboEntidadpension(v_cpension);
+});
+
+listcboEntidadpension = function(v_cpension){    
+    var params = { 
+        "idpension" : v_cpension
+    }; 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbopensionentidad",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#mcboentidadpension').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = mcboentidadpension');
+        }
+    });
+}
+
+$("#mbtnnewentidadpension").click(function (){
+    $('#frmMantentidadpension').trigger("reset");
+
+    $("#modalMantentidadpension").modal('show');
+
+    $('#mhdnAccionentidadpension').val('N');
+});
+
+$('#modalMantentidadpension').on('show.bs.modal', function (e) {
+    $('#frmMantentidadpension').validate({        
+        rules: {
+            txtdescripcion: {
+              required: true,
+            },
+        },
+        messages: {
+            txtdescripcion: {
+              required: "Por Favor ingrese Nombre de la entidad"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantentidadpension');
+            var request = $.ajax({
+                url:$('#frmMantentidadpension').attr("action"),
+                type:$('#frmMantentidadpension').attr("method"),
+                data:$('#frmMantentidadpension').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                      
+                    var vidpension = $('#mcbopension').val();
+                    listcboEntidadpension(vidpension);
+
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCMantentidadpension').click();    
+                });
+            });
+            return false;
+        }
+    });
+});
+
+listcboBanco = function(vidbanco){    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbobanco",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcbobanco').html(result);
+            $('#mcbobanco').val(vidbanco).trigger("change"); 
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = mcbobanco');
+        }
+    });
+}
+
+$("#mbtnnewbanco").click(function (){
+    $('#frmMantbanco').trigger("reset");
+
+    $("#modalMantbanco").modal('show');
+    
+    $('#mhdnAccionbanco').val('N');
+});
+
+$('#modalMantbanco').on('show.bs.modal', function (e) {
+    $('#frmMantbanco').validate({        
+        rules: {
+            txtdesbanco: {
+              required: true,
+            },
+        },
+        messages: {
+            txtdesbanco: {
+              required: "Por Favor ingrese Nombre del Banco"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantbanco');
+            var request = $.ajax({
+                url:$('#frmMantbanco').attr("action"),
+                type:$('#frmMantbanco').attr("method"),
+                data:$('#frmMantbanco').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                      
+                    listcboBanco();
+
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCMantbanco').click();    
+                });
+            });
+            return false;
+        }
+    });
+});
+
+listcboProfesion = function(){    
+    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcboprofesion",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcboprofesion').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = mcboprofesion');
+        }
+    });
+}
+
+$("#mbtnnewprofesion").click(function (){
+    $('#frmMantprofesion').trigger("reset");
+
+    $("#modalMantprofesion").modal('show');
+    
+    $('#mhdnAccionprofesion').val('N');
+});
+
+$('#modalMantprofesion').on('show.bs.modal', function (e) {
+    $('#frmMantprofesion').validate({        
+        rules: {
+            txtdesprofesion: {
+              required: true,
+            },
+        },
+        messages: {
+            txtdesprofesion: {
+              required: "Por Favor ingrese Nombre de la Profesion"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantprofesion');
+            var request = $.ajax({
+                url:$('#frmMantprofesion').attr("action"),
+                type:$('#frmMantprofesion').attr("method"),
+                data:$('#frmMantprofesion').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                      
+                    listcboProfesion();
+
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCMantprofesion').click();    
+                });
+            });
+            return false;
+        }
+    });
+});
+
+listcboArea = function(v_ccia){    
+    var params = { 
+        "ccia" : v_ccia
+    }; 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcboarea",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#mcboarea').html(result);
+        },
+        error: function(){
+            a
+            lert('Error, No se puede autenticar por error = mcboarea');
+        }
+    });
+}
+
+$('#mcboarea').change(function(){    
+    var vccia = $('#hrdcia').val();
+    var vcarea = $('#mcboarea').val();
+    listcboSubarea(vccia,vcarea);
+});
+
+listcboSubarea = function(v_ccia,v_carea){    
+    var params = { 
+        "ccia" : v_ccia,
+        "carea" : v_carea
+    }; 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbosubarea",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#mcbosubarea').html(result);
+        },
+        error: function(){
+            a
+            lert('Error, No se puede autenticar por error = mcbosubarea');
+        }
+    });
+}
+
+listcboCargo = function(){    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbocargo",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcbocargo').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = mcbocargo');
+        }
+    });
+}
+
+$("#mbtnnewcargo").click(function (){
+    $('#frmMantcargo').trigger("reset");
+
+    $("#modalMantcargo").modal('show');
+    
+    $('#mhdnAccioncargo').val('N');
+});
+
+$('#modalMantcargo').on('show.bs.modal', function (e) {
+    $('#frmMantcargo').validate({        
+        rules: {
+            txtdescargo: {
+              required: true,
+            },
+        },
+        messages: {
+            txtdescargo: {
+              required: "Por Favor ingrese Nombre del Cargo"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantcargo');
+            var request = $.ajax({
+                url:$('#frmMantcargo').attr("action"),
+                type:$('#frmMantcargo').attr("method"),
+                data:$('#frmMantcargo').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                      
+                    listcboCargo();
+
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCMantcargo').click();    
+                });
+            });
+            return false;
+        }
+    });
+});
+
 $('#txtFInicio').on('change.datetimepicker',function(e){	
     
     $('#txtFTermino').datetimepicker({
@@ -267,4 +672,6 @@ $('#txtFInicio').on('change.datetimepicker',function(e){
     
 
 });
+
+
 
