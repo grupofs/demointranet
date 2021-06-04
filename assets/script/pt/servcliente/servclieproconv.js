@@ -17,8 +17,8 @@ listEquipo= function(){
         "bJQueryUI"     : true,
         "scrollResize"  : true,
         "scrollY"     	: "400px",
-        "scrollX"     	: true, 
         "scrollCollapse": true,
+        "scrollX"     	: true, 
         'AutoWidth'     : false,
         "paging"      	: false,
         "info"        	: true,
@@ -93,67 +93,7 @@ listEquipo= function(){
     }).draw();  
     otblListEquipos.column(0).visible( false ); 
 };
-/* DETALLE TRAMITES 
-$('#tblListEquipos tbody').on( 'click', 'td.details-control', function () {
-            
-   // var tr = $(this).closest('tr');
-    var tr = $(this).parents('tr');
-    var row = otblListEquipos.row(tr);
-    var rowData = row.data();
-    
-    if ( row.child.isShown() ) {                    
-        row.child.hide();
-        tr.removeClass( 'details' );
-    }
-    else {
-        otblListEquipos.rows().every(function(){
-            // If row has details expanded
-            if(this.child.isShown()){
-                // Collapse row details
-                this.child.hide();
-                $(this.node()).removeClass('details');
-            }
-        })
-        row.child( 
-           '<table id="tblListProductos" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
-           '<thead style="background-color:#FFFFFF;"><tr><th>NOMBRE</th><th>ENVASE</th><th>TIPO</th><th>DIMENSIONES</th><th>PROCAL</th></tr></thead><tbody>' +
-            '</tbody></table>').show();
 
-            otblListProductos = $('#tblListProductos').DataTable({
-                "bJQueryUI": true,
-                'bStateSave': true,
-                'scrollY':        false,
-                'scrollX':        true,
-                'scrollCollapse': false,
-                'bDestroy'    : true,
-                'paging'      : false,
-                'info'        : false,
-                'filter'      : false,   
-                'stateSave'   : true,
-                'ajax'        : {
-                    "url"   : baseurl+"pt/cservcliente/getproconvproducto/",
-                    "type"  : "POST", 
-                    "data": function ( d ) {
-                        d.ccliente = rowData.ccliente;
-                        d.idinforme = rowData.idptinforme;
-                        d.idregistro = rowData.idptregistro;
-                        d.idregestudio = rowData.idptregestudio;
-                    },     
-                    dataSrc : ''        
-                },
-                'columns'     : [
-                    {"orderable": false, data: 'PRODUCTO'},
-                    {"orderable": false, data: 'ENVASE'},
-                    {"orderable": false, data: 'TIPO'},
-                    {"orderable": false, data: 'DIMENSION'},
-                    {"orderable": false, data: 'NROPROCAL'},
-                              
-                ], 
-            });
-
-        tr.addClass('details');
-    }
-});*/
 /* COMPRIMIR GRUPO */
 $('#tblListEquipos tbody').on('click', 'tr.dtrg-group', function () {
     var name = $(this).data('name');
@@ -161,6 +101,7 @@ $('#tblListEquipos tbody').on('click', 'tr.dtrg-group', function () {
     otblListEquipos.draw(true);
 }); 
 
+//$('#contenido').find(".dataTables_scrollBody").css('height', $('#contenido').height() - 20);
 
 listProducto= function(){    
 
@@ -171,8 +112,7 @@ listProducto= function(){
         "bJQueryUI"     : true,
         "scrollResize"  : true,
         "scrollY"     	: "400px",
-        "scrollX"     	: true,
-        "scrollCollapse": true, 
+        "scrollX"     	: true, 
         'AutoWidth'     : true,
         "paging"      	: false,
         "info"        	: true,

@@ -36,7 +36,7 @@
                     <div class="card-header">
                         <h3 class="card-title">ESTUDIO DE DISTRIBUCIÓN DE TEMPERATURA</h3>
                     </div>                
-                    <div class="card-body" style="overflow-x: scroll;">
+                    <div id="contenido" class="card-body" style="overflow-x: scroll;">
                         <table id="tblListEquipos" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
