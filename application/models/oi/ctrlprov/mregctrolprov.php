@@ -10,7 +10,7 @@ class Mregctrolprov extends CI_Model {
    /** CONTROL DE PROVEEDORES **/ 
     public function getcboclieserv() { // Visualizar Clientes del servicio en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcboclieserv()";
+        $procedure = "call usp_oi_ctrlprov_getcboclieserv()";
 		$query = $this->db-> query($procedure);
         
         if ($query->num_rows() > 0) {
@@ -28,7 +28,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcboprovxclie($parametros) { // Visualizar Proveedor por cliente en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcboprovxclie(?)";
+        $procedure = "call usp_oi_ctrlprov_getcboprovxclie(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -46,7 +46,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcbomaqxprov($parametros) { // Visualizar Maquilador por proveedor en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcbomaqxprov(?)";
+        $procedure = "call usp_oi_ctrlprov_getcbomaqxprov(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -64,7 +64,7 @@ class Mregctrolprov extends CI_Model {
     }	
     public function getcboinspector($parametros) { // Visualizar Clientes del servicio en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcboinspector(?)";
+        $procedure = "call usp_oi_ctrlprov_getcboinspector(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -117,7 +117,7 @@ class Mregctrolprov extends CI_Model {
         }	
     }
     public function getbuscarctrlprov($parametros) { // Recupera Listado de Propuestas        
-		$procedure = "call usp_at_ctrlprov_getbuscarctrlprov(?,?,?,?,?,?,?,?,?)";
+		$procedure = "call usp_oi_ctrlprov_getbuscarctrlprov(?,?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -127,7 +127,7 @@ class Mregctrolprov extends CI_Model {
 		}	
     }
     public function getrecuperainsp($parametros) { // Recupera Listado de Propuestas        
-		$procedure = "call usp_at_ctrlprov_getrecuperainsp(?)";
+		$procedure = "call usp_oi_ctrlprov_getrecuperainsp(?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -138,7 +138,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcboregestable($parametros) { // Visualizar Proveedor por cliente en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcboregestable(?,?,?,?)";
+        $procedure = "call usp_oi_ctrlprov_getcboregestable(?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -227,7 +227,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcbotipoestable() { // Listar Ensayos	
         $sql = "select ctipoestablecimiento, dtipoestablecimiento 
-                from mtipoestablecimiento where ccompania = '1'  
+                from mtipoestablecimiento where ccompania = '2'  
                 order by dtipoestablecimiento asc ;";
         $query  = $this->db->query($sql);
         
@@ -262,7 +262,7 @@ class Mregctrolprov extends CI_Model {
     public function setregctrlprov($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_at_ctrlprov_setpcauditoriainspeccion(?,?,?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_oi_ctrlprov_setpcauditoriainspeccion(?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -278,7 +278,7 @@ class Mregctrolprov extends CI_Model {
     
     public function getcbosistemaip() { // Visualizar Sistema en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcbosistemaip()";
+        $procedure = "call usp_oi_ctrlprov_getcbosistemaip()";
 		$query = $this->db-> query($procedure);
         
         if ($query->num_rows() > 0) {
@@ -296,7 +296,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcborubroip($parametros) { // Visualizar Rubro en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcborubroip(?)";
+        $procedure = "call usp_oi_ctrlprov_getcborubroip(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -314,7 +314,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcbochecklist($parametros) { // Visualizar Checklist en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcbochecklist(?,?,?)";
+        $procedure = "call usp_oi_ctrlprov_getcbochecklist(?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -332,7 +332,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcboformula($parametros) { // Visualizar Formula en CBO	
         
-        $procedure = "call usp_at_ctrlprov_getcboformula(?)";
+        $procedure = "call usp_oi_ctrlprov_getcboformula(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -350,7 +350,7 @@ class Mregctrolprov extends CI_Model {
     }
     public function getcbocriterio($parametros) { // Visualizar Criterio en CBO	
         
-        $procedure = "call usp_at_audi_getcbocriterio(?)";
+        $procedure = "call usp_oi_audi_getcbocriterio(?)";
 		$query = $this->db-> query($procedure,$parametros);
         
         if ($query->num_rows() > 0) {
@@ -367,7 +367,7 @@ class Mregctrolprov extends CI_Model {
         }	
     }
     public function getcbomodinforme() { // Listar Ensayos	
-        $sql = "select cmodeloinforme,dmodelo from mmodeloinforme where ccompania = '1' and carea = '01' and cservicio = '02';";
+        $sql = "select cmodeloinforme,dmodelo from mmodeloinforme where ccompania = '2' and carea = '01' and cservicio = '01';";
         $query  = $this->db->query($sql);
         
         if ($query->num_rows() > 0) {
@@ -440,7 +440,7 @@ class Mregctrolprov extends CI_Model {
     public function setreginspeccion($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_at_ctrlprov_setpdauditoriainspeccion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_oi_ctrlprov_setpdauditoriainspeccion(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)

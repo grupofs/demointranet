@@ -211,13 +211,11 @@ listarBusqueda = function(){
             {"orderable": false, 
                 render:function(data, type, row){            
                     if(row.SCOTIZACION == "S"){
-                        varCerrar = '<a id="aAbrirCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Abrir" style="cursor:pointer; color:blue;"><span class="far fa-folder-open fa-2x" aria-hidden="true"> </span></a>'
+                        varCerrar = '<a title="Editar" style="cursor:pointer; color:green;" onClick="selRecep(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\',\'' + row.DCLIENTE + '\',\'' + row.NROCOTI + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'
                     }else{
-                        varCerrar = '<a id="aCerrarCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Cerrar" style="cursor:pointer; color:red;"><span class="far fa-folder fa-2x" aria-hidden="true"> </span></a>'
+                        varCerrar = '<a id="aCerrarCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" dclie="'+row.DCLIENTE+'" ncoti="'+row.NROCOTI+'" title="Recepción" style="cursor:pointer; color:red;"><span class="fas fa-folder-plus fa-2x" aria-hidden="true"> </span></a>'
                     };
                     return '<div class="text-left" >' +
-                        '<a title="Recepcion" style="cursor:pointer; color:green;" onClick="selRecep(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\',\'' + row.DCLIENTE + '\',\'' + row.NROCOTI + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
-                        '&nbsp;&nbsp;'+
                         varCerrar
                     '</div>';
                 }
@@ -294,16 +292,16 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
                 '</tbody></table>').show();
 
                 otblListdetrecepcion = $('#tblListdetrecepcion').DataTable({
-                    "bJQueryUI": true,
-                    'bStateSave': true,
-                    'scrollY':        false,
-                    'scrollX':        true,
+                    "bJQueryUI"     : true,
+                    'bStateSave'    : true,
+                    'scrollY'       : false,
+                    'scrollX'       : true,
                     'scrollCollapse': false,
-                    'bDestroy'    : true,
-                    'paging'      : false,
-                    'info'        : false,
-                    'filter'      : false,   
-                    'stateSave'   : true,
+                    'bDestroy'      : true,
+                    'paging'        : false,
+                    'info'          : false,
+                    'filter'        : false,   
+                    'stateSave'     : true,
                     'ajax'        : {
                         "url"   : baseurl+"lab/recepcion/crecepcion/getlistdetrecepcion",
                         "type"  : "POST", 
@@ -381,7 +379,7 @@ selRecep= function(IDCOTIZACION,NVERSION,DCLIENTE,NROCOTI){
     document.querySelector('#lblclie').innerText = DCLIENTE;
     document.querySelector('#lblcoti').innerText = NROCOTI;
      
-    recuperaListproducto();
+    recuperaListproducto(IDCOTIZACION,NVERSION);
     /*$('#btnParticiopantes').show();*/
 };
 
@@ -391,15 +389,17 @@ $("body").on("click","#aCerrarCoti",function(event){
     
     IDCOTI = $(this).attr("href");
     NVERSION = $(this).attr("nver");
+    DCLIENTE = $(this).attr("dclie");
+    NROCOTI = $(this).attr("ncoti");
     
     Swal.fire({
-        title: 'Confirmar Cerrar',
-        text: "¿Está seguro de Cerrar la Cotizacion?",
+        title: 'Confirmar Apertura de Recepcion ',
+        text: "¿Está seguro de Aperturar de Recepcion?",
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, cerrarlo!'
+        confirmButtonText: 'Si, Aperturarlo!'
     }).then((result) => {
         if (result.value) {
             $.post(baseurl+"lab/coti/ccotizacion/cerrarcotizacion/", 
@@ -408,8 +408,17 @@ $("body").on("click","#aCerrarCoti",function(event){
                 nversion        : NVERSION,
             },      
             function(data){     
-                otblListCotizacion.ajax.reload(null,false); 
-                Vtitle = 'Se Cerro Correctamente';
+                $('#tablab a[href="#tablab-reg"]').tab('show'); 
+                $('#frmRegCoti').trigger("reset");
+                $('#hdnAccionregcoti').val('A'); 
+                $('#mtxtidcotizacion').val(IDCOTI); 
+                $('#mtxtnroversion').val(NVERSION);
+              
+                document.querySelector('#lblclie').innerText = DCLIENTE;
+                document.querySelector('#lblcoti').innerText = NROCOTI;
+                listarBusqueda(); 
+                recuperaListproducto(IDCOTI,NVERSION);
+                Vtitle = 'Se Aperturo Correctamente';
                 Vtype = 'success';
                 sweetalert(Vtitle,Vtype);      
             });
@@ -453,7 +462,7 @@ $('#btnRetornarLista').click(function(){
     //$('#btnBuscar').click();
 });
 
-recuperaListproducto = function(){
+recuperaListproducto = function(IDCOTIZACION,NVERSION){
     otblListProducto = $('#tblListProductos').DataTable({         
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -474,8 +483,8 @@ recuperaListproducto = function(){
             "url"   : baseurl+"lab/recepcion/crecepcion/getrecepcionmuestra/",
             "type"  : "POST", 
             "data": function ( d ) {
-                d.idcoti    = $('#mtxtidcotizacion').val(); 
-                d.nversion  = $('#mtxtnroversion').val();  
+                d.idcoti    = IDCOTIZACION; 
+                d.nversion  = NVERSION;  
             },     
             dataSrc : ''        
         },
@@ -554,9 +563,7 @@ recuperaListproducto = function(){
     }).draw();
 
     $('#tblListProductos tbody').on( 'click', 'tr.group', function () {
-        var val = $(this).closest('tr').find('td:eq(0)').text();
-
-        
+        var val = $(this).closest('tr').find('td:eq(0)').text();        
         var nro = $(this).closest('tr').find('td:eq(1)').text().substr(7,17);
         
         $('#modalFechaOT').modal({show:true});
@@ -655,7 +662,7 @@ $('#frmFechaOT').submit(function(event){
             Vtitle = 'Grabo Correctamente!!';
             Vtype = 'success';
             sweetalert(Vtitle,Vtype);        
-            $('#mbtnGFechaOT').click();
+            $('#mbtnCFechaOT').click();
         }
     });
 });
@@ -749,7 +756,10 @@ $('#btngenerarOT').click(function(){
 
     var IDPRODUCTO;
     var varsot = 'N';
+    var varidot = null;
     var CUSU = $('#mtxtcusuario').val();
+
+    var res;
 
     Swal.fire({
         title: 'Confirmar Generar OT',
@@ -772,10 +782,12 @@ $('#btngenerarOT').click(function(){
                 
                 if(var_NROORDEN == ''){
                     if(varsot == 'N'){
-                        generarOT(IDCOTIZACION,NVERSION,CUSU); 
+                        varidot = generarResult(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU,varidot,varsot);  
                         varsot = 'S';
+                    }else{
+                        varidot = generarResult(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU,varidot,varsot);
                     }
-                    generarResult(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU); 
+                     
                 }else{
                     alert("La muestra "+IDMUESTRA+", Seleccionada ya tiene OT");
                     return;
@@ -791,9 +803,16 @@ generarOT = function(IDCOTIZACION,NVERSION,CUSU){
         cinternocotizacion    : IDCOTIZACION,
         nversioncotizacion    : NVERSION,
         cusuario : CUSU,
+    },  
+    function(data){ 
+        var c = JSON.parse(data);
+        $.each(c,function(i,item){ 
+            return item.id; 
+        })      
     });
 }
-generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU){      
+generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU,IDOT,VARSOT){  
+         
     $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajoresult", 
     {
         cinternocotizacion    : IDCOTIZACION,
@@ -801,7 +820,16 @@ generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU){
         nordenproducto  : IDPRODUCTO,
         cmuestra  : IDMUESTRA,
         cusuario : CUSU,
+        cinternoordenservicio : IDOT,
+        varsot : VARSOT,
+    },  
+    function(data){ 
+        var c = JSON.parse(data);
+        $.each(c,function(i,item){ 
+            return item.id; 
+        })      
     });
+    
 }
 generarOTMensajeOK = function(){ 
     otblListProducto.ajax.reload(null,false); 

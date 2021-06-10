@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Cregctrolprov extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
-		$this->load->model('at/ctrlprov/mregctrolprov');
+		$this->load->model('oi/ctrlprov/mregctrolprov');
 		$this->load->model('mglobales');
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));
@@ -55,9 +55,9 @@ class Cregctrolprov extends CI_Controller {
         
 		$varnull = 	'';
 
-		$ccia 			= '1';
+		$ccia 			= '2';
 		$carea 			= '01';
-		$cservicio 		= '02';
+		$cservicio 		= '01';
 		$fini       	= $this->input->post('fdesde');
 		$ffin       	= $this->input->post('fhasta');
 		$ccliente   	= $this->input->post('ccliente');
@@ -214,8 +214,7 @@ class Cregctrolprov extends CI_Controller {
 		$varnull = '';
 		
 		$cauditoriainspeccion 	= $this->input->post('mtxtidinsp');	
-		$fservicio 				= $this->input->post('mfechainsp');
-		$fechaservicio 			= $this->input->post('txtFInsp');	
+		$fservicio 				= $this->input->post('txtFInsp');	
 		$cusuarioconsultor 		= $this->input->post('cboinspinspector');	
 		$cnorma 				= $this->input->post('cboinspsistema');	
 		$csubnorma 				= $this->input->post('cboinsprubro');	
@@ -231,8 +230,7 @@ class Cregctrolprov extends CI_Controller {
         
         $parametros = array(
             '@cauditoriainspeccion' => $cauditoriainspeccion,
-            '@fservicio' 			=> ($this->input->post('mfechainsp') == '') ? '1900-01-01' : substr($fservicio, 6, 4).'-'.substr($fservicio,3 , 2).'-'.substr($fservicio, 0, 2),
-            '@fechaservicio'   		=> ($this->input->post('txtFInsp') == 'Sin Fecha') ? '1900-01-01' : substr($fechaservicio, 6, 4).'-'.substr($fechaservicio,3 , 2).'-'.substr($fechaservicio, 0, 2),
+            '@fservicio'   			=> ($this->input->post('txtFInsp') == 'Sin Fecha') ? '1900-01-01' : substr($fservicio, 6, 4).'-'.substr($fservicio,3 , 2).'-'.substr($fservicio, 0, 2),
             '@cusuarioconsultor'   	=> ($this->input->post('cboinspinspector') == $varnull) ? null : $cusuarioconsultor,
             '@cnorma'   			=> ($this->input->post('cboinspsistema') == $varnull) ? null : $cnorma,
             '@csubnorma'   			=> ($this->input->post('cboinsprubro') == $varnull) ? null : $csubnorma,

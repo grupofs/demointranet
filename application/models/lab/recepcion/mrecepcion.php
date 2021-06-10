@@ -69,7 +69,7 @@ class Mrecepcion extends CI_Model {
     public function setordentrabajoresult($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setordentrabajoresult(?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setordentrabajoresult(?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -88,6 +88,8 @@ class Mrecepcion extends CI_Model {
         $data = array(
             "FORDENTRABAJO" => $fordentrabajo,
             "NORDENTRABAJO" => $nordentrabajo,
+            "FORDENSERVICIO" => $fordentrabajo,
+            "NORDENSERVICIO" => $nordentrabajo,
         );
 
         $this->db->where("cinternoordenservicio", $mhdncinternoordenservicio);
