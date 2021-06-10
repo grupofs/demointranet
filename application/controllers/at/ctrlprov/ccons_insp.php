@@ -53,8 +53,6 @@ class ccons_insp extends FS_Controller
 	public function search()
 	{
 		$ccia = $this->input->post('ccia');
-		$area = $this->input->post('area');
-		$cservicio = $this->input->post('cservicio');
 		$afecha = (int)$this->input->post('afecha');
 		$fini = $this->input->post('fini');
 		$ffin = $this->input->post('ffin');
@@ -62,31 +60,28 @@ class ccons_insp extends FS_Controller
 		$cclienteprov = $this->input->post('filtro_proveedor');
 		$cclientemaquila = $this->input->post('filtro_maquilador');
 		$careacliente = $this->input->post('filtro_cliente_area');
-		$ubigeoprov = null; // $this->input->post('ubigeoprov');
-		$ubigeomaquila = null; // $this->input->post('ubigeomaquila');
 		$tipoestado = $this->input->post('filtro_tipo_estado');
-		$cond = $this->input->post('cond');
 		$peligro = $this->input->post('filtro_peligro');
-		$nrorow = $this->input->post('nrorow');
 		$sevalprod = $this->input->post('sevalprod');
-		$ultinsp = $this->input->post('ultinsp');
+		$filtro_calificacion = $this->input->post('filtro_calificacion');
+		$establecimientoMaqui = $this->input->post('filtro_establecimiento_maqui');
+		$dirEstablecimientoMaqui = $this->input->post('filtro_dir_establecimiento_maqui');
+		$nroInforme = $this->input->post('filtro_nro_informe');
 
 		$inspecciones = '';
 		if (!empty($ccliente)) {
 			$area = self::AREA;
 			$cservicio = self::SERVICIO;
-//			$ccliente = is_null($ccliente) ? '00005' : $ccliente;
 			$cclienteprov = (empty($cclienteprov)) ? '%' : $cclienteprov;
 			$cclientemaquila = (empty($cclientemaquila)) ? '%' : $cclientemaquila;
-			$careacliente = (empty($careacliente)) ? '%' : $careacliente;
-			$ubigeoprov = is_null($ubigeoprov) ? '%' : $ubigeoprov;
-			$ubigeomaquila = is_null($ubigeomaquila) ? '%' : $ubigeomaquila;
-			$tipoestado = (empty($tipoestado)) ? '%' : $tipoestado;
-			$cond = is_null($cond) ? '0' : $cond;
+			$careacliente = (empty($careacliente)) ? [] : $careacliente;
+			$establecimientoMaqui = is_null($establecimientoMaqui) ? '%' : "%{$establecimientoMaqui}%";
+			$dirEstablecimientoMaqui = is_null($dirEstablecimientoMaqui) ? '%' : "%{$dirEstablecimientoMaqui}%";
+			$nroInforme = is_null($nroInforme) ? '%' : "%{$nroInforme}%";
+			$tipoestado = (empty($tipoestado)) ? [] : $tipoestado;
 			$peligro = empty($peligro) ? '%' : $peligro;
-			$nrorow = is_null($nrorow) ? 0 : $nrorow;
 			$sevalprod = is_null($sevalprod) ? '0' : $sevalprod;
-			$ultinsp = is_null($ultinsp) ? '0' : $ultinsp;
+			$filtro_calificacion = is_null($filtro_calificacion) ? [] : $filtro_calificacion;
 
 			// Se verifica si filtrara con fecha o no
 			$now = \Carbon\Carbon::now('America/Lima')->format('Y-m-d');
@@ -96,32 +91,35 @@ class ccons_insp extends FS_Controller
 			} else {
 				// En caso sea un formato invalido se tomara la fecha de hoy
 				$fini = (validateDate($fini, 'd/m/Y'))
-					? \Carbon\Carbon::createFromFormat('d/m/Y', $fini, 'America/Lima')->format('Y-m-m')
+					? \Carbon\Carbon::createFromFormat('d/m/Y', $fini, 'America/Lima')->format('Y-m-d')
 					: $now;
 				$ffin = (validateDate($ffin, 'd/m/Y'))
-					? \Carbon\Carbon::createFromFormat('d/m/Y', $ffin, 'America/Lima')->format('Y-m-m')
+					? \Carbon\Carbon::createFromFormat('d/m/Y', $ffin, 'America/Lima')->format('Y-m-d')
 					: $now;
 			}
 
-			$inspecciones = $this->mcons_insp->buscarInspecciones([
-				"@CCIA" => $ccia,
-				"@CAREA" => $area,
-				"@CSERVICIO" => $cservicio,
-				"@FINI" => $fini,
-				"@FFIN" => $ffin,
-				"@CCLIENTE" => $ccliente,
-				"@CCLIENTEPROV" => $cclienteprov,
-				"@CCLIENTEMAQUILA" => $cclientemaquila,
-				"@CAREACLIENTE" => $careacliente,
-				"@UBIGEOPROV" => $ubigeoprov,
-				"@UBIGEOMAQUILA" => $ubigeomaquila,
-				"@TIPOESTADO" => $tipoestado,
-				"@COND" => $cond,
-				"@PELIGRO" => $peligro,
-				"@NROROW" => $nrorow,
-				"@SEVALPROD" => $sevalprod,
-				"@ULTINSP" => $ultinsp
-			]);
+			$calificacion = clearLabel($filtro_calificacion, false);
+			$tipoestado = clearLabel($tipoestado, false);
+			$careacliente = clearLabel($careacliente, false);
+
+			$inspecciones = $this->mcons_insp->buscarInspecciones(
+				$ccia,
+				$area,
+				$cservicio,
+				$ccliente,
+				$cclienteprov,
+				$cclientemaquila,
+				$careacliente,
+				$establecimientoMaqui,
+				$dirEstablecimientoMaqui,
+				$nroInforme,
+				$tipoestado,
+				$fini,
+				$ffin,
+				$peligro,
+				$sevalprod,
+				$calificacion
+			);
 		}
 		echo json_encode(['items' => $inspecciones]);
 	}
@@ -146,7 +144,6 @@ class ccons_insp extends FS_Controller
 	 * Recurso para obtener el PDF
 	 * @param string $codigo
 	 * @param string $pdf
-	 * @return \Dompdf\Dompdf
 	 */
 	private function _pdf($codigo, $fecha)
 	{
@@ -166,33 +163,100 @@ class ccons_insp extends FS_Controller
 		$cuadro2 = $this->mcons_insp->pdfCuadro2($data);
 		$grafico2 = $this->mcons_insp->pdfGrafico2($data);
 		$imgGrafico1 = '';
+		$unicaInspeccion = true;
 		if (!empty($grafico1)) {
+			$arrayLabel = [];
+			$arrayData = [];
+			$arrayColor = [];
+			if (!empty($grafico1->TF1)) {
+				$arrayLabel[] = date('d/m/Y', strtotime($grafico1->TF1)) . " " . $grafico1->CERT1;
+				$arrayData[] = $grafico1->TR1;
+				$arrayColor[] = getColorRgba($grafico1->TR1);
+			} else {
+				$arrayLabel[] = '';
+				$arrayData[] = -1; // $grafico1->TR2;
+				$arrayColor[] = "'rgba(255,255,255,1)'";
+			}
+			if (!empty($grafico1->TF2)) {
+				$unicaInspeccion = false;
+				$arrayLabel[] = date('d/m/Y', strtotime($grafico1->TF2)) . " " . $grafico1->CERT2;
+				$arrayData[] = $grafico1->TR2;
+				$arrayColor[] = getColorRgba($grafico1->TR2);
+			} else {
+				$arrayLabel[] = '';
+				$arrayData[] = -1; // $grafico1->TR2;
+				$arrayColor[] = "'rgba(255,255,255,1)'";
+			}
+			if (!empty($grafico1->TF3)) {
+				$unicaInspeccion = false;
+				$arrayLabel[] = date('d/m/Y', strtotime($grafico1->TF3)) . " " . $grafico1->CERT3;
+				$arrayData[] = $grafico1->TR3;
+				$arrayColor[] = getColorRgba($grafico1->TR3);
+			} else {
+				$arrayLabel[] = '';
+				$arrayData[] = -1; // $grafico1->TR2;
+				$arrayColor[] = "'rgba(255,255,255,1)'";
+			}
+			if (!empty($grafico1->TF4)) {
+				$unicaInspeccion = false;
+				$arrayLabel[] = date('d/m/Y', strtotime($grafico1->TF4)) . " " . $grafico1->CERT4;
+				$arrayData[] = $grafico1->TR4;
+				$arrayColor[] = getColorRgba($grafico1->TR4);
+			} else {
+				$arrayLabel[] = '';
+				$arrayData[] = -1; // $grafico1->TR2;
+				$arrayColor[] = "'rgba(255,255,255,1)'";
+			}
+			if (!empty($grafico1->TF5)) {
+				$unicaInspeccion = false;
+				$arrayLabel[] = date('d/m/Y', strtotime($grafico1->TF5)) . " " . $grafico1->CERT5;
+				$arrayData[] = $grafico1->TR5;
+				$arrayColor[] = getColorRgba($grafico1->TR5);
+			} else {
+				$arrayLabel[] = '';
+				$arrayData[] = -1; // $grafico1->TR2;
+				$arrayColor[] = "'rgba(255,255,255,1)'";
+			}
 			$imgGrafico1 = getLinkFormChartBar(
-				[
-					$grafico1->TF1 . ' ' . $grafico1->CERT1,
-					$grafico1->TF2 . ' ' . $grafico1->CERT2,
-					$grafico1->TF3 . ' ' . $grafico1->CERT3,
-					$grafico1->TF4 . ' ' . $grafico1->CERT4,
-					$grafico1->TF5 . ' ' . $grafico1->CERT5,
-				],
-				[
-					floatval($grafico1->TR1),
-					floatval($grafico1->TR2),
-					floatval($grafico1->TR3),
-					floatval($grafico1->TR4),
-					floatval($grafico1->TR5),
-				]
+				$arrayLabel,
+				$arrayData,
+				$arrayColor
 			);
+		}
+		$parrafoPrimeraInsp = '';
+		if ($unicaInspeccion) {
+			$parrafoPrimeraInsp = $this->mcons_insp->pdfPrimeraInsp($data);
 		}
 		$imgGrafico2 = '';
 		if (!empty($grafico2)) {
-			$totalRows = (count($grafico2) / 2);
-			$labels = range(1, $totalRows);
-			$dataMaximo = implode(',', getValueGraphic2($grafico2, 'máximo'));
+			$lenRows = count($grafico2);
+			$totalRows = ($lenRows / 2);
+			$labels = [];
+			$maxValue = 0;
+			foreach ($grafico2 as $key => $value) {
+				if (!in_array($value->dnumerador, $labels)) {
+					$labels[] = $value->dnumerador;
+				}
+				if ($value->mayor_val > $maxValue) {
+					$maxValue = $value->mayor_val;
+				}
+			}
+			$maxValue += 30; // Se aumenta 10 para poder mostrar el texto hacia arriba
+			$dataMaximo = implode(',', getValueGraphic2($grafico2, 'maximo'));
 			$dataObtenido = implode(',', getValueGraphic2($grafico2, 'obtenido'));
-			$datasets = "{label:'Maximo',data:[{$dataMaximo}]}";
-			$datasets .= ",{label:'Obtenido',data:[{$dataObtenido}]}";
-			$imgGrafico2 = getLinkFormChartBar2($labels, $datasets);
+			$backgroundColorMaximo = "'rgba(255,0,0,1)'";
+			$backgroundColorObtenido = "'rgba(0,128,0,1)'";
+			if ($lenRows == 4) {
+				$backgroundColorMaximo = "'rgba(255,0,0,1)','rgba(255,0,0,1)'";
+				$backgroundColorObtenido = "'rgba(0,128,0,1)','rgba(0,128,0,1)'";
+			}
+			if ($lenRows > 4) {
+				$backgroundColorMaximo = "'rgba(255,0,0,1)','rgba(255,0,0,1)','rgba(255,0,0,1)'";
+				$backgroundColorObtenido = "'rgba(0,128,0,1)','rgba(0,128,0,1)','rgba(0,128,0,1)'";
+			}
+			$datasets = "{label:'Maximo',data:[{$dataMaximo}],backgroundColor:[{$backgroundColorMaximo}]}";
+			$datasets .= ",{label:'Obtenido',data:[{$dataObtenido}],backgroundColor:[{$backgroundColorObtenido}]}";
+			$imgGrafico2 = getLinkFormChartBar2($labels, $datasets, $maxValue);
 		}
 		$cuadro3 = $this->mcons_insp->pdfCuadro3($data);
 		$cuadro4 = $this->mcons_insp->pdfCuadro4($data);
@@ -210,12 +274,22 @@ class ccons_insp extends FS_Controller
 		$escalaValoracion = $this->mcons_insp->pdfEscalaValoracion($data);
 		$parrafoExcluyentes = $this->mcons_insp->pdfParrafoRequisitos($data);
 		$requisitosExcluyentes = $this->mcons_insp->pdfRequisitoExcluyentes($data);
+		$inspector = $this->mcons_insp->getDatosInspector($data);
 		$peligros = $this->mcons_insp->pdfPeligros($data);
+		$excluyentes = $this->mcons_insp->pdfExcluyentes($data);
+		$rutafirma = null;
+		if (!empty($inspector)) {
+			$rutafirma = 'http://plataforma.grupofs.com:82/demointranet/FTPfileserver/Imagenes/internos/firmas/' . $inspector->rutafirma;
+			if (file_exists($rutafirma)) {
+				$rutafirma = base64ResourceConvert($rutafirma);
+			}
+		}
 		// Contenedor de la ficha tecnica
 		$content = $this->load->view('at/ctrlprov/vcons_insp_pdf', [
 			'caratula' => $caratula,
 			'parrafo1Pt1' => $parrafo1Pt1,
 			'parrafo1Pt2' => $parrafo1Pt2,
+			'parrafoPrimeraInsp' => $parrafoPrimeraInsp,
 			'cuadro1' => $cuadro1,
 			'parrafo2' => $parrafo2,
 			'imgGrafico1' => $imgGrafico1,
@@ -235,8 +309,13 @@ class ccons_insp extends FS_Controller
 			'parrafoExcluyentes' => $parrafoExcluyentes,
 			'requisitosExcluyentes' => $requisitosExcluyentes,
 			'peligros' => $peligros,
+			'rutafirma' => $rutafirma,
+			'inspector' => $inspector,
+			'excluyentes' => $excluyentes,
+			'unicaInspeccion' => $unicaInspeccion,
 		], TRUE);
 		$html2pdf = new \Spipu\Html2Pdf\Html2Pdf();
+//		$html2pdf->setDefaultFont('arial');
 		$html2pdf->writeHTML($content);
 		return $html2pdf;
 	}
@@ -260,8 +339,17 @@ class ccons_insp extends FS_Controller
 			if (empty($inspeccioncab)) {
 				throw new Exception('La inspección cabecera no pudo ser encontrada.');
 			}
+
+			$caratula = $this->mcons_insp->pdfCaratula([
+				'@CAUDI' => $codigo, // '00000303',
+				'@FSERV' => $fecha, // '2020-10-09',
+			]);
+
+			$informe = $caratula->dinforme;
+			$dinforme = explode('/',$informe);
+
 			// codigo | fecha .pdf
-			$fileName = $codigo . str_replace('-', '', $fecha) . '.pdf';
+			$fileName = date('dmY', strtotime($fecha)) . '-' . $dinforme[0] . '.pdf';
 			$dompdf = $this->_pdf($codigo, $fecha);
 
 			// Separado por Archivos / cia|area|servicio / ccliente / caudi
@@ -348,10 +436,11 @@ class ccons_insp extends FS_Controller
 		]);
 		$contactos = $this->mcons_insp->getProveedorContactos([
 			'@AS_CCLIENTE' => $id_proveedor,
+			'@AS_CESTABLECIMIENTO' => (!empty($establecimiento)) ? $establecimiento->cestablecimientoprov : '',
 		]);
 		echo json_encode([
 			'proveedor' => $proveedor,
-			'establecimiento' => $establecimiento,
+			'establecimiento' => (!empty($establecimiento)) ? $establecimiento->ESTABLECIMIENTO : '',
 			'linea' => $linea,
 			'contactos' => $contactos,
 		]);

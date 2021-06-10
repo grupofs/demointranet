@@ -76,6 +76,10 @@ $(function () {
 						d.filtro_tipo_estado = $('#filtro_tipo_estado').val();
 						d.filtro_cliente_area = $('#filtro_cliente_area').val();
 						d.filtro_linea_proveedor = $('#filtro_linea_proveedor').val();
+						d.filtro_calificacion = $('#filtro_calificacion').val();
+						d.filtro_establecimiento_maqui = $('#filtro_establecimiento_maqui').val();
+						d.filtro_dir_establecimiento_maqui = $('#filtro_dir_establecimiento_maqui').val();
+						d.filtro_nro_informe = $('#filtro_nro_informe').val();
 						d.filtro_peligro = filtroPeligro;
 					},
 					dataSrc: function (data) {
@@ -93,24 +97,42 @@ $(function () {
 						render: function (data, type, row) {
 							const rowId = 'dropdown-' + row.CODIGO + row.FECHAINSPECCION;
 							let htmlRow = '<div class="dropdown">';
-							htmlRow += '<button type="button" class="btn btn-secondary dropdown-toggle" role="button" id="' + rowId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+							htmlRow += '<button type="button" class="btn btn-secondary btn-sm dropdown-toggle" role="button" id="' + rowId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 							htmlRow += '<i class="fa fa-bars" ></i> Opciones';
 							htmlRow += '</button>';
 							htmlRow += '<div class="dropdown-menu" aria-labelledby="' + rowId + '">';
 							let tipoEstado = String(row.TIPOESTADOSERVICIO).toLowerCase().trim();
-							console.log(tipoEstado);
-							if (tipoEstado === 'convalidado' || tipoEstado === 'concluido ok') {
-								if (row.DUBICACIONFILESERVERPDF) {
-									htmlRow += '<button type="button" class="dropdown-item download-pdf" data-link="' + row.DUBICACIONFILESERVERPDF + '" ><i class="fa fa-download" ></i> Descargar Informe Técnico</button>';
-								} else {
-									htmlRow += '<button type="button" class="dropdown-item open-pdf" data-codigo="' + row.CODIGO + '" data-fecha="' + row.FECHAINSPECCION + '" ><i class="fa fa-file-pdf" ></i> Ver Informe Técnico</button>';
+							if (tipoEstado === 'concluido ok') {
+								if (!row.DUBICACIONFILESERVERPDF) {
+									htmlRow += '<button type="button" class="btn btn-sm dropdown-item open-pdf" data-codigo="' + row.CODIGO + '" data-fecha="' + row.FECHAINSPECCION + '" ><i class="fa fa-file-pdf" ></i> Ver Informe Técnico</button>';
 								}
 							}
-							htmlRow += '<button type="button" class="dropdown-item ver-accion-correctiva" data-codigo="' + row.CODIGO + '" data-fecha="' + row.FECHAINSPECCION + '" ><i class="fa fa-th-list" ></i> Ver Acciones Correctivas</button>';
-							htmlRow += '<button type="button" class="dropdown-item ver-proveedor" data-codigo="' + row.CODIGO + '" data-proveedor="' + row.CPROVEEDOR + '" ><i class="fa fa-eye" ></i> Ver Proveedor</button>';
+							let DIRECCIONPROV = (row.DIRECCIONPROV) ? row.DIRECCIONPROV : '';
+							let ESTABLECIMIENTOPROV = (row.ESTABLECIMIENTOPROV) ? row.ESTABLECIMIENTOPROV : '';
+							let MAQUILADOR = (row.MAQUILADOR) ? row.MAQUILADOR : '';
+							let dirProvMaqui = (DIRECCIONPROV) ? ESTABLECIMIENTOPROV : ESTABLECIMIENTOPROV + ' - ' + MAQUILADOR;
+							htmlRow += '<button type="button" class="btn btn-sm dropdown-item ver-accion-correctiva" data-excel="' + row.DUBICACIONFILESERVERAC + '" data-codigo="' + row.CODIGO + '" data-fecha="' + row.FECHAINSPECCION + '" data-proveedor="' + row.PROVEEDOR + '" data-direccion="' + dirProvMaqui + '" ><i class="fa fa-th-list" ></i> Ver Acciones Correctivas</button>';
+							htmlRow += '<button type="button" class="btn btn-sm dropdown-item ver-proveedor" data-codigo="' + row.CODIGO + '" data-proveedor="' + row.CPROVEEDOR + '" ><i class="fa fa-eye" ></i> Datos del Proveedor</button>';
 							htmlRow += '</div>';
 							htmlRow += '</div>';
 							return htmlRow;
+						}
+					},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							if (row.DUBICACIONFILESERVER) {
+								return '<a href="' + baseurl + 'FTPfileserver/Archivos/' + row.DUBICACIONFILESERVER + '" target="_blank" class="btn btn-sm btn-success btn-block" ><i class="fa fa-folder" ></i> Ver Informe Convalidado</a>';
+							} else {
+								if (!row.DUBICACIONFILESERVERPDF) {
+									let tipoEstado = String(row.TIPOESTADOSERVICIO).toLowerCase().trim();
+									if (tipoEstado === 'concluido ok') {
+										return '<button type="button" class="btn btn-danger btn-sm btn-block close-pdf" data-codigo="' + row.CODIGO + '" data-fecha="' + row.FECHAINSPECCION + '" ><i class="fa fa-save"></i> Cerrar Informe</button>';
+									}
+								} else {
+									return '<a href="' + baseurl + 'FTPfileserver/Archivos/' + row.DUBICACIONFILESERVERPDF + '" target="_blank" class="btn btn-sm btn-success btn-block" ><i class="fa fa-file-pdf" ></i> Ver Informe Técnico</a>';
+								}
+							}
 						}
 					},
 					{data: 'CODIGO', orderable: false, targets: 1},
@@ -120,46 +142,120 @@ $(function () {
 							return moment(row.FECHAINSPECCION, 'YYYY-MM-DD').format('DD/MM/YYYY');
 						}
 					},
-					// {data: 'FECHAINSPECCION', orderable: false, targets: 2},
 					{
 						"orderable": false,
 						render: function (data, type, row) {
 							return moment(row.FCREACION, 'YYYY-MM-DD').format('DD/MM/YYYY');
 						}
 					},
-					// {data: 'FCREACION', orderable: false, targets: 3},
 					{data: 'CLIENTE', orderable: false, targets: 4},
-					{data: 'PROVEEDOR', orderable: false, targets: 5},
-					{data: 'RUC', orderable: false, targets: 6},
-					{data: 'DIRECCIONPROV', orderable: false, targets: 7},
-					{data: 'UBIGEOPROV', orderable: false, targets: 8},
-					{data: 'MAQUILADOR', orderable: false, targets: 9},
-					{data: 'DIRECCIONMAQUILA', orderable: false, targets: 10},
-					{data: 'UBIGEOMAQUILA', orderable: false, targets: 11},
-					{data: 'AREACLIENTE', orderable: false, targets: 12},
-					{data: 'LINEA', orderable: false, targets: 13},
-					{data: 'RESULTADOCHECKLIST', orderable: false, targets: 14},
-					{data: 'RESULTADOTEXTO', orderable: false, targets: 15},
-					{data: 'TAMANOEMPRESAPROV', orderable: false, targets: 16},
-					{data: 'TIPOESTADOSERVICIO', orderable: false, targets: 17},
-					{data: 'COMENTARIO', orderable: false, targets: 18},
-					{data: 'CERTIFICADORA', orderable: false, targets: 19},
-					{data: 'CERTIFICACION', orderable: false, targets: 20},
-					{data: 'SCERTIFICACION', orderable: false, targets: 21},
-					{data: 'LICENCIADEFUNCIONAMIENTO', orderable: false, targets: 22},
-					{data: 'ESTADOLICENCIADEFUNCIONAMIENTO', orderable: false, targets: 23},
-					{data: 'CONSULTOR', orderable: false, targets: 24},
-					{data: 'EMPRESAINSPECTORA', orderable: false, targets: 25},
-					{data: 'CONVALIDADO', orderable: false, targets: 26},
-					{data: 'ACCIONCORRECTIVA', orderable: false, targets: 27},
-					{data: 'dinformefinal', orderable: false, targets: 28},
-					{data: 'SEVALPROD', orderable: false, targets: 29},
-					{data: 'espeligro', orderable: false, targets: 30},
-					{data: 'CCHECKLIST', orderable: false, targets: 31},
-					{data: 'CHECKLIST', orderable: false, targets: 32},
-					{data: 'CERTIFICADORA', orderable: false, targets: 33},
-					{data: 'DSISTEMA', orderable: false, targets: 34},
-					{data: 'DSUBNORMA', orderable: false, targets: 35},
+					{data: 'nruc', orderable: false, targets: 5},
+					{data: 'PROVEEDOR', orderable: false, targets: 6},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let DIRECCIONPROV = (row.DIRECCIONPROV) ? row.DIRECCIONPROV : '';
+							let ESTABLECIMIENTOPROV = (row.ESTABLECIMIENTOPROV) ? row.ESTABLECIMIENTOPROV : '';
+							let MAQUILADOR = (row.MAQUILADOR) ? row.MAQUILADOR : '';
+							if (DIRECCIONPROV) {
+								return ESTABLECIMIENTOPROV;
+							} else {
+								return ESTABLECIMIENTOPROV + ' - ' + MAQUILADOR;
+							}
+						}
+					},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let DIRECCIONMAQUILA = (row.DIRECCIONMAQUILA) ? row.DIRECCIONMAQUILA : '';
+							let UBIGEOMAQUILA = (row.UBIGEOMAQUILA) ? row.UBIGEOMAQUILA : '';
+							let DIRECCIONPROV = (row.DIRECCIONPROV) ? row.DIRECCIONPROV : '';
+							let UBIGEOPROV = (row.UBIGEOPROV) ? row.UBIGEOPROV : '';
+							if (DIRECCIONPROV) {
+								return DIRECCIONPROV + ' ' + UBIGEOPROV;
+							} else {
+								return DIRECCIONMAQUILA + ' ' + UBIGEOMAQUILA;
+							}
+						}
+					},
+					{data: 'AREACLIENTE', orderable: false, targets: 6},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							if (String(row.espeligro).toUpperCase() === 'S') {
+								return '<span class="text-danger" >' + row.LINEA + '</span>';
+							}
+							return row.LINEA;
+						}
+					},
+					// {data: 'LINEA', orderable: false, targets: 7},
+					{data: 'TIPOESTADOSERVICIO', orderable: false, targets: 8},
+					{data: 'COMENTARIO', orderable: false, targets: 9},
+					{data: 'dinformefinal', orderable: false, targets: 10},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let RESULTADOCHECKLIST = (row.RESULTADOCHECKLIST) ? row.RESULTADOCHECKLIST + '%' : '';
+							let RESULTADOTEXTO = (row.RESULTADOTEXTO) ? row.RESULTADOTEXTO : '';
+							return RESULTADOCHECKLIST + '<br>' + RESULTADOTEXTO;
+						}
+					},
+					{data: 'ACCIONCORRECTIVA', orderable: false, targets: 12},
+					{data: 'CONSULTOR', orderable: false, targets: 13},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let CERTIFICADORA = (row.CERTIFICADORA) ? row.CERTIFICADORA : '';
+							let CERTIFICACION = (row.CERTIFICACION) ? row.CERTIFICACION : '';
+							if (CERTIFICADORA || CERTIFICACION) {
+								return CERTIFICADORA + '<br>' + CERTIFICACION;
+							}
+							let tipoEstado = String(row.TIPOESTADOSERVICIO).toLowerCase().trim();
+							let EMPRESAINSPECTORA = String(row.EMPRESAINSPECTORA).toLowerCase().trim();
+							if (tipoEstado === 'convalidado' && (
+								EMPRESAINSPECTORA === 'senasa' ||
+								EMPRESAINSPECTORA === 'digesa' ||
+								EMPRESAINSPECTORA === 'sanipes'
+							)) {
+								return row.EMPRESAINSPECTORACONV;
+							}
+						}
+					},
+					// {data: 'SCERTIFICACION', orderable: false, targets: 15},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let SCERTIFICACION = (row.SCERTIFICACION) ? row.SCERTIFICACION : '';
+							let EMPRESAINSPECTORA = String(row.EMPRESAINSPECTORA).toLowerCase().trim();
+							let tipoEstado = String(row.TIPOESTADOSERVICIO).toLowerCase().trim();
+							if (tipoEstado === 'convalidado' && (
+								EMPRESAINSPECTORA === 'senasa' ||
+								EMPRESAINSPECTORA === 'digemid' ||
+								EMPRESAINSPECTORA === 'digesa' ||
+								EMPRESAINSPECTORA === 'sanipes'
+							)) {
+								return 'SI TIENE';
+							} else {
+								return SCERTIFICACION;
+							}
+						}
+					},
+					{
+						"orderable": false,
+						render: function (data, type, row) {
+							let LICENCIADEFUNCIONAMIENTO = (row.LICENCIADEFUNCIONAMIENTO) ? row.LICENCIADEFUNCIONAMIENTO : '';
+							let ESTADOLICENCIADEFUNCIONAMIENTO = (row.ESTADOLICENCIADEFUNCIONAMIENTO) ? row.ESTADOLICENCIADEFUNCIONAMIENTO : '';
+							return ESTADOLICENCIADEFUNCIONAMIENTO + '<br>' + LICENCIADEFUNCIONAMIENTO;
+						}
+					},
+					{data: 'EMPRESAINSPECTORA', orderable: false, targets: 17},
+					{data: 'SEVALPROD', orderable: false, targets: 18},
+					{data: 'espeligro', orderable: false, targets: 19},
+					{data: 'CCHECKLIST', orderable: false, targets: 20},
+					{data: 'CHECKLIST', orderable: false, targets: 21},
+					{data: 'CERTIFICADORA', orderable: false, targets: 22},
+					{data: 'DSISTEMA', orderable: false, targets: 23},
+					{data: 'DSUBNORMA', orderable: false, targets: 24},
 				],
 				"columnDefs": [
 					{
@@ -203,25 +299,31 @@ $(function () {
 	/**
 	 * Cierra el PF
 	 */
-	objInsp.closePDF = function () {
-		const btn = $('#closePDF');
-		$.ajax({
-			url: BASE_URL + 'at/ctrlprov/ccons_insp/close_download',
-			method: 'POST',
-			data: objInsp.pdf,
-			dataType: 'json',
-			beforeSend: function () {
-				objPrincipal.botonCargando(btn);
-			}
-		}).done(function (res) {
-			objInsp.download(res.data.DUBICACIONFILESERVERPDF);
-			$('#modalPDF').modal('hide');
-			objInsp.search();
-		}).fail(function () {
-			objPrincipal.alert('error', 'Error en la descarga del archivo.', 'Vuelva a inentarlo más tarde.');
-		}).always(function () {
-			objPrincipal.liberarBoton(btn);
-		});
+	objInsp.closePDF = function (btn) {
+		if (objInsp.loading) {
+			objPrincipal.alert('info', 'Existe una carga pendiente! Intentalo más tarde.');
+		} else {
+			objInsp.loading = true;
+			$.ajax({
+				url: BASE_URL + 'at/ctrlprov/ccons_insp/close_download',
+				method: 'POST',
+				data: objInsp.pdf,
+				dataType: 'json',
+				beforeSend: function () {
+					objPrincipal.botonCargando(btn);
+				}
+			}).done(function (res) {
+				objInsp.download(res.data.DUBICACIONFILESERVERPDF);
+				$('#modalPDF').modal('hide');
+				objInsp.loading = false;
+				objInsp.search();
+			}).fail(function () {
+				objInsp.loading = false;
+				objPrincipal.alert('error', 'Error en la descarga del archivo.', 'Vuelva a inentarlo más tarde.');
+			}).always(function () {
+				objPrincipal.liberarBoton(btn);
+			});
+		}
 	};
 
 	/**
@@ -286,7 +388,7 @@ $(function () {
 			dataType: "JSON",
 		}).done(function(res) {
 			const items = res.items;
-			let options = '<option value="" ></option>';
+			let options = '';
 			if (items && Array.isArray(items)) {
 				items.forEach(function(item) {
 					options += '<option value="' + item.AREACLIENTE + '" >' + item.DAREACLIENTE + '</option>';
@@ -329,6 +431,7 @@ $(function () {
 			dataType: "JSON",
 		}).done(function(res) {
 			$('#filtro_tipo_estado').html(res);
+			$('#filtro_tipo_estado').val(0).trigger('change');
 		}).fail(function() {
 			objPrincipal.notify('warning', 'Hubo un error al carga los proveedor.');
 		});
@@ -360,53 +463,74 @@ $(function () {
 		const button = $(this);
 		const codigo = button.data('codigo');
 		const fecha = button.data('fecha');
-		$.ajax({
-			url: baseurl + 'at/ctrlprov/ccons_insp/get_accion_correctiva',
-			method: 'POST',
-			data: {
-				codigo: codigo,
-				fecha: fecha,
+		const proveedor = button.data('proveedor');
+		const dirProvMaqui = button.data('direccion');
+		const excel = button.data('excel');
+		objPrincipal.botonCargando(button);
+		const oTableLista = $('#tblAcciónCorrectiva').DataTable({
+			"processing"  	: true,
+			"bDestroy"    	: true,
+			"stateSave"     : true,
+			"bJQueryUI"     : true,
+			"scrollY"     	: "540px",
+			"scrollX"     	: true,
+			'AutoWidth'     : true,
+			"paging"      	: false,
+			"info"        	: true,
+			"filter"      	: true,
+			"ordering"		: false,
+			"responsive"    : false,
+			"select"        : true,
+			'ajax': {
+				"url": baseurl + 'at/ctrlprov/ccons_insp/get_accion_correctiva',
+				"type": "POST",
+				"data": function (d) {
+					d.codigo = codigo;
+					d.fecha = fecha;
+				},
+				dataSrc: function (data) {
+					objPrincipal.liberarBoton(button);
+					return data.items;
+				},
+				error: function () {
+					objPrincipal.alert('warning', 'Error en el proceso de ejecución.', 'Vuelva a intentarlo más tarde.');
+					objPrincipal.liberarBoton(button);
+				}
 			},
-			dataType: 'json',
-			beforeSend: function() {
-				objPrincipal.botonCargando(button);
-			},
-		}).done(function(res) {
-			const elModal = $('#modalAccionCorrectiva');
-			elModal.find('h5').html('Acción Correctiva (Insp. ' + codigo + ' - ' + moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') + ')');
-			objInsp.imprimirAccionCorrectiva(res.items);
-			elModal.modal('show');
-		}).fail(function() {
-			objPrincipal.notify('warning', 'Error al intentar cargar las acciones correctivas')
-		}).always(function() {
-			objPrincipal.liberarBoton(button);
+			'columns': [
+				{data: 'dnumerador', orderable: false, targets: 0, "class": "col-s"},
+				{data: 'drequisito', orderable: false, targets: 1, "class": "col-1m"},
+				{data: 'sexcluyente', orderable: false, targets: 2, "class": "col-xs"},
+				{data: 'tipohallazgo', orderable: false, targets: 3, "class": "col-sm"},
+				{data: 'dhallazgo', orderable: false, targets: 4, "class": "col-1m"},
+				{data: 'daccioncorrectiva', orderable: false, targets: 5, "class": "col-1m"},
+				{data: 'dresponsablecliente', orderable: false, targets: 6, "class": "col-sm"},
+				{
+					"orderable": false,
+					render: function (data, type, row) {
+						return moment(row.tcreacion).format('DD/MM/YYYY');
+					}
+				},
+				{data: 'svalor', orderable: false, targets: 8, "class": "col-xs"},
+				{data: 'dobservacion', orderable: false, targets: 9, "class": "col-xm"},
+			],
+			"columnDefs": [
+				{
+					"defaultContent": " ",
+					"targets": "_all"
+				}
+			]
 		});
-	};
-
-	/**
-	 * @param data
-	 */
-	objInsp.imprimirAccionCorrectiva = function(data) {
-		let rows = '';
-		if (data && Array.isArray(data)) {
-			data.forEach(function(item) {
-				let responsable = (item.dresponsablecliente) ? item.dresponsablecliente : '';
-				let observacion = (item.dobservacion) ? item.dobservacion : '';
-				rows += '<tr>';
-				rows += '<td class="text-left" style="" >' + item.dnumerador + '</td>';
-				rows += '<td class="text-left" style="min-width: 250px" >' + item.drequisito + '</td>';
-				rows += '<td class="text-center" style="" >' + item.sexcluyente + '</td>';
-				rows += '<td class="text-left" style="min-width: 180px" >' + item.tipohallazgo + '</td>';
-				rows += '<td class="text-left" style="min-width: 250px" >' + item.dhallazgo + '</td>';
-				rows += '<td class="text-left" style="min-width: 250px" >' + item.dhallazgotext + '</td>';
-				rows += '<td class="text-left" style="min-width: 200px" >' + responsable + '</td>';
-				rows += '<td class="text-left" style="min-width: 60px" >' + moment(item.tcreacion).format('DD/MM/YYYY') + '</td>';
-				rows += '<td class="text-center" style="min-width: 60px" >' + item.svalor + '</td>';
-				rows += '<td class="text-left" style="min-width: 200px" >' + observacion + '</td>';
-				rows += '</tr>';
-			});
+		const elModal = $('#modalAccionCorrectiva');
+		elModal.find('h5').html('Acción Correctiva (' + proveedor + ' - ' + dirProvMaqui + ' - ' + moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') + ')');
+		if (excel) {
+			$('#btnDownloadAccionCorrectiva').attr('href', baseurl + 'FTPfileserver/Archivos/' + excel);
+			$('#download-excel').show();
+		} else {
+			$('#btnDownloadAccionCorrectiva').attr('href', '#');
+			$('#download-excel').hide();
 		}
-		$('#tblAcciónCorrectiva > tbody').html(rows);
+		elModal.modal('show');
 	};
 
 	/**
@@ -451,6 +575,7 @@ $(function () {
 		$('#proveedor_ubigeo').html(data.UBIGEO);
 		$('#proveedor_telefono').html(data.DTELEFONO);
 		$('#proveedor_representante').html(data.DREPRESENTANTE);
+		$('#proveedor_tipo_empresa').html(data.tipoempresa);
 	};
 
 	/**
@@ -497,20 +622,28 @@ $(document).ready(function () {
 	$('#btnBuscar').click(objInsp.search);
 
 	$('#chkBusavanzada').click(function() {
-		const el = $(this);
-		const content = $('#filtroAvanzado');
-		if (el.is(':checked')) {
-			content.show();
-		} else {
-			content.hide();
-		}
+		$('#modalFiltro').modal('show');
+	});
+
+	$('#modalFiltro').on('hidden.bs.modal', function () {
+		$('#chkBusavanzada').prop('checked', false);
 	});
 
 	$(document).on('click', '.open-pdf', objInsp.openPDF);
 
+	$(document).on('click', '.close-pdf', function() {
+		const btn = $(this);
+		objInsp.pdf.codigo = btn.data('codigo');
+		objInsp.pdf.fecha = btn.data('fecha');
+		objInsp.closePDF(btn);
+	});
+
 	$(document).on('click', '.download-pdf', objInsp.downloadPDF);
 
-	$('#closePDF').click(objInsp.closePDF);
+	$('#closePDF').click(function() {
+		const btn = $(this);
+		objInsp.closePDF(btn);
+	});
 
 	$('#activar_fecha').change(objInsp.activeDate);
 
@@ -555,7 +688,7 @@ $(document).ready(function () {
 	$('#filtro_cliente').select2(initSelect2);
 	$('#filtro_proveedor').select2(initSelect2);
 	$('#filtro_maquilador').select2(initSelect2);
-	$('#filtro_tipo_estado').select2(initSelect2);
-	$('#filtro_cliente_area').select2(initSelect2);
+	// $('#filtro_tipo_estado').select2(initSelect2);
+	// $('#filtro_cliente_area').select2(initSelect2);
 
 });
