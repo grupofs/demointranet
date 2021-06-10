@@ -64,9 +64,9 @@
     <div class="container-fluid"> 
         <div class="row">
             <div class="col-12">
-                <div class="card card-success card-outline card-tabs">
+                <div class="card card-primary card-outline card-tabs">
                     <div class="card-header p-0 pt-1 border-bottom-0">            
-                        <ul class="nav nav-tabs" id="tabctrlprov" style="background-color: #28a745;" role="tablist">                    
+                        <ul class="nav nav-tabs bg-lightblue" id="tabctrlprov" role="tablist">                    
                             <li class="nav-item">
                                 <a class="nav-link active" style="color: #000000;" id="tabctrlprov-list-tab" data-toggle="pill" href="#tabctrlprov-list" role="tab" aria-controls="tabctrlprov-list" aria-selected="true">LISTADO</a>
                             </li>
@@ -78,7 +78,7 @@
                     <div class="card-body">
                         <div class="tab-content" id="tabctrlprov-tabContent">
                             <div class="tab-pane fade show active" id="tabctrlprov-list" role="tabpanel" aria-labelledby="tabctrlprov-list-tab">
-                                <div class="card card-success">
+                                <div class="card card-primary">
                                     <div class="card-header">
                                         <h3 class="card-title">BUSQUEDA</h3>
                                         <div class="card-tools">
@@ -171,7 +171,7 @@
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="card card-outline card-success">
+                                        <div class="card card-outline card-primary">
                                             <div class="card-header">
                                                 <div class="row">
                                                 <div class="col-md-8">
@@ -243,134 +243,124 @@
                                 </fieldset>
                                 <fieldset class="scheduler-border" id="regInspeccion">
                                     <legend class="scheduler-border text-primary">Programación de Inspección</legend>
-                                    <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('at/ctrlprov/cregctrolprov/setreginspeccion')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('oi/ctrlprov/cregctrolprov/setreginspeccion')?>" method="POST" enctype="multipart/form-data" role="form">
                                         <input type="hidden" name="mtxtidinsp" id="mtxtidinsp">
-                                        <input type="hidden" name="mfechainsp" id="mfechainsp">
                                         <input type="hidden" name="mhdnzctipoestado" id="mhdnzctipoestado">
                                         <input type="hidden" name="mhdnccliente" id="mhdnccliente">
                                         <input type="hidden" name="mhdnAccioninsp" id="mhdnAccioninsp"> 
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="text-info">Periodo</div>
-                                                    <div> 
-                                                        <input type="month" name="cboinspperiodo" id="cboinspperiodo" class="form-control" pattern="[0-9]{4}-[0-9]{2}">
-                                                    </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Periodo</label>
+                                                    <input type="month" name="cboinspperiodo" id="cboinspperiodo" class="form-control" pattern="[0-9]{4}-[0-9]{2}">
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <div class="text-info">Estado Inspeccion</div>
-                                                    <div>
-                                                        <input type="text" name="txtinspestado" id="txtinspestado" class="form-control" disabled>
-                                                    </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Inspector</label>
+                                                    <select class="form-control select2bs4" id="cboinspinspector" name="cboinspinspector" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
                                                 </div>
-                                                <div class="col-md-3"> 
-                                                    <div class="text-info">Fecha Inspeccion</div>                     
-                                                    <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
-                                                        <div class="input-group-prepend">
-                                                            <div class="input-group-text"><a style="cursor:pointer;" onClick="javascript:quitarFecha()"><i class="far fa-calendar-times"></i></a></div>
-                                                        </div>
-                                                        <input type="text" id="txtFInsp" name="txtFInsp" class="form-control datetimepicker-input" data-target="#txtFInspeccion"/>
-                                                        <div class="input-group-append" data-target="#txtFInspeccion" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                        </div>
+                                            </div>
+                                            <div class="col-md-3">      
+                                                <label>Fecha Inspeccion</label>                      
+                                                <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text"><a style="cursor:pointer;" onClick="javascript:quitarFecha()"><i class="far fa-calendar-times"></i></a></div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="text-info">Hora</div>
-                                                    <div class="input-group date" id="mtxtHplaninspeccion" data-target-input="nearest">
-                                                        <input type="text" id="mtxtHplaninsp" name="mtxtHplaninsp" class="form-control datetimepicker-input" data-target="#mtxtHplaninspeccion"/>
-                                                        <div class="input-group-append" data-target="#mtxtHplaninspeccion" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                                        </div>
+                                                    <input type="text" id="txtFInsp" name="txtFInsp" class="form-control datetimepicker-input" data-target="#txtFInspeccion"/>
+                                                    <div class="input-group-append" data-target="#txtFInspeccion" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Sistema</div>
-                                                    <div>
-                                                        <select class="form-control select2bs4" id="cboinspsistema" name="cboinspsistema" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Rubro</div>
-                                                    <div>                                                  
-                                                        <select class="form-control select2bs4" id="cboinsprubro" name="cboinsprubro" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Inspector</div>
-                                                    <div>   
-                                                        <select class="form-control select2bs4" id="cboinspinspector" name="cboinspinspector" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    <div class="text-info">Check List</div>
-                                                    <div>   
-                                                        <select class="form-control select2bs4" id="cboinspcchecklist" name="cboinspcchecklist" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Modelo Informe</div>
-                                                    <div>                                                  
-                                                        <select class="form-control select2bs4" id="cboinspmodeloinfo" name="cboinspmodeloinfo" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Valor No Conformidad</div>
-                                                    <div>                                                     
-                                                        <select class="form-control select2bs4" id="cboinspvalconf" name="cboinspvalconf" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Formula Evaluacion</div>
-                                                    <div>                                                 
-                                                        <select class="form-control select2bs4" id="cboinspformula" name="cboinspformula" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Criterio Resultado</div>
-                                                    <div>                                                     
-                                                        <select class="form-control select2bs4" id="cboinspcritresul" name="cboinspcritresul" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="text-info">Contactos</div>
-                                                    <div>  
-                                                        <textarea class="form-control" cols="20" id="mtxtinspcoment" name="mtxtinspcoment" rows="2" ></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-12 text-right"> 
-                                                    <button type="submit" class="btn btn-success" id="btnGrabar"><i class="fas fa-save"></i> Grabar</button> 
-                                                    <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Estado Inspeccion</label>
+                                                    <input type="text" name="txtinspestado" id="txtinspestado" class="form-control" disabled>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Sistema</label>
+                                                    <select class="form-control select2bs4" id="cboinspsistema" name="cboinspsistema" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Rubro</label>                                                    
+                                                    <select class="form-control select2bs4" id="cboinsprubro" name="cboinsprubro" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label>Check List</label>
+                                                    <select class="form-control select2bs4" id="cboinspcchecklist" name="cboinspcchecklist" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Modelo Informe</label>                                                    
+                                                    <select class="form-control select2bs4" id="cboinspmodeloinfo" name="cboinspmodeloinfo" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Valor No Conformidad</label>                                                    
+                                                    <select class="form-control select2bs4" id="cboinspvalconf" name="cboinspvalconf" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Formula Evaluacion</label>                                                    
+                                                    <select class="form-control select2bs4" id="cboinspformula" name="cboinspformula" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Criterio Resultado</label>                                                    
+                                                    <select class="form-control select2bs4" id="cboinspcritresul" name="cboinspcritresul" style="width: 100%;">
+                                                        <option value="" selected="selected">Cargando...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Comentario</label>
+                                                    <textarea class="form-control" cols="20" id="mtxtinspcoment" name="mtxtinspcoment" rows="2" ></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 text-right"> 
+                                                <button type="submit" class="btn btn-success" id="btnGrabar"><i class="fas fa-save"></i> Grabar</button> 
+                                                <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                            </div>
+                                        </div>
                                     </form>
+
                                 </fieldset>
                             </div>
                         </div>
@@ -387,7 +377,7 @@
 <div class="modal fade" id="modalCreactrlprov" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmCreactrlprov" name="frmCreactrlprov" action="<?= base_url('at/ctrlprov/cregctrolprov/setregctrlprov')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmCreactrlprov" name="frmCreactrlprov" action="<?= base_url('oi/ctrlprov/cregctrolprov/setregctrlprov')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Registro de Control de Proveedores</h4>
@@ -524,7 +514,7 @@
 <div class="modal fade" id="modalCierreespecial" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('at/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('oi/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Cierre Especial</h4>
@@ -579,7 +569,7 @@
 <div class="modal fade" id="modalConvalidacion" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmConvalidacion" name="frmConvalidacion" action="<?= base_url('at/ctrlprov/cregctrolprov/setconvalidacion')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmConvalidacion" name="frmConvalidacion" action="<?= base_url('oi/ctrlprov/cregctrolprov/setconvalidacion')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Convalidacion</h4>

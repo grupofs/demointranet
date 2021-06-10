@@ -33,7 +33,7 @@ $(document).ready(function() {
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboclieserv",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboclieserv",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -47,7 +47,7 @@ $(document).ready(function() {
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboestado",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboestado",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -62,7 +62,7 @@ $(document).ready(function() {
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspector",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspector",
         dataType: "JSON",
         async: true,
         data: params,
@@ -249,7 +249,7 @@ $("#cboclieserv").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboprovxclie",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboprovxclie",
         dataType: "JSON",
         async: true,
         data: params,
@@ -276,7 +276,7 @@ $("#cboprovxclie").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomaqxprov",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbomaqxprov",
         dataType: "JSON",
         async: true,
         data: params,
@@ -311,7 +311,7 @@ $("#btnBuscar").click(function (){
         "select"        : true,
 		"dom": 'lfTrtip',
         'ajax'	: {
-            "url"   : baseurl+"at/ctrlprov/cregctrolprov/getbuscarctrlprov/",
+            "url"   : baseurl+"oi/ctrlprov/cregctrolprov/getbuscarctrlprov/",
             "type"  : "POST", 
             "data": function ( d ) {
                 d.ccliente      = $('#cboclieserv').val();
@@ -424,7 +424,7 @@ $("#btnNuevo").click(function (){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboclieserv",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboclieserv",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -439,7 +439,7 @@ $("#btnNuevo").click(function (){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbotipoestable",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbotipoestable",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -459,7 +459,7 @@ $("#cboregClie").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboprovxclie",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboprovxclie",
         dataType: "JSON",
         async: true,
         data: params,
@@ -473,7 +473,7 @@ $("#cboregClie").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboareaclie",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboareaclie",
         dataType: "JSON",
         async: true,
         data: params,
@@ -495,7 +495,7 @@ $("#cboregprovclie").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomaqxprov",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbomaqxprov",
         dataType: "JSON",
         async: true,
         data: params,
@@ -509,7 +509,7 @@ $("#cboregprovclie").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbocontacprinc",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbocontacprinc",
         dataType: "JSON",
         async: true,
         data: params,
@@ -549,7 +549,7 @@ $("#cboregestable").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbolineaproc",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbolineaproc",
         dataType: "JSON",
         async: true,
         data: params,
@@ -567,7 +567,7 @@ $("#cboregestable").change(function(){
     var request = $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getdirestable",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getdirestable",
         dataType: "JSON",
         async: true,
         data: parametros,
@@ -590,7 +590,7 @@ $("#cbotipoestable").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getmontotipoestable",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getmontotipoestable",
         dataType: "JSON",
         async: true,
         data: params,
@@ -615,7 +615,7 @@ cboEstablecimiento = function(cboclie,cboprov,cbomaqui,vtipo){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboregestable",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboregestable",
         dataType: "JSON",
         async: true,
         data: params,
@@ -637,7 +637,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspector",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspector",
         dataType: "JSON",
         async: true,
         data: params,
@@ -653,7 +653,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbosistemaip",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbosistemaip",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -670,7 +670,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
         $.ajax({
             type: 'ajax',
             method: 'post',
-            url: baseurl+"at/ctrlprov/cregctrolprov/getcborubroip",
+            url: baseurl+"oi/ctrlprov/cregctrolprov/getcborubroip",
             dataType: "JSON",
             async: true,
             data: paramsrubro,
@@ -693,7 +693,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbochecklist",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbochecklist",
         dataType: "JSON",
         async: true,
         data: paramschecklist,
@@ -709,7 +709,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomodinforme",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbomodinforme",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -724,7 +724,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspvalconf",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspvalconf",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -740,7 +740,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspformula",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspformula",
         dataType: "JSON",
         async: true,
         data: paramsform,
@@ -756,7 +756,7 @@ iniInspe = function(cusuarioconsultor,consultsreg,cnorma,csubnorma,cchecklist,cc
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspcritresul",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspcritresul",
         dataType: "JSON",
         async: true,
         success:function(result)
@@ -781,7 +781,7 @@ $("#cboinspsistema").change(function(){
         $.ajax({
             type: 'ajax',
             method: 'post',
-            url: baseurl+"at/ctrlprov/cregctrolprov/getcborubroip",
+            url: baseurl+"oi/ctrlprov/cregctrolprov/getcborubroip",
             dataType: "JSON",
             async: true,
             data: paramsrubro,
@@ -807,7 +807,7 @@ $("#cboinsprubro").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbochecklist",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbochecklist",
         dataType: "JSON",
         async: true,
         data: paramschecklist,
@@ -827,7 +827,7 @@ $("#cboinspcchecklist").change(function(){
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcboinspformula",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcboinspformula",
         dataType: "JSON",
         async: true,
         data: paramsform,
@@ -847,7 +847,6 @@ selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuariocon
     $('#frmRegInsp').trigger("reset");
 
     $('#mtxtidinsp').val(cauditoriainspeccion); 
-    $('#mfechainsp').val(fservicio);
     $('#mhdnAccioninsp').val('A');
     $('#mhdnccliente').val(ccliente);  
 
@@ -889,7 +888,6 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     $('#frmRegInsp').trigger("reset");
 
     $('#mtxtidinsp').val(cauditoriainspeccion); 
-    $('#mfechainsp').val(fservicio);
     $('#mhdnAccioninsp').val('A');
     $('#mhdnccliente').val(ccliente);  
 
@@ -915,15 +913,6 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     }else{
         $('#txtFInsp').val(fservicio);
     }
-    
-    $('#mtxtHsalidaperm').datetimepicker({
-        format: 'hh:mm A',
-        locale:'es',
-        stepping: 15
-    });	
-    $('#mtxtHsalidaperm').datetimepicker('minDate', moment('08:00 AM', 'hh:mm A') );
-    $('#mtxtHsalidaperm').datetimepicker('maxDate', moment('05:45 PM', 'hh:mm A') );
-    $('#mtxtHsalidaperm').datetimepicker('date', moment('08:00 AM', 'hh:mm A') );
 };
 
 $('#btnRetornarLista').click(function(){
@@ -937,7 +926,7 @@ $('#modalCierreespecial').on('shown.bs.modal', function (e) {
     $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbocierreTipo",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getcbocierreTipo",
         dataType: "JSON",
         async: true,
         success:function(result){
@@ -960,7 +949,7 @@ verInspeccion = function(id){
     var request = $.ajax({
         type: 'ajax',
         method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getrecuperainsp",
+        url: baseurl+"oi/ctrlprov/cregctrolprov/getrecuperainsp",
         dataType: "JSON",
         async: true,
         data: parametros,

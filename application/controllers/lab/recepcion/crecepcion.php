@@ -372,6 +372,8 @@ class Crecepcion extends CI_Controller {
 		$nordenproducto 	    = $this->input->post('nordenproducto');
         $cmuestra 	            = $this->input->post('cmuestra');
         $cusuario 	            = $this->input->post('cusuario');
+        $cinternoordenservicio  = $this->input->post('cinternoordenservicio');
+        $varsot 	            = $this->input->post('varsot');
 
         $parametros = array(
             '@cinternocotizacion'   	=>  $cinternocotizacion,
@@ -379,6 +381,8 @@ class Crecepcion extends CI_Controller {
             '@nordenproducto'      		=>  $nordenproducto,
             '@cmuestra'    		        =>  $cmuestra,
             '@cusuario'    		        =>  $cusuario,
+            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@varsot'    		        =>  $varsot,
         );
         $retorna = $this->mrecepcion->setordentrabajoresult($parametros);
         echo json_encode($retorna);	

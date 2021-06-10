@@ -122,5 +122,17 @@ class Mservcliente extends CI_Model {
 			return False;
 		}	
     }	
+	
+    public function getcocsechorequipo($parametros) { // Obtener estudio mapeo termico	
+        
+        $procedure = "call sp_appweb_pt_getcocsechorequipo(?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}	
+    }	
 }
 ?>
