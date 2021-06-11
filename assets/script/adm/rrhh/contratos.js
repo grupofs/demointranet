@@ -1,5 +1,5 @@
 
-var otblListContratos;
+var otblListContratos, otblContratos;
 
 $(document).ready(function() {
 
@@ -51,8 +51,8 @@ getListarBusqueda = function(param){
                 return  '<div class="dropdown" style="text-align: center;">'+
                             '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
-                                '<li><a data-toggle="modal" title="Contratos" data-target="#modalContratos" onClick=""><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Contratos</a></li>'+
-                                '<li><a data-toggle="modal" title="Cese" data-target="#modalCierreespecial" onClick=""><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cese de Contrato</a></li>'+
+                                '<li><a data-toggle="modal" title="Contratos" data-target="#modalMantcontratos" onclick="javascript:selContratos(\''+row.id_empleado+'\');"><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Contratos</a></li>'+
+                                '<li><a data-toggle="modal" title="Cese" data-target="#modalCese" onClick=""><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cese de Contrato</a></li>'+
                             '</ul>'+
                         '</div>'
                 
@@ -140,8 +140,10 @@ $('#tblListContratos tbody').on('dblclick', 'td', function () {
     $('#txtFNace').val(rowData.fecha_nace);
     $('#mcboestadocivil').val(rowData.estado_civil).trigger("change"); 
     $('#mtxtnrohijos').val(rowData.hijos);
-    $('#mcbopension').val(rowData.idpension).trigger("change"); 
-    $('#mcboentidadpension').val(rowData.idpensionentidad).trigger("change"); 
+    $('#mcbopension').val(rowData.idpension).trigger("change", [rowData.idpensionentidad] ); 
+    //$('#mcbopension').val(rowData.idpension).change(rowData.idpensionentidad);
+    $('#mcboentidadpension').val(rowData.idpensionentidad);
+    //listcboEntidadpension(rowData.idpension,rowData.idpensionentidad);
     //$('#mcbobanco').val(rowData.idbanco).trigger("change");     
     listcboBanco(rowData.idbanco);
     $('#mtxtnroctasueldo').val(rowData.nroctacte);
@@ -161,7 +163,12 @@ $("#btnNuevo").click(function (){
     $('#divcia').show();
 
     $('#mhdnAccionempleado').val('N');
+
     $('#mhdntipodoc').val(1);
+    $('#mcbosexo').val('').trigger("change"); 
+    $('#mcboestadocivil').val('').trigger("change"); 
+    $('#mcbopension').val(0).trigger("change"); 
+    $('#mcboeps').val('N').trigger("change"); 
     listcboBanco(0);
     listcboProfesion(0);
     
@@ -263,12 +270,13 @@ $('#modalMantemple').on('show.bs.modal', function (e) {
     });
 });
 
-$('#mcbopension').change(function(){ 
+$('#mcbopension').change(function( event, videnti ){ 
     var v_cpension = $( "#mcbopension option:selected").attr("value");
-    listcboEntidadpension(v_cpension);
+    var v_cidentidad = videnti || 0;
+    listcboEntidadpension(v_cpension,v_cidentidad);
 });
 
-listcboEntidadpension = function(v_cpension){    
+listcboEntidadpension = function(v_cpension,videntidadpension){    
     var params = { 
         "idpension" : v_cpension
     }; 
@@ -282,6 +290,7 @@ listcboEntidadpension = function(v_cpension){
         success:function(result)
         {
             $('#mcboentidadpension').html(result);
+            $('#mcboentidadpension').val(videntidadpension).trigger("change"); 
         },
         error: function(){
             alert('Error, No se puede autenticar por error = mcboentidadpension');
@@ -345,7 +354,7 @@ $('#modalMantentidadpension').on('show.bs.modal', function (e) {
                     sweetalert(Vtitle,Vtype); 
                       
                     var vidpension = $('#mcbopension').val();
-                    listcboEntidadpension(vidpension);
+                    listcboEntidadpension(vidpension,0);
 
                     objPrincipal.liberarBoton(botonEvaluar);    
                     $('#mbtnCMantentidadpension').click();    
@@ -440,7 +449,7 @@ $('#modalMantbanco').on('show.bs.modal', function (e) {
     });
 });
 
-listcboProfesion = function(){    
+listcboProfesion = function(idprofesion){    
     
     $.ajax({
         type: 'ajax',
@@ -451,6 +460,7 @@ listcboProfesion = function(){
         success:function(result)
         {
             $('#mcboprofesion').html(result);
+            $('#mcboprofesion').val(idprofesion).trigger("change"); 
         },
         error: function(){
             alert('Error, No se puede autenticar por error = mcboprofesion');
@@ -674,4 +684,177 @@ $('#txtFInicio').on('change.datetimepicker',function(e){
 });
 
 
+$('#modalMantcontratos').on('show.bs.modal', function (e) {
+    
+    $('#txtFInicio_cont,#txtFTermino_cont').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
+    });	
+    var fecha = new Date();		
+    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
+    $('#txtFInicio_cont').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
+   
+});
 
+selContratos = function(vid_empleado){
+    $('#mhdnidempleado_cont').val(vid_empleado);
+    getContratos();
+}
+
+$('#txtFInicio_cont').on('change.datetimepicker',function(e){	
+    
+    $('#txtFTermino_cont').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es'
+    });	
+    
+    var faño = moment(e.date).add(1, 'years');
+    $('#txtFTermino_cont').datetimepicker('date',moment(faño).format('DD/MM/YYYY') );    
+
+});
+
+listcboArea_cont = function(v_ccia, v_carea){    
+    var params = { 
+        "ccia" : v_ccia
+    }; 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcboarea",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#mcboarea_cont').html(result);
+            $('#mcboarea_cont').val(v_carea).trigger("change"); 
+        },
+        error: function(){
+            a
+            lert('Error, No se puede autenticar por error = mcboarea');
+        }
+    });
+}
+
+$('#mcboarea_cont').change(function(){    
+    var vccia = $('#hrdcia_cont').val();
+    var vcarea = $('#mcboarea_cont').val();
+    listcboSubarea_cont(vccia,vcarea,0);
+});
+
+listcboSubarea_cont = function(v_ccia,v_carea,v_subarea){    
+    var params = { 
+        "ccia" : v_ccia,
+        "carea" : v_carea
+    }; 
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbosubarea",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result)
+        {
+            $('#mcbosubarea_cont').html(result);
+            $('#mcbosubarea_cont').val(v_subarea).trigger("change"); 
+        },
+        error: function(){
+            a
+            lert('Error, No se puede autenticar por error = mcbosubarea');
+        }
+    });
+}
+
+listcboCargo_cont = function(){    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"adm/rrhh/ccontratos/getcbocargo",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcbocargo_cont').html(result);
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = mcbocargo');
+        }
+    });
+}
+
+getContratos = function(){
+    otblContratos = $('#tblContratos').DataTable({
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        'ajax'	: {
+            "url"   : baseurl+"adm/rrhh/ccontratos/getcontratosxempleado/",
+            "type"  : "POST", 
+            "data": function ( d ) { 
+                d.id_empleado     = $('#mhdnidempleado_cont').val(); 
+            },      
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: null, "class": "col-xxs"},
+            {data: 'FINICIO', "class": "col-sm"},
+            {data: 'FTERMINO', "class": "col-sm"},
+            {data: 'ESTADO', "class": "col-xs"},
+            {"orderable": false, "class": "col-xxs",
+                render:function(data, type, row){
+                return '<div>' +
+                    '</div>' ;
+                } 
+            }
+        ]
+    });      
+    // Enumeracion 
+    otblContratos.on( 'order.dt search.dt', function () { 
+        otblContratos.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+          cell.innerHTML = i+1;
+          } );
+    }).draw();  
+};
+
+$('#tblContratos tbody').on('click', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblContratos.row(tr);
+    var rowData = row.data();
+
+    $('#frmMantcontratos').trigger("reset");
+
+    $('#mhdnAccioncontrato').val('A');
+
+    $('#mhdnidcontrato').val(rowData.id_contrato);
+    $('#hrdcia_cont').val(rowData.ccompania);
+    $('#txtFIni_cont').val(rowData.FINICIO);
+    $('#txtFTerm_cont').val(rowData.FTERMINO);    
+    $('#mcboarea_cont').val(rowData.carea).trigger("change", [rowData.ccompania,rowData.csubarea] ); 
+    //$('#mcboarea_cont').val(rowData.carea).trigger("change");
+    //$('#mcbosubarea_cont').val(rowData.csubarea).trigger("change");
+    $('#mcbomodalidad_cont').val(rowData.modalidad_contrato).trigger("change");
+    $('#mtxtsueldo_cont').val(rowData.sueldo);
+    $('#mcbocargo_cont').val(rowData.idcargo).trigger("change");
+});
+
+$('#mcboarea_cont').change(function( event, ccia, csubarea ){ 
+    var v_carea = $( "#mcboarea_cont option:selected").attr("value");
+    var v_ccia = ccia;
+    var v_csubarea = csubarea;
+    listcboSubarea_cont(v_ccia,v_carea,v_csubarea);
+});

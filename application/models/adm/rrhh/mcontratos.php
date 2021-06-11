@@ -216,5 +216,19 @@ class Mcontratos extends CI_Model {
             }	
         }   
     }
+    public function getcontratosxempleado($id_empleado) { // Buscar Cotizacion        
+        $sql = "select b.id_contrato, b.id_empleado, DATEFORMAT(b.finicio_contrato,'dd/mm/yyyy') as 'FINICIO', DATEFORMAT(b.ftermino_contrato,'dd/mm/yyyy') as 'FTERMINO', b.estado_contrato as 'ESTADO',
+                    b.ccompania, b.carea, b.csubarea, b.idcargo, b.modalidad_contrato, b.sueldo  
+                from adm_rrhh_empleado a 
+                    join adm_rrhh_contrato b on a.id_empleado = b.id_empleado 
+                where a.id_empleado = ".$id_empleado." order by b.finicio_contrato DESC;";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }	
 }
 ?>

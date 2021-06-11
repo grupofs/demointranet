@@ -197,5 +197,13 @@ class Ccontratos extends CI_Controller {
 		$respuesta = $this->mcontratos->setcargo($parametros);
 		echo json_encode($respuesta);
 	}
+    public function getcontratosxempleado() {	// Busqueda de Contratos 	
+		$varnull = '';
+
+        $id_empleado   = $this->input->post('id_empleado');        
+        
+        $resultado = $this->mcontratos->getcontratosxempleado($id_empleado);
+        echo json_encode($resultado);
+    } 
 }
 ?>

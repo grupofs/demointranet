@@ -245,7 +245,7 @@
                 </div>                
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="text-info">Fecha Nacimiento <span class="text-requerido">*</span></div>                    
+                        <div class="text-info">Fecha Nacimiento</div>                    
                         <div class="input-group date" id="txtFNacimiento" data-target-input="nearest">
                             <input type="text" id="txtFNace" name="txtFNace" class="form-control datetimepicker-input" data-target="#txtFNacimiento" />
                             <div class="input-group-append" data-target="#txtFNacimiento" data-toggle="datetimepicker">
@@ -435,6 +435,133 @@
                     <div class="text-right">
                         <button type="reset" class="btn btn-default" id="mbtnCManteemp" data-dismiss="modal">Cancelar</button>
                         <button type="submit" form="frmMantemple" class="btn btn-info" id="mbtnGManteemp">Grabar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-Mante Contratos --> 
+<div class="modal fade" id="modalMantcontratos" role="dialog" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Registrar Contratos</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body"> 
+            <div class="row">
+                <div class="col-md-6">
+                    <table id="tblContratos" class="table table-striped table-bordered compact" style="width:50%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>FECHA INICIO</th>
+                            <th>FECHA TERMINO</th>
+                            <th>ESTADO</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>               
+                    </table> 
+                </div>
+                <div class="col-md-6">
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border text-primary">Registro</legend>  
+                    <form class="form-horizontal" id="frmMantcontratos" name="frmMantcontratos" action="<?= base_url('adm/rrhh/ccontratos/setcontratos')?>" method="POST" enctype="multipart/form-data" role="form"> 
+                        <input type="hidden" id="mhdnidcontrato" name="mhdnidcontrato">
+                        <input type="hidden" id="mhdnidempleado_cont" name="mhdnidempleado_cont">
+                        <input type="hidden" id="hrdcia_cont" name="hrdcia_cont">
+                        <input type="hidden" id="mhdnAccioncontrato" name="mhdnAccioncontrato">
+                        <div class="form-group">        
+                            <div class="row"> 
+                                <div class="col-md-6">
+                                    <div class="text-info">Fecha Inicio <span class="text-requerido">*</span></div>                    
+                                    <div class="input-group date" id="txtFInicio_cont" data-target-input="nearest">
+                                        <input type="text" id="txtFIni_cont" name="txtFIni_cont" class="form-control datetimepicker-input" data-target="#txtFInicio_cont" />
+                                        <div class="input-group-append" data-target="#txtFInicio_cont" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div> 
+                                </div>   
+                                <div class="col-md-6">
+                                    <div class="text-info">Fecha Termino <span class="text-requerido">*</span></div>                    
+                                    <div class="input-group date" id="txtFTermino_cont" data-target-input="nearest">
+                                        <input type="text" id="txtFTerm_cont" name="txtFTerm_cont" class="form-control datetimepicker-input" data-target="#txtFTermino_cont" />
+                                        <div class="input-group-append" data-target="#txtFTermino_cont" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div> 
+                                </div>  
+                            </div>      
+                            <div class="row"> 
+                                <div class="col-md-6"> 
+                                    <div class="text-info">Area</div>                        
+                                    <div class="input-group input-group-select-button">                            
+                                        <select class="form-control select2bs4" id="mcboarea_cont" name="mcboarea_cont" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="col-md-6"> 
+                                    <div class="text-info">Sub Area</div>                        
+                                    <div class="input-group input-group-select-button">                            
+                                        <select class="form-control select2bs4" id="mcbosubarea_cont" name="mcbosubarea_cont" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                            </div>    
+                            <div class="row">  
+                                <div class="col-md-7"> 
+                                    <div class="text-info">Modalidad</div>                        
+                                    <div>                            
+                                        <select class="form-control select2bs4" id="mcbomodalidad_cont" name="mcbomodalidad_cont" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                            <option value="PLA" >PLANILLA</option>
+                                            <option value="RXH" >RECIBOS HONORARIOS</option>
+                                            <option value="INT" >INTERMITENTE</option>
+                                            <option value="PRA" >PRACTICAS</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-5"> 
+                                    <div class="text-info">Sueldo</div>
+                                    <div>    
+                                        <input type="number" name="mtxtsueldo_cont"id="mtxtsueldo_cont" class="form-control" ><!-- disable -->
+                                    </div>
+                                </div> 
+                            </div>    
+                            <div class="row"> 
+                                <div class="col-md-12"> 
+                                    <div class="text-info">Cargo</div>                        
+                                    <div class="input-group input-group-select-button">                            
+                                        <select class="form-control select2bs4" id="mcbocargo_cont" name="mcbocargo_cont" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                        </select>
+                                        <div class="input-group-addon input-group-button">
+                                            <button type="button" role="button" class="btn btn-outline-info" id="mbtnnewcargo_cont" data-toggle="modal" data-target="#modalMantcargo"><i class="fas fa-plus-circle"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+                    </form>
+                </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer w-100 d-flex flex-row" style="background-color: #D4EAFC;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <button type="reset" class="btn btn-default" id="mbtnCMantcontrato" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="frmMantcontratos" class="btn btn-info" id="mbtnGMantcontrato">Grabar</button>
                     </div>
                 </div>
             </div>
