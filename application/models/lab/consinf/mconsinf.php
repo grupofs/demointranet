@@ -67,5 +67,15 @@ class Mconsinf extends CI_Model {
 			return False;
 		}		
     }
+    public function getinfxmuestras_firmas($parametros) { // Buscar Cotizacion	
+        $procedure = "call usp_lab_consinf_getinfxmuestras_firmas(?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
 }
 ?>

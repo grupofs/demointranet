@@ -1,4 +1,4 @@
-var otblListServiciolab;
+var otblListServiciolab, otblListResultados;
 var varfdesde = '%', varfhasta = '%';
 
 
@@ -174,9 +174,9 @@ paramListarBusqueda = function (){
         "numero"        : $('#txtbuscarnro').val(), 
         "fini"          : varfdesde, 
         "ffin"          : varfhasta,   
-        "descripcion"   : $('#txtdescri').val(), 
-        "ensayo"        : $('#txtensayo').val(), 
-        "areaserv"      : $('#cboareaserv').val(),
+        //"descripcion"   : $('#txtdescri').val(), 
+        //"ensayo"        : $('#txtensayo').val(), 
+        //"areaserv"      : $('#cboareaserv').val(),
     };  
 
     return parametros;
@@ -201,53 +201,188 @@ getListarBusqueda = function(){
         "responsive"    : false,
         "select"        : true,
         "ajax"	: {
-            "url"   : baseurl+"lab/resultados/cregresult/getbusserviciolab",
+            "url"   : baseurl+"lab/resultados/cregresult/getbuscaringresoresult",
             "type"  : "POST", 
             "data"  : parametros,     
             dataSrc : ''      
         }, 
         'columns'	: [
+            {data: 'BLANCO', "className":"col-xxs"},
+            {data: 'cinternoordenservicio'},
             {data: 'DCLIENTE'},
-            {data: null, "className":"details-control col-xs"},
-            {data: 'NROCOTI'},
-            {data: 'DFECHA'},
-            {data: 'ENTREGAINFO'},
-            {data: 'MONTOSINIGV', "class" : "col-s dt-body-right"},
-            {data: 'ITOTAL', "class" : "col-s dt-body-right"},
-            {data: 'ELABORADO'},
-            {"orderable": false, 
-                render:function(data, type, row){     
-                    return '<div>' +
-                        '&nbsp;&nbsp;'+
-                    '</div>';
-                }
-            }
-        ],  
+            {data: 'COTIZACION'},
+            {data: 'ORDENTRABAJO'},
+            {data: 'NOMPROD', "className":"col-m"},
+            {data: 'NROMUESTRA'},
+            {data: 'LOCAL'},
+        ],
         "drawCallback": function ( settings ) {
             var api = this.api();
-            var rows = api.rows( {page:'all'} ).nodes();
-            var last = null;
-			var grupo;
- 
-            api.column([1], {} ).data().each( function ( ctra, i ) { 
-                grupo = api.column(1).data()[i];
-                if ( last !== ctra ) {
-                    $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="8"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
+            var tableRows = api.rows( {page:'current'} ).nodes();
+
+            var lastGroup = null;
+            var lastSub = null;
+            var lastSub01 = null;
+
+            var groupName = null;
+            var mySubGroup = null;
+            var mySubGroup01 = null;
+            var mySubGroup02 = null;
+
+            api.column([0], {} ).data().each( function ( ctra, i ) {
+                groupName = api.column(2).data()[i];
+
+                mySubGroup = api.column(3).data()[i];
+                mySubGroup01 = api.column(4).data()[i];
+                mySubGroup02 = api.column(1).data()[i];
+
+                if ( lastGroup !== groupName ) {
+                    $(tableRows).eq( i ).before(
+                        '<tr class="group"><td colspan="8">'+groupName.toUpperCase()+'</td></tr>'
                     ); 
-                    last = ctra;
+                    lastGroup = groupName;
+                 }
+
+                if (lastSub !== mySubGroup) {
+                    $(tableRows).eq( i ).before(
+                        '<tr class="subgroup"><td class="groupCoti">'+mySubGroup02.toUpperCase()+'</td><td colspan="2">Cotización: '+mySubGroup.toUpperCase()+'</td><td>OT: '+mySubGroup01.toUpperCase()+'</td></tr>'
+                    ); 
+                    lastSub = mySubGroup;
                 }
             } );
-        }
+        }   
     }); 
-    otblListRecepcion.column(0).visible( false ); 
-    otblListRecepcion.column(1).visible( false );      
-    // Enumeracion 
-    otblListRecepcion.on( 'order.dt search.dt', function () { 
-        otblListRecepcion.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-          cell.innerHTML = i+1;
-          } );
-    }).draw(); 
+    otblListServiciolab.column(1).visible( false ); 
+    otblListServiciolab.column(2).visible( false ); 
+    otblListServiciolab.column(3).visible( false );  
+    otblListServiciolab.column(4).visible( false );  
 
     $("#btnexcel").prop("disabled",false);  
 };
+
+$('#tblListServiciolab tbody').on( 'dblclick', 'tr.subgroup', function () {     
+    var id = $(this).find("td.groupCoti:first-child").text().substr(0,8);
+    $('#tablab a[href="#tablab-reg"]').tab('show');
+    verResultados(id);
+} ); 
+
+verResultados = function(id){
+    var parametros = { 
+        "cinternoordenservicio":id 
+    };
+    var request = $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"lab/resultados/cregresult/getrecuperaservicio",
+        dataType: "JSON",
+        async: true,
+        data: parametros,
+        error: function(){
+            alert('Error, no se puede cargar el servicio');
+        }
+    });      
+    request.done(function( respuesta ) {            
+        $.each(respuesta, function() { 
+
+            $('#txtcliente').val(this.drazonsocial);
+            $('#mtxtFanali').val(this.fanalisis);
+            $('#mtxtHanali').val(this.hanalisis);
+            $('#txtcotizacion').val(this.dcotizacion);
+            $('#txtfcotizacion').val(this.fcotizacion);  
+            $('#txtnroot').val(this.nordenservicio);  
+            $('#txtfot').val(this.fordenservicio);  
+            $('#txtidcotizacion').val(this.cinternocotizacion);  
+            $('#txtnroversion').val(this.nversioncotizacion);  
+            $('#txtidordenservicio').val(this.cinternoordenservicio);            
+            
+        });
+    });
+    getListResultados(id);
+};
+
+
+getListResultados = function(id){         
+    var parametros = {
+        "cinternoordenservicio" : id,
+    };  
+
+    otblListResultados = $('#tblListResultados').DataTable({ 
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "540px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
+        "ajax"	: {
+            "url"   : baseurl+"lab/resultados/cregresult/getlistresultados",
+            "type"  : "POST", 
+            "data"  : parametros,     
+            dataSrc : ''      
+        }, 
+        'columns'	: [
+            {data: 'BLANCO', "className":"col-xxs"},
+            {data: 'tipoensayo'},
+            {data: 'codmuestra'},
+            {data: 'drealproducto'},
+            {data: 'censayofs', "className":"col-s"},
+            {data: 'densayo', "className":"col-m"},
+            {data: 'unidadmedida', "className":"col-s"},
+            {data: 'despecificacion', "className":"col-sm"},
+            {data: 'dresultado', "className":"col-sm"},
+            {data: 'sresultado', "className":"col-s"},
+            {data: 'dinfensayo'},
+            {data: 'BLANCO'},
+        ],
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var tableRows = api.rows( {page:'current'} ).nodes();
+
+            var lastGroup = null;
+
+            var groupName = null;
+            var groupName01 = null;
+            var groupName02 = null;
+
+            api.column([0], {} ).data().each( function ( ctra, i ) {
+                groupName = api.column(2).data()[i];
+                groupName01 = api.column(3).data()[i];
+                groupName02 = api.column(10).data()[i];
+
+                if ( lastGroup !== groupName ) {
+                    $(tableRows).eq( i ).before(
+                        '<tr class="group"><td class="groupOt" colspan="2">'+groupName.toUpperCase()+'</td><td colspan="3">'+groupName01.toUpperCase()+'</td><td colspan="2">'+groupName02.toUpperCase()+'</td></tr>'
+                    ); 
+                    lastGroup = groupName;
+                 }
+
+            } );
+        }   
+    }); 
+    otblListResultados.column(2).visible( false ); 
+    otblListResultados.column(3).visible( false ); 
+    otblListResultados.column(10).visible( false ); 
+    // Enumeracion 
+    otblListResultados.on( 'order.dt search.dt', function () { 
+        otblListResultados.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+          cell.innerHTML = i+1;
+          } );
+    }).draw();    
+};
+
+$('#btnRetornarLista').click(function(){
+    $('#tablab a[href="#tablab-list"]').tab('show');  
+});
+
+$('#tblListResultados tbody').on( 'dblclick', 'tr.group', function () {     
+    var idmuestra = $(this).find("td.groupOt:first-child").text().substr(0,3);
+    var idot = $('#txtidordenservicio').val();
+    window.open(baseurl+"lab/resultados/cregresult/pdfInformeMuestra/"+idot+"/"+idmuestra);
+    
+} ); 

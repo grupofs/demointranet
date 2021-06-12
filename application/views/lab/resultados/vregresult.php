@@ -15,13 +15,16 @@
         font-weight: bold;
     }
     .group{
-            background-color:#D5D8DC !important;
-            font-size:15px;
-            color:#000000!important;
-            opacity:0.7;
+        background-color:#D5D8DC !important;
+        font-size:15px;
+        color:#000000!important;
+        opacity:0.8;
+        cursor: pointer;
     }
     .subgroup{
         cursor: pointer;
+        font-weight: normal !important;
+        font-size: 15px !important;
     }
 
     .btn-circle {
@@ -224,20 +227,28 @@
                                     <div class="col-12">
                                         <div class="card card-outline card-primary">
                                             <div class="card-header">
-                                                <h3 class="card-title"><b>LISTADO DE SERVICIOS LABORATORIO</b></h3>
+                                                <div class="row">
+                                                <div class="col-md-8">
+                                                    <h3 class="card-title"><b>LISTADO DE SERVICIOS LABORATORIO</b></h3>
+                                                </div>                                                 
+                                                <!--<div class="col-md-4 text-right">
+                                                    <button id="btn-show-all-children" type="button">Expandir</button>
+                                                    <button id="btn-hide-all-children" type="button">Contraer</button>
+                                                </div>  /.Main content -->
+                                                </div>                                                
                                             </div>                                        
                                             <div class="card-body">
-                                                <table id="tblListServiciolab" class="table table-striped table-bordered" style="width:100%">
+                                                <table id="tblListServiciolab" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th></th>
+                                                        <th></th>
                                                         <th>Cliente</th>
                                                         <th>Cotización</th>
-                                                        <th>Elaborado por</th>
-                                                        <th>Fecha Coti</th>
                                                         <th>Orden Trabajo</th>
-                                                        <th>Fecha OT</th>
-                                                        <th></th>
+                                                        <th>Producto</th>
+                                                        <th>N° Muestra</th>
+                                                        <th>Local</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -250,54 +261,100 @@
                             </div>
                             <div class="tab-pane fade" id="tablab-reg" role="tabpanel" aria-labelledby="tablab-reg-tab">
                                 <fieldset class="scheduler-border-fsc" id="regCoti">
-                                    <legend class="scheduler-border-fsc text-primary">INGRESO RESULTADOS</legend>
-                                    <div id="regProductos" style="border-top: 1px solid #ccc; padding-top: 10px;">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h4>
-                                                    <i class="fas fa-weight"></i> <label id="lblclie"></label>
-                                                    <small id="lblcoti"> </small>
-                                                </h4>
+                                    <legend class="scheduler-border-fsc text-primary">DATOS DEL SERVICIO</legend>
+                                    <input type="hidden" name="txtidcotizacion" class="form-control" id="txtidcotizacion">
+                                    <input type="hidden" name="txtnroversion" class="form-control" id="txtnroversion">
+                                    <input type="hidden" name="txtidordenservicio" class="form-control" id="txtidordenservicio">
+                                    <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="text-info">Cliente</div>
+                                            <div>
+                                                <input type="text" id="txtcliente" name="txtcliente" class="form-control" disabled = true/>
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="text-info">Fecha Analisis</div>
+                                            <div class="input-group date" id="mtxtFanalisis" data-target-input="nearest">
+                                            <input type="text" id="mtxtFanali" name="mtxtFanali" class="form-control datetimepicker-input" data-target="#mtxtFanalisis"/>
+                                            <div class="input-group-append" data-target="#mtxtFanalisis" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                            </div>
+                                        </div>  
+                                        <div class="col-sm-3">
+                                            <div class="text-info">Hora Analisis</div>
+                                            <div class="input-group date" id="mtxtHanalisis" data-target-input="nearest">
+                                            <input type="text" id="mtxtHanali" name="mtxtHanali" class="form-control datetimepicker-input" data-target="#mtxtHanalisis"/>
+                                            <div class="input-group-append" data-target="#mtxtHanalisis" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                            </div>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="text-info">Cotizacion</div>
+                                            <div>
+                                                <input type="text" id="txtcotizacion" name="txtcotizacion" class="form-control" disabled = true/>
                                             </div> 
-                                        </div> 
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="text-info">Fecha Coti.</div>
+                                            <div>
+                                                <input type="text" id="txtfcotizacion" name="txtfcotizacion" class="form-control" disabled = true/>
+                                            </div> 
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-info">OT</div>
+                                            <div>
+                                                <input type="text" id="txtnroot" name="txtnroot" class="form-control" disabled = true/>
+                                            </div> 
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="text-info">Fecha OT</div>
+                                            <div>
+                                                <input type="text" id="txtfot" name="txtfot" class="form-control" disabled = true/>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" style="background-color: #dff0d8;">                                                         
+                                        <div class="col-6 text-left">
+                                            <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
+                                        </div>                                                          
+                                        <div class="col-6 text-right">
+                                            <button type="button" class="btn btn-success" id="btngrabarResult"><i class="fas fa-clipboard-list"></i> Grabar</button>
+                                            <button type="button" class="btn btn-info" id="btnverinformes"><i class="fas fa-clipboard-list"></i> Inf. Ensayo</button>
+                                        </div>    
+                                    </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="scheduler-border-fsc" id="regCoti">
+                                    <legend class="scheduler-border-fsc text-primary">INGRESO RESULTADOS</legend>
+                                    <div class="form-group">
                                         <div class="row"> 
                                             <div class="col-12">
                                                 <div class="card card-outline card-primary">
                                                     <div class="card-header">
-                                                        <h3 class="card-title">Listado de Recepcion</h3>
+                                                        <h3 class="card-title">Listado de Resultados</h3>
                                                     </div>                                        
-                                                    <div class="card-body">
-                                                    <input type="hidden" name="mtxtcusuario" class="form-control" id="mtxtcusuario" value="<?php echo $cusuario ?>">
-                                                        <div class="row" style="background-color: #dff0d8;">                                                         
-                                                            <div class="col-6 text-left">
-                                                                <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
-                                                            </div>                                                          
-                                                            <div class="col-6 text-right">
-                                                                <button type="button" class="btn btn-success" id="btngenerarOT"><i class="fas fa-clipboard-list"></i> Generar OT</button>
-                                                            </div>    
-                                                        </div>
-                                                        <br>
+                                                    <div class="card-body" style="overflow-x: scroll;">                                                        
                                                         <div class="row">                                                         
                                                             <div class="col-12"> 
-                                                            <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                                                            <table id="tblListResultados" class="table table-striped table-bordered compact" style="width:100%">
                                                                 <thead>
                                                                 <tr>
-                                                                    <th></th>
-                                                                    <th></th>
                                                                     <th>N°</th>
-                                                                    <th>F. Recepcion</th>
-                                                                    <th>Codigo</th>
-                                                                    <th>Producto Real</th>
-                                                                    <th>Presentacion</th>
-                                                                    <th>Temp. Recep.</th>
-                                                                    <th>Cant. Muestra</th>
-                                                                    <th>Proveedor</th>
-                                                                    <th>N° Lote</th>
-                                                                    <th>F. Envase</th>
-                                                                    <th>F. Muestreo</th>
-                                                                    <th>Hora Muestreo</th>
-                                                                    <th>Observacion</th>
-                                                                    <th>Observacion Otros</th>
+                                                                    <th>Tipo Ensayo</th>
+                                                                    <th>Cod. Muestra</th>
+                                                                    <th>Muestra</th>
+                                                                    <th>Cod. Ensayo</th>
+                                                                    <th>Ensayo</th>
+                                                                    <th>Unidad</th>
+                                                                    <th>Especificación</th>
+                                                                    <th>Resultado</th>
+                                                                    <th>Conclusion</th>
                                                                     <th></th>
                                                                     <th></th>
                                                                 </tr>
