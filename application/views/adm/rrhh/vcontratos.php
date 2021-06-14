@@ -4,6 +4,10 @@
 ?>
 
 <style>
+    .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default, .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default {
+        background: red !important;
+        color: white !important;
+    }
 </style>
 
 <!-- content-header -->
@@ -37,16 +41,15 @@
           
             <div class="card-body">
                 <input type="hidden" class="form-control" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusuario ?>">
-
+                <input type="hidden" class="form-control" id="hdnestadocontrato" name="hdnestadocontrato" value="A">
             </div>                
                         
             <div class="card-footer justify-content-between"> 
                 <div class="row">
-                    <!--<div class="col-md-2"> 
-                        <div id="console-event"></div>                   
-                        <input type="checkbox" name="swVigencia" id="swVigencia" data-toggle="toggle" checked data-bootstrap-switch  data-on-text="Activos" data-off-text="Inactivos">
-                    </div>-->
-                    <div class="col-md-12">
+                    <div class="col-md-6">                  
+                        <input type="checkbox" name="swCesados" id="swCesados" data-toggle="toggle" checked data-bootstrap-switch  data-on-text="Vigentes" data-off-text="Cesados">
+                    </div>
+                    <div class="col-md-6">
                         <div class="text-right">
                             <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
                             <button type="button" role="button" class="btn btn-outline-info" id="btnNuevo" data-toggle="modal" data-target="#modalMantemple"><i class="fas fa-plus"></i> Crear Nuevo</button>
@@ -471,6 +474,7 @@
                     </table> 
                 </div>
                 <div class="col-md-6">
+                <label id="nomempleado"></label>
                 <fieldset class="scheduler-border">
                     <legend class="scheduler-border text-primary">Registro</legend>  
                     <form class="form-horizontal" id="frmMantcontratos" name="frmMantcontratos" action="<?= base_url('adm/rrhh/ccontratos/setcontratos')?>" method="POST" enctype="multipart/form-data" role="form"> 
@@ -717,6 +721,7 @@
         <form class="form-horizontal" id="frmMantcargo" name="frmMantcargo" action="<?= base_url('adm/rrhh/ccontratos/setcargo')?>" method="POST" enctype="multipart/form-data" role="form"> 
             <input type="hidden" id="mhdnidcargo" name="mhdnidcargo">
             <input type="hidden" id="mhdnAccioncargo" name="mhdnAccioncargo">
+            <input type="hidden" id="mhdncargotipo" name="mhdncargotipo">
             <div class="form-group">        
                 <div class="row">
                     <div class="col-md-12"> 

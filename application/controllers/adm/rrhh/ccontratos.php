@@ -16,9 +16,11 @@ class Ccontratos extends CI_Controller {
 		$varnull = '';
 
         $descripcion   = $this->input->post('descripcion');
+        $estadocontrato   = $this->input->post('estadocontrato');
         
         $parametros = array(
 			'@descripcion'		=> ($this->input->post('descripcion') == '') ? '%' : '%'.$descripcion.'%',
+			'@estadocontrato'	=> $estadocontrato
         );
         
         $resultado = $this->mcontratos->getbuscarcontratos($parametros);
@@ -205,5 +207,55 @@ class Ccontratos extends CI_Controller {
         $resultado = $this->mcontratos->getcontratosxempleado($id_empleado);
         echo json_encode($resultado);
     } 
+	public function setcontratos() {	// Registrar Vacaciones		
+		$varnull = 	'';	
+
+		$idempleado     = $this->input->post('mhdnidempleado_cont');	
+		$idcontrato     = $this->input->post('mhdnidcontrato');
+		$ccompania     	= $this->input->post('hrdcia_cont');	
+		$finiciocontrato      = $this->input->post('txtFIni_cont');
+		$fterminocontrato      = $this->input->post('txtFTerm_cont');
+		$carea      	= $this->input->post('mcboarea_cont');
+		$csubarea      	= $this->input->post('mcbosubarea_cont');
+		$idcargo      	= $this->input->post('mcbocargo_cont');
+		$modalidadcontrato      = $this->input->post('mcbomodalidad_cont');
+		$sueldo      	= $this->input->post('mtxtsueldo_cont');
+		$accion         = $this->input->post('mhdnAccioncontrato');
+
+		$parametros = array(
+			'@id_empleado'  =>  $idempleado,
+			'@id_contrato'  =>  $idcontrato,
+			'@ccompania'  =>  $ccompania,
+			'@finicio_contrato'	=>   ($finiciocontrato == $varnull) ? NULL : substr($finiciocontrato, 6, 4).'-'.substr($finiciocontrato,3 , 2).'-'.substr($finiciocontrato, 0, 2),
+			'@ftermino_contrato'	=>   ($fterminocontrato == $varnull) ? NULL : substr($fterminocontrato, 6, 4).'-'.substr($fterminocontrato,3 , 2).'-'.substr($fterminocontrato, 0, 2),
+			'@carea'    =>  $carea,
+			'@csubarea'    =>  $csubarea,
+			'@idcargo'    =>  $idcargo,
+			'@modalidadcontrato'    =>  $modalidadcontrato,
+			'@sueldo'    =>  $sueldo,
+			'@accion'    	=>  $accion,
+		);				
+		$respuesta = $this->mcontratos->setcontratos($parametros);
+		echo json_encode($respuesta);
+	}
+	public function setrenovarcontrato() {	// Registrar Vacaciones		
+		$varnull = 	'';	
+	
+		$idcontrato     = $this->input->post('idcontrato');
+
+		$parametros = array(
+			'@id_contrato'  =>  $idcontrato,
+		);				
+		$respuesta = $this->mcontratos->setrenovarcontrato($parametros);
+		echo json_encode($respuesta);
+	}
+	public function setcesarcontrato() {	// Registrar Vacaciones		
+		$varnull = 	'';	
+	
+		$idcontrato     = $this->input->post('idcontrato');
+			
+		$respuesta = $this->mcontratos->setcesarcontrato($idcontrato);
+		echo json_encode($respuesta);
+	}
 }
 ?>

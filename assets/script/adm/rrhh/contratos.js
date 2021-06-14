@@ -5,6 +5,16 @@ $(document).ready(function() {
 
 });
 
+$('#swCesados').on('switchChange.bootstrapSwitch',function (event, state) {
+    if($('#swCesados').prop('checked')){
+        $('#hdnestadocontrato').val('A'); 
+    }else{
+        $('#hdnestadocontrato').val('F'); 
+    }
+      
+    $('#btnBuscar').click();
+});
+
 $("#btnBuscar").click(function (){    
     parametros = paramListarBusqueda();
     getListarBusqueda(parametros);    
@@ -13,7 +23,8 @@ $("#btnBuscar").click(function (){
 paramListarBusqueda = function (){    
        
     var param = {
-        "descripcion"     : '%',//$('#txtcodprodu').val(),
+        "descripcion"     : '%',//
+        "estadocontrato"  : $('#hdnestadocontrato').val(),
     }; 
 
     return param;    
@@ -51,8 +62,8 @@ getListarBusqueda = function(param){
                 return  '<div class="dropdown" style="text-align: center;">'+
                             '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
-                                '<li><a data-toggle="modal" title="Contratos" data-target="#modalMantcontratos" onclick="javascript:selContratos(\''+row.id_empleado+'\');"><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Contratos</a></li>'+
-                                '<li><a data-toggle="modal" title="Cese" data-target="#modalCese" onClick=""><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cese de Contrato</a></li>'+
+                                '<li><a data-toggle="modal" title="Contratos" data-target="#modalMantcontratos" onclick="javascript:selContratos(\''+row.id_empleado+'\',\''+row.EMPLEADO+'\',\''+row.id_contrato+'\',\''+row.ccompania+'\',\''+row.FINICIO+'\',\''+row.FFIN+'\',\''+row.carea+'\',\''+row.csubarea+'\',\''+row.modalidad_contrato+'\',\''+row.SUELDO+'\',\''+row.id_cargo+'\');"><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Contratos</a></li>'+
+                                '<li><a id="aCesecontrato" href="'+row.id_contrato+'" title="Cese"><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cese de Contrato</a></li>'+
                             '</ul>'+
                         '</div>'
                 
@@ -80,6 +91,11 @@ getListarBusqueda = function(param){
             {data: 'CARGO', "class": "col-s"},
             {data: 'SUELDO', "class": "dt-body-right col-xs"},
         ],  
+        "rowCallback":function(row,data){            
+            if(data.estado_contrato == "F"){
+                $(row).css("color","red");
+            }
+        },
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'all'} ).nodes();
@@ -173,6 +189,23 @@ $("#btnNuevo").click(function (){
     listcboProfesion(0);
     
 });
+    
+$("body").on("click","#aCesecontrato",function(event){
+    event.preventDefault();
+    vidcontrato = $(this).attr("href");
+    
+    $.post(baseurl+"adm/rrhh/ccontratos/setcesarcontrato", 
+    {
+        idcontrato   : vidcontrato,
+    },      
+    function(data){           
+        Vtitle = 'Se Ceso Correctamente!!!';
+        Vtype = 'success';
+        sweetalert(Vtitle,Vtype); 
+
+        otblListContratos.ajax.reload(null,false); 	
+    });
+}); 
 
 DNI=function(){
     $('#btntipodoc').html("DNI");
@@ -296,7 +329,7 @@ listcboEntidadpension = function(v_cpension,videntidadpension){
             alert('Error, No se puede autenticar por error = mcboentidadpension');
         }
     });
-}
+};
 
 $("#mbtnnewentidadpension").click(function (){
     $('#frmMantentidadpension').trigger("reset");
@@ -381,7 +414,7 @@ listcboBanco = function(vidbanco){
             alert('Error, No se puede autenticar por error = mcbobanco');
         }
     });
-}
+};
 
 $("#mbtnnewbanco").click(function (){
     $('#frmMantbanco').trigger("reset");
@@ -466,7 +499,7 @@ listcboProfesion = function(idprofesion){
             alert('Error, No se puede autenticar por error = mcboprofesion');
         }
     });
-}
+};
 
 $("#mbtnnewprofesion").click(function (){
     $('#frmMantprofesion').trigger("reset");
@@ -554,7 +587,7 @@ listcboArea = function(v_ccia){
             lert('Error, No se puede autenticar por error = mcboarea');
         }
     });
-}
+};
 
 $('#mcboarea').change(function(){    
     var vccia = $('#hrdcia').val();
@@ -583,9 +616,10 @@ listcboSubarea = function(v_ccia,v_carea){
             lert('Error, No se puede autenticar por error = mcbosubarea');
         }
     });
-}
+};
 
-listcboCargo = function(){    
+listcboCargo = function(tipocargo){
+    vtipocargo = tipocargo;    
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -594,13 +628,17 @@ listcboCargo = function(){
         async: true,
         success:function(result)
         {
-            $('#mcbocargo').html(result);
+            if(vtipocargo == 'E'){
+                $('#mcbocargo').html(result);
+            }else{
+                $('#mcbocargo_cont').html(result);
+            }            
         },
         error: function(){
             alert('Error, No se puede autenticar por error = mcbocargo');
         }
     });
-}
+};
 
 $("#mbtnnewcargo").click(function (){
     $('#frmMantcargo').trigger("reset");
@@ -608,9 +646,11 @@ $("#mbtnnewcargo").click(function (){
     $("#modalMantcargo").modal('show');
     
     $('#mhdnAccioncargo').val('N');
+    $('#mhdncargotipo').val('E');
 });
 
 $('#modalMantcargo').on('show.bs.modal', function (e) {
+    var vtipocargo = $('#mhdncargotipo').val();
     $('#frmMantcargo').validate({        
         rules: {
             txtdescargo: {
@@ -656,8 +696,8 @@ $('#modalMantcargo').on('show.bs.modal', function (e) {
                     Vtitle = 'Se Grabo Correctamente!!!';
                     Vtype = 'success';
                     sweetalert(Vtitle,Vtype); 
-                      
-                    listcboCargo();
+                     
+                    listcboCargo(vtipocargo);
 
                     objPrincipal.liberarBoton(botonEvaluar);    
                     $('#mbtnCMantcargo').click();    
@@ -685,31 +725,92 @@ $('#txtFInicio').on('change.datetimepicker',function(e){
 
 
 $('#modalMantcontratos').on('show.bs.modal', function (e) {
-    
-    $('#txtFInicio_cont,#txtFTermino_cont').datetimepicker({
+    /*
+    $('#txtFInicio_cont').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es',
-        autoclose: true,
-        todayBtn: true
+        autoclose: true
     });	
     var fecha = new Date();		
     var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-    $('#txtFInicio_cont').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
+    $('#txtFInicio_cont').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );*/
    
+
+    $('#frmMantcontratos').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantcontrato');
+            var request = $.ajax({
+                url:$('#frmMantcontratos').attr("action"),
+                type:$('#frmMantcontratos').attr("method"),
+                data:$('#frmMantcontratos').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                    
+                    otblContratos.ajax.reload(null,false);  
+                    //getlistContratos(); 
+
+                    objPrincipal.liberarBoton(botonEvaluar);       
+                });
+            });
+            return false;
+        }
+    });
 });
 
-selContratos = function(vid_empleado){
-    $('#mhdnidempleado_cont').val(vid_empleado);
-    getContratos();
-}
+selContratos = function(vidempleado,vempleado,vidcontrato,vccia,vfinicio,vffin,vcarea,vcsubarea,vmodalidad_contrato,vsueldo,vidcargo){
+    
+    $('#mhdnidempleado_cont').val(vidempleado);
+    $('#mhdnAccioncontrato').val('A');
+    document.querySelector('#nomempleado').innerText = vempleado;
+    $('#txtFInicio_cont').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true
+    });	
+    getlistContratos();    
+    getContratos(vidcontrato,vccia,vfinicio,vffin,vcarea,vcsubarea,vmodalidad_contrato,vsueldo,vidcargo);
+};
 
 $('#txtFInicio_cont').on('change.datetimepicker',function(e){	
     
     $('#txtFTermino_cont').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
-        locale:'es'
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
     });	
     
     var faño = moment(e.date).add(1, 'years');
@@ -717,7 +818,7 @@ $('#txtFInicio_cont').on('change.datetimepicker',function(e){
 
 });
 
-listcboArea_cont = function(v_ccia, v_carea){    
+listcboArea_cont = function(v_ccia, v_carea, v_csubarea){    
     var params = { 
         "ccia" : v_ccia
     }; 
@@ -731,19 +832,17 @@ listcboArea_cont = function(v_ccia, v_carea){
         success:function(result)
         {
             $('#mcboarea_cont').html(result);
-            $('#mcboarea_cont').val(v_carea).trigger("change"); 
+            $('#mcboarea_cont').val(v_carea).trigger("change", [v_ccia,v_csubarea] ); 
         },
         error: function(){
-            a
-            lert('Error, No se puede autenticar por error = mcboarea');
+            alert('Error, No se puede autenticar por error = mcboarea');
         }
     });
-}
+};
 
-$('#mcboarea_cont').change(function(){    
-    var vccia = $('#hrdcia_cont').val();
-    var vcarea = $('#mcboarea_cont').val();
-    listcboSubarea_cont(vccia,vcarea,0);
+$('#mcboarea_cont').change(function( event, ccia, csubarea){ 
+    var v_carea = $( "#mcboarea_cont option:selected").attr("value");
+    listcboSubarea_cont(ccia,v_carea,csubarea);
 });
 
 listcboSubarea_cont = function(v_ccia,v_carea,v_subarea){    
@@ -768,9 +867,9 @@ listcboSubarea_cont = function(v_ccia,v_carea,v_subarea){
             lert('Error, No se puede autenticar por error = mcbosubarea');
         }
     });
-}
+};
 
-listcboCargo_cont = function(){    
+listcboCargo_cont = function(v_idcargo){    
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -780,6 +879,7 @@ listcboCargo_cont = function(){
         success:function(result)
         {
             $('#mcbocargo_cont').html(result);
+            $('#mcbocargo_cont').val(v_idcargo).trigger("change"); 
         },
         error: function(){
             alert('Error, No se puede autenticar por error = mcbocargo');
@@ -787,13 +887,13 @@ listcboCargo_cont = function(){
     });
 }
 
-getContratos = function(){
+getlistContratos = function(){
     otblContratos = $('#tblContratos').DataTable({
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
         "bJQueryUI"     : true,
-        "scrollY"     	: "400px",
+        "scrollY"     	: "320px",
         "scrollX"     	: true, 
         'AutoWidth'     : true,
         "paging"      	: false,
@@ -816,9 +916,16 @@ getContratos = function(){
             {data: 'FTERMINO', "class": "col-sm"},
             {data: 'ESTADO', "class": "col-xs"},
             {"orderable": false, "class": "col-xxs",
-                render:function(data, type, row){
-                return '<div>' +
-                    '</div>' ;
+                render:function(data, type, row){                
+                        if ( row.ESTADO == 'A' ){
+                            return '<div>' +
+                            '<a id="aRenovar" href="'+row.id_contrato+'" title="Renovar" style="cursor:pointer; color:cray;"><span class="fas fa-marker" aria-hidden="true"> </span></a>'
+                            '</div>' ;
+                        }else{
+                            return '<div>' +
+                            '</div>' ;
+                        }
+                    
                 } 
             }
         ]
@@ -831,6 +938,17 @@ getContratos = function(){
     }).draw();  
 };
 
+getContratos = function(vidcontrato,vccia,vfinicio,vffin,vcarea,vcsubarea,vmodalidad_contrato,vsueldo,vidcargo){
+    $('#mhdnidcontrato').val(vidcontrato);
+    $('#hrdcia_cont').val(vccia);
+    $('#txtFIni_cont').val(vfinicio);
+    $('#txtFTerm_cont').val(vffin); 
+    listcboArea_cont(vccia,vcarea,vcsubarea);
+    $('#mcbomodalidad_cont').val(vmodalidad_contrato).trigger("change");
+    $('#mtxtsueldo_cont').val(vsueldo);
+    listcboCargo_cont(vidcargo);
+};
+
 $('#tblContratos tbody').on('click', 'td', function () {
     var tr = $(this).parents('tr');
     var row = otblContratos.row(tr);
@@ -839,22 +957,31 @@ $('#tblContratos tbody').on('click', 'td', function () {
     $('#frmMantcontratos').trigger("reset");
 
     $('#mhdnAccioncontrato').val('A');
-
-    $('#mhdnidcontrato').val(rowData.id_contrato);
-    $('#hrdcia_cont').val(rowData.ccompania);
-    $('#txtFIni_cont').val(rowData.FINICIO);
-    $('#txtFTerm_cont').val(rowData.FTERMINO);    
-    $('#mcboarea_cont').val(rowData.carea).trigger("change", [rowData.ccompania,rowData.csubarea] ); 
-    //$('#mcboarea_cont').val(rowData.carea).trigger("change");
-    //$('#mcbosubarea_cont').val(rowData.csubarea).trigger("change");
-    $('#mcbomodalidad_cont').val(rowData.modalidad_contrato).trigger("change");
-    $('#mtxtsueldo_cont').val(rowData.sueldo);
-    $('#mcbocargo_cont').val(rowData.idcargo).trigger("change");
+    getContratos(rowData.id_contrato,rowData.ccompania,rowData.FINICIO,rowData.FTERMINO,rowData.carea,rowData.csubarea,rowData.modalidad_contrato,rowData.sueldo,rowData.idcargo);
 });
 
-$('#mcboarea_cont').change(function( event, ccia, csubarea ){ 
-    var v_carea = $( "#mcboarea_cont option:selected").attr("value");
-    var v_ccia = ccia;
-    var v_csubarea = csubarea;
-    listcboSubarea_cont(v_ccia,v_carea,v_csubarea);
+$("#mbtnnewcargo_cont").click(function (){
+    $('#frmMantcargo').trigger("reset");
+
+    $("#modalMantcargo").modal('show');
+    
+    $('#mhdnAccioncargo').val('N');
+    $('#mhdncargotipo').val('C');
 });
+    
+$("body").on("click","#aRenovar",function(event){
+    event.preventDefault();
+    vidcontrato = $(this).attr("href");
+    
+    $.post(baseurl+"adm/rrhh/ccontratos/setrenovarcontrato", 
+    {
+        idcontrato   : vidcontrato,
+    },      
+    function(data){           
+        Vtitle = 'Se Renovo Correctamente!!!';
+        Vtype = 'success';
+        sweetalert(Vtitle,Vtype); 
+
+        otblContratos.ajax.reload(null,false); 	
+    });
+}); 

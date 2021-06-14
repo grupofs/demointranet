@@ -9,7 +9,7 @@ class Mcontratos extends CI_Model {
 
    /** CONTRATOS **/
     public function getbuscarcontratos($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_adm_rrhh_getbuscarcontratos(?)";
+        $procedure = "call usp_adm_rrhh_getbuscarcontratos(?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -229,6 +229,52 @@ class Mcontratos extends CI_Model {
 		}{
 			return False;
 		}		
+    }
+	public function setcontratos($parametros) { // Registrar Vacaciones		
+        $this->db->trans_begin();
+    
+        $procedure = "call usp_adm_rrhh_setcontratos(?,?,?,?,?,?,?,?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros); 
+           
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }
+        else{
+            $this->db->trans_commit();
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            }{
+                return False;
+            }	
+        }   
+    }
+	public function setrenovarcontrato($parametros) { // Registrar Vacaciones		
+        $this->db->trans_begin();
+    
+        $procedure = "call usp_adm_rrhh_setrenovarcontrato(?)";
+        $query = $this->db-> query($procedure,$parametros); 
+           
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }
+        else{
+            $this->db->trans_commit();
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            }{
+                return False;
+            }	
+        }   
     }	
+    public function setcesarcontrato($idcontrato) { // Recuperar Password
+		
+        $data = array(
+            "estado_contrato" => 'F',
+        );
+        $this->db->where("id_contrato", $idcontrato);
+		if($this->db->update("adm_rrhh_contrato", $data)){
+			return TRUE;
+		}
+    }
 }
 ?>
