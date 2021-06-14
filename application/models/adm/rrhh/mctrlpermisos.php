@@ -9,9 +9,9 @@ class Mctrlpermisos extends CI_Model {
    /** CONTROL PERMISOS - VACACIONES - EXTRAS **/ 
 
     public function getempleados($ccia,$carea) { // recupera los empleados     
-        $sql = "select id_empleado, (nrodoc+' - '+b.datosrazonsocial) as 'empleado' 
-        from adm_rrhh_empleado a join adm_administrado b on b.id_administrado = a.id_administrado
-        where (a.ccompania = '".$ccia."' or '".$ccia."' = '0') and (a.carea = '".$carea."' or '".$carea."' = '0') ;";
+        $sql = "select a.id_empleado, (b.nrodoc+' - '+b.datosrazonsocial) as 'empleado' 
+        from adm_rrhh_empleado a join adm_administrado b on b.id_administrado = a.id_administrado join adm_rrhh_contrato c on c.id_empleado = a.id_empleado
+        where (c.ccompania = '".$ccia."' or '".$ccia."' = '0') and (c.carea = '".$carea."' or '".$carea."' = '0')  and c.estado_contrato = 'A';";
         $query  = $this->db->query($sql);
             
         if ($query->num_rows() > 0) {
