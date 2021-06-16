@@ -1,5 +1,6 @@
 var otblListServiciolab, otblListResultados;
 var varfdesde = '%', varfhasta = '%';
+var collapsedGroupsEq = {},collapsedGroupsEq1 = {},collapsedGroupsEq2 = {};
 
 
 $(document).ready(function() {
@@ -184,19 +185,19 @@ paramListarBusqueda = function (){
 };
 
 getListarBusqueda = function(){    
-    var groupColumn = 0;   
 
     otblListServiciolab = $('#tblListServiciolab').DataTable({ 
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
         "bJQueryUI"     : true,
+        "scrollResize"  : true,
         "scrollY"     	: "540px",
         "scrollX"     	: true, 
         'AutoWidth'     : true,
         "paging"      	: false,
         "info"        	: true,
-        "filter"      	: false, 
+        "filter"      	: true, 
         "ordering"		: false,
         "responsive"    : false,
         "select"        : true,
@@ -207,64 +208,121 @@ getListarBusqueda = function(){
             dataSrc : ''      
         }, 
         'columns'	: [
-            {data: 'BLANCO', "className":"col-xxs"},
-            {data: 'cinternoordenservicio'},
             {data: 'DCLIENTE'},
-            {data: 'COTIZACION'},
-            {data: 'ORDENTRABAJO'},
-            {data: 'NOMPROD', "className":"col-m"},
-            {data: 'NROMUESTRA'},
-            {data: 'LOCAL'},
+            {data: 'cinternoordenservicio'},
+            {data: 'NROCOTI'},
+            {data: 'ELABORADOPOR'},
+            {data: 'NORDENTRABAJO'},
+            {data: 'BLANCO', "className":"col-xxs"},
+            {data: 'CODMUESTRA'},
+            {data: 'REALPRODUCTO'},
+            {data: 'BLANCO', "className":"col-xxs"},
+            {data: 'TIPOENSAYO'},
+            {data: 'CODENSAYO'},
+            {data: 'ENSAYO'},
+            {data: 'BLANCO'},
+            {data: 'BLANCO'},
+            {data: 'BLANCO', "className":"col-xxs"},
         ],
-        "drawCallback": function ( settings ) {
-            var api = this.api();
-            var tableRows = api.rows( {page:'current'} ).nodes();
+        rowGroup: {
+            startRender : function ( rows, group, level ) {
+                
+                if ( level == 0 ) {
+                    var varcclie = rows
+                        .data()
+                        .reduce( function (a, b) {
+                            return b.ccliente;
+                        }, 0) ; 
 
-            var lastGroup = null;
-            var lastSub = null;
-            var lastSub01 = null;
+                    var collapsed = !!collapsedGroupsEq[varcclie];
+        
+                    rows.nodes().each(function (r) {
+                        r.style.display = collapsed ? 'none' : '';
+                    });   
+              
+                    
+                    return $('<tr/>')
+                    .append('<td colspan="8" style="cursor: pointer;">' + group + '</td>')
+                    .attr('data-name', varcclie)
+                    .toggleClass('collapsed', collapsed);
 
-            var groupName = null;
-            var mySubGroup = null;
-            var mySubGroup01 = null;
-            var mySubGroup02 = null;
+                } else if ( level == 1 ){
+                    var varid = rows
+                        .data()
+                        .reduce( function (a, b) {
+                            return b.cinternoordenservicio;
+                        }, 0) ;
 
-            api.column([0], {} ).data().each( function ( ctra, i ) {
-                groupName = api.column(2).data()[i];
+                    var collapsed = !!collapsedGroupsEq1[varid];
+        
+                    rows.nodes().each(function (r) {
+                        r.style.display = collapsed ? 'none' : '';
+                    }); 
 
-                mySubGroup = api.column(3).data()[i];
-                mySubGroup01 = api.column(4).data()[i];
-                mySubGroup02 = api.column(1).data()[i];
 
-                if ( lastGroup !== groupName ) {
-                    $(tableRows).eq( i ).before(
-                        '<tr class="group"><td colspan="8">'+groupName.toUpperCase()+'</td></tr>'
-                    ); 
-                    lastGroup = groupName;
-                 }
+                    return $('<tr/>')
+                    .append('<td colspan="5" style="cursor: pointer;">' + group + '</td><td></td><td></td><td></td>')
+                    .attr('data-name', varid)
+                    .toggleClass('collapsed', collapsed);
+                    
+                } else if ( level == 2 ){
+                    var varcod = rows
+                        .data()
+                        .reduce( function (a, b) {
+                            return b.cinternoordenservicio+b.CODMUESTRA;
+                        }, 0) ;
 
-                if (lastSub !== mySubGroup) {
-                    $(tableRows).eq( i ).before(
-                        '<tr class="subgroup"><td class="groupCoti">'+mySubGroup02.toUpperCase()+'</td><td colspan="2">Cotización: '+mySubGroup.toUpperCase()+'</td><td>OT: '+mySubGroup01.toUpperCase()+'</td></tr>'
-                    ); 
-                    lastSub = mySubGroup;
+                    var collapsed = !!collapsedGroupsEq2[varcod];
+        
+                    rows.nodes().each(function (r) {
+                        r.style.display = collapsed ? 'none' : '';
+                    }); 
+                    
+                    return $('<tr/>')
+                    .append('<td></td><td colspan="4" style="cursor: pointer;">' + group.toUpperCase() + '</td><td></td><td></td><td></td>')
+                    .attr('data-name', varcod)
+                    .toggleClass('collapsed', collapsed);
                 }
-            } );
-        }   
+                 
+            },
+            dataSrc: ["DCLIENTE","NROCOTI","REALPRODUCTO"]
+        },
     }); 
+    otblListServiciolab.column(0).visible( false ); 
     otblListServiciolab.column(1).visible( false ); 
     otblListServiciolab.column(2).visible( false ); 
-    otblListServiciolab.column(3).visible( false );  
+    otblListServiciolab.column(3).visible( false );
     otblListServiciolab.column(4).visible( false );  
+    otblListServiciolab.column(6).visible( false );  
+    otblListServiciolab.column(7).visible( false );  
+    otblListServiciolab.column(12).visible( true ); 
+    otblListServiciolab.column(14).visible( true );  
 
     $("#btnexcel").prop("disabled",false);  
 };
 
-$('#tblListServiciolab tbody').on( 'dblclick', 'tr.subgroup', function () {     
-    var id = $(this).find("td.groupCoti:first-child").text().substr(0,8);
+/* COMPRIMIR GRUPO 
+$('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-0', function () {      
+    var name = $(this).data('name');
+    collapsedGroupsEq[name] = !collapsedGroupsEq[name];
+    otblListServiciolab.draw(true);
+});
+$('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-1', function () {    
+    var name = $(this).data('name');
+    collapsedGroupsEq1[name] = !collapsedGroupsEq1[name];
+    otblListServiciolab.draw(true);
+}); */
+$('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-2', function () {    
+    var name = $(this).data('name');
+    collapsedGroupsEq2[name] = !collapsedGroupsEq2[name];
+    otblListServiciolab.draw(true);
+}); 
+
+$('#tblListServiciolab tbody').on('dblclick', 'tr.dtrg-level-1', function () {
+    var id = $(this).data('name');
     $('#tablab a[href="#tablab-reg"]').tab('show');
     verResultados(id);
-} ); 
+} );
 
 verResultados = function(id){
     var parametros = { 
@@ -300,12 +358,12 @@ verResultados = function(id){
     getListResultados(id);
 };
 
-
 getListResultados = function(id){         
     var parametros = {
         "cinternoordenservicio" : id,
     };  
 
+    var groupColumn = 0;
     otblListResultados = $('#tblListResultados').DataTable({ 
         "processing"  	: true,
         "bDestroy"    	: true,
@@ -316,7 +374,7 @@ getListResultados = function(id){
         'AutoWidth'     : true,
         "paging"      	: false,
         "info"        	: true,
-        "filter"      	: false, 
+        "filter"      	: true, 
         "ordering"		: false,
         "responsive"    : false,
         "select"        : true,
@@ -331,16 +389,16 @@ getListResultados = function(id){
             {data: 'tipoensayo'},
             {data: 'codmuestra'},
             {data: 'drealproducto'},
-            {data: 'censayofs', "className":"col-s"},
-            {data: 'densayo', "className":"col-m"},
-            {data: 'unidadmedida', "className":"col-s"},
-            {data: 'despecificacion', "className":"col-sm"},
-            {data: 'dresultado', "className":"col-sm"},
-            {data: 'sresultado', "className":"col-s"},
+            {data: 'censayofs'},
+            {data: 'densayo'},
+            {data: 'unidadmedida'},
+            {data: 'despecificacion'},
+            {data: 'dresultado'},
+            {data: 'sresultado'},
             {data: 'dinfensayo'},
             {data: 'BLANCO'},
         ],
-        "drawCallback": function ( settings ) {
+        "drawCallback": function ( settings ) {      
             var api = this.api();
             var tableRows = api.rows( {page:'current'} ).nodes();
 
@@ -348,16 +406,14 @@ getListResultados = function(id){
 
             var groupName = null;
             var groupName01 = null;
-            var groupName02 = null;
 
             api.column([0], {} ).data().each( function ( ctra, i ) {
                 groupName = api.column(2).data()[i];
                 groupName01 = api.column(3).data()[i];
-                groupName02 = api.column(10).data()[i];
 
                 if ( lastGroup !== groupName ) {
                     $(tableRows).eq( i ).before(
-                        '<tr class="group"><td class="groupOt" colspan="2">'+groupName.toUpperCase()+'</td><td colspan="3">'+groupName01.toUpperCase()+'</td><td colspan="2">'+groupName02.toUpperCase()+'</td></tr>'
+                        '<tr class="group"> <td> </td> <td>'+groupName.toUpperCase()+'</td> <td colspan="7">'+groupName01.toUpperCase()+'</td> </tr>'
                     ); 
                     lastGroup = groupName;
                  }
@@ -365,9 +421,9 @@ getListResultados = function(id){
             } );
         }   
     }); 
-    otblListResultados.column(2).visible( false ); 
-    otblListResultados.column(3).visible( false ); 
-    otblListResultados.column(10).visible( false ); 
+    otblListResultados.column(2).visible(false); 
+    otblListResultados.column(3).visible(false); 
+    otblListResultados.column(10).visible(false); 
     // Enumeracion 
     otblListResultados.on( 'order.dt search.dt', function () { 
         otblListResultados.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -376,13 +432,132 @@ getListResultados = function(id){
     }).draw();    
 };
 
+$('#tblListResultados tbody').on('dblclick', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblListResultados.row(tr);
+    var rowData = row.data();
+    
+    $("#modalIngresult").modal('show');
+    $('#frmIngresult').trigger("reset");
+    
+
+    $('#mhdncinternoordenservicio').val(rowData.cinternoordenservicio);
+    $('#mhdncinternocotizacion').val(rowData.cinternocotizacion);
+    $('#mhdnnversioncotizacion').val(rowData.nversioncotizacion);
+    $('#mhdnnordenproducto').val(rowData.nordenproducto);
+    $('#mhdncmuestra').val(rowData.cmuestra);
+    $('#mhdncensayo').val(rowData.censayo);
+
+    document.querySelector('#nomtipoensayo').innerText = rowData.tipoensayo;
+    document.querySelector('#muestra').innerText = rowData.codmuestra+' '+rowData.drealproducto;
+
+    $('#mtxtcodensayo').val(rowData.censayofs);
+    $('#mtxtnomensayo').val(rowData.densayo);
+    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"lab/resultados/cregresult/getcboum",
+        dataType: "JSON",
+        async: true,
+        success:function(result){
+            $('#mcboum').html(result);
+            $('#mcboum').val(rowData.zctipounidadmedida).trigger("change");
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error cboum');
+        }
+    });
+    
+    if(rowData.condi_espe == 'Ausencia'){
+        ausencia();  
+    }else if(rowData.condi_espe == '='){     
+        igual(); 
+    }else if(rowData.condi_espe == '<'){     
+        mayor(); 
+    }else if(rowData.condi_espe == '>'){     
+        menor(); 
+    }else if(rowData.condi_espe == '<='){     
+        mayorigual(); 
+    }else if(rowData.condi_espe == '>='){     
+        menorigual(); 
+    }
+    $('#mtxtvalor_esp').val(rowData.valor_espe);
+    $('#mcbosexponente_esp').val(rowData.esexpo_espe).trigger("change");
+    $('#mtxtvalorexpo_esp').val(rowData.valexpo_espe);
+    //$('#mcbocondi_resul').val(rowData.condi_resul);
+    $('#mtxtvalor_resul').val(rowData.valor_resul);
+    $('#mcbosexponente_resul').val(rowData.esexpo_resul).trigger("change");
+    $('#mtxtvalorexpo_resul').val(rowData.valexpo_resul);
+    $('#mcboresultado').val(rowData.sresultado).trigger("change");
+
+    //$('#mhdnidempleado').val(rowData.cinternoordenservicio);
+});
+
+ausencia=function(){
+    $('#btncondi').html("Ausencia");
+    $('#mhdncondi').val("Ausencia");
+};
+igual=function(){
+    $('#btncondi').html("=");
+    $('#mhdncondi').val("=");
+};
+mayor=function(){
+    $('#btncondi').html("<");
+    $('#mhdncondi').val("<");
+};
+menor=function(){
+    $('#btncondi').html(">");
+    $('#mhdncondi_').val(">");
+};
+mayorigual=function(){
+    $('#btncondi').html("<=");
+    $('#mhdncondi').val("<=");
+};
+menorigual=function(){
+    $('#btncondi').html(">=");
+    $('#mhdncondi').val(">=");
+};
+
+ausencia_resul=function(){
+    $('#btncondi_resul').html("Ausencia");
+    $('#mhdncondi_res').val("Ausencia");
+};
+igual_resul=function(){
+    $('#btncondi_resul').html("=");
+    $('#mhdncondi_res').val("=");
+};
+mayor_resul=function(){
+    $('#btncondi_resul').html("<");
+    $('#mhdncondi_res').val("<");
+};
+menor_resul=function(){
+    $('#btncondi_resul').html(">");
+    $('#mhdncondi_res').val(">");
+};
+mayorigual_resul=function(){
+    $('#btncondi_resul').html("<=");
+    $('#mhdncondi_res').val("<=");
+};
+menorigual_resul=function(){
+    $('#btncondi_resul').html(">=");
+    $('#mhdncondi_res').val(">=");
+};
+
+$('#modalIngresult').on('show.bs.modal', function (e) {
+
+    
+
+});
+
 $('#btnRetornarLista').click(function(){
     $('#tablab a[href="#tablab-list"]').tab('show');  
 });
-
+/*
 $('#tblListResultados tbody').on( 'dblclick', 'tr.group', function () {     
     var idmuestra = $(this).find("td.groupOt:first-child").text().substr(0,3);
     var idot = $('#txtidordenservicio').val();
     window.open(baseurl+"lab/resultados/cregresult/pdfInformeMuestra/"+idot+"/"+idmuestra);
     
 } ); 
+*/

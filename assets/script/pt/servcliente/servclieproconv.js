@@ -73,17 +73,7 @@ listEquipo= function(){
                     return '<p>'+row.NROINFOR+'</p>';
                 }                      
             }
-        }/*,{
-            "targets": [1], 
-            "data": 'ESPACE',
-            "render": function(data, type, row) {
-                if(row.idptregestudio == 1){
-                    $(row).find('tr').removeClass( 'details-control' );
-                    alert(row.idptregestudio);
-                };
-                return row.ESPACE;
-            }
-        }*/]
+        }]
     });   
     // Enumeracion 
     otblListEquipos.on( 'order.dt search.dt', function () { 

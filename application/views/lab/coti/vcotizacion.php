@@ -129,8 +129,9 @@
                                         </div>
                                     </div> 
 
-                                    <form class="form-horizontal" id="frmbuscarcoti" name="frmbuscarcoti" action="<?= base_url('lab/coti/ccotizacion/exportexcellistcoti')?>" method="POST" enctype="multipart/form-data" role="form">
+                                    
                                     <div class="card-body">
+                                    <form class="form-horizontal" id="frmbuscarcoti" name="frmbuscarcoti" action="<?= base_url('lab/coti/ccotizacion/exportexcellistcoti')?>" method="POST" enctype="multipart/form-data" role="form">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -189,6 +190,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </form>
                                     </div>                
                                                 
                                     <div class="card-footer justify-content-between"> 
@@ -201,12 +203,11 @@
                                                 <div class="text-right">
                                                     <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button> 
                                                     <button type="button" class="btn btn-outline-info" id="btnNuevo" ><i class="fas fa-plus"></i> Nueva Cotización</button>  
-                                                    <button type="submit" class="btn btn-success" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>  
+                                                    <button type="submit" class="btn btn-success" form="frmbuscarcoti" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>  
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    </form>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -524,8 +525,7 @@
                             
                                 <fieldset class="scheduler-border-fsc" id="regProd">
                                     <legend class="scheduler-border-fsc text-primary">Registro de Producto</legend> 
-                                    <div class="card card-lightblue">
-                                    <form class="form-horizontal" id="frmCreaProduc" name="frmCreaProduc" action="<?= base_url('lab/coti/ccotizacion/setproductoxcotizacion')?>" method="POST" enctype="multipart/form-data" role="form"> 
+                                    <div class="card card-lightblue">                                    
                                         <div class="card-header">
                                             <h3 class="card-title"><i class="fas fa-archive"></i>&nbsp;<b>Producto :: NRO Cotización - </b> <label id="lblNrocoti"></label></h3>
                                             <div class="card-tools">
@@ -533,6 +533,7 @@
                                             </div>
                                         </div>                                
                                         <div class="card-body">
+                                        <form class="form-horizontal" id="frmCreaProduc" name="frmCreaProduc" action="<?= base_url('lab/coti/ccotizacion/setproductoxcotizacion')?>" method="POST" enctype="multipart/form-data" role="form"> 
                                             <input type="hidden" id="mhdnIdProduc" name="mhdnIdProduc" class="form-control"> <!-- ID -->
                                             <input type="hidden" id="mhdnidcotizacion" name="mhdnidcotizacion" class="form-control">
                                             <input type="hidden" id="mhdnnroversion" name="mhdnnroversion" class="form-control">
@@ -638,8 +639,9 @@
                                                             </select>
                                                         </div>
                                                     </div> 
-                                                </div>                
+                                                </div>                 
                                             </div>
+                                        </form>
                                         </div>                
                                                                             
                                         <div class="card-footer justify-content-between">                     
@@ -649,12 +651,11 @@
                                                         <button type="reset" class="btn btn-secondary" id="mbtnCCreaProduc" data-dismiss="modal"><i class="fas fa-door-open"></i>Regresar</button> 
                                                     </div>
                                                     <div class="col-md-6 text-right">
-                                                        <button type="submit" class="btn btn-success" id="mbtnGCreaProduc"><i class="fas fa-save"></i>Grabar</button>              
+                                                        <button type="submit" class="btn btn-success" form="frmCreaProduc" id="mbtnGCreaProduc"><i class="fas fa-save"></i>Grabar</button>              
                                                     </div> 
                                                 </div>  
                                             </div>  
-                                        </div>
-                                    </from>  
+                                        </div> 
                                     </div>          
                                 </fieldset>  
 
@@ -778,12 +779,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal-footer">  
-
-        </div>
-                
-      </form>
     </div>
     <div class="modal-content" id="contenedorEditarensayo">
     </div>
@@ -796,8 +791,7 @@
 <div class="modal fade" id="modalselensayo" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmEnsayosLab" name="frmEnsayosLab" action="<?= base_url('lab/coti/ccotizacion/setregensayoxprod')?>" method="POST" enctype="multipart/form-data" role="form"> 
-
+      
         <div class="modal-header text-center bg-lightblue">
             <h4 class="modal-title w-100 font-weight-bold">Ensayos por Laboratorio</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -806,6 +800,7 @@
         </div>
 
         <div class="modal-body">
+        <form class="form-horizontal" id="frmEnsayosLab" name="frmEnsayosLab" action="<?= base_url('lab/coti/ccotizacion/setregensayoxprod')?>" method="POST" enctype="multipart/form-data" role="form"> 
             <input type="hidden" id="mhdnmcensayo" name="mhdnmcensayo"> 
             <input type="hidden" id="hdnmIdcoti" name="hdnmIdcoti" >
             <input type="hidden" id="hdnmNvers" name="hdnmNvers" >
@@ -853,13 +848,13 @@
                     </div>
                 </div>
             </div>
+        </form>
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
             <button type="reset" class="btn btn-default" id="mbtnCerrarEnsayo" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGabarEnsayo">Grabar</button>
+            <button type="submit" form="frmEnsayosLab" class="btn btn-info"  id="mbtnGabarEnsayo">Grabar</button>
         </div>
-      </form>
     </div>
   </div>
 </div> 

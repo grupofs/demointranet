@@ -44,5 +44,23 @@ class Mregresult extends CI_Model {
 			return False;
 		}		
     }
+    public function getcboum() { // Visualizar 	
+        
+        $sql = "select CTIPO, dregistro from ttabla where CTABLA = '38' and NCORRELATIVO > 0 order by NCORRELATIVO;";
+		$query  = $this->db->query($sql);
+
+        $listas = '<option value="0" selected="selected">::Elegir</option>';
+        
+        if ($query->num_rows() > 0) {
+            
+            foreach ($query->result() as $row)
+            {
+                $listas .= '<option value="'.$row->CTIPO.'">'.$row->dregistro.'</option>';  
+            }
+               return $listas;
+        }{
+            return false;
+        }	
+    }
 }
 ?>

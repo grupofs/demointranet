@@ -240,15 +240,25 @@
                                             <div class="card-body">
                                                 <table id="tblListServiciolab" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
+                                                    <tr align="center">
+                                                        <th rowspan="2">Cliente</th>
+                                                        <th rowspan="2">id</th>
+                                                        <th rowspan="2">coti</th>
+                                                        <th rowspan="2">elaboradopor</th>
+                                                        <th rowspan="2">ot</th>
+                                                        <th rowspan="2"></th>
+                                                        <th rowspan="2">codmuestra</th>
+                                                        <th rowspan="2">realprod</th>
+                                                        <th rowspan="2"></th>
+                                                        <th rowspan="2">Tipo de Ensayo</th>
+                                                        <th rowspan="2">Codigo de Ensayo</th>
+                                                        <th rowspan="2">Ensayo</th>
+                                                        <th colspan="2">Informes</th>
+                                                        <th rowspan="2"></th>
+                                                    </tr>
                                                     <tr>
                                                         <th></th>
                                                         <th></th>
-                                                        <th>Cliente</th>
-                                                        <th>Cotización</th>
-                                                        <th>Orden Trabajo</th>
-                                                        <th>Producto</th>
-                                                        <th>N° Muestra</th>
-                                                        <th>Local</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -379,5 +389,191 @@
     </div>
 </section>
 <!-- /.Main content -->
+
+<!-- /.modal-Ingreso Resultados --> 
+<div class="modal fade" id="modalIngresult" role="dialog" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Ingresar Resultados</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body"> 
+            <fieldset class="scheduler-border">
+                <legend class="scheduler-border text-primary">Datos del Ensayo</legend> 
+                <div class="form-group"> 
+                    <div class="row"> 
+                        <div class="col-md-12">
+                            <div class="text-blue"><b><small id="nomtipoensayo"></small></b></div>
+                            <div>
+                                <h3 class="card-title"><i class="fas fa-poll"></i>&nbsp;<b>Ensayo ::  </b> <label id="muestra" style="font-size: 22px;"></label></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <form class="form-horizontal" id="frmMantcontratos" name="frmMantcontratos" action="<?= base_url('adm/rrhh/ccontratos/setcontratos')?>" method="POST" enctype="multipart/form-data" role="form"> 
+                        <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">
+                        <input type="hidden" id="mhdncinternocotizacion" name="mhdncinternocotizacion">
+                        <input type="hidden" id="mhdnnversioncotizacion" name="mhdnnversioncotizacion">
+                        <input type="hidden" id="mhdnnordenproducto" name="mhdnnordenproducto">
+                        <input type="hidden" id="mhdncmuestra" name="mhdncmuestra">
+                        <input type="hidden" id="mhdncensayo" name="mhdncensayo">
+                        <div class="form-group">        
+                            <div class="row"> 
+                                <div class="col-md-2">
+                                    <div class="text-info">Datos del ensayo <span class="text-requerido">*</span></div>                   
+                                    <div>
+                                        <input type="text" name="mtxtcodensayo"id="mtxtcodensayo" class="form-control" disabled>
+                                    </div> 
+                                </div> 
+                                <div class="col-md-7">  
+                                    <div class="text-info">&nbsp;</div>                   
+                                    <div>
+                                        <input type="text" name="mtxtnomensayo"id="mtxtnomensayo" class="form-control" disabled>
+                                    </div> 
+                                </div>
+                                <div class="col-md-3"> 
+                                    <div class="text-info">Unidad Medida</div>                        
+                                    <div>                            
+                                        <select class="form-control select2bs4" id="mcboum" name="mcboum" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                        </select>
+                                    </div>
+                                </div>   
+                            </div> 
+                            <br>
+                            <div style="border-top: 1px solid #ccc; padding-top: 10px;">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>
+                                        <i class="fas fa-clipboard-list"></i> Especificaciones
+                                    </h5>
+                                </div> 
+                            </div>      
+                            <div class="row"> 
+                                <div class="col-md-7">
+                                    <div class="text-info">Valor <span class="text-requerido">*</span></div>  
+                                    <div>    
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                <span id="btncondi">Ausencia</span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" onClick="javascript:ausencia()">Ausencia</a>
+                                                    <a class="dropdown-item" onClick="javascript:igual()">=</a>
+                                                    <a class="dropdown-item" onClick="javascript:mayor()"><</a>
+                                                    <a class="dropdown-item" onClick="javascript:menor()">></a>
+                                                    <a class="dropdown-item" onClick="javascript:mayorigual()"><=</a>
+                                                    <a class="dropdown-item" onClick="javascript:menorigual()">>=</a>
+                                                </div>
+                                                <input type="hidden" id="mhdncondi" name="mhdncondi">  
+                                            </div>
+                                            <input type="text" name="mtxtvalor_esp"id="mtxtvalor_esp" class="form-control" >
+                                        </div> 
+                                    </div>
+                                </div> 
+                                <div class="col-md-2"> 
+                                    <div class="text-info">Exponencial</div>                        
+                                    <div>                            
+                                        <select class="form-control" id="mcbosexponente_esp" name="mcbosexponente_esp" style="width: 100%;">
+                                            <option value="N" selected="selected">NO</option>
+                                            <option value="S" >SI</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="col-md-3">
+                                    <div class="text-info">Valor Exponente <span class="text-requerido">*</span></div>                    
+                                    <div>
+                                        <input type="text" name="mtxtvalorexpo_esp"id="mtxtvalorexpo_esp" class="form-control" >
+                                    </div> 
+                                </div>
+                            </div>
+                            </div> 
+                            <div style="border-top: 1px solid #ccc; padding-top: 10px;">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>
+                                        <i class="fas fa-vial"></i> Resultados
+                                    </h5>
+                                </div> 
+                            </div>    
+                            <div class="row"> 
+                                <div class="col-md-7"> 
+                                    <div class="text-info">Valor <span class="text-requerido">*</span></div>  
+                                    <div>    
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                <span id="btncondi_resul">Ausencia</span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" onClick="javascript:ausencia_resul()">Ausencia</a>
+                                                    <a class="dropdown-item" onClick="javascript:igual_resul()">=</a>
+                                                    <a class="dropdown-item" onClick="javascript:mayor_resul()"><</a>
+                                                    <a class="dropdown-item" onClick="javascript:menor_resul()">></a>
+                                                    <a class="dropdown-item" onClick="javascript:mayorigual_resul()"><=</a>
+                                                    <a class="dropdown-item" onClick="javascript:menorigual_resul()">>=</a>
+                                                </div>
+                                                <input type="hidden" id="mhdncondi_res" name="mhdncondi_res">  
+                                            </div>
+                                            <input type="text" name="mtxtvalor_resul"id="mtxtvalor_resul" class="form-control" >
+                                        </div> 
+                                    </div>
+                                </div> 
+                                <div class="col-md-2"> 
+                                    <div class="text-info">Exponencial</div>                        
+                                    <div>                            
+                                        <select class="form-control" id="mcbosexponente_resul" name="mcbosexponente_resul" style="width: 100%;">
+                                            <option value="" selected="selected">Ninguno</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="col-md-3">
+                                    <div class="text-info">Valor Exponente <span class="text-requerido">*</span></div>                    
+                                    <div>
+                                        <input type="text" name="mtxtvalorexpo_resul"id="mtxtvalorexpo_resul" class="form-control" >
+                                    </div> 
+                                </div>
+                            </div>
+                            </div>    
+                            <div class="row"> 
+                                <div class="col-md-3"> 
+                                    <div class="text-info">Resultado</div>                        
+                                    <div>                
+                                        <select class="form-control" id="mcboresultado" name="mcboresultado" style="width: 100%;">
+                                            <option value="" selected="selected"></option>
+                                            <option value="C" >CONFORME</option>
+                                            <option value="N" >NO CONFORME</option>
+                                            <option value="NA" >NO APLICA</option>
+                                            <option value="AA" >ALTO EN AZUCAR</option>
+                                            <option value="AS" >ALTO EN SODIO</option>
+                                            <option value="GS" >ALTO EN GRASAS SATURADAS</option>
+                                            <option value="GT" >CONTIENE GRASAS TRANS</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                            </div>      
+                        </div>
+                    </form>
+                
+            </fieldset>
+        </div>
+        <div class="modal-footer w-100 d-flex flex-row" style="background-color: #D4EAFC;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <button type="reset" class="btn btn-default" id="mbtnCIngresult" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="frmIngresult" class="btn btn-info" id="mbtnGIngresult">Grabar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
 
 

@@ -66,6 +66,12 @@ class Cregresult extends CI_Controller {
         echo json_encode($retorna);		
     }
 
+    public function getcboum() {	// Visualizar los Tipo Equipos de Registro	
+		
+		$resultado = $this->mregresult->getcboum();
+		echo json_encode($resultado);
+	}
+
 	public function pdfInformeMuestra($cinternoordenservicio,$cmuestra) { // recupera los cPTIZACION
         $this->load->library('pdfgenerator');
 
