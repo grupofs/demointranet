@@ -482,10 +482,25 @@ $('#tblListResultados tbody').on('dblclick', 'td', function () {
     }else if(rowData.condi_espe == '>='){     
         menorigual(); 
     }
+
     $('#mtxtvalor_esp').val(rowData.valor_espe);
     $('#mcbosexponente_esp').val(rowData.esexpo_espe).trigger("change");
     $('#mtxtvalorexpo_esp').val(rowData.valexpo_espe);
-    //$('#mcbocondi_resul').val(rowData.condi_resul);
+    
+    if(rowData.condi_espe == 'Ausencia'){
+        ausencia_resul();  
+    }else if(rowData.condi_espe == '='){     
+        igual_resul(); 
+    }else if(rowData.condi_espe == '<'){     
+        mayor_resul(); 
+    }else if(rowData.condi_espe == '>'){     
+        menor_resul(); 
+    }else if(rowData.condi_espe == '<='){     
+        mayorigual_resul(); 
+    }else if(rowData.condi_espe == '>='){     
+        menorigual_resul(); 
+    }
+    
     $('#mtxtvalor_resul').val(rowData.valor_resul);
     $('#mcbosexponente_resul').val(rowData.esexpo_resul).trigger("change");
     $('#mtxtvalorexpo_resul').val(rowData.valexpo_resul);

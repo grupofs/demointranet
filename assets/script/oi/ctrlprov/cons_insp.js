@@ -63,7 +63,7 @@ $(function () {
 				'info': true,
 				'filter': true,
 				'ajax': {
-					"url": BASE_URL + 'at/ctrlprov/ccons_insp/search',
+					"url": BASE_URL + 'oi/ctrlprov/ccons_insp/search',
 					"type": "POST",
 					"data": function (d) {
 						d.afecha = ($('#activar_fecha').is(':checked')) ? 1 : 0;
@@ -293,7 +293,7 @@ $(function () {
 	 * @returns {string}
 	 */
 	objInsp.getLink = function () {
-		return BASE_URL + 'at/ctrlprov/ccons_insp/pdf?codigo=' + objInsp.pdf.codigo + '&fecha=' + objInsp.pdf.fecha;
+		return BASE_URL + 'oi/ctrlprov/ccons_insp/pdf?codigo=' + objInsp.pdf.codigo + '&fecha=' + objInsp.pdf.fecha;
 	};
 
 	/**
@@ -305,7 +305,7 @@ $(function () {
 		} else {
 			objInsp.loading = true;
 			$.ajax({
-				url: BASE_URL + 'at/ctrlprov/ccons_insp/close_download',
+				url: BASE_URL + 'oi/ctrlprov/ccons_insp/close_download',
 				method: 'POST',
 				data: objInsp.pdf,
 				dataType: 'json',
@@ -340,7 +340,7 @@ $(function () {
 	 * @param linkPdf
 	 */
 	objInsp.download = function (linkPdf) {
-		const url = BASE_URL + 'at/ctrlprov/ccons_insp/download?filename=' + linkPdf;
+		const url = BASE_URL + 'oi/ctrlprov/ccons_insp/download?filename=' + linkPdf;
 		const download = window.open(url, '_blank');
 		if (!download) {
 			objPrincipal.alert('warning', 'Habilite la ventana emergente de su navegador.');
@@ -365,7 +365,7 @@ $(function () {
 		$.ajax({
 			type: 'ajax',
 			method: 'post',
-			url: baseurl + "at/ctrlprov/cregctrolprov/getcboclieserv",
+			url: baseurl + "oi/ctrlprov/cregctrolprov/getcboclieserv",
 			dataType: "JSON",
 		}).done(function(res) {
 			$('#filtro_cliente').html(res);
@@ -381,7 +381,7 @@ $(function () {
 		$.ajax({
 			type: 'ajax',
 			method: 'post',
-			url: baseurl + "at/ctrlprov/ccons_insp/get_areas",
+			url: baseurl + "oi/ctrlprov/ccons_insp/get_areas",
 			data: {
 				ccliente: idCliente,
 			},
@@ -407,7 +407,7 @@ $(function () {
 		$.ajax({
 			type: 'ajax',
 			method: 'post',
-			url: baseurl + "at/ctrlprov/cregctrolprov/getcboprovxclie",
+			url: baseurl + "oi/ctrlprov/cregctrolprov/getcboprovxclie",
 			data: {
 				ccliente: idCliente,
 			},
@@ -426,7 +426,7 @@ $(function () {
 		$.ajax({
 			type: 'ajax',
 			method: 'post',
-			url: baseurl + "at/ctrlprov/cregctrolprov/getcboestado",
+			url: baseurl + "oi/ctrlprov/cregctrolprov/getcboestado",
 			data: {},
 			dataType: "JSON",
 		}).done(function(res) {
@@ -444,7 +444,7 @@ $(function () {
 		$.ajax({
 			type: 'ajax',
 			method: 'post',
-			url: baseurl + "at/ctrlprov/cregctrolprov/getcbomaqxprov",
+			url: baseurl + "oi/ctrlprov/cregctrolprov/getcbomaqxprov",
 			data: {
 				cproveedor: idProveedor,
 			},
@@ -482,7 +482,7 @@ $(function () {
 			"responsive"    : false,
 			"select"        : true,
 			'ajax': {
-				"url": baseurl + 'at/ctrlprov/ccons_insp/get_accion_correctiva',
+				"url": baseurl + 'oi/ctrlprov/ccons_insp/get_accion_correctiva',
 				"type": "POST",
 				"data": function (d) {
 					d.codigo = codigo;
@@ -541,7 +541,7 @@ $(function () {
 		const caudi = button.data('codigo');
 		const proveedor = button.data('proveedor');
 		$.ajax({
-			url: baseurl + 'at/ctrlprov/ccons_insp/get_proveedor',
+			url: baseurl + 'oi/ctrlprov/ccons_insp/get_proveedor',
 			method: 'POST',
 			data: {
 				proveedor: proveedor,
