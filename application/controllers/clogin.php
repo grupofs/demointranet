@@ -127,7 +127,7 @@ class Clogin extends CI_Controller {
 
 	
 /*****************************/
-/** RECUPERAR PASSWORD **/ 		
+/** CAMBIAR PASSWORD **/ 		
 	public function change_pass($cia = "") { // Restablecer Cuenta Bloqueada
 		$data = array();
 		$data["ccia"] = $cia;
@@ -187,7 +187,7 @@ class Clogin extends CI_Controller {
 		//si el password se ha cambiado correctamente y actualizado los datos
 		if($this->mlogin->changepasw_login($parametros) === TRUE){						
 			$retorno = array(
-				'respuesta' =>  "Su password ha sido modificado correctamente.",
+				'respuesta' =>  "Por favor inicia sesión con la nueva contraseña.",
 				'valor' 	=>  2
 			);
 			echo json_encode($retorno);	
@@ -199,7 +199,9 @@ class Clogin extends CI_Controller {
 			echo json_encode($retorno);	
 		}
 	}
-
+	
+/*****************************/
+/** RECUPERAR PASSWORD **/ 
 	public function unlock_pass($cia='') { // Recuperar Password	
 		$data = array();
 		$data['ccia'] = $cia;
@@ -226,36 +228,48 @@ class Clogin extends CI_Controller {
 		
         if($validar == '0'){  	
         	//obtenemos los datos del usuario porque existe el email
-        	$userData = $this->mlogin->getUserData($this->input->post("email"));
-        	//si se ha actualiado el request_token y todo ha ido bien
+			$userData = $this->mlogin->getUserData($this->input->post("email"));
+			$codususer = $userData->id_usuario;
+			
+			$s_usuario = array(
+				's_idusuario' 	=> $userData->id_usuario, 
+				's_cia' 		=> $ccia,
+				's_dmail' 		=> $userData->email_acceso,
+				'login' 		=> TRUE
+			);			
+			$this -> session -> set_userdata($s_usuario);
+
         	//enviamos un email al usuario
-        	if($userData){
-        		if($this->sendMailRecoveryPass($userData,$comp) === TRUE){							
+        	if($userData){				
+        		if($this->sendMailRecoveryPass($userData) === TRUE){							
 					$retorno = array(
 						'respuesta' =>  "Se ha enviado un email a su correo para recuperar su password, tiene 20 minutos",
-						'valor' 	=>  3
+						'valor' 	=>  3,
+						'iduser' 	=>  $codususer
 					);
 					echo json_encode($retorno);	
         		}else{						
 					$retorno = array(
 						'respuesta' =>  "Ha ocurrido un error enviando el email, pruebe más tarde.",
-						'valor' 	=>  -6
+						'valor' 	=>  -6,
+						'iduser' 	=>  $codususer
 					);
 					echo json_encode($retorno);	
         		}
         	}else{					
 				$retorno = array(
 					'respuesta' =>  "Ha ocurrido un error validando email, use otro.",
-					'valor' 	=>  -6
+					'valor' 	=>  -6,
+					'iduser' 	=>  null
 				);
 				echo json_encode($retorno);	
 			}
         }
 	}
-	
-	private function sendMailRecoveryPass($userdata, $comp) { // Envio de Email
+
+	private function sendMailRecoveryPass($userdata) { // Envio de Email
 		
-        $from = "plataforma@grupofs.com";
+        $from = "intranet@grupofs.com";
         $namfrom = "PLATAFORMA SOPORTE TI";		
 
         $replyto = "plataforma@grupofs.com";
@@ -265,8 +279,10 @@ class Clogin extends CI_Controller {
 		$this->load->library("email");
 		
 		$iduser = $userdata->id_usuario;
+		$randAcceso = $userdata->nroseguridad;
 
 		$emailData = $this->mlogin->getconfigemail('011');
+
 		if($emailData){
 			$mailhost = $emailData->DSERVER;
 			$mailport = $emailData->NPUERTO;
@@ -286,39 +302,37 @@ class Clogin extends CI_Controller {
 			'charset' => 'utf-8',
 			'newline' => "\r\n",
 			'crlf' => "\r\n",
-		);	
-		
-		$VarToken = $userdata->token;
+		);			
+		//$VarToken = $userdata->token;
 
 		$to = $userdata->email_acceso;
-        $cc = 'sistemas@grupofs.com';
+        //$cc = 'eortega@grupofs.com';
 
-        $asunto = "Recuperación de Contraseña. ";
-			
-		$mensaje = 'Hola '.$to.'.<br>';
-		$mensaje .= '<table><tr><td align="justify" colspan="3">Hemos detectado que necesita recuperar su  <b>contraseña</b>, para acceder a tu cuenta de nuestra plataforma. <br> Puedes continuar con el cambio de tu contraseña haciendo click en el el boton del enlace.
-			<br></td></tr>';
-		$mensaje .= '<tr><td colspan="3"></td></tr>';
-		$mensaje .= '<tr ><td></td><td align="center" >';
-		$mensaje .= '<table cellpadding="0" cellmargin="0" border="0" height="44" width="320" style="border-radius: 8px; border:5px solid #0080FF">
-			<tr>
-		  		<td bgcolor="#0080FF" valign="middle" align="center" width="320">
-					<div style="font-size: 18px; color: #ffffff; line-height: 1; margin: 0; padding: 0; mso-table-lspace:0; mso-table-rspace:0;">
-			  			<a href="'.base_url("/clogin/recovery_password/$VarToken/$comp/$iduser").'" style="text-decoration: none; color: #ffffff; border: 0; font-family: Arial, arial, sans-serif; mso-table-lspace:0; mso-table-rspace:0;" border="0">Recuperar contraseña</a>
-					</div>
-		  		</td>
-			</tr>
-	  	</table>'; 
-	  	$mensaje .= '</td><td></td></tr></table><br>Si tienes dudas nos puedes contactar en el siguiente email - sistemas@grupofs.com';
-		$mensaje .= '<br><br>Saludos,<br> Equipo de sistemas - GrupoFS.<br>';
-		$mensaje .= '<br><small><b>Recuerda :: </b><br>Si no haz solicitado recuperar tu contraseña, solo ignora este mensaje.</small>';
+		$asunto = "[GrupoFS] Solicitud para restablecer la contraseña";
 		
+		$mensaje = '<div style="width:600px;max-width:100%;background:#fff;border-radius:6px;margin:0 auto"> <img width="100%" src="'.public_url().'images/EmailCab.jpg" tabindex="0"/>';
+		$mensaje .= '<div style="padding:0 20px 40px"> <table style="border-spacing:0;float:right;width:100%;line-height:32px;margin-top:16px;font-size:14px;border-radius:4px">  
+			<tbody> <tr> <td width="100%"> </td></tr> </tbody> </table> </div>
+			<div style="clear:both"></div>
+			<h3 style="font-weight:bold;font-size:24px;line-height:36px;margin:16px 0;color:#1e2026">Restablecer la contraseña </h3>
+			<p style="font-weight:normal;margin:16px 0 0 0;color:#474d57">Ha solicitado restablecer la contraseña vinculada a la plataforma de la empresa.<a style="color:#396acc;text-decoration:underline"></a> </p>
+			<p style="font-weight:normal;color:#474d57">Tenga en cuenta que toda información es obtenida desde la Plataforma Web</p>
+			<p style="font-weight:normal;color:#474d57">Para confirmar su solicitud, utilice el código de 6 digitos a continuación: </p>
+			<p style="font-weight:normal;color:#474d57"> </p>
+			<div style="font-size:32px;margin-top:16px;color:#1e2026">'.$randAcceso.'</div>
+			<p style="font-weight:normal;margin:16px 0 0 0;color:#474d57"> </p>
+			<p style="font-weight:normal;color:#474d57">El código de verificación tendrá una validez de 20 minutos. No comparta este código con nadie. Si no reconoce esta actividad, comuníquese con nuestro servicio de atención al cliente de inmediato en  
+			<a style="text-decoration-line:none;font-weight:normal;line-height:24px;color:#f0b90b" href="https://grupofs.com/#ContactoFS" target="_blank" > https://grupofs.com/#ContactoFS </a>. </p>
+			<p style="font-weight:normal;color:#474d57"> </p>
+			<p style="font-weight:normal;margin:0;font-size:14px;line-height:22px;color:#76808f;margin-top:36px">Equipo GrupoFS TI<br>Este es un mensaje automático, no responda.</p>
+			<p style="font-weight:normal;margin:0;font-size:14px;line-height:22px;color:#aeb4bc;text-align:center">Copyright © sistemas :: 2018-2020 GrupoFS. Todos los Derechos Reservados. - All rights reserved.</p>
+			</div>';		
  
         //cargamos la configuración para enviar con gmail
         $this->email->initialize($configGrupofs); 
         $this->email->from($from, $namfrom);
         $this->email->to($to);
-        $this->email->cc($cc);
+        //$this->email->cc($cc);
         $this->email->reply_to($replyto, $replynam);
 		$this->email->subject($asunto);
 		$this->email->message($mensaje);
@@ -330,28 +344,52 @@ class Clogin extends CI_Controller {
         	return FALSE;
 		}		
 	}
+
+	public function valcodigo() { // recuperar Password		
+		$iduser = $this->input->post("iduser");
+		$codverif = $this->input->post("codverif");
+		$varcia = $this->input->post("varcia");
+		
+        if($codverif <> ''){  	
+        	//
+			$validacion = $this->mlogin->getvalcodigo($iduser,$codverif);			
+        	//
+        	if($validacion){							
+				$retorno = array(
+					'respuesta' =>  "Su código es correcto.",
+					'valor' 	=>  1,
+					'ccia'		=> $varcia
+				);
+				echo json_encode($retorno);	
+        	}else{					
+				$retorno = array(
+					'respuesta' =>  "Su código fue rechazado.",
+					'valor' 	=>  0,
+					'ccia'		=> $varcia
+				);
+				echo json_encode($retorno);	
+			}
+        }
+	}
 	
-	public function recovery_password($token = "",$cia = "",$iduser ="") { // Ejecuta el proceso TOKEN enviado a email
+	/*public function recovery_password() {
+		$cia = $this->input->post("ccia");
+		redirect(base_url("clogin/change_pass/"+$cia),"refresh");
+		//$this->change_pass($cia);
+	}*/
+
+	public function recovery_password($cia = "") { // Ejecuta el proceso TOKEN enviado a email ($token = "",$cia = "",$iduser ="",$valverif ="")
 		//si el password ha caducado
-		if($this->checkIsLiveToken($token) === FALSE)
+		/*if($this->checkIsLiveToken($token) === FALSE)
 		{
 			$this->session->set_flashdata(
 				"expired_request", "Si necesita recuperar su password rellene el 
 				formulario con su email y le haremos llegar un correo con instrucciones"
 			);
 			redirect(base_url("clogin/request_password"),"refresh");
-		}
-
-		$datosuser = $this->mlogin->getUser($iduser);
-
-		$s_usuario = array(
-			's_idusuario' 	=> $iduser, 
-			's_cia' 		=> $cia,
-			's_dmail' 		=> $datosuser->email_acceso,
-			'login' 		=> TRUE
-		);
-		   
-		$this -> session -> set_userdata($s_usuario);
+		}*/
+		$iduser = $this-> session-> userdata('s_idusuario');
+		$email = $this-> session-> userdata('s_dmail');
 
 		if($cia  == 1){
 			$ccia = 'fs';
@@ -365,23 +403,21 @@ class Clogin extends CI_Controller {
 		$data["idcia"] = $cia;
 		$data["tipo"] = '1';		
 		$data["ccia"] = $ccia;		
-		$data["idusuario"] = $this-> session-> userdata('s_idusuario');	
-		$data["dmail"] = $this-> session-> userdata('s_dmail');
+		$data["idusuario"] = $iduser;	
+		$data["dmail"] = $email;
 		$data['tipo'] = '1';
 		
-		$this->session->set_userdata("id_user_recovery_pass", $this->checkIsLiveToken($token)->id_usuario);
+		//$this->session->set_userdata("id_user_recovery_pass", $this->checkIsLiveToken($token)->id_usuario);
 		
 		if ($cia  == 1 or $cia  == 2 or $cia  == 0) :
 			$this->load->view("seguridad/vlogin_changepwd", $data);
 		else:
 			$this->load->view('welcome_message');
 		endif;
-	}
-	
+	}	
 	private function checkIsLiveToken($token) { // Verifica si el TOKEN a expirado
 		return $this->mlogin->checkIsLiveToken($token);
-	}
-	
+	}	
 	private function token() { // Genera un Token para cada usuario
         return sha1(uniqid(rand(),true));
 	}

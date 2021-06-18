@@ -96,6 +96,8 @@
   </body>
 
   <script src="<?php echo public_url(); ?>template/GUI/plugins/jquery/jquery.min.js"></script>
+  <script src="<?php echo public_url(); ?>template/GUI/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="<?php echo public_url(); ?>template/GUI/plugins/jquery-validation/additional-methods.min.js"></script>
   <script src="<?php echo public_url(); ?>template/GUI/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="<?php echo public_url(); ?>template/GUI/plugins/sweetalert2/sweetalert2.all.min.js"></script>
   <script src="<?php echo public_url(); ?>template/GUI/dist/js/adminlte.js"></script>   

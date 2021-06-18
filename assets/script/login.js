@@ -4,8 +4,33 @@
 var myCoolJavascriptVariable;
 var pos = 0;
 
+const objPrincipal = {};
+
 myCoolJavascriptVariable = window.location.href.split("/");
  
+$(function() {
+	/**
+	 * Muestra una carga a un boton y lo desactiva
+	 * @param boton
+     */
+	objPrincipal.botonCargando = function(boton) {
+		const icon = boton.find('i.fa');
+		if (icon.length) icon.hide();
+		boton.prepend('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>');
+		boton.prop('disabled', true);
+	};
+	/**
+	 * Libera el boton de la carga y lo activa
+	 * @param boton
+     */
+	objPrincipal.liberarBoton = function(boton) {
+		const carga = boton.find('span.spinner-border');
+		const icon = boton.find('i.fa');
+		if (carga.length) carga.remove();
+		if (icon.length) icon.show();
+		boton.prop('disabled', false);
+	}
+});
  
 login = function() {
 	$(document).ready(function () {
@@ -64,57 +89,6 @@ login = function() {
 		});
 	});
 };
-
-unlock_pass = function() {
-	$(document).ready(function () {
-		if($('#tipo').val()=='1'){
-			$('#email').val('');
-			$("#email").prop({readonly:false});
-		}else if($('#tipo').val()=='2'){
-			$("#email").prop({readonly:true});
-		} 
-	});
-
-	$('#frmrecoverpwd').submit(function(event){
-		event.preventDefault();
-		
-		var request = $.ajax({
-			url:$('#frmrecoverpwd').attr("action"),
-			type:$('#frmrecoverpwd').attr("method"),
-			data:$('#frmrecoverpwd').serialize(),
-			error: function(){
-				Vtitle = 'No se puede Acceder por Error';
-				Vtype = 'error';
-				sweetalert(Vtitle,Vtype); 
-			}
-		});	
-		request.done(function( respuesta ) {
-			var posts = JSON.parse(respuesta);
-			if(posts.valor == -6){		
-				Swal.fire({
-					title: 'Error en Validar Email!',
-					text: posts.respuesta,
-					type: 'error',
-				})
-			}else if(posts.valor == 3){		
-				Swal.fire({
-					title: 'Envio de Email!',
-					text: posts.respuesta,
-					position: 'center',
-					type: 'success',
-					showConfirmButton: false,
-					timer: 6000
-				}).then((result) => {
-					if (result.dismiss === Swal.DismissReason.timer) {
-						var retornar = document.getElementById('btnreturn');
-						retornar.click();
-					}
-				})
-			}
-			
-		});
-	});
-}
 
 change_pass = function() {
 	$(document).ready(function () {
@@ -218,17 +192,15 @@ change_pass = function() {
 			var posts = JSON.parse(respuesta);
 			if(posts.valor == 2){		
 				Swal.fire({
-					title: 'Conforme!!',
+					title: 'Contraseña cambiada!!',
 					text: posts.respuesta,
 					position: 'center',
 					type: 'success',
-					showConfirmButton: false,
-					timer: 2200
+					showConfirmButton: true,
+					confirmButtonText: 'Iniciar sesión'
 				}).then((result) => {
-					if (result.dismiss === Swal.DismissReason.timer) {
-						var retornar = document.getElementById('btnreturn');
-						retornar.click();
-					}
+					var retornar = document.getElementById('btnexit');
+					retornar.click();
 				})				
 			}else{	
 				Swal.fire({
@@ -240,6 +212,157 @@ change_pass = function() {
 			
 		});
 	});	
+}
+
+unlock_pass = function() {
+	$(document).ready(function () {						
+		$('#cardemail').show(); 
+		$('#cardverif').hide();
+				
+		if($('#tipo').val()=='1'){
+			$('#email').val('');
+			$("#email").prop({readonly:false});
+		}else if($('#tipo').val()=='2'){
+			$("#email").prop({readonly:true});
+		} 
+
+		//var vcia = $('#cia').val();
+		
+		$('#frmrecoverpwd').validate({
+			rules: {
+			},
+			messages: {
+			},
+			errorElement: 'span',
+			errorPlacement: function (error, element) {
+			  error.addClass('invalid-feedback');
+			  element.closest('.form-group').append(error);
+			},
+			highlight: function (element, errorClass, validClass) {
+			  $(element).addClass('is-invalid');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+			  $(element).removeClass('is-invalid');
+			},        
+			submitHandler: function (form) {
+				const botonEvaluar = $('#idbuttongrupo');
+				var request = $.ajax({
+					url:$('#frmrecoverpwd').attr("action"),
+					type:$('#frmrecoverpwd').attr("method"),
+					data:$('#frmrecoverpwd').serialize(),
+					error: function(){
+						Vtitle = 'No se puede Acceder por Error';
+						Vtype = 'error';
+						sweetalert(Vtitle,Vtype); 
+						objPrincipal.liberarBoton(botonEvaluar);
+					},
+					beforeSend: function() {
+						objPrincipal.botonCargando(botonEvaluar);
+					}
+				});	
+				request.done(function( respuesta ) {
+					var posts = JSON.parse(respuesta);
+					if(posts.valor == -6){		
+						Swal.fire({
+							title: 'Error en Validar Email!',
+							text: posts.respuesta,
+							type: 'error',
+						})
+					}else if(posts.valor == 3){		
+						Swal.fire({
+							title: 'Envio de Email!',
+							text: posts.respuesta,
+							position: 'center',
+							type: 'success',
+							showConfirmButton: false,
+							timer: 4000
+						}).then((result) => {
+							if (result.dismiss === Swal.DismissReason.timer) {						
+								$('#cardverif').show(); 
+								$('#cardemail').hide();
+								$('#iduser').val(posts.iduser);
+								objPrincipal.liberarBoton(botonEvaluar);
+							}
+						})
+					}					
+				});
+				return false;
+			}
+		});
+		
+		$('#frmverifsegu').validate({
+			rules: {
+			},
+			messages: {
+			},
+			errorElement: 'span',
+			errorPlacement: function (error, element) {
+			  error.addClass('invalid-feedback');
+			  element.closest('.form-group').append(error);
+			},
+			highlight: function (element, errorClass, validClass) {
+			  $(element).addClass('is-invalid');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+			  $(element).removeClass('is-invalid');
+			},        
+			submitHandler: function (form) {
+				const botonEvaluar = $('#btnSiguiente');
+				var request = $.ajax({
+					url:$('#frmverifsegu').attr("action"),
+					type:$('#frmverifsegu').attr("method"),
+					data:$('#frmverifsegu').serialize(),
+					error: function(){
+						Vtitle = 'No se puede Acceder por Error';
+						Vtype = 'error';
+						sweetalert(Vtitle,Vtype); 
+						objPrincipal.liberarBoton(botonEvaluar);						
+						$('#cardemail').show(); 
+						$('#cardverif').hide();
+						$('#frmverifsegu').trigger("reset");
+					},
+					beforeSend: function() {
+						objPrincipal.botonCargando(botonEvaluar);
+					}
+				});	
+				request.done(function( respuesta ) {
+					var posts = JSON.parse(respuesta);
+					if(posts.valor == 0){		
+						Swal.fire({
+							title: 'Error en Validar Codigo!',
+							text: posts.respuesta,
+							type: 'error',
+						})
+					}else if(posts.valor == 1){		
+						Swal.fire({
+							title: 'Codigo Validado!',
+							text: posts.respuesta,
+							position: 'center',
+							type: 'success',
+							showConfirmButton: false,
+							timer: 4000
+						}).then((result) => {
+							if (result.dismiss === Swal.DismissReason.timer) {								
+								objPrincipal.liberarBoton(botonEvaluar);
+								var varcia = posts.ccia
+								window.open(baseurl+"clogin/recovery_password/"+varcia,"_parent");
+							}
+						})
+					}
+					
+				});
+				return false;
+			}
+		});
+	});
+	
+	$("#btnreturn").click(function (){   		 
+		$('#cardemail').show(); 
+		$('#cardverif').hide();
+		$('#frmverifsegu').trigger("reset");
+	});
+
+
 }
 
 
@@ -274,4 +397,5 @@ sweetalert = function(Vtitle,Vtype){
 	  title: Vtitle
 	})
 };
+
 
