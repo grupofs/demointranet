@@ -141,7 +141,7 @@ $(document).ready(function() {
                     Vtitle = 'Inspección Guardada!!!';
                     Vtype = 'success';
                     sweetalert(Vtitle,Vtype); 
-                    otblListctrlprov.ajax.reload(null,false);   
+                    $('#btnBuscar').click();  
                     objPrincipal.liberarBoton(botonEvaluar);    
                 });
             });
@@ -346,10 +346,19 @@ $("#btnBuscar").click(function (){
             },
             {data: 'periodo', "class" : "col-s"},
             {data: 'destado', "class" : "col-sm"},
-            {data: 'finspeccion', "class" : "col-s"},
+            {"orderable": false, "class": "col-s", 
+              render:function(data, type, row){
+                if(row.finspeccion == '01/01/1900'){
+                    vfechaip = '';
+                }else{
+                    vfechaip = row.finspeccion;
+                }
+                return '<div>'+vfechaip+'</div>'
+            }},
             {data: 'inspector', "class" : "col-xm"},
             {data: 'dinformefinal', "class" : "col-sm"},
             {data: 'resultado', "class" : "col-xm"},
+            {data: 'espeligro'},
             {responsivePriority: 1, "orderable": false, "class" : "col-s", 
                 render:function(data, type, row){
                     return '<div>'+
@@ -362,7 +371,12 @@ $("#btnBuscar").click(function (){
         ],  
 		"columnDefs": [
             { "targets": [0], "visible": false },
-		],
+		],  
+        "rowCallback":function(row,data){            
+            /*if(data.espeligro == "S"){
+                $(row).css("color","red");
+            }*/
+        },
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
@@ -372,10 +386,17 @@ $("#btnBuscar").click(function (){
             api.column([0], {} ).data().each( function ( ctra, i ) {                
                 grupo = api.column(1).data()[i];
                 grupo01 = api.column(2).data()[i];
+                
+                speligro = api.column(10).data()[i];
+                if(speligro == "S"){
+                    var varcolor = "#FF0000";
+                }else{
+                    var varcolor = "#000000";
+                }
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
                         '<tr class="group"><td colspan="7" class="subgroup">'+ctra.toUpperCase()+'</td></tr>'+
-                        '<tr class="group"><td colspan="7" class="expand">Area : '+grupo+'<tab><tab>Linea : '+grupo01+'</td></tr>'
+                        '<tr class="group"><td colspan="3" class="expand">Area : '+grupo+'</td><td colspan="4" class="expand" style="color:'+varcolor+'">Linea : '+grupo01+'</td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -383,7 +404,8 @@ $("#btnBuscar").click(function (){
         } 
     }); 
     otblListctrlprov.column( 1 ).visible( false );   
-    otblListctrlprov.column( 2 ).visible( false ); 
+    otblListctrlprov.column( 2 ).visible( false );  
+    otblListctrlprov.column( 10 ).visible( false ); 
 
 
 });
@@ -419,7 +441,12 @@ $("#btnNuevo").click(function (){
     $("#modalCreactrlprov").modal('show');
 
     $('#frmCreactrlprov').trigger("reset");
-    $('#mhdnAccionctrlprov').val('N'); 
+    $('#mhdnAccionctrlprov').val('N');
+
+    var vnfecha = new Date();
+    var vnano = vnfecha. getFullYear();
+    var vnmes = ('00'+vnfecha.getMonth());
+    $('#mtxtregPeriodo').val(vnano+'-'+vnmes.substr(-2));
 
     $.ajax({
         type: 'ajax',

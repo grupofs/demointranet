@@ -203,6 +203,7 @@
                                                         <th>Informe</th>
                                                         <th>Resultado</th>
                                                         <th></th>
+                                                        <th></th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -244,13 +245,18 @@
                                 <fieldset class="scheduler-border" id="regInspeccion">
                                     <legend class="scheduler-border text-primary">Programación de Inspección</legend>
                                     <form class="form-horizontal" id="frmRegInsp" action="<?= base_url('at/ctrlprov/cregctrolprov/setreginspeccion')?>" method="POST" enctype="multipart/form-data" role="form">
-                                        <input type="hidden" name="mtxtidinsp" id="mtxtidinsp">
                                         <input type="hidden" name="mfechainsp" id="mfechainsp">
                                         <input type="hidden" name="mhdnzctipoestado" id="mhdnzctipoestado">
                                         <input type="hidden" name="mhdnccliente" id="mhdnccliente">
                                         <input type="hidden" name="mhdnAccioninsp" id="mhdnAccioninsp"> 
                                         <div class="form-group">
                                             <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="text-info">Código</div>
+                                                    <div> 
+                                                        <input type="text" name="mtxtidinsp" id="mtxtidinsp" class="form-control" readonly>
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-3">
                                                     <div class="text-info">Periodo</div>
                                                     <div> 
@@ -258,11 +264,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <div class="text-info">Estado Inspeccion</div>
+                                                    <div class="text-info">Estado Inspección</div>
                                                     <div>
                                                         <input type="text" name="txtinspestado" id="txtinspestado" class="form-control" disabled>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-3"> 
                                                     <div class="text-info">Fecha Inspeccion</div>                     
                                                     <div class="input-group date" id="txtFInspeccion" data-target-input="nearest">
@@ -275,12 +283,26 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-4">
+                                                    <div class="text-info">Inspector</div>
+                                                    <div>   
+                                                        <select class="form-control select2bs4" id="cboinspinspector" name="cboinspinspector" style="width: 100%;">
+                                                            <option value="" selected="selected">Cargando...</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1" style="text-align: center;">
+                                                    <div class="text-info">AACC</div>
+                                                    <div>   
+                                                        <input type="checkbox" name="swaacc" id="swaacc" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO">
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-3">
-                                                    <div class="text-info">Hora</div>
-                                                    <div class="input-group date" id="mtxtHplaninspeccion" data-target-input="nearest">
-                                                        <input type="text" id="mtxtHplaninsp" name="mtxtHplaninsp" class="form-control datetimepicker-input" data-target="#mtxtHplaninspeccion"/>
-                                                        <div class="input-group-append" data-target="#mtxtHplaninspeccion" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                    <div class="text-info">Incluye Plan Inspección</div>
+                                                    <div>   
+                                                        <input type="checkbox" name="swplaninsp" id="swplaninsp" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO">
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text">Generar Plan</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -298,14 +320,6 @@
                                                     <div class="text-info">Rubro</div>
                                                     <div>                                                  
                                                         <select class="form-control select2bs4" id="cboinsprubro" name="cboinsprubro" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="text-info">Inspector</div>
-                                                    <div>   
-                                                        <select class="form-control select2bs4" id="cboinspinspector" name="cboinspinspector" style="width: 100%;">
                                                             <option value="" selected="selected">Cargando...</option>
                                                         </select>
                                                     </div>
@@ -503,7 +517,7 @@
                     <div class="row">
                         <div class="col-3">
                             <div class="text-info">Periodo</div>
-                            <input type="month" name="mtxtregPeriodo" id="mtxtregPeriodo" class="form-control" value="2021-02" pattern="[0-9]{4}-[0-9]{2}">
+                            <input type="month" name="mtxtregPeriodo" id="mtxtregPeriodo" class="form-control" pattern="[0-9]{4}-[0-9]{2}">
                         </div> 
                     </div> 
                 </div> 
