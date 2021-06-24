@@ -514,6 +514,12 @@ PDFvistaPrevia = function(){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+var_idcoti+"/"+var_nversion);
 };
 
+PDFvistaPreviasolodet = function(){
+    var_idcoti = $('#mtxtidcotizacion').val();
+    var_nversion = $('#mtxtnroversion').val();
+    window.open(baseurl+"lab/coti/ccotizacion/pdfCotisolodet/"+var_idcoti+"/"+var_nversion);
+};
+
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
 };

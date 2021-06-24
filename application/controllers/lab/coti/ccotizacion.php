@@ -686,6 +686,470 @@ class Ccotizacion extends CI_Controller {
         
 	}
 
+	public function pdfCotisolodet($idcoti,$nversion) { // recupera los cPTIZACION
+        $this->load->library('pdfgenerator');
+
+        $date = getdate();
+        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
+
+        $html = '<html>
+                <head>
+                    <title>Cotización solo detalle</title>
+                    <style>
+                        @page {
+                             margin: 0.3in 0.3in 0.3in 0.3in;
+                        }
+                        .teacherPage {
+                            page: teacher;
+                            page-break-after: always;
+                        }
+                        body{
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 9pt;
+                            margin-top: 2cm;
+                            margin-left: 0cm;
+                            margin-right: 0cm;
+                            margin-bottom: 0cm;
+                        }  
+                        header {
+                            position: fixed;
+                            top: 0cm;
+                            left: 0cm;
+                            right: 0cm;
+                            height: 3cm;
+                        }
+                        .cuerpo {
+                            text-align: justify;
+                        }
+                        img.izquierda {
+                            float: left;
+                        }
+                        img.derecha {
+                            float: right;
+                        }
+                        div.page_break {
+                            page-break-before: always;
+                        }
+                        .page-number {
+                          text-align: right;
+                        }
+                        
+                        .page-number:before {
+                          content: counter(page);
+                        }
+                        th { 
+                            text-align: center; 
+                            border: 1px solid black;
+                        }
+                    </style>
+                </head>
+                <body>
+                
+                <header>
+                    <table  width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                        <tr>
+                            <td width="20%" rowspan="4">
+                                <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
+                            </td>
+                            <td width="60%" align="center" rowspan="4">
+                                <h2>COTIZACION DE SERVICIO DE ENSAYO</h2>
+                            </td>
+                            <td width="20%" align="center" colspan="2">
+                                FSC-F-LAB-07
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Versión</td>
+                            <td align="right">02</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td align="right">24/10/2013</td>
+                        </tr>
+                        <tr>
+                            <td>Página</td>
+                            <td align="right"><div class="page-number"></div></td>
+                        </tr>
+                    </table>
+                </header>';
+
+        			
+        $res = $this->mcotizacion->getpdfdatoscoti($idcoti,$nversion);
+        if ($res){
+            foreach($res as $row){
+				$dcotizacion         = $row->dcotizacion;
+				$drazonsocial         = $row->drazonsocial;
+				$nruc         = $row->nruc;
+				$ddireccioncliente         = $row->ddireccioncliente;
+				$dtelefono         = $row->dtelefono;
+				$dcontacto         = $row->dcontacto;
+				$dmail         = $row->dmail;
+                $fcotizacion         = $row->fcotizacion;
+                $imuestreo         = $row->imuestreo;
+                $isubtotal         = $row->isubtotal;
+                $subtotalimuestra = $row->subtotalimuestra;
+                $pigv         = $row->pigv;
+                $pdescuento         = $row->pdescuento;
+                $itotal         = $row->itotal;
+				$cantprod         = $row->cantprod;
+				$summuestra         = $row->summuestra;
+				$cforma_pago         = $row->cforma_pago;
+				$banco         = $row->banco;
+				$detraccion         = $row->detraccion;
+                $entrega         = $row->entrega;
+                $dcantidadminima         = $row->dcantidadminima;
+                $diaspermanecia         = $row->diaspermanecia;
+                $diascoti         = $row->diascoti;
+                $dobservacion         = $row->dobservacion;
+                $usuariocrea         = $row->usuariocrea;
+                $verprecios         = $row->verprecios;
+                $digv         = $row->digv;
+                $ddescuento         = $row->ddescuento;
+                $condescuento         = $row->condescuento;
+                $namefile         = $row->namefile;
+                $ctipocambio         = $row->ctipocambio;
+                $dtipocambio         = $row->dtipocambio;              
+                
+                
+                if ($ctipocambio  == 'S') :
+                    $var_moneda = 'S/.';
+                else:
+                    $var_moneda = '$';
+                endif;
+			}
+		}
+                
+        $html .= '
+            <main>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                    <tr>
+                        <td colspan="4"><b>N°'.$dcotizacion.'</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="height:10px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" ><b>I CLIENTE</b></td>
+                    </tr>
+                    <tr>
+                        <td width="80px">Razón Social:</td>
+                        <td width="360px">'.$drazonsocial.'</td>
+                        <td width="50px">RUC:</td>
+                        <td width="190px">'.$nruc.'</td>
+                    </tr>
+                    <tr>
+                        <td>Dirección:</td>
+                        <td>'.$ddireccioncliente.'</td>
+                        <td>Teléfono:</td>
+                        <td>'.$dtelefono.'</td>
+                    </tr>
+                    <tr>
+                        <td>Contacto:</td>
+                        <td>'.$dcontacto.'</td>
+                        <td>E-mail:</td>
+                        <td>'.$dmail.'</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Fecha:</td>
+                        <td>'.$fcotizacion.'</td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                    <tr>
+                        <td><b>II DETERMINACIONES</b></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr>
+                        <th width="30%" align="center">LOCAL</th>
+                        <th width="35%" align="center">PRODUCTO</th>
+                        <th width="20%" align="center">CONDICIONES DE LA MUESTRA</th>
+                        <th width="15%" align="center">CANTIDAD MUESTRA MINIMA</th>
+                    </tr>';
+                    //</table>
+                    //<table width="700px" align="center" cellspacing="0" cellpadding="3" style="border: 1px solid black;" FRAME="void" RULES="rows">';  
+                    $resprod = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
+                    if ($resprod){
+                        foreach($resprod as $rowprod){
+                            $destablecimiento = $rowprod->destablecimiento;
+                            $dproducto = $rowprod->dproducto;
+                            $condicion = $rowprod->condicion;
+                            $procedencia = $rowprod->procedencia;
+                            $dcantidadminima = $rowprod->dcantidadminima;
+                            $html .= '<tr>
+                                <td width="30%">&nbsp;'.$destablecimiento.' <br> &nbsp;'.$procedencia.'</td>
+                                <td width="35%">&nbsp;'.$dproducto.'</td>
+                                <td width="20%">&nbsp;'.$condicion.'</td>
+                                <td width="15%">&nbsp;'.$dcantidadminima.'</td>
+                            </tr>';
+                        }
+                    }        
+                $html .= '</table>';
+                //<table width="700px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;" FRAME="void" RULES="rows">
+                $html .= '<table width="300px" style="margin-left: 15px; height:25px;">
+                    <tr>
+                        <td>Cantidad de Productos:</td>
+                        <td>'.$cantprod.'</td>
+                        <td>Suma de Muestras:</td>
+                        <td>'.$summuestra.'</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="height:30px;"></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr >
+                        <th width="10%" align="center">Codigo Metodo</th>
+                        <th width="35%" align="center">METODO DE ENSAYO</th>
+                        <th width="10%" align="center">AC / NOAC</th>
+                        <th width="25%" align="center">NORMA / REFERENCIA</th>
+                        <th width="10%" align="center" colspan="3">Cant.</th>
+                    </tr>';
+                    $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
+                    if ($resproddet){
+                        foreach($resproddet as $rowproddet){
+                            $dproductodet = strtoupper($rowproddet->dproducto);
+                            $idproduc = $rowproddet->nordenproducto;
+                            $subtotal = $rowproddet->subtotal;
+                            
+                            if ($verprecios  == 'S') :
+                                $var_subtotal = $subtotal;
+                            else:
+                                $var_subtotal = null;
+                            endif;
+                            
+                            $html .= '<tr>
+                                <td colspan="6" ><h3>'.$dproductodet.'</h3>
+                                </td>
+                                <td align="right"><h3></h3>
+                                </td>
+                            </tr>';
+                                $resensadet = $this->mcotizacion->getlistarensayo($idcoti,$nversion,$idproduc);
+                                if ($resensadet){
+                                    foreach($resensadet as $rowensadet){
+                                        $codigo = $rowensadet->CODIGO;
+                                        $densayo = $rowensadet->DENSAYO;
+                                        $acre = $rowensadet->ACRE;
+                                        $norma = $rowensadet->NORMA;
+                                        $cantidad = $rowensadet->CANTIDAD;
+                                        $costoensa = $rowensadet->CONSTOENSAYO;
+                                        $costo = $rowensadet->COSTO;
+                                        
+                                        if ($verprecios  == 'S') :
+                                            $var_costoensa = $costoensa;
+                                        else:
+                                            $var_costoensa = null;
+                                        endif;
+                                        if ($verprecios  == 'S') :
+                                            $var_costo = $costo;
+                                        else:
+                                            $var_costo = null;
+                                        endif;
+
+                                        $html .= '<tr>
+                                        <td width="10%" align="center">
+                                        '.$codigo.'
+                                        </td>
+                                        <td width="30%">
+                                        '.$densayo.'
+                                        </td>
+                                        <td width="5%" align="center">
+                                        '.$acre.'
+                                        </td>
+                                        <td width="40%">
+                                        '.$norma.'
+                                        </td>
+                                        <td width="15%" align="center" colspan="3">
+                                        '.$cantidad.'
+                                        </td>
+                                        </tr>';
+                                    }
+                                }
+                                $html .= '';
+                        }
+                    }
+                    //<table width="698px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;">';
+                    $html .= '</table>                    
+                    <table width="698px" align="center">';
+                    
+                if ($ctipocambio  == 'S') :
+                    $html .= '<tr>
+                            <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                            <td width="130px" > </td>
+                            <td width="80px"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td> </td>
+                            <td></td> 
+                        </tr>';
+                    if($pdescuento > 0){
+                    $html .= '<tr>
+                                <td></td>
+                                <td> </td>
+                                <td </td>
+                            </tr>
+                            <tr>                
+                                <td></td>
+                                <td> </td>
+                                <td</td>
+                            </tr>';
+                    }
+                    $html .= '<tr>                
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>                
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="height:10px;">
+                            </td>
+                        </tr>';
+                else:
+                    $html .= '<tr>
+                        <td width="530px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                        <td width="70px"></td>
+                        <td width="80px" align="right"></td>
+                    </tr>
+                    <tr>
+                        <td style="height:10px;">
+                        </td>
+                    </tr>';
+                endif;                    
+
+                    $html .= '</table>';
+
+        $html .= '<table width="700px" align="center">
+            <tr>
+                <td><b>III</b></td>
+                <td><b>FORMA DE PAGO:</b></td>
+                <td align="left">'.$cforma_pago.'</td>
+                <td>'.$banco.'</td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td>CCI: 00219400156160801692</td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td>'.$detraccion.'</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="height:10px;">
+                </td>
+            </tr>
+            <tr>
+                <td><b>IV</b></td>
+                <td colspan="2"><b>TIEMPO DE ENTREGA DEL INFORME:</b></td>
+                <td style="text-align: justify;">'.$entrega.'</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="height:10px;">
+                </td>
+            </tr>
+            <tr>
+                <td VALIGN=top><b>V</b></td>
+                <td colspan="4" style="text-align: justify;"><b>CANTIDAD DE MUESTRA MINIMA:</b>  En caso el cliente incumpla estas condiciones la muestra se considerará muestra no idónea y sólo con su autorización será ensayada y reportará como Informe No Oficial.</td>
+            </tr>            
+            <tr>
+                <td colspan="4" style="height:10px;">
+                </td>
+            </tr>
+            <tr>
+                <td VALIGN=top><b>VI</b></td>
+                <td colspan="4" style="text-align: justify;"><b>PERMANENCIA DE LA CONTRA MUESTRA EN EL LABORATORIO:</b>  En caso de que el servicio considere contramuestras, éstas se conservarán en el laboratorio por el período acordado con el cliente, 
+                luego de lo cual serán eliminadas de acuerdo a nuestros procedimientos  internos. En caso el cliente requiera la devolución de la contramuestra, esta deberá ser solicitada antes de la finalización del Tiempo de Custodia ('.$diaspermanecia.')</td>
+            </tr>            
+            <tr>
+                <td colspan="4" style="height:10px;">
+                </td>
+            </tr>
+        </table>';
+        
+        $html .= '<table width="700px" align="center">
+            <tr>
+                <td VALIGN=top ><b>VII</b></td>
+                <td ><b>VIGENCIA DE COTIZACION:</b></td>
+                <td align="left">'.$diascoti.'</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:10px;"></td>
+            </tr>
+            <tr>
+                <td VALIGN=top><b>VIII</b></td>
+                <td colspan="2"><b>ACEPTACION DE LA COTIZACION:</b></td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">En caso de Aceptar la Cotización, favor de enviarla firmada o declaranado su aceptación mediante un correo electronico. Cualquier cambio en la cotización enviada deberá solicitarse antes de iniciado el servicio.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">Al dar su visto bueno, el cliente acepta esta cotización con carácter de contrato.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">Toda la información derivada de las actividades del laboratorio obtenidas a través del servicio brindado se conservará de modo confidencial, excepto por la información que el cliente pone a disposición del público, o cuando lo acuerdan el laboratorio y el cliente.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">Cuando a FS Certificaciones se le solicite por ley o disposiciones contractuales divulgar información confidencial, notificará al cliente salvo que esté prohibido por ley.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">La información acerca del cliente, obtenida de fuentes diferentes del cliente se tratará como información confidencial.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">La emisión de los Informes de Ensayo se realizará en formato digital (PDF), los cuales serán enviados por correo electrónico al cliente. El envío de los informes físicos tiene un costo adicional que será informado al cliente.</td>
+            </tr>
+            <tr>
+                <td VALIGN=top>-</td>
+                <td colspan="2" style="text-align: justify;">Copias adicionales de los informes y las traducciones de los mismos tendrán un costo adicional.</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:10px;"></td>
+            </tr>
+            <tr>
+                <td VALIGN=top width="10px"><b>IX</b></td>
+                <td width="180px"><b>OBSERVACIONES:</b></td>
+                <td>'.$dobservacion.'</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:10px;"></td>
+            </tr>
+        </table>';
+        
+        $html .= '<table width="700px" align="center">
+            <tr>
+                <td colspan="4" style="height:80px;"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td align="center" style="border-top: 1px solid black;">CLIENTE</td>
+                <td></td>
+                <td align="center">FSC LABORATORIO</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="height:10px;"></td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>'.$usuariocrea.'</b></td>
+            </tr>
+        </table>';
+
+        $html .= '</main></body></html>';
+		$filename = 'Cotizacion-'.$namefile;
+        $this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
+        
+	}
+
     public function setduplicarprodxcoti() { // Registrar informe PT
 		$varnull = '';
 		
