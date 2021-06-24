@@ -1,9 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mperfilcliente extends CI_Model{
-	function __construct() {
-		parent::__construct();
-		$this->load->library('session');
+    function __construct() {
+      parent::__construct();
+      $this->load->library('session');
     }
 		
     public function getresumenperfil($parametros) { // Datos del Empleado

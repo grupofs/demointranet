@@ -119,9 +119,6 @@
 /**/
 
 /*DISEÑO PLANTILLA*/ 
-
-
-
     .inline {
         display: inline;
     }
@@ -536,5 +533,15 @@
     .input-group-select-button{
         flex-wrap: inherit !important;
     }
-
 /**/
+
+/*AGRUPACION DATATABLE*/
+    tr.group,
+    tr.group:hover {
+        background-color: #ddd !important;
+        cursor:pointer !important;
+    }
+/**/
+
+
+

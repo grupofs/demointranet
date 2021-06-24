@@ -15,7 +15,7 @@
     elseif(file_exists($rutaimagen)):
         $imgperfil = $imgperfil;
     else:        
-        $imgperfil = 'unknown.png';
+        $imgperfil = $imgperfil;
     endif;
     
     if($cia == '1'):
@@ -262,10 +262,10 @@
 
         <!-- MAIN FOOTER -->
         <footer class="main-footer">
-            <strong>Copyright &copy; sistemas :: 2018-2020 <a href="http://grupofs.com">GrupoFS</a>.</strong>
+            <strong>Copyright &copy; sistemas :: 2018-2021 <a href="http://grupofs.com">GrupoFS</a>.</strong>
             Todos los Derechos Reservados. - All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.1.0 
+                <b>Version</b> 3.4.0 
             </div>
         </footer>
         <!-- /.FOOTER  -->

@@ -9,17 +9,21 @@ $(document).ready(function () {
 
 /*MODULOS*/
     listarModulos = function(){
-        oTable_listamodulo = $('#tablalistaModulos').DataTable({
-            'bJQueryUI'     : true,
-            'scrollY'     	: '280px',
-            'scrollX'     	: true, 
-            'paging'      	: true,
-            'processing'  	: true,      
-            'bDestroy'    	: true,
-            'info'        	: true,
-            'filter'      	: true, 
-            "ordering"		: false,  
-            'stateSave'     : true,  
+        var groupColumn = 1; 
+        oTable_listamodulo = $('#tablalistaModulos').DataTable({  
+            "processing"  	: true,
+            "bDestroy"    	: true,
+            "stateSave"     : true,
+            "bJQueryUI"     : true,
+            "scrollY"     	: "280px",
+            "scrollX"     	: true, 
+            'AutoWidth'     : true,
+            "paging"      	: true,
+            "info"        	: true,
+            "filter"      	: true, 
+            "ordering"		: false,
+            "responsive"    : false,
+            "select"        : true,  
             'ajax'        : {
                 "url"   : baseurl+"adm/ti/csistemas/getlistarmodulos/",
                 "type"  : "POST", 
@@ -28,16 +32,12 @@ $(document).ready(function () {
                 dataSrc : ''        
             },
             'columns'     : [
-                {
-                "class"     :   "index",
-                orderable   :   false,
-                data        :   null,
-                targets     :   0
-                },
-                {data: 'CIA', targets: 1},
-                {data: 'id_modulo',targets: 2},
-                {data: 'desc_modulo', targets: 3},
-                {data: 'TIPO', targets: 4},                           
+                {"class" : "index", orderable : false, data : null},
+                {data: 'CIA'},
+                {data: 'AREA'},
+                {data: 'id_modulo'},
+                {data: 'desc_modulo'},
+                {data: 'TIPO'},                           
                 {"orderable": false, 
                     render:function(data, type, row){
                         return '<div>' + 
@@ -47,12 +47,82 @@ $(document).ready(function () {
                 }
             ],
             "columnDefs": [{
-                "targets": [3], 
+                "targets": [4], 
                 "data": null, 
                 "render": function(data, type, row) { 
                     return '<p><i class="'+row.class_icono+'">&nbsp;</i>&nbsp;'+row.desc_modulo+'<p>';
                 }
-            }]
+            }],
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last = null;
+                var sublast = null;
+                var groupadmin = [];
+                var subgroupadmin = [];
+                var a = 0;
+                var b = 0
+                //api.column([1], {page:'current'} ).data().each( function ( group, i ) {   
+                $(rows).each( function (i) {
+                    group = this.cells[1].innerHTML;                     
+                    if ( last !== group ) {
+                        a++ ;
+                        //$(rows).eq( i ).before(
+                            //'<tr class="group" id="'+i+'"><td colspan="7">'+group.toUpperCase()+'</td></tr>'
+                            $(this ).before('<tr class="group" id="'+a+'"><td colspan="7">'+group.toUpperCase()+'</td></tr>');
+                        //); 
+                        groupadmin.push(a);
+                        last = group;
+                    }
+                } );
+
+                b = a;
+                $(rows).each( function (i) {
+                    
+                    subgroup = this.cells[2].innerHTML;   
+                    if ( sublast !== subgroup ) {
+                        b++;
+                        $(this ).before('<tr class="subgroup" id="'+b+'"><td colspan="7">'+subgroup.toUpperCase()+'</td></tr>');
+                        subgroupadmin.push(b);
+                        sublast = subgroup;
+                    }
+                } );
+                
+                
+                for( var k=0; k < groupadmin.length ; k++){
+                      $("#"+groupadmin[k]).nextUntil("#"+groupadmin[k+1]).addClass(' group_'+groupadmin[k]); 
+                      $("#"+groupadmin[k]).click(function(){
+                            var gid = $(this).attr("id");
+                             $(".group_"+gid).slideToggle(300);
+                      });
+                }
+                for( var k=0; k < subgroupadmin.length ; k++){
+                      $("#"+subgroupadmin[k]).nextUntil("#"+subgroupadmin[k+1]).addClass(' subgroup'+subgroupadmin[k]); 
+                      $("#"+subgroupadmin[k]).click(function(){
+                            var gid = $(this).attr("id");
+                            alert(".subgroup"+gid.style.display);
+                             $(".subgroup"+gid).slideToggle(300);
+                      });
+                }
+                                
+                /*for( var sk=0; sk < subgroupadmin.length; sk++){
+                      $("#"+subgroupadmin[sk]).nextUntil("#"+subgroupadmin[sk+1],".odd").addClass(' subgroup_'+subgroupadmin[sk]); 
+                      $("#"+subgroupadmin[sk]).nextUntil("#"+subgroupadmin[sk+1],".even").addClass(' subgroup_'+subgroupadmin[sk]); 
+
+                      //$("#"+subgroupadmin[sk]).click(function(){
+                      $("#"+subgroupadmin[sk]).on("click", ".subgroupo", function(){
+                          alert("eder");
+                            var sgid = $(this).attr("id");
+                            alert(sgid);
+                             $(".subgroup_"+sgid).slideToggle(300);
+                      });
+                }*/
+                
+            },
+            "initComplete": function (settings, json) {
+                //$("#tablalistaModulos tbody tr.group").click(); 
+                //$("#tablalistaModulos tbody tr.subgroup").click();
+            },
         });
         // Enumeracion 
         oTable_listamodulo.on( 'order.dt search.dt', function () { 
@@ -60,6 +130,8 @@ $(document).ready(function () {
             cell.innerHTML = i+1;
             } );
         }).draw();  
+        
+        oTable_listamodulo.column( 1 ).visible( true );  
     };
 
     $('#collapseModulo').on('show.bs.collapse', function () {
@@ -481,6 +553,7 @@ $(document).ready(function () {
                 var api = this.api();
                 var rows = api.rows( {page:'current'} ).nodes();
                 var last=null;
+                var sublast = null;
      
                 api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
                     if ( last !== group ) {

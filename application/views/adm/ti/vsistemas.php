@@ -51,6 +51,7 @@
                               <tr>     
                                 <th>#</th> 
                                 <th>CIA</th> 
+                                <th>AREA</th> 
                                 <th>ID</th> 
                                 <th>DESCRIPCION</th>
                                 <th>TIPO</th> 

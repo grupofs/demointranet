@@ -315,6 +315,7 @@ class Ccotizacion extends CI_Controller {
                 $fcotizacion         = $row->fcotizacion;
                 $imuestreo         = $row->imuestreo;
                 $isubtotal         = $row->isubtotal;
+                $subtotalimuestra = $row->subtotalimuestra;
                 $pigv         = $row->pigv;
                 $pdescuento         = $row->pdescuento;
                 $itotal         = $row->itotal;
@@ -518,7 +519,7 @@ class Ccotizacion extends CI_Controller {
                         <tr>
                             <td></td>
                             <td> SUBTOTAL</td>
-                            <td align="right">'.$isubtotal.'</td>
+                            <td align="right">'.$subtotalimuestra.'</td> 
                         </tr>';
                     if($pdescuento > 0){
                     $html .= '<tr>
