@@ -459,7 +459,7 @@
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>   
                                                     <button type="button" class="btn btn-danger" id="btnVistaPrevia" onclick="PDFvistaPrevia()"><i class="far fa-file-pdf"></i> Vista Previa</button>
-                                                    <button type="button" class="btn btn-navy" id="btnVistaPreviasolodet" onclick="PDFvistaPreviasolodet()"><i class="far fa-file-pdf"></i> Vista solo Detalle</button>
+                                                    <button type="button" class="btn btn-info" id="btnVistaPreviasolodet" onclick="PDFvistaPreviasolodet()"><i class="far fa-file-pdf"></i> Vista solo Detalle</button>
                                                     <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                                 </div>
                                             </div>
