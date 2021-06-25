@@ -131,7 +131,7 @@ class Minforme extends CI_Model {
     }
 
     public function gettramiteSid($idpttramite) { // Listar Ensayos	
-        $sql = "select idptpropuesta,fecha_tramite,id_tipotramite,codigo,nombproducto,descripcion,idresponsable,comentarios,adj_docum,adj_carta,ruta_docum,ruta_carta,nomb_docum,nomb_carta  
+        $sql = "select idptpropuesta,CONVERT(CHAR(10),fecha_tramite,103) as 'fecha_tramite',id_tipotramite,codigo,nombproducto,descripcion,idresponsable,comentarios,adj_docum,adj_carta,ruta_docum,ruta_carta,nomb_docum,nomb_carta  
                 from pt_tramite  
                 where idpttramite = '".$idpttramite."';";
         $query  = $this->db->query($sql);

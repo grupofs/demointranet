@@ -701,7 +701,11 @@ recuperaListinforme = function(){
             {"orderable": false, "class": "col-xl", 
               render:function(data, type, row){ 
                 if(row.idptservicio == 2 || row.idptservicio == 4 || row.idptservicio == 3){
-                    v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"> #SID </a>'
+                    if(row.idpttramite == 0){
+                        v_sid = ' <a data-toggle="modal" title="Registrar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-plus-circle" style="cursor:pointer;"> #SID </i></a>'
+                    }else{
+                        v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-eye" style="cursor:pointer;"> #SID </i></a>'
+                    }                    
                 }else{
                     v_sid = ''
                 }               
@@ -909,8 +913,6 @@ $('#frmCreaTram').submit(function(event){
         });
     });
 });
-
-
 
 fechaActualReg = function(){
     var fecha = new Date();		
