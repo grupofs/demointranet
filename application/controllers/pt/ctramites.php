@@ -81,6 +81,7 @@ class Ctramites extends CI_Controller {
             '@nombproducto'     =>  $this->input->post('mtxtNombprod'),
             '@descripcion'      =>  $this->input->post('mtxtDescrip'),
             '@comentarios'      =>  $this->input->post('mtxtComentario'),
+            '@idinforme'      	=>  null,
             '@accion'           =>  $this->input->post('mhdnAccionTram')
         );
         $retorna = $this->mtramites->settramite($parametros);

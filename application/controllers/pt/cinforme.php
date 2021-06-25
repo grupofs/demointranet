@@ -199,8 +199,7 @@ class Cinforme extends CI_Controller {
 		$resultado = $this->minforme->delinforme($idptinforme);
 		echo json_encode($resultado);
 	}
-    public function getlistinforme() {	// Recupera Listado de Reg. informes	
-        
+    public function getlistinforme() {	// Recupera Listado de Reg. informes        
 		$varnull 			= 	'';
             
         $parametros = array(
@@ -209,6 +208,32 @@ class Cinforme extends CI_Controller {
 		$resultado = $this->minforme->getlistinforme($parametros);
 		echo json_encode($resultado);
 	}
+    public function gettramiteSid() {	// Recupera Listado de Reg. informes	
+        
+        $idpttramite = $this->input->post('idpttramite');	
+		$resultado = $this->minforme->gettramiteSid($idpttramite);
+		echo json_encode($resultado);
+	}
+    public function settramite() {	// Registrar tramite PT        
+        $varnull = '';
+		
+		$ftram = $this->input->post('mtxtFtram');
+        $parametros = array(
+            '@idpttramite'   	=>  $this->input->post('mhdnIdTram'),
+            '@id_tipotramite'   =>  $this->input->post('mcboTipotram'),
+            '@idptpropuesta'    =>  $this->input->post('mcboNropropu'),
+            '@fecha_tramite'    =>  substr($ftram, 6, 4).'-'.substr($ftram,3 , 2).'-'.substr($ftram, 0, 2),
+            '@idresponsable'    =>  $this->input->post('mcboRespon'),
+            '@codigo'           =>  $this->input->post('mtxtCodigo'),
+            '@nombproducto'     =>  $this->input->post('mtxtNombprod'),
+            '@descripcion'      =>  $this->input->post('mtxtDescrip'),
+            '@comentarios'      =>  $this->input->post('mtxtComentario'),
+            '@idinforme'      	=>  $this->input->post('mhdnIdinforme'),
+            '@accion'           =>  $this->input->post('mhdnAccionTram')
+        );
+        $retorna = $this->minforme->settramite($parametros);
+        echo json_encode($retorna);
+    }	
     public function getlistregistro() {	// Recupera Listado de Registros	
          
         $parametros = array(

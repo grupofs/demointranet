@@ -96,7 +96,7 @@ class Mtramites extends CI_Model {
     public function settramite($parametros) {  // Registrar tramite PT
         $this->db->trans_begin();
 
-        $procedure = "call sp_appweb_pt_settramite(?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call sp_appweb_pt_settramite(?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE){

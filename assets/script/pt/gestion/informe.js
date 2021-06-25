@@ -701,7 +701,7 @@ recuperaListinforme = function(){
             {"orderable": false, "class": "col-xl", 
               render:function(data, type, row){ 
                 if(row.idptservicio == 2 || row.idptservicio == 4 || row.idptservicio == 3){
-                    v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"> #SID </a>'
+                    v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"> #SID </a>'
                 }else{
                     v_sid = ''
                 }               
@@ -728,7 +728,10 @@ recuperaListinforme = function(){
 };
 
 
-tramiteSid = function(idptinforme,ccliente,idptpropuesta,idptservicio){
+tramiteSid = function(idptinforme,ccliente,idptpropuesta,idptservicio,idpttramite){
+    $('#frmCreaTram').trigger("reset");
+
+    $('#mhdnIdinforme').val(idptinforme);
     $('#mhdnIdccliente').val(ccliente);
     $('#mcboTipotram').val(3);
     var params = { "ccliente":ccliente };
@@ -788,8 +791,54 @@ tramiteSid = function(idptinforme,ccliente,idptpropuesta,idptservicio){
         locale:'es'
     });	
     fechaActualReg();
-    $('#mhdnAccionTram').val('N');
+
+    if(idpttramite == 0){
+        $('#mhdnAccionTram').val('N');
+    }else{
+        $('#mhdnAccionTram').val('A');
+        gettramiteSid(idpttramite);
+    }
+    
 }
+
+gettramiteSid = function(idpttramite){  
+
+    var parametros = { 
+        "idpttramite":idpttramite 
+    };
+    var request = $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"pt/cinforme/gettramiteSid",
+        dataType: "JSON",
+        async: true,
+        data: parametros,
+        error: function(){
+            alert('Error, no se puede cargar la lista desplegable de establecimiento');
+        }
+    });      
+    request.done(function( respuesta ) {   
+        $.each(respuesta, function() {
+            
+            $('#mcboNropropu').val(this.idptpropuesta).trigger("change");
+            $('#mtxtFtram').val(this.fecha_tramite);
+            $('#mcboTipotramite').val(this.id_tipotramite);
+            $('#mtxtCodigo').val(this.codigo);
+            $('#mtxtNombprod').val(this.nombproducto);
+            $('#mtxtDescrip').val(this.descripcion);
+            $('#mcboRespon').val(this.idresponsable).trigger("change");
+            $('#mtxtComentario').val(this.comentarios);
+            $('#mtxtarchivo').val(this.adj_docum);
+            $('#mtxtCarta').val(this.adj_carta);
+            $('#mtxtRutaarch').val(this.ruta_docum);
+            $('#mtxtRutacarta').val(this.ruta_carta);
+            $('#mtxtNombarch').val(this.nomb_docum);
+            $('#mtxtNombcarta').val(this.nomb_carta);            
+            
+        });
+    });
+}
+
 escogerArchivoSID = function(){    
     var archivoInput = document.getElementById('mtxtArchivotram');
     var archivoRuta = archivoInput.value;
@@ -854,6 +903,7 @@ $('#frmCreaTram').submit(function(event){
                 Vtype = 'success';
                 sweetalert(Vtitle,Vtype);        
                 $('#mbtnCCreaTram').click();
+                recuperaListinforme();
             }   
             $('#sArchivoSID').val('N');        
         });

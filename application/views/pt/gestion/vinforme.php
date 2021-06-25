@@ -1765,7 +1765,7 @@
 <div class="modal fade" id="modalCreaTram" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmCreaTram" name="frmCreaTram" action="<?= base_url('pt/ctramites/settramite')?>" method="POST" enctype="multipart/form-data" role="form"> 
+      <form class="form-horizontal" id="frmCreaTram" name="frmCreaTram" action="<?= base_url('pt/cinforme/settramite')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Registro de Tramite</h4>
@@ -1776,6 +1776,7 @@
 
         <div class="modal-body">          
             <input type="hidden" id="mhdnIdTram" name="mhdnIdTram"> <!-- ID -->
+            <input type="hidden" id="mhdnIdinforme" name="mhdnIdinforme"> 
             <input type="hidden" id="mhdnIdccliente" name="mhdnIdccliente"> 
             <input type="hidden" id="mcboTipotram" name="mcboTipotram">
             <input type="hidden" id="mhdnAccionTram" name="mhdnAccionTram">
