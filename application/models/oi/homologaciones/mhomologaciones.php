@@ -13,9 +13,7 @@ class Mhomologaciones extends CI_Model {
         $query = $this->db-> query($procedure);
 
         if ($query->num_rows() > 0) {
-
-            $listas = '<option value="" >::Elegir</option>';
-            
+            $listas = '<option value="" >::Elegir</option>';            
             foreach ($query->result() as $row)
             {
                 $listas .= '<option value="'.$row->CODIGO.'">'.$row->CLIENTE.'</option>';  
@@ -24,7 +22,6 @@ class Mhomologaciones extends CI_Model {
         }{
             return false;
         }	
-
     }
 
     public function getEstadoExp(){
@@ -32,9 +29,7 @@ class Mhomologaciones extends CI_Model {
         $query = $this->db->query($procedure);
         
         if ($query->num_rows() > 0) {
-
-            $listas = '<option value="%" selected>::Elegir</option>';
-            
+            $listas = '<option value="%" selected>::Elegir</option>';            
             foreach ($query->result() as $row)
             {
                 $listas .= '<option value="'.$row->ID.'">'.$row->VALUE.'</option>';  
@@ -43,8 +38,6 @@ class Mhomologaciones extends CI_Model {
         }{
             return false;
         }	
-        
-
     }
 
     public function getArea(){
@@ -52,9 +45,7 @@ class Mhomologaciones extends CI_Model {
         $query = $this->db->query($procedure);
         
         if ($query->num_rows() > 0) {
-
             $listas = '<option value="" selected>::Elegir</option>';
-            
             foreach ($query->result() as $row)
             {
                 $listas .= '<option value="'.$row->careacliente.'">'.$row->dareacliente.'</option>';  
@@ -63,8 +54,6 @@ class Mhomologaciones extends CI_Model {
         }{
             return false;
         }	
-        
-
     }
 
     public function getRequisitos(){
@@ -72,9 +61,7 @@ class Mhomologaciones extends CI_Model {
         $query = $this->db->query($procedure);
         
         if ($query->num_rows() > 0) {
-
-            $listas = '<option value="" selected>::Elegir</option>';
-            
+            $listas = '<option value="" selected>::Elegir</option>';            
             foreach ($query->result() as $row)
             {
                 $listas .= '<option value="'.$row->careacliente.'">'.$row->dareacliente.'</option>';  
@@ -83,11 +70,7 @@ class Mhomologaciones extends CI_Model {
         }{
             return false;
         }	
-        
-
     }
-
-    
 
     public function getbuscarexpediente($parametros){
         $procedure = "call sp_appweb_oi_buscar_expediente(?,?,?,?)";
@@ -125,14 +108,10 @@ class Mhomologaciones extends CI_Model {
     public function getContactoProveedor($parametros){
       // $procedure = "call sp_appweb_oi_buscar_contactoxproveedor(?)";
         $procedure = "SELECT distinct(contact.ccontacto) as 'IDCONTACTO', contact.DNOMBRE+' '+contact.DAPEPAT AS'NOMBRE', contact.DMAIL AS 'EMAIL' FROM MCONTACTO contact INNER JOIN PEVALUACIONPRODUCTO prod on contact.ccliente = prod.cproveedorcliente  WHERE prod.cproveedorcliente LIKE '%".$parametros."'"; 
-
-
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) {
-
             $listas = '<option value="%" >::Elegir</option>';
-            
             foreach ($query->result() as $row)
             {
                 $listas .= '<option email="'.$row->EMAIL.'" value="'.$row->IDCONTACTO.'">'.$row->NOMBRE.'</option>';  
@@ -145,7 +124,6 @@ class Mhomologaciones extends CI_Model {
 
     public function getProveedorxCliente($parametros){
         $procedure = "call sp_appweb_oi_buscar_proveedorxcliente(?)";
-
         // $procedure = "select cliente.drazonsocial as 'NOMBRE',cliente.ccliente as 'ID' FROM MCLIENTE cliente
         // INNER JOIN PEVALUACIONPRODUCTO prod on cliente.ccliente = prod.cproveedorcliente where prod.cevaluacionproducto = '".$parametros."'";
 		$query = $this->db-> query($procedure,$parametros);

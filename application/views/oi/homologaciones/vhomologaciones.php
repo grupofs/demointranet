@@ -589,9 +589,6 @@
 
         </div>
     </div>
-
-
-    
 </section>
 <!-- /.Main content -->
 
