@@ -1,11 +1,22 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class Cconsulhomo extends CI_Controller { 
     function __construct() {
 		parent:: __construct();	
 		$this->load->model('oi/homologacionesclie/mconsulhomo');
 		$this->load->helper(array('form','url','download','html','file'));
-        $this->load->library(array('form_validation','session','encryption'));
+		$this->load->library(array('form_validation','session','encryption'));
     }
 
     /** RECUPERAR TABLAS - HOMOLOGACIONES **/ 
@@ -57,6 +68,192 @@ class Cconsulhomo extends CI_Controller {
 			$resultado = $this->mconsulhomo->getlistarrequisitos($parametros);
 			echo json_encode($resultado);
 		}
+		// Excel de homologaciones
+		public function getexcelhomologaciones(){
+			/*Estilos */
+			   $titulo = [
+				   'font'	=> [
+					   'name' => 'Arial',
+					   'size' =>12,
+					   'color' => array('rgb' => 'FFFFFF'),
+					   'bold' => true,
+				   ], 
+				   'fill'	=>[
+					   'fillType' => Fill::FILL_SOLID,
+					   'startColor' => [
+						   'rgb' => '29B037'
+					   ]
+				   ],
+				   'borders'	=>[
+					   'allBorders' => [
+						   'borderStyle' => Border::BORDER_THIN,
+						   'color' => [ 
+							   'rgb' => '000000'
+						   ]
+					   ]
+				   ],
+				   'alignment' => [
+					   'horizontal' => Alignment::HORIZONTAL_CENTER,
+					   'vertical' => Alignment::VERTICAL_CENTER,
+					   'wrapText' => true,
+				   ],
+			   ];
+			   $cabecera = [
+				   'font'	=> [
+					   'name' => 'Arial',
+					   'size' =>10,
+					   'color' => array('rgb' => 'FFFFFF'),
+					   'bold' => true,
+				   ], 
+				   'fill'	=>[
+					   'fillType' => Fill::FILL_SOLID,
+					   'startColor' => [
+						   'rgb' => '29B037'
+					   ]
+				   ],
+				   'borders'	=>[
+					   'allBorders' => [
+						   'borderStyle' => Border::BORDER_THIN,
+						   'color' => [ 
+							   'rgb' => '000000'
+						   ]
+					   ]
+				   ],
+				   'alignment' => [
+					   'horizontal' => Alignment::HORIZONTAL_CENTER,
+					   'vertical' => Alignment::VERTICAL_CENTER,
+					   'wrapText' => true,
+				   ],
+			   ];
+			   $celdastexto = [
+				   'borders'	=>[
+					   'allBorders' => [
+						   'borderStyle' => Border::BORDER_THIN,
+						   'color' => [ 
+							   'rgb' => '000000'
+						   ]
+					   ]
+				   ],
+				   'alignment' => [
+					   'horizontal' => Alignment::HORIZONTAL_LEFT,
+					   'vertical' => Alignment::VERTICAL_CENTER,
+					   'wrapText' => true,
+				   ],
+			   ];
+			/*Estilos */			
+			
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setTitle('Listado - Tramites');
+
+			$spreadsheet->getDefaultStyle()
+				->getFont()
+				->setName('Arial')
+				->setSize(9);
+			
+			$sheet->setCellValue('A1', 'LISTADO DE HOMOLOGACIONES')
+				->mergeCells('A1:H1')
+				->setCellValue('A2', 'CLIENTE:')
+				->mergeCells('B2:D2')
+				->setCellValue('A4', 'Fecha de Registro')
+				->setCellValue('B4', 'Fecha de Inicio')
+				->setCellValue('C4', 'Fecha de termino')
+				->setCellValue('D4', 'Estado')
+				->setCellValue('E4', 'Categoria / Tipo de Proveedor')
+				->setCellValue('F4', 'Proveedor')
+				->setCellValue('G4', 'Producto')
+				->setCellValue('H4', 'Marca');
+
+			$sheet->getStyle('A1:H1')->applyFromArray($titulo);
+			$sheet->getStyle('A4:H4')->applyFromArray($cabecera);
+		
+			$sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(12.10);
+			$sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(12.10);
+			$sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(12.10);
+			$sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(25.10);
+			$sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(35.10);
+			$sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(45.10);
+			$sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(58.10);
+			$sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(32.10);
+
+			$varnull 			= 	'';
+			$celestado			= 	'';
+
+			$cestado = $this->input->post('cboEstado');			
+			if(isset($cestado)){
+				foreach($cestado as $dest){
+					$celestado = $dest.','.$celestado;
+				}
+				$countest =strlen($celestado) ;
+				$celestado = substr($celestado,0,$countest-1);
+			}
+
+			$fregini = $this->input->post('txtFregIni');
+			$fregfin = $this->input->post('txtFregFin');
+			$finiini = $this->input->post('txtFiniIni');
+			$finifin = $this->input->post('txtFiniFin');
+			$ftermini = $this->input->post('txtFterIni');
+			$ftermfin = $this->input->post('txtFterFin');
+
+			$parametros = array(
+				'@CCIA' 	        =>	'2',
+				'@CLIENTE' 	        =>	$this->input->post('hdnCCliente'),
+				'@PROVEEDOR' 	    =>	$this->input->post('cboProveedor'),
+				'@ESTADOEVAL' 		=>  $celestado, 
+				'@TIPOPROVEEDOR' 	=>  $this->input->post('cboTiporoveedor'),
+				'@PRODUCTO' 		=>  ($this->input->post('txtProducto') == $varnull) ? '%' : '%'.$this->input->post('txtProducto').'%', 
+				'@MARCA' 			=>  ($this->input->post('txtMarca') == $varnull) ? '%' : '%'.$this->input->post('txtMarca').'%', 
+				'@FREGINI' 		    =>  ($this->input->post('txtFregIni') == '') ? NULL : substr($fregini, 6, 4).'-'.substr($fregini,3 , 2).'-'.substr($fregini, 0, 2), 
+				'@FREGFIN' 		    =>  ($this->input->post('txtFregFin') == '') ? NULL : substr($fregfin, 6, 4).'-'.substr($fregfin,3 , 2).'-'.substr($fregfin, 0, 2),  
+				'@FINIINI' 			=>  ($this->input->post('txtFiniIni') == '') ? NULL : substr($finiini, 6, 4).'-'.substr($finiini,3 , 2).'-'.substr($finiini, 0, 2),
+				'@FINIFIN' 			=>  ($this->input->post('txtFiniFin') == '') ? NULL : substr($finifin, 6, 4).'-'.substr($finifin,3 , 2).'-'.substr($finifin, 0, 2),
+				'@FTERMINI' 		=>  ($this->input->post('txtFterIni') == '') ? NULL : substr($ftermini, 6, 4).'-'.substr($ftermini,3 , 2).'-'.substr($ftermini, 0, 2),			
+				'@FTERMFIN' 	    =>	($this->input->post('txtFterFin') == '') ? NULL : substr($ftermfin, 6, 4).'-'.substr($ftermfin,3 , 2).'-'.substr($ftermfin, 0, 2),
+			);
+
+			$rpt = $this->mconsulhomo->getexcelhomologaciones($parametros);
+			$irow = 5;
+			if ($rpt){
+				foreach($rpt as $row){	
+	
+					$CLIENTE = $row->CLIENTE;
+					$FECHA = $row->FECHA;
+					$FECHAEVALUA = $row->FECHAEVALUA;
+					$FECHAESTADOEVALUACION = $row->FECHAESTADOEVALUACION;
+					$ESTADOEVALUACION = $row->ESTADOEVALUACION;
+					$TIPOPRODUCTOEVALUAR = $row->TIPOPRODUCTOEVALUAR;
+					$PROVEEDOR = $row->PROVEEDOR;
+					$PRODUCTO = $row->PRODUCTO;
+					$MARCA = $row->MARCA;
+					
+					$sheet->setCellValue('A'.$irow,$FECHA);
+					$sheet->setCellValue('B'.$irow,$FECHAEVALUA);
+					$sheet->setCellValue('C'.$irow,$FECHAESTADOEVALUACION);
+					$sheet->setCellValue('D'.$irow,$ESTADOEVALUACION);
+					$sheet->setCellValue('E'.$irow,$TIPOPRODUCTOEVALUAR);
+					$sheet->setCellValue('F'.$irow,$PROVEEDOR);
+					$sheet->setCellValue('G'.$irow,$PRODUCTO);
+					$sheet->setCellValue('H'.$irow,$MARCA);
+	
+					$irow++;
+				}
+			}
+			$sheet->setCellValue('B2',$CLIENTE);
+			$pos = $irow - 1;
+	
+			$sheet->getStyle('A5:H'.$pos)->applyFromArray($celdastexto);
+	
+			$sheet->setAutoFilter('A4:H'.$pos);
+	
+			$writer = new Xlsx($spreadsheet);
+			$filename = 'listaHomologaciones-'.time().'.xlsx"';
+			ob_end_clean();
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$filename);
+			header('Cache-Control: max-age=0');
+	
+			$writer->save('php://output');
+		}	
 
 	/** LLENAR LISTAS - HOMOLOGACIONES **/ 
 		// Lista de proveedores

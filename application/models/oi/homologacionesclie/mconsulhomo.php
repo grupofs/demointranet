@@ -32,6 +32,17 @@ class Mconsulhomo extends CI_Model {
 			}		   
 		}	
     /*****************************/	
+        public function getexcelhomologaciones($parametros) /* Lista la busqueda de homologaciones */
+		{
+			$procedure = "call sp_appweb_oi_excel_evalpdtocia(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			$query = $this->db-> query($procedure,$parametros);
+
+			if ($query->num_rows() > 0) { 
+				return $query->result();
+			}{
+				return False;
+			}		   
+        }
 				
 	/** LISTAS - HOMOLOGACIONES**/ 
 		public function getproveedoreshomo($ccliente) /* Lista de proveedores */

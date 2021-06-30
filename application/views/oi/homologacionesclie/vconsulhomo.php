@@ -47,6 +47,7 @@
             </div>
         
             <div class="card-body">
+                <form class="form-horizontal" id="frmexcellisthomo" name="frmexcellisthomo" action="<?= base_url('oi/homologacionesclie/cconsulhomo/getexcelhomologaciones')?>" method="POST" enctype="multipart/form-data" role="form">  
                 <input type="hidden" class="form-control" id="hdnCCliente" name="hdnCCliente" value="<?php echo $cclie ?>">
                 <div class="row">  
                     <div class="col-md-4">
@@ -60,7 +61,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>Estado :</label>
-                            <select class="form-control select2bs4" id="cboEstado" name="cboEstado" multiple="multiple" data-placeholder="Seleccione estado" style="width: 100%;">
+                            <select class="select2bs4" id="cboEstado" name="cboEstado[]" multiple="multiple" data-placeholder="Seleccionar" style="width: 100%;">
                                 <option value="%" selected="selected">Cargando...</option>
                             </select>
                         </div>
@@ -149,7 +150,8 @@
                             </div>
                         </div>
                     </div>              
-                </div>
+                </div>                
+                </form>
             </div>             
                         
             <div class="card-footer justify-content-between" style="background-color: #D4EAFC;"> 
@@ -157,7 +159,7 @@
                     <div class="col-md-12">
                         <div class="text-right">
                             <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>
-                            <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>  
+                            <button type="submit" form="frmexcellisthomo" class="btn btn-info" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>  
                         </div>
                     </div>
                 </div>

@@ -185,8 +185,8 @@ paramListhomologaciones = function (){
     if(varfreghasta != '%'){ varfreghasta = $('#txtFregFin').val(); }
     if(varfinidesde != '%'){ varfinidesde = $('#txtFiniIni').val(); }
     if(varfinihasta != '%'){ varfinihasta = $('#txtFiniFin').val(); }
-    if(varfterdesde != '%'){ varfterdesde = $('#txtFregIni').val(); }
-    if(varfterhasta != '%'){ varfterhasta = $('#txtFregFin').val(); }  
+    if(varfterdesde != '%'){ varfterdesde = $('#txtFterIni').val(); }
+    if(varfterhasta != '%'){ varfterhasta = $('#txtFterFin').val(); }  
    
     var parametros = {
         "ccia"          : '2',
