@@ -152,7 +152,7 @@
                 </div>
             </div>             
                         
-            <div class="card-footer justify-content-between"> 
+            <div class="card-footer justify-content-between" style="background-color: #D4EAFC;"> 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="text-right">

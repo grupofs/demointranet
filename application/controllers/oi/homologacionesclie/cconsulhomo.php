@@ -47,8 +47,38 @@ class Cconsulhomo extends CI_Controller {
 			);
 			$resultado = $this->mconsulhomo->getbuscarhomologaciones($parametros);
 			echo json_encode($resultado);
+		}			
+		// Recupera lista del detalle
+		public function getlistarrequisitos(){	
+			$parametros = array(
+				'@CEVAL' 	        =>	$this->input->post('ceval'),
+				'@CPRODUCTO' 	    =>	$this->input->post('cproducto'),
+			);
+			$resultado = $this->mconsulhomo->getlistarrequisitos($parametros);
+			echo json_encode($resultado);
 		}
-		
+
+	/** LLENAR LISTAS - HOMOLOGACIONES **/ 
+		// Lista de proveedores
+		public function getproveedoreshomo(){		
+			$ccliente = $this->input->post('ccliente');		
+			$resultado = $this->mconsulhomo->getproveedoreshomo($ccliente);
+			echo json_encode($resultado);
+		}
+		// Lista de estados
+		public function getestadoshomo(){		
+			$ccliente = $this->input->post('ccliente');		
+			$resultado = $this->mconsulhomo->getestadoshomo($ccliente);
+			echo json_encode($resultado);
+		}	
+		// Lista de tipo de proveedores
+		public function gettipoprovedorhomo(){		
+			$ccliente = $this->input->post('ccliente');		
+			$resultado = $this->mconsulhomo->gettipoprovedorhomo($ccliente);
+			echo json_encode($resultado);
+		}	
+
+	/** LLENAR LISTAS - PRODUCTO A VENCER **/ 	
 		// Lista de alertas por fecha
 		public function getalertasfecha(){	
 			$fvence = $this->input->post('vence');
@@ -62,38 +92,5 @@ class Cconsulhomo extends CI_Controller {
 			$resultado = $this->mconsulhomo->getalertasfecha($parametros);
 			echo json_encode($resultado);
         }
-		
-		// Recupera lista del detalle
-		public function getlistarrequisitos(){	
-			$parametros = array(
-				'@CEVAL' 	        =>	$this->input->post('ceval'),
-				'@CPRODUCTO' 	    =>	$this->input->post('cproducto'),
-			);
-			$resultado = $this->mconsulhomo->getlistarrequisitos($parametros);
-			echo json_encode($resultado);
-		}
-
-
-		/** LLENAR LISTAS - HOMOLOGACIONES **/ 
-		// Lista de proveedores
-		public function getproveedoreshomo(){		
-			$ccliente = $this->input->post('ccliente');		
-			$resultado = $this->mconsulhomo->getproveedoreshomo($ccliente);
-			echo json_encode($resultado);
-		}	
-
-		// Lista de estados
-		public function getestadoshomo(){		
-			$ccliente = $this->input->post('ccliente');		
-			$resultado = $this->mconsulhomo->getestadoshomo($ccliente);
-			echo json_encode($resultado);
-		}	
-
-		// Lista de tipo de proveedores
-		public function gettipoprovedorhomo(){		
-			$ccliente = $this->input->post('ccliente');		
-			$resultado = $this->mconsulhomo->gettipoprovedorhomo($ccliente);
-			echo json_encode($resultado);
-		}	
 		
 }

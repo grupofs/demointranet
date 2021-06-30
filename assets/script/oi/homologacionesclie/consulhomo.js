@@ -307,7 +307,7 @@ function format ( d, e ) {
     $.each(d,function(i,item){
                         
         if (item.DUBICACIONFILESERVER !== null){                    
-            dato = dato + '<tr><th style="padding-left:30px;" width="10%" align="center"><a href="'+baseurl+'/Uploads/Archivos/OI/'+item.DUBICACIONFILESERVER+'" target="_blank" class="btn btn-default btn-xs pull-left"><i class="fas fa-download" style="color:black" data-original-title="ARCHIVO" data-toggle="tooltip"></i></a></th>';
+            dato = dato + '<tr><th style="padding-left:30px;" width="10%" align="center"><a href="'+baseurl+'FTPfileserver/Archivos/'+item.DUBICACIONFILESERVER+'" target="_blank" class="btn btn-default btn-xs pull-left"><i class="fas fa-download" style="color:black" data-original-title="ARCHIVO" data-toggle="tooltip"></i></a></th>';
         }else{
             dato = dato +  '<tr><th style="padding-left:30px;" width="10%" align="center"></th>';
         }  
