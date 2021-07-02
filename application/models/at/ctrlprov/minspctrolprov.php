@@ -471,6 +471,16 @@ class Minspctrolprov extends CI_Model {
             return false;
         }		
     }
+    public function getlistachecklist($parametros) { // Recupera Listado de Propuestas        
+		$procedure = "call usp_at_ctrlprov_getlistachecklist(?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}	
+    }
 
 }
 ?>

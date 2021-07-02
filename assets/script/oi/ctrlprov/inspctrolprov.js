@@ -348,7 +348,7 @@ $("#btnBuscar").click(function(){
 });
 
 //selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioconsultor,periodo,fservicio,cnorma,csubnorma,cchecklist,cmodeloinforme,cvalornoconformidad,cformulaevaluacion,ccriterioresultado,dcomentario,zctipoestadoservicio,destado,ccliente){
-selInspe = function(cauditoriainspeccion,finspeccion,cchecklist,cmodeloinforme,fservicio){
+    selInspe = function(cauditoriainspeccion,finspeccion,cchecklist,cmodeloinforme,fservicio){
     $('#tabctrlprov a[href="#tabctrlprov-det"]').tab('show'); 
     
     $('#frmRegInsp').trigger("reset");

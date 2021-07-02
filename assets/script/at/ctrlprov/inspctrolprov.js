@@ -1,5 +1,5 @@
 
-var otblListinspctrlprov;
+var otblListinspctrlprov, otblinspeccionprov;
 var varfdesde = '%', varfhasta = '%';
 
 $(document).ready(function() {
@@ -125,7 +125,7 @@ $(document).ready(function() {
                     Vtitle = 'Inspección Guardada!!!';
                     Vtype = 'success';
                     sweetalert(Vtitle,Vtype); 
-                    otblListinspctrlprovv.ajax.reload(null,false);   
+                    otblListinspctrlprov.ajax.reload(null,false);   
                     objPrincipal.liberarBoton(botonEvaluar);    
                 });
             });
@@ -316,7 +316,7 @@ $("#btnBuscar").click(function(){
             {responsivePriority: 1, "orderable": false, 
                 render:function(data, type, row){
                     return '<div>'+
-                        '<a title="Checklist" style="cursor:pointer; color:#3c763d;" onClick="javascript:selInspe(\''+row.cauditoriainspeccion+'\',\''+row.finspeccion+'\',\''+row.cchecklist+'\',\''+row.cmodeloinforme+'\',\''+row.cformulaevaluacion+'\');"><span class="fas fa-th-list fa-2x" aria-hidden="true"> </span> </a>'+
+                    '<a title="Checklist" style="cursor:pointer; color:#3c763d;" onClick="javascript:selInspe(\''+row.cauditoriainspeccion+'\',\''+row.finspeccion+'\',\''+row.cchecklist+'\',\''+row.cmodeloinforme+'\',\''+row.fservicio+'\');"><span class="fas fa-th-list fa-2x" aria-hidden="true"> </span> </a>'+
                     '</div>'
                 }
             }
@@ -343,20 +343,21 @@ $("#btnBuscar").click(function(){
             } );
         } 
     }); 
-    otblListinspctrlprovv.column( 1 ).visible( false );   
-    otblListinspctrlprovv.column( 2 ).visible( false );
+    otblListinspctrlprov.column( 1 ).visible( false );   
+    otblListinspctrlprov.column( 2 ).visible( false );
 });
 
-selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioconsultor,periodo,fservicio,cnorma,csubnorma,cchecklist,cmodeloinforme,cvalornoconformidad,cformulaevaluacion,ccriterioresultado,dcomentario,zctipoestadoservicio,destado,ccliente){
+//selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioconsultor,periodo,fservicio,cnorma,csubnorma,cchecklist,cmodeloinforme,cvalornoconformidad,cformulaevaluacion,ccriterioresultado,dcomentario,zctipoestadoservicio,destado,ccliente){
+selInspe = function(cauditoriainspeccion,finspeccion,cchecklist,cmodeloinforme,fservicio){
     $('#tabctrlprov a[href="#tabctrlprov-det"]').tab('show'); 
     
     $('#frmRegInsp').trigger("reset");
 
     $('#mtxtidinsp').val(cauditoriainspeccion); 
     $('#mhdnAccioninsp').val('A');
-    $('#mhdnccliente').val(ccliente);  
+    //$('#mhdnccliente').val(ccliente);  
 
-    iniInspe(cusuarioconsultor,'T',cnorma,csubnorma,cchecklist,ccliente,cvalornoconformidad,cmodeloinforme,cformulaevaluacion,ccriterioresultado);
+    /*iniInspe(cusuarioconsultor,'T',cnorma,csubnorma,cchecklist,ccliente,cvalornoconformidad,cmodeloinforme,cformulaevaluacion,ccriterioresultado);
 
     $('#mtxtinspdatos').val(desc_gral); 
     $('#mtxtinsparea').val('AREÁ : '+areacli); 
@@ -365,8 +366,10 @@ selInspe = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuariocon
     $('#cboinspperiodo').val(periodo);
     $('#mtxtinspcoment').val(dcomentario);
     $('#mhdnzctipoestado').val(zctipoestadoservicio);
-    $('#txtinspestado').val(destado);
-    
+    $('#txtinspestado').val(destado);*/
+
+    listChecklist(cauditoriainspeccion,fservicio);
+
     $('#txtFInspeccion').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
@@ -513,3 +516,53 @@ $('#btnRetornarLista').click(function(){
     $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
     $('#btnBuscar').click();
 });
+
+listChecklist = function(varcauditoria,varfservicio){
+      alert(varcauditoria);
+      alert(varfservicio);
+    otblinspeccionprov = $('#tblinspeccionprov').DataTable({  
+        'responsive'    : false,
+        'bJQueryUI'     : true,
+        'scrollY'     	: '400px',
+        'scrollX'     	: true, 
+        'paging'      	: false,
+        'processing'  	: true,     
+        'bDestroy'    	: true,
+        'AutoWidth'     : true,
+        'info'        	: true,
+        'filter'      	: true, 
+        'ordering'		: false,  
+        'stateSave'     : true,
+        'ajax'	: {
+            "url"   : baseurl+"oi/ctrlprov/cinspctrolprov/getlistachecklist/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.cauditoriainspeccion      = varcauditoria;
+                d.fservicio        = varfservicio; 
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {"orderable": false, data: 'dnumeradorpadre', targets: 0},
+            {"orderable": false, data: 'dnumerador', targets: 1},
+            {"orderable": false, data: 'drequisito', targets: 2},
+            {"orderable": false, data: 'nvalormaxrequisito', targets: 3},
+            {"orderable": false, data: 'nvalorrequisito', targets: 4},
+            {"orderable": false, data: 'noconformidad', targets: 5},
+            {"orderable": false, data: 'existeHallazgo', targets: 6},
+            {"orderable": false, data: null, targets: 7},
+            {responsivePriority: 1, "orderable": false, 
+                render:function(data, type, row){
+                    return '<div>'+  
+                    '&nbsp; &nbsp;'+
+                    '<a href="#" data-original-title="Registrar" data-toggle="modal" data-target="#modalChecklist" onClick="selChecklist(\''+row.idinspecciontienda+'\',\''+row.iditem+'\',\''+row.cchecklist+'\',\''+row.CREQUISITOCHECKLIST+'\',\''+row.idclaseareatienda+'\',\''+row.CVALORREQUISITO+'\',\''+row.DHALLAZGO+'\',\''+row.NVALORREQUISITO+'\');"><i class="fa fa-edit fa-3x" data-original-title="Registrar" data-toggle="tooltip"></i></a>'+
+                    
+                 '</div>'   
+                }
+            }
+        ],  
+		"columnDefs": [
+            { "targets": [0], "visible": true },
+		],
+    }); 
+};

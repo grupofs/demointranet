@@ -245,6 +245,16 @@ class Cinspctrolprov extends CI_Controller {
 		echo json_encode($resultado);
 	}
 	
+    public function getlistachecklist() {	// Visualizar Inspectores en CBO	
+        
+        $parametros = array(
+            '@cauditoriainspeccion'   => $this->input->post('cauditoriainspeccion'),
+            '@fechaservicio'   => $this->input->post('fservicio')
+        );
+		$resultado = $this->minspctrolprov->getlistachecklist($parametros);
+		echo json_encode($resultado);
+	}
+	
     
 }
 ?>

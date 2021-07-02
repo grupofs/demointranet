@@ -249,6 +249,40 @@
                                     </form>
 
                                 </fieldset>
+                                
+                                <fieldset class="scheduler-border" >
+                                    <legend class="scheduler-border text-primary">Listado Checklist</legend>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Listado de Inspecciones - <label id="lblCliente"></label></h3>
+                                                </div>                                       
+                                                <div class="card-body">
+                                                    <table id="tblinspeccionprov" class="table table-striped table-bordered" style="width:100%">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>ITEM</th>
+                                                            <th></th>
+                                                            <th>REQUISITO</th>
+                                                            <th>VALOR MAX</th>
+                                                            <th>VALOR</th>
+                                                            <th>CRITERIO DE HALLAZGO</th>
+                                                            <th>HALLAZGO</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
                             </div>
                         </div>
                     </div>                

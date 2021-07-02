@@ -294,15 +294,15 @@
                                                 <div class="col-md-1" style="text-align: center;">
                                                     <div class="text-info">AACC</div>
                                                     <div>   
-                                                        <input type="checkbox" name="swaacc" id="swaacc" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO">
+                                                        <input type="checkbox" name="swaacc" id="swaacc" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO" data-size="lg">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="text-info">Incluye Plan Inspección</div>
-                                                    <div>   
-                                                        <input type="checkbox" name="swplaninsp" id="swplaninsp" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO">
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text">Generar Plan</div>
+                                                    <div class="input-group">
+                                                        <input type="checkbox" name="swplaninsp" id="swplaninsp" data-toggle="toggle" checked data-bootstrap-switch data-on-text="SI" data-off-text="NO">                                                        
+                                                        <div class="input-group-addon input-group-button" id="Btnplan">
+                                                            <button type="button" role="button" class="btn btn-outline-info" id="mbtnnewentidadpension" data-toggle="modal" data-target="#modalMantentidadpension" ><i class="far fa-file-alt"></i> Generar Plan</button>
                                                         </div>
                                                     </div>
                                                 </div>

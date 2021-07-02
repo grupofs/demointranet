@@ -929,6 +929,8 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     $('#cboinspperiodo').val(periodo);
     $('#mhdnzctipoestado').val(zctipoestadoservicio);
     $('#txtinspestado').val(destado);
+
+    $('#swplaninsp').val('S').trigger("change");
     
     $('#txtFInspeccion').datetimepicker({
         format: 'DD/MM/YYYY',
@@ -951,7 +953,18 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     $('#mtxtHsalidaperm').datetimepicker('minDate', moment('08:00 AM', 'hh:mm A') );
     $('#mtxtHsalidaperm').datetimepicker('maxDate', moment('05:45 PM', 'hh:mm A') );
     $('#mtxtHsalidaperm').datetimepicker('date', moment('08:00 AM', 'hh:mm A') );
+
+    $('#Btnplan').show();
 };
+
+$('#swplaninsp').on('switchChange.bootstrapSwitch',function (event, state) {
+    if($('#swplaninsp').prop('checked')){
+        $('#Btnplan').show(); 
+    }else{
+        $('#Btnplan').hide(); 
+    }
+    
+});
 
 $('#btnRetornarLista').click(function(){
     $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
