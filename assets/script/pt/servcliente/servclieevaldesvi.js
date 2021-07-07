@@ -1,5 +1,6 @@
 
 var otblListEstudios;
+var collapsedGroupsEq = {};
 var vccliente = $('#hdnccliente').val(); 
 
 $(document).ready(function() { 
@@ -8,19 +9,21 @@ $(document).ready(function() {
 
 listEstudios= function(){    
 
-    otblListEstudios = $('#tblListEstudios').DataTable({  
-        'responsive'    : true,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
-        'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+    otblListEstudios = $('#tblListEstudios').DataTable({          
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"pt/cservcliente/getevaldesviestudio/",
             "type"  : "POST", 
@@ -29,48 +32,57 @@ listEstudios= function(){
             },     
             dataSrc : ''        
         },
-        'columns'	: [
-            {
-              "class"     :   "index",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0
+        'columns'	: [            
+            {data: 'TIPO'},
+            {data: null, "class" : "col-xxs"},
+            {data: 'NROINFOR', "class":"col-sm"},
+            {data: 'DESC', "class":"col-lm"},
+            {data: 'PRODUCTO', "class":"col-m"},
+            {data: 'DIMENSION', "class":"col-sm"},
+            {data: 'NRODEVCAL', "class":"col-s"},
+            {data: 'TIPOEQUIPO', "class":"col-sm"},
+            {data: 'IDEN', "class":"col-xs"},
+        ],
+        rowGroup: {
+            startRender : function ( rows, group ) {
+                var collapsed = !!collapsedGroupsEq[group];
+    
+                rows.nodes().each(function (r) {
+                    r.style.display = collapsed ? 'none' : '';
+                }); 
+                return $('<tr/>')
+                .append('<td colspan="14" style="cursor: pointer;">' + group + ' (' + rows.count() + ')</td>')
+                .attr('data-name', group)
+                .toggleClass('collapsed', collapsed);
             },
-            {"orderable": false, data: 'DESC'},
-            {"orderable": false, data: 'TIPO'},
-            {"orderable": false, data: 'PRODUCTO'},
-            {"orderable": false, data: 'DIMENSION'},
-            {"orderable": false, data: 'NRODEVCAL'},
-            {"orderable": false, data: 'TIPOEQUIPO'},
-            {"orderable": false, data: 'IDEN'},
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '</div>'
-                }
-            },            
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },             
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },
-        ]
+            dataSrc: "TIPO"
+        },
+        "columnDefs": [{
+            "targets": [2], 
+            "data": null, 
+            "render": function(data, type, row) { 
+                if(row.ARCHIVO != "") {
+                    return '<p><a title="Descargar" style="cursor:pointer; color:#294ACF;" href="'+baseurl+row.ruta_informe+row.ARCHIVO+'" target="_blank" class="pull-left">'+row.NROINFOR+'&nbsp;<i class="fas fa-cloud-download-alt""></i></a><p>';
+                }else{
+                    return '<p>'+row.NROINFOR+'</p>';
+                }                      
+            }
+        }]
     });   
     // Enumeracion 
     otblListEstudios.on( 'order.dt search.dt', function () { 
-        otblListEstudios.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListEstudios.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
     }).draw();  
+    otblListEstudios.column(0).visible( false ); 
 };
+
+/* COMPRIMIR GRUPO */
+$('#tblListEstudios tbody').on('click', 'tr.dtrg-group', function () {
+    var name = $(this).data('name');
+    collapsedGroupsEq[name] = !collapsedGroupsEq[name];
+    otblListEstudios.draw(true);
+}); 
 
 

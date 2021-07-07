@@ -37,7 +37,7 @@
                         <h3 class="card-title">ESTUDIO DE DISTRIBUCIÓN DE TEMPERATURA</h3>
                     </div>                
                     <div id="contenido" class="card-body" style="overflow-x: scroll;">
-                        <table id="tblListEquipos" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListEquipos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
                                 <th>TIPO</th>
@@ -64,7 +64,7 @@
                         <h3 class="card-title">ESTUDIO DE PENETRACIÓN DE CALOR</h3>
                     </div>                
                     <div class="card-body" style="overflow-x: scroll;">
-                        <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                        <table id="tblListProductos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
                                 <th>TIPO</th>

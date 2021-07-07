@@ -674,5 +674,51 @@ class Cregresult extends CI_Controller {
 
 		$writer->save('php://output');
     }
+    
+    public function setresultados() { // Registrar informe PT
+		$varnull = '';
+		
+        $cinternoordenservicio  = $this->input->post('mhdncinternoordenservicio');
+		$cinternocotizacion 	= $this->input->post('mhdncinternocotizacion');
+		$nversioncotizacion 	= $this->input->post('mhdnnversioncotizacion');
+		$nordenproducto 	    = $this->input->post('mhdnnordenproducto');
+        $cmuestra 	            = $this->input->post('mhdncmuestra');
+        $censayo 	            = $this->input->post('mhdncensayo');
+        $nviausado 	            = $this->input->post('mhdnnviausado');
+        $zctipounidadmedida     = $this->input->post('mcboum');
+        $condi_espe 	        = $this->input->post('mhdncondi');
+        $valor_espe 	        = $this->input->post('mtxtvalor_esp');
+        $esexpo_espe            = $this->input->post('mcbosexponente_esp');
+        $valexpo_espe 	        = $this->input->post('mtxtvalorexpo_esp');
+        $condi_resul 	        = $this->input->post('mhdncondi_res');
+        $valor_resul 	        = $this->input->post('mtxtvalor_resul');
+        $esexpo_resul 	        = $this->input->post('mcbosexponente_resul');
+        $valexpo_resul 	        = $this->input->post('mtxtvalorexpo_resul');
+        $sresultado 	        = $this->input->post('mcboresultado');
+
+        $parametros = array(
+            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@cinternocotizacion'   	=>  $cinternocotizacion,
+            '@nversioncotizacion'   	=>  $nversioncotizacion,
+            '@nordenproducto'      		=>  $nordenproducto,
+            '@cmuestra'    		        =>  $cmuestra,
+            '@censayo'    		        =>  $censayo,
+            '@nviausado'    		    =>  $nviausado,
+            '@zctipounidadmedida'    	=>  $zctipounidadmedida,
+            '@condi_espe'    		    =>  $condi_espe,
+            '@valor_espe'    		    =>  $valor_espe,
+            '@esexpo_espe'    		    =>  $esexpo_espe,
+            '@valexpo_espe'    		    =>  $valexpo_espe,
+            '@condi_resul'    		    =>  $condi_resul,
+            '@valor_resul'    		    =>  $valor_resul,
+            '@esexpo_resul'    		    =>  $esexpo_resul,
+            '@valexpo_resul'    		=>  $valexpo_resul,
+            '@sresultado'    		    =>  $sresultado,
+        );
+        $retorna = $this->mregresult->setresultados($parametros);
+        echo json_encode($retorna);	
+    }
+
+
 }
 ?>

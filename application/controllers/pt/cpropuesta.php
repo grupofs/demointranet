@@ -185,10 +185,14 @@ class Cpropuesta extends CI_Controller {
 			->setCellValue('F3', 'Servicio')
 			->setCellValue('G3', 'Detalle')
 			->setCellValue('H3', 'Costo')
-			->setCellValue('I3', 'Establecimiento');
+			->setCellValue('I3', 'Establecimiento')
+			->setCellValue('J3', 'Contacto')
+			->setCellValue('K3', 'Observación')
+			->setCellValue('L3', 'Servicio Nuevo o Mejorado')
+			->setCellValue('M3', 'Cliente Potencial Nuevo');
 
-		$sheet->getStyle('A1:I1')->applyFromArray($titulo);
-        $sheet->getStyle('A3:I3')->applyFromArray($cabecera);
+		$sheet->getStyle('A1:M1')->applyFromArray($titulo);
+        $sheet->getStyle('A3:M3')->applyFromArray($cabecera);
 
 		$sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(4.10);
 		$sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(20.10);
@@ -199,6 +203,10 @@ class Cpropuesta extends CI_Controller {
 		$sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(60.10);
 		$sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(12.10);
 		$sheet->getColumnDimension('I')->setAutoSize(false)->setWidth(60.10);
+		$sheet->getColumnDimension('J')->setAutoSize(false)->setWidth(24.10);
+		$sheet->getColumnDimension('K')->setAutoSize(false)->setWidth(60.10);
+		$sheet->getColumnDimension('L')->setAutoSize(false)->setWidth(12.10);
+		$sheet->getColumnDimension('M')->setAutoSize(false)->setWidth(12.10);
 		
 
 		$varnull 			= 	'';
@@ -257,7 +265,12 @@ class Cpropuesta extends CI_Controller {
 				$DESCRIPSERV = $row->DESCRIPSERV;
 				$DETAPROPU = $row->DETAPROPU;
 				$COSTOPROPU = $row->COSTOPROPU;
-				$DESCRIPESTABLE = $row->DESCRIPESTABLE;							
+				$DESCRIPESTABLE = $row->DESCRIPESTABLE;	
+				$CONTACTO = $row->CONTACTO;
+				$OBSPROPU = $row->OBSPROPU;
+				$SERVNEW = $row->SERVNEW;
+				$CLIPOTEN = $row->CLIPOTEN;
+										
 				
                 if($ESTPROPU == '1'){
                     $DESCESTADO = 'Aceptado';
@@ -275,6 +288,18 @@ class Cpropuesta extends CI_Controller {
                     $DESCESTADO = 'Referencial';
 				}  
 				
+                if($SERVNEW == 'N'){
+                    $SERVNEW = '';
+				}else{
+					$SERVNEW = 'SI';
+				} 
+				
+                if($CLIPOTEN == 'N'){
+                    $CLIPOTEN = '';
+				}else{
+					$CLIPOTEN = 'SI';
+				} 
+
 				$sheet->setCellValue('A'.$irow,$i);
 				$sheet->setCellValue('B'.$irow,$NROPROPU);
 				$sheet->setCellValue('C'.$irow,$FECHPROPU);
@@ -284,36 +309,32 @@ class Cpropuesta extends CI_Controller {
 				$sheet->setCellValue('G'.$irow,$DETAPROPU);
 				$sheet->setCellValue('H'.$irow,$COSTOPROPU);
 				$sheet->setCellValue('I'.$irow,$DESCRIPESTABLE);
+				$sheet->setCellValue('J'.$irow,$CONTACTO);
+				$sheet->setCellValue('K'.$irow,$OBSPROPU);
+				$sheet->setCellValue('L'.$irow,$SERVNEW);
+				$sheet->setCellValue('M'.$irow,$CLIPOTEN);
 
 				$i++;
 				$irow++;
 			}
 		}
 		$pos = $irow - 1;
-		$sheet->getStyle('A4:I'.$pos)->applyFromArray($celdastexto);
+		$sheet->getStyle('A4:M'.$pos)->applyFromArray($celdastexto);
 		$sheet->getStyle('A4:A'.$pos)->applyFromArray($celdasnumero);
 		$sheet->getStyle('H4:H'.$pos)->applyFromArray($celdasnumero);
 		$sheet->getStyle('C4:C'.$pos)->applyFromArray($celdascentro);
 		$sheet->getStyle('E4:E'.$pos)->applyFromArray($celdascentro);
 
-		$sheet->setAutoFilter('B3:I'.$pos);
+		$sheet->setAutoFilter('B3:M'.$pos);
 		
-
+                   
+		$writer = new Xlsx($spreadsheet);
 		$filename = 'listadoPropuestas-'.time().'.xlsx';
-
-		// Redirect output to a client's web browser (Xlsx)
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="'.$filename.'"');
+		ob_end_clean();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
 		header('Cache-Control: max-age=0');
-		// If you're serving to IE 9, then the following may be needed
-		header('Cache-Control: max-age=1');		
-		// If you're serving to IE over SSL, then the following may be needed
-		header('Expires: Mon, 26 Jul 2017 05:00:00 GMT'); // Date in the past
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-		header('Pragma: public'); // HTTP/1.
 
-		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 		$writer->save('php://output');
 	}
 	public function excelpropujs1111() {

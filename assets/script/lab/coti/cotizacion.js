@@ -402,23 +402,14 @@ listarBusqueda = function(){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "index col-xs",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0,
-            },
-            {"orderable": false, data: 'DCLIENTE', targets: 1},
-            {"orderable": false, data: 'NROCOTI', "class" : "col-m", targets: 2},
-            {"orderable": false, data: 'DFECHA', "class" : "col-s dt-body-center", targets: 3},
-            {"orderable": false, data: 'ORDENTRABA', "class" : "col-xm", targets: 4},
-            {"orderable": false, data: 'IMUESTREO', "class" : "col-s dt-body-right", targets: 5},
-            {"orderable": false, data: 'ISUBTOTAL', "class" : "col-s dt-body-right", targets: 6},
-            {"orderable": false, data: 'DESCUENTO', "class" : "col-s dt-body-right", targets: 7},
-            {"orderable": false, data: 'MONTOSINIGV', "class" : "col-s dt-body-right", targets: 8},
-            {"orderable": false, data: 'DIGV', "class" : "col-s dt-body-right", targets: 9},
-            {"orderable": false, data: 'ITOTAL', "class" : "col-s dt-body-right", targets: 10},
-            {"orderable": false, data: 'ELABORADO', "class" : "col-m", targets: 11},
+            {data: 'DCLIENTE'},
+            {data:  null, "class" : "col-xs"},
+            {data: 'NROCOTI', "class" : "col-m"},
+            {data: 'DFECHA', "class" : "col-s dt-body-center"},
+            {data: 'ORDENTRABA', "class" : "col-xm"},
+            {data: 'MONTOSINIGV', "class" : "col-s dt-body-right"},
+            {data: 'ITOTAL', "class" : "col-s dt-body-right"},
+            {data: 'ELABORADO', "class" : "col-m"},
             {"orderable": false, "class" : "col-s", 
                 render:function(data, type, row){                    
                     if(row.SCOTIZACION == "S"){
@@ -441,12 +432,12 @@ listarBusqueda = function(){
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
-                    '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;'+row.DESTADO+'&nbsp;<i class="fas fa-file-pdf fa-2x" style="color:#FF0000;"></i></a><p>' +
+                    '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf fa-1x" style="color:#FF0000;"></i></a>&nbsp;&nbsp;'+row.DESTADO+'<p>' +
                     '</div>';
                 }
             },
             {
-                "targets": [10], 
+                "targets": [6], 
                 "data": null, 
                 "render": function(data, type, row) {
                     if(row.MONEDA == 'D'){
@@ -466,8 +457,8 @@ listarBusqueda = function(){
             var last = null;
 			var grupo;
  
-            api.column([1], {} ).data().each( function ( ctra, i ) { 
-                grupo = api.column(1).data()[i];
+            api.column([0], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(0).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
                         '<tr class="group"><td colspan=11"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
@@ -478,16 +469,19 @@ listarBusqueda = function(){
         }
     }); 
     otblListCotizacion.column(0).visible( false ); 
-    otblListCotizacion.column(1).visible( false );      
-    // Enumeracion 
-    otblListCotizacion.on( 'order.dt search.dt', function () { 
-        otblListCotizacion.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-          cell.innerHTML = i+1;
-          } );
-    }).draw();   
+    otblListCotizacion.column(1).visible( true );     
 
     $("#btnexcel").prop("disabled",false);
 };
+
+$('#tblListCotizacion tbody').on('dblclick', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblListCotizacion.row(tr);
+    var rowData = row.data();
+
+    selCoti(rowData.IDCOTIZACION,rowData.NVERSION,rowData.DFECHA,rowData.NROCOTI,rowData.SCOTIZACION,rowData.VIGENCIACOTI,rowData.SREGISTRO,rowData.CCLIENTE,rowData.CPROVEEDOR,rowData.SUBSERVICIO,rowData.MONEDA,rowData.SMUESTREO,rowData.CONTACTO,rowData.PERMANMUESTRA,rowData.TIPOPAGO,rowData.OTROPAGO,rowData.NTIEMPOENTREGAINFO,rowData.STIEMPOENTREGAINFO,rowData.OBSERVA,rowData.VERPRECIO,rowData.IMUESTREO,rowData.DIGV,rowData.PDESCUENTO,rowData.ISUBTOTAL,rowData.ITOTAL,rowData.ZPERMANMUESTRA,rowData.DDESCUENTO,rowData.MONTOSINIGV);
+
+});
 
 $("#swVigencia").on('switchChange.bootstrapSwitch',function (event, state) {
     listarBusqueda();
@@ -707,7 +701,7 @@ dias=function(){
 };
 
 calen=function(){
-    $('#btntipodias').html("Días Calend.");
+    $('#btntipodias').html("Días Calendario");
     $('#txtregtipodias').val('C');
 };
 util=function(){
@@ -1022,7 +1016,7 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
         })
         // Open this row
         row.child( 
-           '<table class="display compact" id = "child_details' + index + '"  style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+           '<table class="display compact" id = "child_details' + index + '"  style="width:100%; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Codigo</th><th>Acred.</th><th>Ensayo</th><th>Precio S/.</th><th>Vias</th><th>Cantidad</th><th>Costo S/.</th></tr></thead><tbody>' +
             '</tbody></table>').show();
         
@@ -1053,14 +1047,14 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
                 dataSrc : ''        
             },
             'columns'	: [
-                {"class" : "col-xxs", "orderable": false, data : 'ENUMERAR', targets : 0},
-                {"orderable": false, data: 'CODIGO', targets: 1},
-                {"orderable": false, data: 'ACRE', targets: 2},
-                {"orderable": false, data: 'DENSAYO', targets: 3},
-                {"orderable": false, data: 'CONSTOENSAYO', targets: 4},
-                {"orderable": false, data: 'NVIAS', targets: 5},
-                {"orderable": false, data: 'CANTIDAD', targets: 6},
-                {"orderable": false, data: 'COSTO', targets: 7}
+                {data: 'ENUMERAR', "class" : "col-xxs"},
+                {data: 'CODIGO'},
+                {data: 'ACRE'},
+                {data: 'DENSAYO'},
+                {data: 'CONSTOENSAYO'},
+                {data: 'NVIAS'},
+                {data: 'CANTIDAD'},
+                {data: 'COSTO'}
             ]
         });
         tr.addClass('details');

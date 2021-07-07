@@ -1,6 +1,7 @@
 <?php
     $idusu = $this -> session -> userdata('s_idusuario');
     $codusu = $this -> session -> userdata('s_cusuario');
+    $infousuario = $this->session->userdata('s_infodato');
 ?>
 
 <style>
@@ -26,11 +27,11 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">INFORMES</h1>
+        <h1 class="m-0 text-dark"><i class="fas fa-file-alt"></i> INFORMES</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>cprincipal/principal">Home</a></li>
+          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>main">Home</a></li>
           <li class="breadcrumb-item active">Gestion Procesos Termicos</li>
         </ol>
       </div>
@@ -43,8 +44,8 @@
 <section class="content">
     <div class="container-fluid"> 
         <div class="row">
-            <div class="col-12">
-                <input type="hidden" id="mtxtuserpropu" name="mtxtuserpropu" value="<?php echo $codusu ?>">
+            <div class="col-12">  
+                <input type="hidden" id="mtxtuserpropu" name="mtxtuserpropu" value="<?php echo $codusu ?>">              
                 <div class="card card-success card-outline card-tabs">
                     <div class="card-header p-0 pt-1 border-bottom-0">            
                         <ul class="nav nav-tabs tabfs" id="tabinforme" role="tablist">                    
@@ -71,6 +72,7 @@
                                     </div>
                         
                                     <div class="card-body">
+                                    <form class="form-horizontal" id="frmbuscainfor" name="frmbuscainfor" action="<?= base_url('pt/cinforme/excelinformes')?>" method="POST" enctype="multipart/form-data" role="form"> 
                                         <input type="hidden" name="mtxtidusuinfor" class="form-control" id="mtxtidusuinfor" value="<?php echo $idusu ?>">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -124,18 +126,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                    
-                        
-                                    <div class="card-footer justify-content-between"> 
                                         <div class="row">
                                             <div class="col-md-2"> 
                                                 <div id="console-event"></div>                   
                                                 <input type="checkbox" name="swVigencia" id="swVigencia" checked data-bootstrap-switch  data-on-text="Activos" data-off-text="Inactivos">
                                             </div>
-                                            <div class="col-md-10">
+                                        </div>
+                                    </form>
+                                    </div>                    
+                        
+                                    <div class="card-footer justify-content-between"> 
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <div class="text-right">
                                                     <button type="submit" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
                                                     <button type="button" class="btn btn-outline-info" id="btnNuevo"><i class="fas fa-plus"></i> Crear Nuevo</button>
+                                                    <button type="submit" form="frmbuscainfor" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
                                                 </div>
                                             </div>
                                         </div>
@@ -149,8 +155,8 @@
                                                 <h3 class="card-title">Listado de Informes</h3>
                                             </div>
                                         
-                                            <div class="card-body">
-                                                <table id="tblListInforme" class="table table-striped table-bordered" style="width:100%">
+                                            <div class="card-body" style="overflow-x: scroll;">
+                                                <table id="tblListInforme" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th></th>

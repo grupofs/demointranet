@@ -62,5 +62,22 @@ class Mregresult extends CI_Model {
             return false;
         }	
     }
+
+    public function setresultados($parametros) { // Buscar Cotizacion
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_resultados_setresultados(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    }
 }
 ?>

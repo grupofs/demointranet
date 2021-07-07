@@ -27,11 +27,11 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">PROPUESTAS</h1>
+        <h1 class="m-0 text-dark"><i class="fas fa-file-alt"></i> PROPUESTAS</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>cprincipal/principal">Home</a></li>
+          <li class="breadcrumb-item"><a href="<?php echo public_base_url(); ?>main">Home</a></li>
           <li class="breadcrumb-item active">Gestion Procesos Termicos</li>
         </ol>
       </div>
@@ -44,7 +44,7 @@
 <section class="content">
     <div class="container-fluid">  
         <div class="card card-success">
-        <form class="form-horizontal" id="frmbuscahomo" name="frmbuscahomo" action="<?= base_url('pt/cpropuesta/excelpropu')?>" method="POST" enctype="multipart/form-data" role="form"> 
+        
             <div class="card-header">
                 <h3 class="card-title">BUSQUEDA</h3>
                 <div class="card-tools">
@@ -53,6 +53,7 @@
             </div>
           
             <div class="card-body">
+            <form class="form-horizontal" id="frmbuscapropu" name="frmbuscapropu" action="<?= base_url('pt/cpropuesta/excelpropu')?>" method="POST" enctype="multipart/form-data" role="form"> 
                 <input type="hidden" name="mtxtidusupropu" class="form-control" id="mtxtidusupropu" value="<?php echo $idusu ?>">
                 <div class="row">
                     <div class="col-md-4">
@@ -113,24 +114,26 @@
                         </div>
                     </div>
                 </div>
-            </div>                
-                        
-            <div class="card-footer justify-content-between"> 
                 <div class="row">
                     <div class="col-md-2"> 
                         <div id="console-event"></div>                   
                         <input type="checkbox" name="swVigencia" id="swVigencia" data-toggle="toggle" checked data-bootstrap-switch  data-on-text="Activos" data-off-text="Inactivos">
                     </div>
-                    <div class="col-md-10">
+                </div>
+            </form>
+            </div>                
+                        
+            <div class="card-footer justify-content-between"> 
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="text-right">
                             <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
                             <button type="button" class="btn btn-outline-info" id="btnNuevo" data-toggle="modal" data-target="#modalCreaPropu"><i class="fas fa-plus"></i> Crear Nuevo</button>
-                            <button type="submit" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
+                            <button type="submit" form="frmbuscapropu" class="btn btn-info" id="btnexcel" disabled="true"><i class="fa fw fa-file-excel-o"></i> Exportar Excel</button>  
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </div>        
         </div>
         <div class="row">
             <div class="col-12">
@@ -139,8 +142,8 @@
                         <h3 class="card-title">Listado de Propuestas</h3>
                     </div>
                 
-                    <div class="card-body">
-                        <table id="tblListPropuesta" class="table table-striped table-bordered" style="width:100%">
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <table id="tblListPropuesta" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
                                 <th></th>
@@ -169,9 +172,7 @@
 <!-- /.modal-crear-propuesta --> 
 <div class="modal fade" id="modalCreaPropu" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form class="form-horizontal" id="frmCreaPropu" name="frmCreaPropu" action="<?= base_url('pt/cpropuesta/setpropuesta')?>" method="POST" enctype="multipart/form-data" role="form"> 
-
+    <div class="modal-content">    
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Registro de Propuesta</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -179,7 +180,8 @@
             </button>
         </div>
 
-        <div class="modal-body">          
+        <div class="modal-body"> 
+        <form class="form-horizontal" id="frmCreaPropu" name="frmCreaPropu" action="<?= base_url('pt/cpropuesta/setpropuesta')?>" method="POST" enctype="multipart/form-data" role="form">         
             <input type="hidden" id="mhdnIdPropu" name="mhdnIdPropu"> <!-- ID -->
             <input type="hidden" id="mhdnAccionPropu" name="mhdnAccionPropu" value="">
 
@@ -354,14 +356,20 @@
                         </div> 
                     </div> 
                 </div>                
-            </div>             
+            </div> 
+        </form>            
         </div>
 
-        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreaPropu" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGCreaPropu">Grabar</button>
+        <div class="modal-footer w-100 d-flex flex-row" style="background-color: #dff0d8;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <button type="reset" class="btn btn-default" id="mbtnCCreaPropu" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="frmCreaPropu" class="btn btn-info" id="mbtnGCreaPropu">Grabar</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </form>
     </div>
   </div>
 </div> 

@@ -511,12 +511,20 @@ class Ccotizacion extends CI_Controller {
                     <table width="698px" align="center">';
                     
                 if ($ctipocambio  == 'S') :
+                    if($imuestreo > 0){
                     $html .= '<tr>
                             <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
                             <td width="130px" > Muestreo</td>
                             <td width="80px" align="right">'.$imuestreo.'</td>
-                        </tr>
-                        <tr>
+                        </tr>';
+                    }else{
+                        $html .= '<tr>
+                                <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
+                                <td width="130px" >&nbsp; </td>
+                                <td width="80px" align="right">&nbsp; </td>
+                            </tr>';
+                    }
+                    $html .= '<tr>
                             <td></td>
                             <td> SUBTOTAL</td>
                             <td align="right">'.$subtotalimuestra.'</td> 

@@ -133,6 +133,18 @@ class Mservcliente extends CI_Model {
 		}{
 			return False;
 		}	
-    }	
+    }
+	
+    public function getcocsechorrecinto($parametros) { // Obtener estudio mapeo termico	
+        
+        $procedure = "call sp_appweb_pt_getcocsechorrecinto(?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}	
+    }		
 }
 ?>

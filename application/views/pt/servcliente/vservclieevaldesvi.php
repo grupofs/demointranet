@@ -36,21 +36,19 @@
                     <div class="card-header">
                         <h3 class="card-title">ESTUDIOS</h3>
                     </div>                
-                    <div class="card-body">
-                        <table id="tblListEstudios" class="table table-striped table-bordered" style="width:100%">
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <table id="tblListEstudios" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th></th>
-                                <th>DESCRIPCION DEL ACUERDO</th>
                                 <th>TIPO DE CONCLUSION</th>
+                                <th></th>
+                                <th>NRO INFORME</th>
+                                <th>DESCRIPCION DEL ACUERDO</th>
                                 <th>PRODUCTO</th>
                                 <th>DIMENSIONES</th>
                                 <th># DEVCAL</th>
                                 <th>TIPO EQUIPO</th>
                                 <th># ID</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>

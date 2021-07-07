@@ -26,7 +26,7 @@ class Cservcliente extends CI_Controller {
     }    
     public function viewcocsechor() { // COCINADOR-SECADOR-HORNO		
 		
-		$this->layout->js(array(public_url('script/pt/servcliente/perfilusuario.js')));
+		$this->layout->js(array(public_url('script/pt/servcliente/servcliecocsechor.js')));
 
 		$data['content_for_layout'] = 'pt/servcliente/vservcliecocsechor';
         $this->parser->parse('seguridad/vprincipalClie',$data);
@@ -135,6 +135,24 @@ class Cservcliente extends CI_Controller {
             '@ccliente'   => $this->input->post('ccliente')
         );
 		$resultado = $this->mservcliente->getevaldesviestudio($parametros);
+		echo json_encode($resultado);
+	}
+	
+    public function getcocsechorequipo() {	// Obtener estudio mapeo termico	
+		
+		$parametros = array(
+            '@ccliente'   => $this->input->post('ccliente')
+        );
+		$resultado = $this->mservcliente->getcocsechorequipo($parametros);
+		echo json_encode($resultado);
+	}
+	
+    public function getcocsechorrecinto() {	// Obtener estudio mapeo termico	
+		
+		$parametros = array(
+            '@ccliente'   => $this->input->post('ccliente')
+        );
+		$resultado = $this->mservcliente->getcocsechorrecinto($parametros);
 		echo json_encode($resultado);
 	}
 }

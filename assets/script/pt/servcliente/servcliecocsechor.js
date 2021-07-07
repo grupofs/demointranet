@@ -1,5 +1,6 @@
 
 var otblListEquipos, otblListRecintos;
+var collapsedGroupsEq = {}, collapsedGroupsRe = {};
 var vccliente = $('#hdnccliente').val(); 
 
 $(document).ready(function() { 
@@ -9,19 +10,22 @@ $(document).ready(function() {
 
 listEquipo= function(){    
 
-    otblListEquipos = $('#tblListEquipos').DataTable({  
-        'responsive'    : false,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
+    otblListEquipos = $('#tblListEquipos').DataTable({    
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollCollapse": true,
+        "scrollX"     	: true, 
         'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"pt/cservcliente/getcocsechorequipo/",
             "type"  : "POST", 
@@ -31,61 +35,78 @@ listEquipo= function(){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "index",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0
+            {data: 'TIPO'},
+            {data: null, "class" : "col-xxs"},
+            {data: 'NROINFOR', "class":"col-sm"},
+            {data: 'FABRI', "class":"col-xm"},
+            {data: 'CAPA', "class":"col-s"},
+            {data: 'MEDIOCAL', "class":"col-xm"},
+            {data: 'NROEQUI', "class":"col-s"},
+            {data: 'NROCANAST', "class":"col-s"},
+            {data: 'IDENTIF', "class":"col-sm"},
+            {data: 'PRODUCTO', "class":"col-lm"},
+            {data: 'PRESENTA', "class":"col-m"},
+        ],
+        rowGroup: {
+            startRender : function ( rows, group ) {
+                var collapsed = !!collapsedGroupsEq[group];
+    
+                rows.nodes().each(function (r) {
+                    r.style.display = collapsed ? 'none' : '';
+                }); 
+                return $('<tr/>')
+                .append('<td colspan="14" style="cursor: pointer;">' + group + ' (' + rows.count() + ')</td>')
+                .attr('data-name', group)
+                .toggleClass('collapsed', collapsed);
             },
-            {"orderable": false, data: 'TIPO'},
-            {"orderable": false, data: 'NROEQUIPOS'},
-            {"orderable": false, data: 'AREAEVAL'},
-            {"orderable": false, data: 'VOLENFRIA'},
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '</div>'
-                }
-            },            
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },             
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },
-        ]
+            dataSrc: "TIPO"
+        },
+        "columnDefs": [{
+            "targets": [2], 
+            "data": null, 
+            "render": function(data, type, row) { 
+                if(row.ARCHIVO != "") {
+                    return '<p><a title="Descargar" style="cursor:pointer; color:#294ACF;" href="'+baseurl+row.ruta_informe+row.ARCHIVO+'" target="_blank" class="pull-left">'+row.NROINFOR+'&nbsp;<i class="fas fa-cloud-download-alt""></i></a><p>';
+                }else{
+                    return '<p>'+row.NROINFOR+'</p>';
+                }                      
+            }
+        }]
     });   
     // Enumeracion 
     otblListEquipos.on( 'order.dt search.dt', function () { 
-        otblListEquipos.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListEquipos.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
     }).draw();  
+    otblListEquipos.column(0).visible( false ); 
 };
+
+/* COMPRIMIR GRUPO */
+$('#tblListEquipos tbody').on('click', 'tr.dtrg-group', function () {
+    var name = $(this).data('name');
+    collapsedGroupsEq[name] = !collapsedGroupsEq[name];
+    otblListEquipos.draw(true);
+}); 
 
 listRecintos= function(){    
 
-    otblListRecintos = $('#tblListRecintos').DataTable({  
-        'responsive'    : false,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
+    otblListRecintos = $('#tblListRecintos').DataTable({    
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollCollapse": true,
+        "scrollX"     	: true, 
         'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"pt/cservcliente/getcocsechorrecinto/",
             "type"  : "POST", 
@@ -95,45 +116,58 @@ listRecintos= function(){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "index",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0
+            {data: 'TIPO'},
+            {data: null, "class" : "col-xxs"},
+            {data: 'NROINFOR', "class":"col-sm"},
+            {data: 'AREAEVAL'},
+            {data: 'MEDIOCAL'},
+            {data: 'NRORECINTOS'},
+            {data: 'NROCOCHES'},
+            {data: 'IDENTIF'},
+            {data: 'PRODUCTO'},
+            {data: 'PRESENTA'},
+        ],
+        rowGroup: {
+            startRender : function ( rows, group ) {
+                var collapsed = !!collapsedGroupsRe[group];
+    
+                rows.nodes().each(function (r) {
+                    r.style.display = collapsed ? 'none' : '';
+                }); 
+                return $('<tr/>')
+                .append('<td colspan="14" style="cursor: pointer;">' + group + ' (' + rows.count() + ')</td>')
+                .attr('data-name', group)
+                .toggleClass('collapsed', collapsed);
             },
-            {"orderable": false, data: 'TIPO'},
-            {"orderable": false, data: 'NRORECINTOS'},
-            {"orderable": false, data: 'AREAEVAL'},
-            {"orderable": false, data: 'VOLENFRIA'},
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '</div>'
-                }
-            },            
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },             
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>'+
-                    '<a data-toggle="modal" title="Ver" style="cursor:pointer; color:#3c763d;" data-target="#modalVerequi" onClick="javascript:selEquipo(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '</div>'
-                }
-            },
-        ]
+            dataSrc: "TIPO"
+        },
+        "columnDefs": [{
+            "targets": [2], 
+            "data": null, 
+            "render": function(data, type, row) { 
+                if(row.ARCHIVO != "") {
+                    return '<p><a title="Descargar" style="cursor:pointer; color:#294ACF;" href="'+baseurl+row.ruta_informe+row.ARCHIVO+'" target="_blank" class="pull-left">'+row.NROINFOR+'&nbsp;<i class="fas fa-cloud-download-alt""></i></a><p>';
+                }else{
+                    return '<p>'+row.NROINFOR+'</p>';
+                }                      
+            }
+        }]
     });   
     // Enumeracion 
     otblListRecintos.on( 'order.dt search.dt', function () { 
-        otblListRecintos.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListRecintos.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
-    }).draw();  
+    }).draw(); 
+    otblListRecintos.column(0).visible( false );  
 };
+
+/* COMPRIMIR GRUPO */
+$('#tblListRecintos tbody').on('click', 'tr.dtrg-group', function () {
+    var name = $(this).data('name');
+    collapsedGroupsRe[name] = !collapsedGroupsRe[name];
+    otblListRecintos.draw(true);
+}); 
 
 
 

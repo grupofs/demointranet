@@ -219,16 +219,12 @@
                                                 <table id="tblListCotizacion" class="table table-striped table-bordered" style="width:100%">
                                                     <thead>
                                                     <tr>
-                                                        <th></th>
                                                         <th>Cliente</th>
+                                                        <th></th>
                                                         <th>Cotizacion</th>
                                                         <th>Fecha</th>
                                                         <th>Orden Trabajo</th>
-                                                        <th>Muestreo</th>
-                                                        <th>Sub Total</th>
-                                                        <th>Descuento</th>
                                                         <th>Monto sin IGV</th>
-                                                        <th>IGV 18%</th>
                                                         <th>Monto Total</th>
                                                         <th>Elaborado por</th>
                                                         <th></th>
@@ -277,13 +273,13 @@
                                                     <input type="hidden" name="hdnregestado" id="hdnregestado" class="form-control">
                                                 </div>
                                             </div>
-                                            <div class="col-md-1">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Vigencia </div>
                                                     <input type="number" name="mtxtregvigen" id="mtxtregvigen" class="form-control" value="30" min="0" pattern="^[0-9]+">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Servicio <span class="text-requerido">*</span></div>
                                                     <select class="form-control select2bs4" id="cboregserv" name="cboregserv" style="width: 100%;">
@@ -319,7 +315,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-1">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Moneda </div>
                                                     <div class="input-group mb-3">
@@ -336,50 +332,59 @@
                                                     </div>
                                                     <input type="hidden" name="mtxtregtipopagos" id="mtxtregtipopagos">
                                                 </div>
-                                            </div>                                            
-                                            <div class="col-md-2">
+                                            </div>   
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="text-info">Sub Total S/. </div>
+                                                    <input type="text" name="txtmontsubtotal"id="txtmontsubtotal" class="form-control" placeholder="0.00">
+                                                </div>
+                                            </div>                                          
+                                            <div class="col-md-3">
                                                 <div class="form-group">                                                    
                                                     <div class="checkbox"><div class="text-info">
                                                     <input type="checkbox" id="chksmuestreo" name="chksmuestreo" />&nbsp;Muestreo </div> </div>   
                                                     <input type="number" name="txtmontmuestreo"id="txtmontmuestreo" class="form-control" placeholder="0.00" min="0.00">
                                                 </div>
-                                            </div> 
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <div class="text-info">Sub Total S/. </div>
-                                                    <input type="number" name="txtmontsubtotal"id="txtmontsubtotal" class="form-control" placeholder="0.00" min="0.00">
-                                                </div>
                                             </div>   
-                                            <div class="col-md-1">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Dscto. (%) </div>
                                                     <input type="number" name="txtporcdescuento"id="txtporcdescuento" class="form-control" placeholder="0" min="0">
                                                 </div>
                                             </div>  
-                                            <div class="col-md-1">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Dscto. S/. </div>
-                                                    <input type="number" name="txtdescuento"id="txtdescuento" class="form-control" placeholder="0.00" min="0.00">
-                                                </div>
-                                            </div> 
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <div class="text-info">Monto sin IGV S/. </div>
-                                                    <input type="number" name="txtmontsinigv"id="txtmontsinigv" class="form-control" placeholder="0.00" min="0.00">
+                                                    <input type="text" name="txtdescuento"id="txtdescuento" class="form-control" placeholder="0.00">
                                                 </div>
                                             </div>  
-                                            <div class="col-md-1">
+                                        </div>
+                                        <div class="row"> 
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="text-info">Monto sin IGV S/. </div>
+                                                    <input type="text" name="txtmontsinigv"id="txtmontsinigv" class="form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>  
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <div class="text-info">IGV. (18%) </div>
-                                                    <input type="number" name="txtporctigv"id="txtporctigv" class="form-control" placeholder="0.00" min="0.00">
+                                                    <input type="text" name="txtporctigv"id="txtporctigv" class="form-control" placeholder="0.00">
                                                 </div>
                                             </div>   
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <div id="divtotal" class="text-info">Total S/.</div>
                                                     <input type="number" name="txtmonttotal"id="txtmonttotal" class="form-control" placeholder="0.00" min="0.00">
                                                 </div>
-                                            </div>  
+                                            </div>   
+                                            <div class="col-md-3">
+                                                <div id="divtotal" class="text-info">&nbsp;</div>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="chkregverpago" name="chkregverpago" />
+                                                    <label for="chkregverpago" class="custom-control-label">Ver Precios en detalle</label>
+                                                </div>
+                                            </div> 
                                         </div>
                                         <div class="row">   
                                             <div class="col-md-2">
@@ -400,17 +405,17 @@
                                                     <input type="hidden" name="mtxtregpermane"id="mtxtregpermane">
                                                 </div>
                                             </div>  
-                                            <div class="col-md-2">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <div class="text-info">Tiempo Entrega Inf. </div>
+                                                    <div class="text-info">Tiempo Entrega Informe</div>
                                                     <div class="input-group mb-3">
                                                         <input type="number" name="mtxtregentregainf"id="mtxtregentregainf" class="form-control" min="0" pattern="^[0-9]+">
                                                         <div class="input-group-prepend">
                                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                            <span id="btntipodias">Días Calend.</span>
+                                                            <span id="btntipodias">Días Calendario</span>
                                                             </button>
                                                             <div class="dropdown-menu">
-                                                                <a class="dropdown-item" onClick="javascript:calen()">Días Calend.</a>
+                                                                <a class="dropdown-item" onClick="javascript:calen()">Días Calendario</a>
                                                                 <a class="dropdown-item" onClick="javascript:util()">Días Útiles</a>
                                                             </div>
                                                         </div>
@@ -418,7 +423,7 @@
                                                     <input type="hidden" name="txtregtipodias" id="txtregtipodias">
                                                 </div>
                                             </div> 
-                                            <div class="col-md-2">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <div class="text-info">Forma de Pago </div>
                                                     <div class="input-group mb-3">
@@ -436,28 +441,20 @@
                                                     </div>
                                                     <input type="hidden" name="txtregformapagos" id="txtregformapagos">
                                                 </div>
-                                            </div> 
-                                            <div class="col-md-6">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="text-info">Observaciones </div>
-                                                    <textarea type="text" name="mtxtobserv"id="mtxtobserv" class="form-control" rows="3"> </textarea>
+                                                    <textarea type="text" name="mtxtobserv"id="mtxtobserv" class="form-control" rows="2"> </textarea>
                                                 </div>
                                             </div>  
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-5 text-left"> 
+                                            <div class="col-sm-12 text-right"> 
                                                 <div class="form-group">
-                                                    <div class="col-md-5">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="chkregverpago" name="chkregverpago" />
-                                                            <label for="chkregverpago" class="custom-control-label">Ver Detalle de Precios</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 text-right"> 
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Registrar</button>   
+                                                    <button type="submit" class="btn btn-success" id="btnRegistrar"><i class="fas fa-save"></i> Grabar</button>   
                                                     <button type="button" class="btn btn-danger" id="btnVistaPrevia" onclick="PDFvistaPrevia()"><i class="far fa-file-pdf"></i> Vista Previa</button>
                                                     <button type="button" class="btn btn-info" id="btnVistaPreviasolodet" onclick="PDFvistaPreviasolodet()"><i class="far fa-file-pdf"></i> Vista solo Detalle</button>
                                                     <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
@@ -481,7 +478,7 @@
                                                         <h3 class="card-title">Listado de Productos</h3>
                                                     </div>                                        
                                                     <div class="card-body">
-                                                        <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                                                        <table id="tblListProductos" class="table table-striped table-bordered compact" style="width:100%">
                                                             <thead>
                                                             <tr>
                                                                 <th></th>

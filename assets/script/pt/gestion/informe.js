@@ -135,19 +135,22 @@ $("#btnBuscar").click(function (){
     if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
     if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); }  
 
-    otblListInforme = $('#tblListInforme').DataTable({  
-        'responsive'    : true,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '400px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,      
-        'bDestroy'    	: true,
-        "AutoWidth"     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        "ordering"		: false,  
-        'stateSave'     : true,
+    otblListInforme = $('#tblListInforme').DataTable({           
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": false, 
+        'AutoWidth'     : false,
+        "paging"      	: true,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : true,
+        "select"        : true, 
         'ajax'	: {
             "url"   : baseurl+"pt/cinforme/getbuscarinforme/",
             "type"  : "POST", 
@@ -164,18 +167,18 @@ $("#btnBuscar").click(function (){
         },
         'columns'	: [
             {
-              "class"     :   "index",
+              "class"     :   "col-xs",
               orderable   :   false,
               data        :   null,
               targets     :   0
             },
             {"orderable": false, data: 'NROINFOR', targets: 1, "class": "col-sm"},
-            {"orderable": false, data: 'RAZONSOCIAL', targets: 2, "class": "col-l"},
-            {"orderable": false, data: 'RESPONSABLE', targets: 3, "class": "col-m"},
-            {"orderable": false, data: 'FECHINFOR', targets: 4, "class": "col-sm"},
-            {"orderable": false, data: 'DESCRIPSERV', targets: 5},
-            {"orderable": false, data: 'NROPROPU', targets: 6},
-            {responsivePriority: 1, "orderable": false, "class": "col-s", 
+            {"orderable": false, data: 'RAZONSOCIAL', targets: 2, "class": "col-xm"},
+            {"orderable": false, data: 'RESPONSABLE', targets: 3, "class": "col-sm"},
+            {"orderable": false, data: 'FECHINFOR',responsivePriority: 1, targets: 4, "class": "col-s"},
+            {"orderable": false, data: 'DESCRIPSERV',responsivePriority: 1, targets: 5, "class": "col-lm"},
+            {"orderable": false, data: 'NROPROPU', targets: 6, "class": "col-xm"},
+            {responsivePriority: 3, "orderable": false, "class": "col-xs", 
               render:function(data, type, row){                
                   return  '<div>'+ 
                     '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalEditInfor" onClick="javascript:selInformeedit(\''+row.IDINFOR+'\',\''+row.idptevaluacion+'\',\''+row.NROINFOR+'\',\''+row.FECHINFOR+'\',\''+row.idresponsable+'\',\''+row.ARCHIVO+'\',\''+row.ruta_informe+'\',\''+row.descripcion+'\',\''+row.descripcion_archivo+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
@@ -188,6 +191,7 @@ $("#btnBuscar").click(function (){
             },            
             {"orderable": false, 
               render:function(data, type, row){ 
+                bfind = true;   
                   return ' <div>'+
                     ' <a data-toggle="modal" title="Adjuntar" style="cursor:pointer; color:#3c763d;" data-target="#modalDetaPropu" onClick="javascript:listarDetPropuesta(\''+row.IDPROPU+'\');"class="btn btn-outline-primary btn-sm hidden-xs hidden-sm"><span class="fas fa-folder-open" aria-hidden="true"> </span> DOCUMENTOS ADJUNTOS</a>'+
                     ' &nbsp; &nbsp;'+

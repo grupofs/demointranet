@@ -401,8 +401,6 @@
             </button>
         </div>
         <div class="modal-body"> 
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border text-primary">Datos del Ensayo</legend> 
                 <div class="form-group"> 
                     <div class="row"> 
                         <div class="col-md-12">
@@ -413,13 +411,14 @@
                         </div>
                     </div>
                 </div>
-                    <form class="form-horizontal" id="frmMantcontratos" name="frmMantcontratos" action="<?= base_url('adm/rrhh/ccontratos/setcontratos')?>" method="POST" enctype="multipart/form-data" role="form"> 
+                    <form class="form-horizontal" id="frmIngresult" name="frmIngresult" action="<?= base_url('lab/resultados/cregresult/setresultados')?>" method="POST" enctype="multipart/form-data" role="form"> 
                         <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">
                         <input type="hidden" id="mhdncinternocotizacion" name="mhdncinternocotizacion">
                         <input type="hidden" id="mhdnnversioncotizacion" name="mhdnnversioncotizacion">
                         <input type="hidden" id="mhdnnordenproducto" name="mhdnnordenproducto">
                         <input type="hidden" id="mhdncmuestra" name="mhdncmuestra">
                         <input type="hidden" id="mhdncensayo" name="mhdncensayo">
+                        <input type="hidden" id="mhdnnviausado" name="mhdnnviausado">
                         <div class="form-group">        
                             <div class="row"> 
                                 <div class="col-md-2">
@@ -527,7 +526,8 @@
                                     <div class="text-info">Exponencial</div>                        
                                     <div>                            
                                         <select class="form-control" id="mcbosexponente_resul" name="mcbosexponente_resul" style="width: 100%;">
-                                            <option value="" selected="selected">Ninguno</option>
+                                        <option value="N" selected="selected">NO</option>
+                                        <option value="S" >SI</option>
                                         </select>
                                     </div>
                                 </div> 
@@ -558,8 +558,6 @@
                             </div>      
                         </div>
                     </form>
-                
-            </fieldset>
         </div>
         <div class="modal-footer w-100 d-flex flex-row" style="background-color: #D4EAFC;">
             <div class="row">

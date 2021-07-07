@@ -34,24 +34,22 @@
             <div class="col-12">
                 <div class="card card-outline card-success">
                     <div class="card-header">
-                        <h3 class="card-title">EQUIPOS / RECINTOS</h3>
+                        <h3 class="card-title">RECINTOS</h3>
                     </div>                
-                    <div class="card-body">
-                        <table id="tblListEquipos" class="table table-striped table-bordered" style="width:100%">
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <table id="tblListRecintos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th></th>
-                                <th>EQUIPO - RECINTO</th>
                                 <th>TIPO</th>
-                                <th>FABRICANTE</th>
-                                <th>CAPACIDAD - AREA</th>
+                                <th></th>
+                                <th>NRO INFORME</th>
+                                <th>ÁREA EVALUADA M</th>
                                 <th>MEDIO CALENTAMIENTO</th>
-                                <th>N° RECINTOS - EQUIPOS</th>
-                                <th>N° COCHES - PARRILLAS</th>
+                                <th>NRO RECINTOS</th>
+                                <th>NRO COCHES / PARRILLAS</th>
                                 <th>IDENTIFICACION</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>PRODUCTO</th>
+                                <th>PRESENTACIÓN</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -65,18 +63,23 @@
             <div class="col-12">
                 <div class="card card-outline card-success">
                     <div class="card-header">
-                        <h3 class="card-title">PRODUCTOS</h3>
+                        <h3 class="card-title">EQUIPOS</h3>
                     </div>                
-                    <div class="card-body">
-                        <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <table id="tblListEquipos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
+                                <th>TIPO</th>
                                 <th></th>
-                                <th>NOMBRE</th>
-                                <th>PRESENTACION</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>NRO INFORME</th>
+                                <th>FABRICANTE</th>
+                                <th>CAPACIDAD</th>
+                                <th>MEDIO CALENTAMIENTO</th>
+                                <th>NRO EQUIPOS</th>
+                                <th>NRO COCHES / PARRILLAS</th>
+                                <th>IDENTIFICACION</th>
+                                <th>PRODUCTO</th>
+                                <th>PRESENTACIÓN</th>
                             </tr>
                             </thead>
                             <tbody>

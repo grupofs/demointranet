@@ -44,16 +44,17 @@ $(document).ready(function() {
         }
     });
 
-    /*$('#frmRecepcion').validate({
+    
+    $('#frmIngresult').validate({
         rules: {
-            mtxtmproductoreal: {
-                required: true,
-            },
+            mcboum: {
+            required: true,
+          },
         },
         messages: {
-            mtxtmproductoreal: {
-                required: "Por Favor ingrese Nombre del Producto"
-            },
+            mcboum: {
+            required: "Por Favor escoja una UM"
+          },
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {
@@ -67,30 +68,38 @@ $(document).ready(function() {
           $(element).removeClass('is-invalid');
         },        
         submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGIngresult');
             var request = $.ajax({
-                url:$('#frmRecepcion').attr("action"),
-                type:$('#frmRecepcion').attr("method"),
-                data:$('#frmRecepcion').serialize(),
+                url:$('#frmIngresult').attr("action"),
+                type:$('#frmIngresult').attr("method"),
+                data:$('#frmIngresult').serialize(),
                 error: function(){
                     Vtitle = 'Error en Guardar!!!';
                     Vtype = 'error';
                     sweetalert(Vtitle,Vtype); 
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
                 }
             });
             request.done(function( respuesta ) {
                 var posts = JSON.parse(respuesta);
                 
-                $.each(posts, function() {
-                    otblListProducto.ajax.reload(null,false);
-                    Vtitle = 'La Recepcion esta Guardada!!!';
+                $.each(posts, function() {                    
+                    
+                    Vtitle = 'Cotizacion Guardada!!!';
                     Vtype = 'success';
-                    sweetalert(Vtitle,Vtype); 
-                    $('#mbtnCCreaProduc').click();    
+                    sweetalert(Vtitle,Vtype);   
+                    objPrincipal.liberarBoton(botonEvaluar); 
+                    
+                    getListResultados(this.cinternoordenservicio);
+
+                    $('#mbtnCIngresult').click();
                 });
             });
             return false;
         }
-    });*/
+    });
 });
 
 fechaActual = function(){
@@ -392,8 +401,8 @@ getListResultados = function(id){
             {data: 'censayofs'},
             {data: 'densayo'},
             {data: 'unidadmedida'},
-            {data: 'despecificacion'},
-            {data: 'dresultado'},
+            {data: 'ESPECIFICACION'},
+            {data: 'RESULTADO'},
             {data: 'sresultado'},
             {data: 'dinfensayo'},
             {data: 'BLANCO'},
@@ -436,75 +445,81 @@ $('#tblListResultados tbody').on('dblclick', 'td', function () {
     var tr = $(this).parents('tr');
     var row = otblListResultados.row(tr);
     var rowData = row.data();
-    
-    $("#modalIngresult").modal('show');
-    $('#frmIngresult').trigger("reset");
-    
 
-    $('#mhdncinternoordenservicio').val(rowData.cinternoordenservicio);
-    $('#mhdncinternocotizacion').val(rowData.cinternocotizacion);
-    $('#mhdnnversioncotizacion').val(rowData.nversioncotizacion);
-    $('#mhdnnordenproducto').val(rowData.nordenproducto);
-    $('#mhdncmuestra').val(rowData.cmuestra);
-    $('#mhdncensayo').val(rowData.censayo);
+    if(rowData.cinternoordenservicio){
+        $("#modalIngresult").modal('show');
+        $('#frmIngresult').trigger("reset");        
 
-    document.querySelector('#nomtipoensayo').innerText = rowData.tipoensayo;
-    document.querySelector('#muestra').innerText = rowData.codmuestra+' '+rowData.drealproducto;
+        $('#mhdncinternoordenservicio').val(rowData.cinternoordenservicio);
+        $('#mhdncinternocotizacion').val(rowData.cinternocotizacion);
+        $('#mhdnnversioncotizacion').val(rowData.nversioncotizacion);
+        $('#mhdnnordenproducto').val(rowData.nordenproducto);
+        $('#mhdncmuestra').val(rowData.cmuestra);
+        $('#mhdncensayo').val(rowData.censayo);
+        $('#mhdnnviausado').val(rowData.nviausado);
 
-    $('#mtxtcodensayo').val(rowData.censayofs);
-    $('#mtxtnomensayo').val(rowData.densayo);
-    
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"lab/resultados/cregresult/getcboum",
-        dataType: "JSON",
-        async: true,
-        success:function(result){
-            $('#mcboum').html(result);
-            $('#mcboum').val(rowData.zctipounidadmedida).trigger("change");
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error cboum');
+        document.querySelector('#nomtipoensayo').innerText = rowData.tipoensayo;
+        document.querySelector('#muestra').innerText = rowData.codmuestra+' '+rowData.drealproducto;
+
+        $('#mtxtcodensayo').val(rowData.censayofs);
+        $('#mtxtnomensayo').val(rowData.densayo);
+        
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            url: baseurl+"lab/resultados/cregresult/getcboum",
+            dataType: "JSON",
+            async: true,
+            success:function(result){
+                $('#mcboum').html(result);
+                $('#mcboum').val(rowData.zctipounidadmedida).trigger("change");
+            },
+            error: function(){
+                alert('Error, No se puede autenticar por error cboum');
+            }
+        });
+        
+        if(rowData.condi_espe == 'Ausencia'){
+            ausencia();  
+        }else if(rowData.condi_espe == '='){     
+            igual(); 
+        }else if(rowData.condi_espe == '<'){     
+            mayor(); 
+        }else if(rowData.condi_espe == '>'){     
+            menor(); 
+        }else if(rowData.condi_espe == '<='){     
+            mayorigual(); 
+        }else if(rowData.condi_espe == '>='){     
+            menorigual(); 
         }
-    });
-    
-    if(rowData.condi_espe == 'Ausencia'){
-        ausencia();  
-    }else if(rowData.condi_espe == '='){     
-        igual(); 
-    }else if(rowData.condi_espe == '<'){     
-        mayor(); 
-    }else if(rowData.condi_espe == '>'){     
-        menor(); 
-    }else if(rowData.condi_espe == '<='){     
-        mayorigual(); 
-    }else if(rowData.condi_espe == '>='){     
-        menorigual(); 
-    }
 
-    $('#mtxtvalor_esp').val(rowData.valor_espe);
-    $('#mcbosexponente_esp').val(rowData.esexpo_espe).trigger("change");
-    $('#mtxtvalorexpo_esp').val(rowData.valexpo_espe);
-    
-    if(rowData.condi_espe == 'Ausencia'){
-        ausencia_resul();  
-    }else if(rowData.condi_espe == '='){     
-        igual_resul(); 
-    }else if(rowData.condi_espe == '<'){     
-        mayor_resul(); 
-    }else if(rowData.condi_espe == '>'){     
-        menor_resul(); 
-    }else if(rowData.condi_espe == '<='){     
-        mayorigual_resul(); 
-    }else if(rowData.condi_espe == '>='){     
-        menorigual_resul(); 
+        $('#mtxtvalor_esp').val(rowData.valor_espe);
+        $('#mcbosexponente_esp').val(rowData.esexpo_espe).trigger("change");
+        $('#mtxtvalorexpo_esp').val(rowData.valexpo_espe);
+        
+        if(rowData.condi_resul == 'Ausencia'){
+            ausencia_resul();  
+        }else if(rowData.condi_resul == '='){     
+            igual_resul(); 
+        }else if(rowData.condi_resul == '<'){     
+            mayor_resul(); 
+        }else if(rowData.condi_resul == '>'){     
+            menor_resul(); 
+        }else if(rowData.condi_resul == '<='){     
+            mayorigual_resul(); 
+        }else if(rowData.condi_resul == '>='){     
+            menorigual_resul(); 
+        }
+        
+        $('#mtxtvalor_resul').val(rowData.valor_resul);
+        $('#mcbosexponente_resul').val(rowData.esexpo_resul).trigger("change");
+        $('#mtxtvalorexpo_resul').val(rowData.valexpo_resul);
+        $('#mcboresultado').val(rowData.sresultado).trigger("change");
+    }else{
+        alert('ok');
     }
     
-    $('#mtxtvalor_resul').val(rowData.valor_resul);
-    $('#mcbosexponente_resul').val(rowData.esexpo_resul).trigger("change");
-    $('#mtxtvalorexpo_resul').val(rowData.valexpo_resul);
-    $('#mcboresultado').val(rowData.sresultado).trigger("change");
+    
 
     //$('#mhdnidempleado').val(rowData.cinternoordenservicio);
 });

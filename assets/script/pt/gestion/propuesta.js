@@ -53,6 +53,71 @@ $(document).ready(function() {
         }
     });
   
+
+    $('#frmCreaPropu').validate({
+        rules: {
+          mcboClie: {
+            required: true,
+          },
+          mcboServPropu: {
+            required: true,
+          },
+        },
+        messages: {
+          mcboClie: {
+            required: "Por Favor escoja un Cliente"
+          },
+          mcboServPropu: {
+            required: "Por Favor escoja un Servicio"
+          },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGCreaPropu');
+            var request = $.ajax({
+                url:$('#frmCreaPropu').attr("action"),
+                type:$('#frmCreaPropu').attr("method"),
+                data:$('#frmCreaPropu').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {                    
+                    $('#mhdnIdPropu').val(this.id_propuesta);
+                    if($('#sArchivo').val() == 'S'){          
+                        subirArchivo();
+                    }else{   
+                        $('#btnBuscar').click();     
+                        Vtitle = 'Propuesta Guardada!!!';//this.respuesta;
+                        Vtype = 'success';
+                        sweetalert(Vtitle,Vtype);
+                        objPrincipal.liberarBoton(botonEvaluar);         
+                        $('#mbtnCCreaPropu').click();
+                    } 
+                    $('#sArchivo').val('N');      
+                });
+            });
+            return false;
+        }
+    });
 });
 
 fechaActual = function(){
@@ -121,21 +186,22 @@ $("#btnBuscar").click(function (){
 
     $("#btnexcel").removeAttr("disabled");
 
-    console.log($('#cboEst').val());
-
-    otblListPropuesta = $('#tblListPropuesta').DataTable({  
-        'responsive'    : true,
-        'bJQueryUI'     : true,
-        'scrollY'     	: '400px',
-        'scrollX'     	: true, 
-        'paging'      	: true,
-        'processing'  	: true,     
-        'bDestroy'    	: true,
+    otblListPropuesta = $('#tblListPropuesta').DataTable({           
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": false, 
         'AutoWidth'     : false,
-        'info'        	: true,
-        'filter'      	: true, 
-        'ordering'		: false,  
-        'stateSave'     : true,
+        "paging"      	: true,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : true,
+        "select"        : true, 
         'ajax'	: {
             "url"   : baseurl+"pt/cpropuesta/getbuscarpropuesta/",
             "type"  : "POST", 
@@ -152,18 +218,18 @@ $("#btnBuscar").click(function (){
         },
         'columns'	: [
             {
-              "class"     :   "index",
+              "class"     :   "col-xs",
               orderable   :   false,
               data        :   null,
               targets     :   0
             },
-            {"orderable": false, data: 'NROPROPU', targets: 1, "class": "col-m"},
+            {"orderable": false, data: 'NROPROPU', targets: 1, "class": "col-xm"},
             {"orderable": false, data: 'RAZONSOCIAL', targets: 2, "class": "col-xm"},
             {"orderable": false, data: 'DETAPROPU', targets: 3, "class": "col-l"},
-            {"orderable": false, data: 'COSTOPROPU', targets: 4, "class": "col-c"},
-            {"orderable": false, data: 'FECHPROPU', targets: 5, "class": "col-c"},
+            {"orderable": false, data: 'COSTOPROPU', targets: 4, "class": "col-s"},
+            {"orderable": false, data: 'FECHPROPU', targets: 5, "class": "col-s"},
             {"orderable": false, data: 'DESCRIPESTABLE', targets: 6, "class": "col-l"},
-            {responsivePriority: 1, "orderable": false, "class": "col-xc", 
+            {responsivePriority: 1, "orderable": false, "class": "col-xs", 
                 render:function(data, type, row){
                     return '<div>'+
                     '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalCreaPropu" onClick="javascript:selPropuesta(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\',\''+row.NOMBARCH+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
@@ -544,36 +610,6 @@ escogerArchivo = function(){
     $('#sArchivo').val('S');
 };
 
-$('#frmCreaPropu').submit(function(event){
-    event.preventDefault();
-    
-    var request = $.ajax({
-        url:$('#frmCreaPropu').attr("action"),
-        type:$('#frmCreaPropu').attr("method"),
-        data:$('#frmCreaPropu').serialize(),
-        error: function(){
-            Vtitle = 'No se puede registrar por error';
-            Vtype = 'error';
-            sweetalert(Vtitle,Vtype);
-        }
-    });
-    request.done(function( respuesta ) {
-        var posts = JSON.parse(respuesta);        
-        $.each(posts, function() {   
-            $('#mhdnIdPropu').val(this.id_propuesta);
-            if($('#sArchivo').val() == 'S'){          
-                subirArchivo();
-            }else{   
-                $('#btnBuscar').click();     
-                Vtitle = this.respuesta;
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);        
-                $('#mbtnCCreaPropu').click();
-            } 
-            $('#sArchivo').val('N');  
-        });
-    });
-});
 
 subirArchivo=function(){
     var parametrotxt = new FormData($("#frmCreaPropu")[0]);
