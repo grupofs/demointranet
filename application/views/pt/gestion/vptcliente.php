@@ -3,7 +3,9 @@
 ?>
 
 <style>
-
+    .fa-file-image:before {
+        content: "\f0c6";
+    }    
 </style>
 
 <!-- content-header -->

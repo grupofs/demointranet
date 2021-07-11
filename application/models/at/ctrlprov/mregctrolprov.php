@@ -453,6 +453,7 @@ class Mregctrolprov extends CI_Model {
             return $query->result(); 
         }   
     } 
+
     public function getcbocierreTipo() { // Listar Ensayos	
         $sql = "select ctipo, dregistro, nvalor from ttabla 
                 where ctabla = '09' and ncorrelativo <> 0 and IsNull(nvalor,9) <> 9 and spermitemodificar = 'N' order by dregistro ASC ;";
@@ -471,6 +472,22 @@ class Mregctrolprov extends CI_Model {
             return false;
         }		
     }
+    public function setcierreespecial($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_at_ctrlprov_setcierreespecial(?,?,?,?,?,?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
 
 }
 ?>

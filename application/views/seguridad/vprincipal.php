@@ -416,8 +416,21 @@
                 });
             });
 
+            //Add text editor
+            $('.summernotebasic').summernote({
+                tabsize: 2,
+                height: 120,
+                lang: 'es-ES',
+                toolbar: [
+                    ['font', ['bold', 'underline']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']]
+                ]
+            });
+
         });
     </script>
+    
 
     <?php echo $this->layout->getJs(); ?>
 

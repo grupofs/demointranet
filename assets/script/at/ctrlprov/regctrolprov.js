@@ -335,7 +335,7 @@ $("#btnBuscar").click(function (){
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
                                 '<li><a title="Programar" style="cursor:pointer; color:#3c763d;" onClick="javascript:fprogramar(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.cusuarioconsultor+'\',\''+row.periodo+'\',\''+row.finspeccion+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="far fa-calendar-alt" aria-hidden="true">&nbsp;</span>&nbsp;Programar</a></li>'+
                                 '<li><a data-toggle="modal" title="Covalidar" style="cursor:pointer; color:#3c763d;" data-target="#modalConvalidacion" ><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Convalidar</a></li>'+
-                                '<li><a data-toggle="modal" title="Cierre" style="cursor:pointer; color:#3c763d;" data-target="#modalCierreespecial" ><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cierres Especiales</a></li>'+
+                                '<li><a data-toggle="modal" title="Cierre" style="cursor:pointer; color:#3c763d;" data-target="#modalCierreespecial" onClick="javascript:fcierreespecial(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.finspeccion+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cierres Especiales</a></li>'+
                             '</ul>'+
                         '</div>'  
                 }else{
@@ -957,23 +957,19 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     $('#Btnplan').show();
 };
 
-$('#swplaninsp').on('switchChange.bootstrapSwitch',function (event, state) {
-    if($('#swplaninsp').prop('checked')){
-        $('#Btnplan').show(); 
-    }else{
-        $('#Btnplan').hide(); 
-    }
-    
-});
-
-$('#btnRetornarLista').click(function(){
-    $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
-});
 
 $('#modalCierreespecial').on('shown.bs.modal', function (e) { 
     $("#txtcierreidinsp").prop({readonly:true}); 
     $("#txtcierrefservicio").prop({readonly:true});
-        
+    
+    $('#txtcierreFProgramado').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
+    });
+
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -988,7 +984,34 @@ $('#modalCierreespecial').on('shown.bs.modal', function (e) {
         }
     })
     
-    $('#txtcierreidinsp').val($('#mtxtidinsp').val());
+    
+});
+fcierreespecial = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,fservicio,zctipoestadoservicio,destado,ccliente){
+   
+    $('#txtcierreidinsp').val(cauditoriainspeccion);
+    $('#mhdnfservicio').val(fservicio);
+    $('#mhdnAccioncierre').val('N');
+    fechaActualcierre();
+};
+fechaActualcierre = function(fservicio){    
+    var fecha = new Date();		
+    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
+    $('#txtcierreFProg').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') ); 
+    $('#txtcierrefservicio').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );    
+
+};
+
+$('#swplaninsp').on('switchChange.bootstrapSwitch',function (event, state) {
+    if($('#swplaninsp').prop('checked')){
+        $('#Btnplan').show(); 
+    }else{
+        $('#Btnplan').hide(); 
+    }
+    
+});
+
+$('#btnRetornarLista').click(function(){
+    $('#tabctrlprov a[href="#tabctrlprov-list"]').tab('show');  
 });
 
 verInspeccion = function(id){

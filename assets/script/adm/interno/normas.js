@@ -431,7 +431,7 @@ $("#mtxtArchivoNewnorma,#mtxtArchivoNormaEdit").fileinput({
 	maxFileCount: 60000,
 	showUpload: false,
 	showRemove: true,
-	overwriteInitial: true,
+	overwriteInitial: false,
 	maxFileSize: 60000,
 	showClose: false,
 	showCaption: false,

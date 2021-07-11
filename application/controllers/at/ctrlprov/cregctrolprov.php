@@ -254,6 +254,35 @@ class Cregctrolprov extends CI_Controller {
         $resultado 	= $this->mregctrolprov->getcbocierreTipo();
 		echo json_encode($resultado);
 	}
+    public function setcierreespecial() {	// Visualizar Inspectores en CBO
+		$varnull = '';
+		
+		$cauditoriainspeccion 	= $this->input->post('txtcierreidinsp');	
+		$fservicio 				= $this->input->post('mhdncierrefservicio');
+		$fechacierre 			= $this->input->post('txtcierrefservicio');	
+		$zctipoestadoservicio	= $this->input->post('cbocierreTipo');
+		$fechaprogramada		= $this->input->post('txtcierreFProg');		
+		$itrunco 				= $this->input->post('txtcierremonto');	
+		$ngastogeneral 			= $this->input->post('txtcierreviatico');	
+		$dcomentario 			= $this->input->post('mtxtcierrecomentario');
+		$cusuario 				= $this->input->post('hdncusuario');	
+		$accion 				= $this->input->post('mhdnAccioncierre');	
+        
+        $parametros = array(
+            '@cauditoriainspeccion' => $cauditoriainspeccion,
+            '@fservicio' 			=> ($this->input->post('mhdncierrefservicio') == '') ? '1900-01-01' : substr($fservicio, 6, 4).'-'.substr($fservicio,3 , 2).'-'.substr($fservicio, 0, 2),
+            '@fechacierre'   		=> ($this->input->post('txtcierrefservicio') == '') ? '1900-01-01' : substr($fechaservicio, 6, 4).'-'.substr($fechaservicio,3 , 2).'-'.substr($fechaservicio, 0, 2),
+            '@zctipoestadoservicio' => $zctipoestadoservicio,
+            '@fechaprogramada'   	=> ($this->input->post('txtcierreFProg') == '') ? '1900-01-01' : substr($fechaprogramada, 6, 4).'-'.substr($fechaprogramada,3 , 2).'-'.substr($fechaprogramada, 0, 2),
+            '@itrunco'   			=> $itrunco,
+            '@ngastogeneral'   		=> $ngastogeneral,
+            '@dcomentario'  		=> $dcomentario,
+            '@cusuario'  			=> $cusuario,
+            '@accion'   			=> $accion 
+        );
+		$resultado = $this->mregctrolprov->setcierreespecial($parametros);
+		echo json_encode($resultado);
+	}
 	
     
 }

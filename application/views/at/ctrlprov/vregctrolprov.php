@@ -1,5 +1,6 @@
 <?php
     $idusu = $this -> session -> userdata('s_idusuario');
+    $cusuario = $this -> session -> userdata('s_cusuario');
 ?>
 
 <style>
@@ -537,8 +538,7 @@
 <!-- /.modal-cierre especial --> 
 <div class="modal fade" id="modalCierreespecial" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('at/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form"> 
+    <div class="modal-content">      
 
         <div class="modal-header text-center bg-success">
             <h4 class="modal-title w-100 font-weight-bold">Cierre Especial</h4>
@@ -547,8 +547,11 @@
             </button>
         </div>
 
-        <div class="modal-body">          
-            <input type="hidden" id="mhdnAccioncierreesp" name="mhdnAccioncierreesp">                          
+        <div class="modal-body">  
+        <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('at/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form">         
+            <input type="hidden" id="mhdncierrefservicio" name="mhdncierrefservicio">   
+            <input type="hidden" id="mhdnAccioncierre" name="mhdnAccioncierre">
+            <input type="hidden" id="hdncusuario" name="hdncusuario" value="<?php echo $cusuario ?>">                       
             <div class="form-group">  
                 <div class="row">
                     <div class="col-md-3"> 
@@ -558,15 +561,11 @@
                         </div>
                     </div> 
                     <div class="col-md-3"> 
-                        <div class="text-info">Fecha</div>
+                        <div class="text-info">Fecha Cierre</div>
                         <div>    
                             <input type="text" name="txtcierrefservicio"id="txtcierrefservicio" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask><!-- ID -->
                         </div>
                     </div> 
-                </div> 
-            </div>                         
-            <div class="form-group">  
-                <div class="row">
                     <div class="col-md-6">
                         <div class="text-info">Tipo de Cierre </div>
                         <div>
@@ -575,15 +574,46 @@
                             </select>
                         </div>
                     </div>
-                </div> 
-            </div>   
+                </div>   
+                <div class="row" id="cierreprograma">
+                    <div class="col-md-3"> 
+                        <div class="text-info">F. Programado</div>                     
+                        <div class="input-group date" id="txtcierreFProgramado" data-target-input="nearest">
+                            <input type="text" id="txtcierreFProg" name="txtcierreFProg" class="form-control datetimepicker-input" data-target="#txtcierreFProgramado"/>
+                            <div class="input-group-append" data-target="#txtcierreFProgramado" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                             </div>
+                        </div>
+                    </div> 
+                    <div class="col-md-3"> 
+                        <div class="text-info">Monto</div>
+                        <div>    
+                            <input type="number" name="txtcierremonto"id="txtcierremonto" class="form-control" min="0.00" value="0.00"><!-- ID -->
+                        </div>
+                    </div> 
+                    <div class="col-md-3"> 
+                        <div class="text-info">Viatico</div>
+                        <div>    
+                            <input type="number" name="txtcierreviatico"id="txtcierreviatico" class="form-control" min="0.00" value="0.00"><!-- ID -->
+                        </div>
+                    </div> 
+                </div>   
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-info">Comentario</div>
+                        <div>  
+                            <textarea class="form-control" cols="20" id="mtxtcierrecomentario" name="mtxtcierrecomentario" rows="2" ></textarea>
+                        </div>
+                    </div>
+                </div>             
+            </div> 
+        </form>  
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCCreactrl" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGCreactrl">Grabar</button>
+            <button type="reset" class="btn btn-default" id="mbtnCCierreesp" data-dismiss="modal">Cancelar</button>
+            <button type="submit" form="frmCierreespecial" class="btn btn-info" id="mbtnGCierreesp">Grabar</button>
         </div>
-      </form>
     </div>
   </div>
 </div> 
