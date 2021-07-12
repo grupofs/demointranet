@@ -135,6 +135,8 @@ $("#btnBuscar").click(function (){
     if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
     if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); }  
 
+    $("#btnexcel").removeAttr("disabled");
+    
     otblListInforme = $('#tblListInforme').DataTable({           
         "processing"  	: true,
         "bDestroy"    	: true,

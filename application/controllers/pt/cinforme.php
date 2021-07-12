@@ -1,6 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class Cinforme extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
@@ -811,6 +821,200 @@ class Cinforme extends CI_Controller {
             $retorna = $this->mtramites->subirArchivo($parametros);
             echo json_encode($retorna);
 		}	
+	}
+
+	public function excelinformes() {
+	 /*Estilos */
+		$titulo = [
+			'font'	=> [
+				'name' => 'Arial',
+				'size' =>12,
+				'color' => array('rgb' => 'FFFFFF'),
+				'bold' => true,
+			], 
+			'fill'	=>[
+				'fillType' => Fill::FILL_SOLID,
+				'startColor' => [
+					'rgb' => '29B037'
+				]
+			],
+			'borders'	=>[
+				'allBorders' => [
+					'borderStyle' => Border::BORDER_THIN,
+					'color' => [ 
+						'rgb' => '000000'
+					]
+				]
+			],
+			'alignment' => [
+				'horizontal' => Alignment::HORIZONTAL_CENTER,
+				'vertical' => Alignment::VERTICAL_CENTER,
+				'wrapText' => true,
+			],
+		];
+        $cabecera = [
+            'font'	=> [
+                'name' => 'Arial',
+                'size' =>10,
+                'color' => array('rgb' => 'FFFFFF'),
+                'bold' => true,
+            ], 
+            'fill'	=>[
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => '29B037'
+                ]
+            ],
+            'borders'	=>[
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => [ 
+                        'rgb' => '000000'
+                    ]
+                ]
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ];
+        $celdastexto = [
+            'borders'	=>[
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => [ 
+                        'rgb' => '000000'
+                    ]
+                ]
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ];
+        $celdasnumero = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_RIGHT,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ];
+        $celdascentro = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ];
+	 /*Estilos */	
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setTitle('Listado - Informes');
+
+        $spreadsheet->getDefaultStyle()
+            ->getFont()
+            ->setName('Arial')
+            ->setSize(9);
+		
+		$sheet->setCellValue('A1', 'Listado de Informes')
+			->mergeCells('A1:H1')
+			->setCellValue('A3', '#')
+			->setCellValue('B3', 'Nro Informe')
+			->setCellValue('C3', 'Fecha Informe')
+			->setCellValue('D3', 'Cliente')
+			->setCellValue('E3', 'Servicio')
+			->setCellValue('F3', 'Tema')
+			->setCellValue('G3', 'Responsable')
+			->setCellValue('H3', 'Nro Propuesta');
+
+		$sheet->getStyle('A1:H1')->applyFromArray($titulo);
+        $sheet->getStyle('A3:H3')->applyFromArray($cabecera);
+
+		$sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(4.10);
+		$sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(20.10);
+		$sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(14.10);
+		$sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(41.10);
+		$sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(34.10);
+		$sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(45.10);
+		$sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(45.10);
+		$sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(20.10);
+		
+
+		$varnull 			= 	'';
+		$celservicio 		= 	'';
+		$celestado			= 	'';
+
+		$ccliente   = $this->input->post('cboClie');
+		$fini       = $this->input->post('txtFIni');
+		$ffin       = $this->input->post('txtFFin');
+		$cservicio  = $this->input->post('cboServ');
+		$dnropropu    = $this->input->post('txtnropropu');
+		$dnroinfor    = $this->input->post('txtnroinfor');
+		$vigente    = $this->input->post('swVigencia');
+
+		
+		if($vigente == 'on'){
+			$cvigente = 'A';
+		}else{
+			$cvigente = 'I';
+		}
+            
+        $parametros = array(
+			'@cservicio'    => ($celservicio == $varnull) ? '0' :$celservicio,
+			'@fini'         => ($this->input->post('txtFIni') == '') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
+			'@ffin'         => ($this->input->post('txtFFin') == '') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
+			'@ccliente'     => ($this->input->post('cboClie') == '') ? '0' : $ccliente,
+			'@dnropropu'      => ($this->input->post('txtnropropu') == $varnull) ? '%' : "%".$dnrodet."%",
+			'@dnroinfor'      => ($this->input->post('txtnroinfor') == $varnull) ? '%' : "%".$dnrodet."%",
+			'@vigente'      => $cvigente,
+		);		
+		$rpt = $this->minforme->getbuscarinforme($parametros);
+		$i = 1;
+		$irow = 4;
+        if ($rpt){
+        	foreach($rpt as $row){
+            
+				$NROINFOR = $row->NROINFOR;
+				$FECHINFOR = $row->FECHINFOR;
+				$RAZONSOCIAL = $row->RAZONSOCIAL;
+				$DESCRIPSERV = $row->DESCRIPSERV;
+				$RESPONSABLE = $row->RESPONSABLE;
+				$NROPROPU = $row->NROPROPU;
+						
+
+				$sheet->setCellValue('A'.$irow,$i);
+				$sheet->setCellValue('B'.$irow,$NROINFOR);
+				$sheet->setCellValue('C'.$irow,$FECHINFOR);
+				$sheet->setCellValue('D'.$irow,$RAZONSOCIAL);
+				$sheet->setCellValue('E'.$irow,$DESCRIPSERV);
+				$sheet->setCellValue('F'.$irow,'');
+				$sheet->setCellValue('G'.$irow,$RESPONSABLE);
+				$sheet->setCellValue('H'.$irow,$NROPROPU);
+
+				$i++;
+				$irow++;
+			}
+		}
+		$pos = $irow - 1;
+		$sheet->getStyle('A4:H'.$pos)->applyFromArray($celdastexto);
+		//$sheet->getStyle('A4:A'.$pos)->applyFromArray($celdasnumero);
+		//$sheet->getStyle('H4:H'.$pos)->applyFromArray($celdasnumero);
+		//$sheet->getStyle('C4:C'.$pos)->applyFromArray($celdascentro);
+		//$sheet->getStyle('E4:E'.$pos)->applyFromArray($celdascentro);
+
+		$sheet->setAutoFilter('B3:H'.$pos);
+		
+                   
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'listadoInforme-'.time().'.xlsx';
+		ob_end_clean();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
 	}
 }
 ?>
