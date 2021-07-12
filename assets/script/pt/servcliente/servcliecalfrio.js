@@ -1,6 +1,7 @@
 
 var otblListEquipos, otblListProductos;
-var vccliente = $('#hdnccliente').val(); 
+var vccliente = $('#hdnccliente').val();
+var collapsedGroupsEq = {} ;
 
 $(document).ready(function() { 
     listProducto()   
@@ -32,18 +33,32 @@ listProducto= function(){
             dataSrc : ''        
         },
         'columns'	: [
+            {"class":"col-sm", data: 'TIPO'},
             {
               "class"     :   "details-control col-xs",
               orderable   :   false,
               data        :   null,
-              targets     :   0
+              targets     :   1
             },
-            {"class":"col-sm", "orderable": false, data: 'NROINFOR'},
-            {"class":"col-lm", "orderable": false, data: 'PRODUCTO'},
-            {"class":"col-sm", "orderable": false, data: 'TIPO'},
-            {"class":"col-m", "orderable": false, data: 'ENVASE'},
-            {"class":"col-xm", "orderable": false, data: 'DIMENSION'},
+            {"class":"col-sm", data: 'NROINFOR'},
+            {"class":"col-lm", data: 'PRODUCTO'},
+            {"class":"col-xm", data: 'ENVASE'},
+            {"class":"col-xm", data: 'DIMENSION'},
         ],
+        rowGroup: {
+            startRender : function ( rows, group ) {
+                var collapsed = !!collapsedGroupsEq[group];
+    
+                rows.nodes().each(function (r) {
+                    r.style.display = collapsed ? 'none' : '';
+                }); 
+                return $('<tr/>')
+                .append('<td colspan="14" style="cursor: pointer;">' + group + ' (' + rows.count() + ')</td>')
+                .attr('data-name', group)
+                .toggleClass('collapsed', collapsed);
+            },
+            dataSrc: "TIPO"
+        },
         "columnDefs": [{
             "targets": [1], 
             "data": null, 
@@ -58,11 +73,18 @@ listProducto= function(){
     });   
     // Enumeracion 
     otblListProductos.on( 'order.dt search.dt', function () { 
-        otblListProductos.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListProductos.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
     }).draw() 
+    otblListProductos.column(0).visible( false ); 
 };
+/* COMPRIMIR GRUPO */
+$('#tblListProductos tbody').on('click', 'tr.dtrg-group', function () {
+    var name = $(this).data('name');
+    collapsedGroupsEq[name] = !collapsedGroupsEq[name];
+    otblListProductos.draw(true);
+}); 
 /* DETALLE TRAMITES */
 $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
             
@@ -85,15 +107,15 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
             }
         })
         row.child( 
-           '<table id="tblListEquipo" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+           '<table id="tblListEquipos" class="display compact" style="width:100%;  background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
            '<thead style="background-color:#FFFFFF;"><tr><th>TIPO DE EQUIPO</th><th>FABRICANTE EQUIPO</th></thead><tbody>' +
             '</tbody></table>').show();
-            /*
-            otblListProductos = $('#tblListProductos').DataTable({
-                "bJQueryUI": true,
-                'bStateSave': true,
-                'scrollY':        false,
-                'scrollX':        true,
+            
+            otblListEquipos = $('#tblListEquipos').DataTable({
+                "bJQueryUI"     : true,
+                'bStateSave'    : true,
+                'scrollY'       : false,
+                'scrollX'       : true,
                 'scrollCollapse': false,
                 'bDestroy'    : true,
                 'paging'      : false,
@@ -101,25 +123,19 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
                 'filter'      : false,   
                 'stateSave'   : true,
                 'ajax'        : {
-                    "url"   : baseurl+"pt/cservcliente/getproconvproducto/",
+                    "url"   : baseurl+"pt/cinforme/getlistequipoxprod/",
                     "type"  : "POST", 
                     "data": function ( d ) {
-                        d.ccliente = rowData.ccliente;
-                        d.idinforme = rowData.idptinforme;
-                        d.idregistro = rowData.idptregistro;
-                        d.idregestudio = rowData.idptregestudio;
+                        d.Idregprod = rowData.idptregproducto;
                     },     
                     dataSrc : ''        
                 },
                 'columns'     : [
-                    {"orderable": false, data: 'PRODUCTO'},
-                    {"orderable": false, data: 'ENVASE'},
-                    {"orderable": false, data: 'TIPO'},
-                    {"orderable": false, data: 'DIMENSION'},
-                    {"orderable": false, data: 'NROPROCAL'},
+                    {"orderable": false, data: 'tipoequipo'},
+                    {"orderable": false, data: 'FABRIEQUIPO'},
                               
                 ], 
-            });*/
+            });
 
         tr.addClass('details');
     }

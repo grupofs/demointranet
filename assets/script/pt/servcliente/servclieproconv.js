@@ -42,12 +42,15 @@ listEquipo= function(){
               data        :   'ESPACE',
               targets     :   1
             },
-            {"class":"col-xm", "orderable": false, data: 'NROINFOR'},
-            {"class":"col-xm", "orderable": false, data: 'MEDIOCAL'},
-            {"class":"col-xm", "orderable": false, data: 'FABRI'},
-            {"class":"col-sm", "orderable": false, data: 'ENVASE'},
-            {"class":"col-m", "orderable": false, data: 'DIMENSION'},
-            {"class":"col-xs", "orderable": false, data: 'IDENTIF'}, 
+            {"class":"col-sm", data: 'NROINFOR'},
+            {"class":"col-sm", data: 'MEDIOCAL'},
+            {"class":"col-sm", data: 'FABRI'},
+            {"class":"col-xm", data: 'ENVASE'},
+            {"class":"col-sm", data: 'DIMENSION'},
+            {"class":"col-sm", data: 'IDENTIF'}, 
+            {"class":"col-s", data: 'NROEQUIPO'}, 
+            {"class":"col-sm", data: 'NROCANAS'}, 
+            {data: 'ESPACE'}, 
         ],
         rowGroup: {
             startRender : function ( rows, group ) {
@@ -83,14 +86,12 @@ listEquipo= function(){
     }).draw();  
     otblListEquipos.column(0).visible( false ); 
 };
-
 /* COMPRIMIR GRUPO */
 $('#tblListEquipos tbody').on('click', 'tr.dtrg-group', function () {
     var name = $(this).data('name');
     collapsedGroupsEq[name] = !collapsedGroupsEq[name];
     otblListEquipos.draw(true);
 }); 
-
 //$('#contenido').find(".dataTables_scrollBody").css('height', $('#contenido').height() - 20);
 
 listProducto= function(){    
@@ -108,7 +109,7 @@ listProducto= function(){
         "info"        	: true,
         "filter"      	: true, 
         "ordering"		: false,
-        "responsive"    : true,
+        "responsive"    : false,
         "select"        : true,
         'ajax'	: {
             "url"   : baseurl+"pt/cservcliente/getproconvproducto/",
@@ -126,14 +127,16 @@ listProducto= function(){
               data        :   null,
               targets     :   1
             },
-            {"class":"col-xm", "orderable": false, data: 'NROINFOR'},
-            {"class":"col-lm", "orderable": false, data: 'PRODUCTO'},
-            {"class":"col-sm", "orderable": false, data: 'ENVASE'},
-            {"class":"col-s", "orderable": false, data: 'NROPROCAL'},
-            {"class":"col-sm", "orderable": false, data: 'DIMENSION'},
-            {"class":"col-sm", "orderable": false, data: 'TIPOEQUIPO'},
-            {"class":"col-sm", "orderable": false, data: 'IDENEQUIPO'},
-            {"class":"col-sm", "orderable": false, data: 'FABRIEQUIPO'},
+            {"class":"col-sm", data: 'NROINFOR'},
+            {"class":"col-lm", data: 'PRODUCTO'},
+            {"class":"col-xm",  data: 'ENVASE'},
+            {"class":"col-m", data: 'ESPACE'},
+            {"class":"col-sm", data: 'DIMENSION'},
+            {"class":"col-xm", data: 'TIPOEQUIPO'},
+            {"class":"col-sm", data: 'FABRIEQUIPO'},
+            {"class":"col-s", data: 'IDENEQUIPO'},
+            {"class":"col-xs", data: 'NROPROCAL'},
+            {data: 'ESPACE'}, 
         ],
         rowGroup: {
             startRender : function ( rows, group ) {

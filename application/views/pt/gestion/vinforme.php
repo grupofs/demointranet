@@ -351,19 +351,19 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>DIÁMETRO/ANCHO</label>
-                                                        <input type="text" class="form-control" id="txtDiamReg01" name="txtDiamReg03">
+                                                        <input type="text" class="form-control" id="txtDiamReg01" name="txtDiamReg01">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>ALTURA/LARGO</label>
-                                                        <input type="text" class="form-control" id="txtAltuReg01" name="txtAltuReg03">
+                                                        <input type="text" class="form-control" id="txtAltuReg01" name="txtAltuReg01">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>GROSOR</label>
-                                                        <input type="text" class="form-control" id="txtGrosReg01" name="txtGrosReg03">
+                                                        <input type="text" class="form-control" id="txtGrosReg01" name="txtGrosReg01">
                                                     </div>
                                                 </div>
                                             </div>
@@ -429,7 +429,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4" id="divparticula">
+                                                <div class="col-md-3" id="divparticula">
                                                     <div class="form-group">
                                                         <label>PARTÍCULAS</label>
                                                         <select class="form-control select2bs4" id="cboParticulasReg03" name="cboParticulasReg03" style="width: 100%;">
@@ -445,7 +445,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>ENVASE</label>
                                                         <select class="form-control select2bs4" id="cboEnvaseReg03" name="cboEnvaseReg03" style="width: 100%;">
@@ -453,12 +453,18 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label># PROCAL</label>
+                                                        <input type="text" class="form-control" id="txtProcalReg03" name="txtProcalReg03">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label># PROCAL</label>
-                                                        <input type="text" class="form-control" id="txtProcalReg03" name="txtProcalReg03">
+                                                        <label>NOMBRE COMUN</label>
+                                                        <input type="text" class="form-control" id="txtNomcomunReg03" name="txtNomcomunReg03">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">

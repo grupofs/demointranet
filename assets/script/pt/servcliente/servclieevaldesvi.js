@@ -38,6 +38,7 @@ listEstudios= function(){
             {data: 'NROINFOR', "class":"col-sm"},
             {data: 'DESC', "class":"col-lm"},
             {data: 'PRODUCTO', "class":"col-m"},
+            {data: 'ENVASE', "class":"col-sm"},
             {data: 'DIMENSION', "class":"col-sm"},
             {data: 'NRODEVCAL', "class":"col-s"},
             {data: 'TIPOEQUIPO', "class":"col-sm"},

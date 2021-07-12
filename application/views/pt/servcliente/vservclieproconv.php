@@ -47,7 +47,10 @@
                                 <th>FABRICANTE</th>
                                 <th>ENVASE</th>
                                 <th>DIMENSIONES</th>
-                                <th>#ID</th>
+                                <th>#ID ESTUDIO</th>
+                                <th>Nro EQUIPOS</th>
+                                <th>NRO CANASTILLAS</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -72,11 +75,13 @@
                                 <th>NRO INFORME</th>
                                 <th>NOMBRE</th>
                                 <th>ENVASE</th>
-                                <th>PROCAL</th>
+                                <th>NOMBRE COMUN</th>
                                 <th>DIMENSIONES</th>
                                 <th>TIPO DE EQUIPO</th>
-                                <th>#ID EQUIPO</th>
                                 <th>FABRICANTE DEL EQUIPO</th>
+                                <th>#ID EQUIPO</th>
+                                <th>PROCAL</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>

@@ -36,17 +36,17 @@
                     <div class="card-header">
                         <h3 class="card-title">PRODUCTOS</h3>
                     </div>                
-                    <div class="card-body">
-                        <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <table id="tblListProductos" class="table table-striped table-bordered compact" style="width:100%">
                             <thead>
                             <tr>
-                                <th></th>
-                                <th>NOMBRE</th>
                                 <th>TIPO</th>
+                                <th></th>
+                                <th>NRO INFORME</th>
+                                <th>NOMBRE PRODUCTO</th>
+                                <th>pH MATERIA PRIMA</th>
+                                <th>pH PRODUCTO FINAL</th>
                                 <th>PARTICULA</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>

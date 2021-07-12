@@ -40,10 +40,10 @@
                         <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
+                                <th>TIPO</th>
                                 <th></th>
                                 <th>NRO INFORME</th>
                                 <th>NOMBRE</th>
-                                <th>TIPO</th>
                                 <th>ENVASE</th>
                                 <th>DIMENSIONES</th>
                             </tr>

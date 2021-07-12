@@ -43,12 +43,13 @@
                                 <th>TIPO DE CONCLUSION</th>
                                 <th></th>
                                 <th>NRO INFORME</th>
-                                <th>DESCRIPCION DEL ACUERDO</th>
+                                <th>DESCRIPCION DE LA DESVIACIÓN</th>
                                 <th>PRODUCTO</th>
+                                <th>ENVASE</th>
                                 <th>DIMENSIONES</th>
                                 <th># DEVCAL</th>
                                 <th>TIPO EQUIPO</th>
-                                <th># ID</th>
+                                <th>#ID EQUIPO</th>
                             </tr>
                             </thead>
                             <tbody>

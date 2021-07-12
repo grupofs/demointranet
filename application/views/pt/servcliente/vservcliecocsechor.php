@@ -47,7 +47,7 @@
                                 <th>MEDIO CALENTAMIENTO</th>
                                 <th>NRO RECINTOS</th>
                                 <th>NRO COCHES / PARRILLAS</th>
-                                <th>IDENTIFICACION</th>
+                                <th>#ID RECINTOS</th>
                                 <th>PRODUCTO</th>
                                 <th>PRESENTACIÓN</th>
                             </tr>
@@ -77,7 +77,7 @@
                                 <th>MEDIO CALENTAMIENTO</th>
                                 <th>NRO EQUIPOS</th>
                                 <th>NRO COCHES / PARRILLAS</th>
-                                <th>IDENTIFICACION</th>
+                                <th>#ID EQUIPOS</th>
                                 <th>PRODUCTO</th>
                                 <th>PRESENTACIÓN</th>
                             </tr>
