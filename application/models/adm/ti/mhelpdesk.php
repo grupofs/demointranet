@@ -6,7 +6,7 @@ class Mhelpdesk extends CI_Model {
 		$this->load->library('session');
     }
     
-    public function getempleados($ccia,$carea) { // recupera los empleados     
+    public function getempleados() { // recupera los empleados     
         $sql = "select a.id_empleado, (b.nrodoc+' - '+b.datosrazonsocial) as 'empleado' 
         from adm_rrhh_empleado a join adm_administrado b on b.id_administrado = a.id_administrado join adm_rrhh_contrato c on c.id_empleado = a.id_empleado
         where c.estado_contrato = 'A';";

@@ -107,6 +107,7 @@
                                         </div>         
 
                                         <div class="card-body">
+                                        <form class="form-horizontal" id="frmRegHelpdesk" action="<?= base_url('adm/ti/chelpdesk/sethelpdesk')?>" method="POST" enctype="multipart/form-data" role="form">
                                             <div class="form-group">
                                                 <div class="row" id="datoempleado">
                                                     <div class="col-md-4">
@@ -191,6 +192,7 @@
                                                     </div>
                                                 </div>  
                                             </div> 
+                                        </form>
                                         </div>          
                                                     
                                         <div class="card-footer justify-content-between"> 
