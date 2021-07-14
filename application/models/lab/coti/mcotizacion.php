@@ -28,7 +28,7 @@ class Mcotizacion extends CI_Model {
     }
 
     public function getbuscarcotizacion($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getbuscarcotizacion(?,?,?,?,?,?,?,?)";
+        $procedure = "call usp_lab_coti_getbuscarcotizacion(?,?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -37,6 +37,7 @@ class Mcotizacion extends CI_Model {
 			return False;
 		}		
     }
+
    /** REGISTRO **/ 
     public function getcboregserv() { // Visualizar Servicios en CBO
         $sql = "select cservicio, csubservicio, dsubservicio 
@@ -461,6 +462,23 @@ class Mcotizacion extends CI_Model {
 		}{
 			return False;
 		}		
+    }
+
+    public function setduplicarcoti($parametros) { // Buscar Cotizacion
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setduplicarcoti(?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
     }
 }
 ?>

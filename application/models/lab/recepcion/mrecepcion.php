@@ -177,6 +177,19 @@ class Mrecepcion extends CI_Model {
 		}{
 			return False;
 		}		
+    }    
+
+    public function getetiquetasmuestras($cinternoordenservicio) { // Listar Ensayos	
+        $sql = "select a.CINTERNOORDENSERVICIO, b.NORDENTRABAJO as 'NORDENTRABAJO', a.CMUESTRA as 'CMUESTRA', 1 as 'COPIA', '' as 'SPACE' 
+                from PRECEPCIONMUESTRA a join PORDENSERVICIOTRABAJO b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO 
+                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
     }
 }
 ?>

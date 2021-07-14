@@ -168,7 +168,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">      
-                                                <label>Hasta</label>                      
+                                                <label>Hasta</label>
                                                 <div class="input-group date" id="txtFHasta" data-target-input="nearest">
                                                     <input type="text" id="txtFFin" name="txtFFin" class="form-control datetimepicker-input" data-target="#txtFHasta" disabled/>
                                                     <div class="input-group-append" data-target="#txtFHasta" data-toggle="datetimepicker">
@@ -184,7 +184,7 @@
                                                     <input type="text" id="txtdescri" name="txtdescri" class="form-control"  onkeypress="pulsarListarCoti(event)"/>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-md-2">
                                                 <label>Ver OT</label>
                                                 <div>
                                                     <select class="form-control" id="cbotieneot" name="cbotieneot">
@@ -215,12 +215,12 @@
                                             <div class="card-header">
                                                 <h3 class="card-title">Listado de Cotizaciones</h3>
                                             </div>                                        
-                                            <div class="card-body">
-                                                <table id="tblListRecepcion" class="table table-striped table-bordered" style="width:100%">
+                                            <div class="card-body" style="overflow-x: scroll;">
+                                                <table id="tblListRecepcion" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
-                                                        <th></th>
                                                         <th>Cliente</th>
+                                                        <th></th>
                                                         <th></th>
                                                         <th>Cotizacion</th>
                                                         <th>Fecha</th>
@@ -228,7 +228,6 @@
                                                         <th>Monto sin IGV</th>
                                                         <th>Monto Total</th>
                                                         <th>Elaborado por</th>
-                                                        <th></th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -270,7 +269,7 @@
                                                         <br>
                                                         <div class="row">                                                         
                                                             <div class="col-12"> 
-                                                            <table id="tblListProductos" class="table table-striped table-bordered" style="width:100%">
+                                                            <table id="tblListProductos" class="table table-striped table-bordered compact" style="width:100%">
                                                                 <thead>
                                                                 <tr>
                                                                     <th></th>
@@ -543,23 +542,22 @@
 
 <!-- /.modal-FechaOT --> 
 <div class="modal fade" id="modalFechaOT" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form class="form-horizontal" id="frmFechaOT" name="frmFechaOT" action="<?= base_url('lab/recepcion/crecepcion/setupdateFechaOT')?>" method="POST" enctype="multipart/form-data" role="form"> 
-
         <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Fecha de OT</h4>
+            <h4 class="modal-title w-100 font-weight-bold">Orden de Trabajo</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
         <div class="modal-body">
+        <form class="form-horizontal" id="frmFechaOT" name="frmFechaOT" action="<?= base_url('lab/recepcion/crecepcion/setupdateFechaOT')?>" method="POST" enctype="multipart/form-data" role="form"> 
             <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">  
             <input type="hidden" id="mhdnnroordenservicio" name="mhdnnroordenservicio">                       
             <div class="form-group"> 
-                <div class="row">                                                                                              
-                    <div class="col-8 text-right">            
+                <div class="row">
+                    <div class="col-md-5 text-center">            
                         <div class="input-group date" id="txtFOT" data-target-input="nearest">
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="fas fa-check-circle">Fecha OT</i></div>
@@ -570,15 +568,113 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-7 text-left"> 
+                        <button type="submit" form="frmFechaOT" class="btn btn-info" id="mbtnGFechaOT">Actualizar</button>
+                    </div>  
+                </div>
+            </div>
+        </form>  
+
+        <form class="form-horizontal" id="frmGenConst" name="frmGenConst" action="<?= base_url('lab/recepcion/crecepcion/setgenerarconst')?>" method="POST" enctype="multipart/form-data" role="form">       
+            <input type="hidden" id="mhdnidotconst" name="mhdnidotconst"> <!-- ID -->
+            <input type="hidden" id="mhdncordenservicioconst" name="mhdncordenservicioconst">
+            <input type="hidden" id="mhdnAccionConst" name="mhdnAccionConst" >
+
+            <div class="form-group">
+                <fieldset class="scheduler-border-fsc" id="regConst">
+                    <legend class="scheduler-border-fsc text-primary">Constancia de recepcion de muestras</legend>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-info">Nro Constancia <span class="text-requerido">*</span></div>
+                            <div>  
+                                <input type="text" id="txtnroconst" name="txtnroconst" class="form-control"/>
+                            </div>
+                        </div> 
+                        <div class="col-md-3">
+                            <div class="text-info">Fecha Ingreso</div>
+                            <div class="input-group date" id="txtFConstancia" data-target-input="nearest">
+                                <input type="text" id="txtFConst" name="txtFConst" class="form-control datetimepicker-input" data-target="#txtFConstancia"/>
+                                <div class="input-group-append" data-target="#txtFConstancia" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>  
+                        </div>  
+                        <div class="col-md-3">
+                            <div class="text-info">Hora Ingreso</div>
+                            <div class="input-group date" id="txtHConstancia" data-target-input="nearest">
+                                <input type="text" id="txtHConst" name="txtHConst" class="form-control datetimepicker-input" data-target="#txtHConstancia"/>
+                                <div class="input-group-append" data-target="#txtHConstancia" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <div class="text-info">&nbsp;</div> 
+                            <button type="submit" form="frmGenConst" class="btn btn-info" id="mbtnGGenConst">Generar Constancia</button>
+                        </div>     
+                    </div>     
+                </fieldset> 
+            </div>
+        </form>
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCFechaOT" data-dismiss="modal">Cancelar</button>            
+        </div>
+      
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-Etiqueta --> 
+<div class="modal fade" id="modalEtiqueta" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Etiquetas para Muestras</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">
+            <div class="row">
+                <div class="col-md-6"> 
+                    <div class="text-info">Tipo de Etiqueta</div>
+                    <input type="checkbox" name="swCasos" id="swCasos" checked data-bootstrap-switch  data-on-text="General" data-off-text="Lote">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12"> 
+                    <div class="card card-outline card-lightblue">
+                        <div class="card-header">
+                            <h3 class="card-title">Listado de Muestras</h3>
+                        </div>                                        
+                        <div class="card-body" style="overflow-x: scroll;">
+                            <table id="tblListEtiquetasmuestras" class="table table-striped table-bordered compact" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Nro Muestra</th>
+                                    <th>Seleccion</th>
+                                    <th>Nro Copias</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCFechaOT" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info" id="mbtnGFechaOT">Grabar</button>
+            <button type="reset" class="btn btn-default" id="mbtnCancelar" data-dismiss="modal">Cancelar</button>   
+            <button type="submit" class="btn btn-info" id="mbtnPrint">Vista Previa</button>           
         </div>
-      </form>
     </div>
   </div>
 </div> 

@@ -66,13 +66,13 @@ class Crecepcion extends CI_Controller {
 		$fenvase 	            = $this->input->post('mtxtFenvase');
 		$fmuestra 	            = $this->input->post('mtxtFmuestra');
 		$hmuestra 	            = $this->input->post('mtxthmuestra');
-		$stottus 		        = $this->input->post('mcbotottus');
-		$ntrimestre 		    = $this->input->post('mcbomonitoreo');
-		$zctipomotivo 	        = $this->input->post('mcbomotivo');
-		$careacliente 	        = $this->input->post('mcboarea');
-		$zctipoitem 	        = $this->input->post('mcboitem');
-		$dubicacion 	        = $this->input->post('mtxtubicacion');
-		$dcondicion 	        = $this->input->post('mtxtestado');
+		$stottus 		        = null;//$this->input->post('mcbotottus');
+		$ntrimestre 		    = null;//$this->input->post('mcbomonitoreo');
+		$zctipomotivo 	        = null;//$this->input->post('mcbomotivo');
+		$careacliente 	        = null;//$this->input->post('mcboarea');
+		$zctipoitem 	        = null;//$this->input->post('mcboitem');
+		$dubicacion 	        = null;//$this->input->post('mtxtubicacion');
+		$dcondicion 	        = null;//$this->input->post('mtxtestado');
 		$dobservacion 	        = $this->input->post('mtxtObserva');
 		$dotraobservacion 	    = $this->input->post('mtxtObsotros');
 
@@ -649,6 +649,464 @@ class Crecepcion extends CI_Controller {
 		header('Cache-Control: max-age=0');
 
 		$writer->save('php://output');
+    }
+
+	public function pdfCargoOT($cinternoordenservicio) { // recupera los cPTIZACION
+        $this->load->library('pdfgenerator');
+
+        $date = getdate();
+        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
+
+        $html = '<html>
+                <head>
+                    <title>Constancia</title>
+                    <style>
+                        @page {
+                             margin: 0.3in 0.3in 0.3in 0.3in;
+                        }
+                        .teacherPage {
+                            page: teacher;
+                            page-break-after: always;
+                        }
+                        body{
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 9pt;
+                            margin-top: 2cm;
+                            margin-left: 0cm;
+                            margin-right: 0cm;
+                            margin-bottom: 0cm;
+                        }  
+                        header {
+                            position: fixed;
+                            top: 0cm;
+                            left: 0cm;
+                            right: 0cm;
+                            height: 3cm;
+                        }
+                        .cuerpo {
+                            text-align: justify;
+                        }
+                        img.izquierda {
+                            float: left;
+                        }
+                        img.derecha {
+                            float: right;
+                        }
+                        div.page_break {
+                            page-break-before: always;
+                        }
+                        .page-number {
+                          text-align: right;
+                        }                        
+                        .page-number:before {
+                          content: counter(page);
+                        }
+                        th { 
+                            text-align: center; 
+                            border: 1px solid black;
+                        }
+                    </style>
+                </head>
+                <body>
+                
+                <header>
+                    <table  width="1050px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                        <tr>
+                            <td width="20%" rowspan="4">
+                                <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
+                            </td>
+                            <td width="65%" align="center" rowspan="4">
+                                <h2>CONSTANCIA DE RECEPCION DE MUESTRAS</h2>
+                            </td>
+                            <td width="15%" align="center" colspan="2">
+                                FSC-F-LAB-08
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Versión</td>
+                            <td align="right">03</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td align="right">09/03/2017</td>
+                        </tr>
+                        <tr>
+                            <td>Página</td>
+                            <td align="right"><div class="page-number"></div></td>
+                        </tr>
+                    </table>
+                </header>';
+
+        			
+        $res = $this->mrecepcion->getpdfdatosot($cinternoordenservicio);
+        if ($res){
+            foreach($res as $row){
+				$nordentrabajo      = $row->nordentrabajo;
+				$fordentrabajo      = $row->fordentrabajo;
+				$cinternocotizacion = $row->cinternocotizacion;
+                $nversioncotizacion = $row->nversioncotizacion;
+                $OBSERVACION        = $row->OBSERVACION;
+			}
+		}
+                
+        $html .= '
+            <main>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2" >
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td width="50%">&nbsp;</td>
+                        <td width="25%" align="right">N° '.$nordentrabajo.'</td>
+                        <td width="25%" align="right">Fecha '.$fordentrabajo.'</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" ><b>I AREA</b></td>
+                    </tr>
+                    <tr>
+                        <td>MICROBIOLOGÍA</td>
+                        <td>FISICOQUÍMICA</td>
+                        <td>SENSORIAL</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td><b>II PRODUCTOS / PRESENTACIÓN / CANTIDAD</b></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr>
+                        <th width="10%" align="center">CÓDIGO DE MUESTRA</th>
+                        <th width="35%" align="center">PRODUCTO</th>
+                        <th width="35%" align="center">PRESENTACIÓN / CANTIDAD</th>
+                        <th width="20%" align="center">CONDICIONES (*)</th>
+                    </tr>';
+                    $resprod = $this->mrecepcion->getpdfdatosotprod($cinternoordenservicio);
+                    if ($resprod){
+                        foreach($resprod as $rowprod){
+                            $cmuestra       = $rowprod->cmuestra;
+                            $drealproducto  = $rowprod->drealproducto;
+                            $DPRESENTACION  = $rowprod->DPRESENTACION;
+                            $dtemperatura = $rowprod->dtemperatura;
+                            $html .= '<tr>
+                                <td width="12%">&nbsp;'.$cmuestra.'</td>
+                                <td width="40%">&nbsp;'.$drealproducto.'</td>
+                                <td width="30%">&nbsp;'.$DPRESENTACION.'</td>
+                                <td width="18%">&nbsp;'.$dtemperatura.'</td>
+                            </tr>';
+                        }
+                    }        
+                $html .= '</table>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><b>III SOLICITUD DE ENSAYO</b></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr>
+                        <th width="12%" align="center">PRODUCTO(S)</th>
+                        <th width="8%" align="center">Código Metodo</th>
+                        <th width="30%" align="center">METODO DE ENSAYO</th>
+                        <th width="37%" align="center">NORMA / REFERENCIA</th>
+                        <th width="5%" align="center">Vías</th>
+                        <th width="5%" align="center">AC/ NOAC</th>
+                    </tr>';
+                    $resensayo = $this->mrecepcion->getpdfdatosotensayo($cinternoordenservicio);
+                    if ($resensayo){
+                        foreach($resensayo as $rowensayo){
+                            $CMUESTRA   = $rowensayo->CMUESTRA;
+                            $CENSAYOFS  = $rowensayo->CENSAYOFS;
+                            $DENSAYO    = $rowensayo->DENSAYO;
+                            $DNORMA     = $rowensayo->DNORMA;
+                            $SACNOAC    = $rowensayo->SACNOAC;
+                            $CANTIDAD   = $rowensayo->CANTIDAD;
+                            $html .= '<tr>
+                                <td width="12%">&nbsp;'.$CMUESTRA.'</td>
+                                <td width="8%">&nbsp;'.$CENSAYOFS.'</td>
+                                <td width="30%">&nbsp;'.$DENSAYO.'</td>
+                                <td width="37%">&nbsp;'.$DNORMA.'</td>
+                                <td width="5%">&nbsp;'.$CANTIDAD.'</td>
+                                <td width="5%">&nbsp;'.$SACNOAC.'</td>
+                            </tr>';
+                        }
+                    } 
+                    
+                           
+                $html .= '<tr>
+                        <td colspan="6" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Observaciones:</td>
+                        <td colspan="4">'.$OBSERVACION.'</td>
+                    </tr>
+                </table>
+                
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th width="15%" align="center">BK</th>
+                        <th width="30%" align="center" style="border: black 1px solid;">LOTE</th>
+                        <th width="55%" align="center" style="border: white 1px solid;">&nbsp;</th>
+                    </tr>';
+                    $resensayo = $this->mrecepcion->getpdfdatosotblancov($cinternocotizacion);
+                    if ($resensayo){
+                        foreach($resensayo as $rowensayo){
+                            $bk     = $rowensayo->bk;
+                            $lote   = $rowensayo->lote;
+                            $html .= '<tr>
+                                <td width="15%">&nbsp;'.$bk.'</td>
+                                <td width="30%">&nbsp;'.$lote.'</td>
+                                <td width="55%">&nbsp;</td>
+                            </tr>';
+                        }
+                    } 
+                $html .= '/table>
+            </main>';
+
+        $html .= '</body></html>';
+		$filename = 'OrdenTrabajo-';//.$namefile;
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'landscape');
+        //echo $html;
+    }
+
+	public function pdfEtiqueta($cinternoordenservicio) { // recupera los cPTIZACION
+        $this->load->library('pdfgenerator');
+
+        $date = getdate();
+        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
+
+        $html = '<html>
+                <head>
+                    <title>Constancia</title>
+                    <style>
+                        @page {
+                             margin: 0.3in 0.3in 0.3in 0.3in;
+                        }
+                        .teacherPage {
+                            page: teacher;
+                            page-break-after: always;
+                        }
+                        body{
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 9pt;
+                            margin-top: 2cm;
+                            margin-left: 0cm;
+                            margin-right: 0cm;
+                            margin-bottom: 0cm;
+                        }  
+                        header {
+                            position: fixed;
+                            top: 0cm;
+                            left: 0cm;
+                            right: 0cm;
+                            height: 3cm;
+                        }
+                        .cuerpo {
+                            text-align: justify;
+                        }
+                        img.izquierda {
+                            float: left;
+                        }
+                        img.derecha {
+                            float: right;
+                        }
+                        div.page_break {
+                            page-break-before: always;
+                        }
+                        .page-number {
+                          text-align: right;
+                        }                        
+                        .page-number:before {
+                          content: counter(page);
+                        }
+                        th { 
+                            text-align: center; 
+                            border: 1px solid black;
+                        }
+                    </style>
+                </head>
+                <body>
+                
+                <header>
+                    <table  width="1050px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                        <tr>
+                            <td width="20%" rowspan="4">
+                                <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
+                            </td>
+                            <td width="65%" align="center" rowspan="4">
+                                <h2>CONSTANCIA DE RECEPCION DE MUESTRAS</h2>
+                            </td>
+                            <td width="15%" align="center" colspan="2">
+                                FSC-F-LAB-08
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Versión</td>
+                            <td align="right">03</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td align="right">09/03/2017</td>
+                        </tr>
+                        <tr>
+                            <td>Página</td>
+                            <td align="right"><div class="page-number"></div></td>
+                        </tr>
+                    </table>
+                </header>';
+
+        			
+        $res = $this->mrecepcion->getpdfdatosot($cinternoordenservicio);
+        if ($res){
+            foreach($res as $row){
+				$nordentrabajo      = $row->nordentrabajo;
+				$fordentrabajo      = $row->fordentrabajo;
+				$cinternocotizacion = $row->cinternocotizacion;
+                $nversioncotizacion = $row->nversioncotizacion;
+                $OBSERVACION        = $row->OBSERVACION;
+			}
+		}
+                
+        $html .= '
+            <main>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2" >
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td width="50%">&nbsp;</td>
+                        <td width="25%" align="right">N° '.$nordentrabajo.'</td>
+                        <td width="25%" align="right">Fecha '.$fordentrabajo.'</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" ><b>I AREA</b></td>
+                    </tr>
+                    <tr>
+                        <td>MICROBIOLOGÍA</td>
+                        <td>FISICOQUÍMICA</td>
+                        <td>SENSORIAL</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td><b>II PRODUCTOS / PRESENTACIÓN / CANTIDAD</b></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr>
+                        <th width="10%" align="center">CÓDIGO DE MUESTRA</th>
+                        <th width="35%" align="center">PRODUCTO</th>
+                        <th width="35%" align="center">PRESENTACIÓN / CANTIDAD</th>
+                        <th width="20%" align="center">CONDICIONES (*)</th>
+                    </tr>';
+                    $resprod = $this->mrecepcion->getpdfdatosotprod($cinternoordenservicio);
+                    if ($resprod){
+                        foreach($resprod as $rowprod){
+                            $cmuestra       = $rowprod->cmuestra;
+                            $drealproducto  = $rowprod->drealproducto;
+                            $DPRESENTACION  = $rowprod->DPRESENTACION;
+                            $dtemperatura = $rowprod->dtemperatura;
+                            $html .= '<tr>
+                                <td width="12%">&nbsp;'.$cmuestra.'</td>
+                                <td width="40%">&nbsp;'.$drealproducto.'</td>
+                                <td width="30%">&nbsp;'.$DPRESENTACION.'</td>
+                                <td width="18%">&nbsp;'.$dtemperatura.'</td>
+                            </tr>';
+                        }
+                    }        
+                $html .= '</table>
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><b>III SOLICITUD DE ENSAYO</b></td>
+                    </tr>
+                </table>
+                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
+                    <tr>
+                        <th width="12%" align="center">PRODUCTO(S)</th>
+                        <th width="8%" align="center">Código Metodo</th>
+                        <th width="30%" align="center">METODO DE ENSAYO</th>
+                        <th width="37%" align="center">NORMA / REFERENCIA</th>
+                        <th width="5%" align="center">Vías</th>
+                        <th width="5%" align="center">AC/ NOAC</th>
+                    </tr>';
+                    $resensayo = $this->mrecepcion->getpdfdatosotensayo($cinternoordenservicio);
+                    if ($resensayo){
+                        foreach($resensayo as $rowensayo){
+                            $CMUESTRA   = $rowensayo->CMUESTRA;
+                            $CENSAYOFS  = $rowensayo->CENSAYOFS;
+                            $DENSAYO    = $rowensayo->DENSAYO;
+                            $DNORMA     = $rowensayo->DNORMA;
+                            $SACNOAC    = $rowensayo->SACNOAC;
+                            $CANTIDAD   = $rowensayo->CANTIDAD;
+                            $html .= '<tr>
+                                <td width="12%">&nbsp;'.$CMUESTRA.'</td>
+                                <td width="8%">&nbsp;'.$CENSAYOFS.'</td>
+                                <td width="30%">&nbsp;'.$DENSAYO.'</td>
+                                <td width="37%">&nbsp;'.$DNORMA.'</td>
+                                <td width="5%">&nbsp;'.$CANTIDAD.'</td>
+                                <td width="5%">&nbsp;'.$SACNOAC.'</td>
+                            </tr>';
+                        }
+                    } 
+                    
+                           
+                $html .= '<tr>
+                        <td colspan="6" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Observaciones:</td>
+                        <td colspan="4">'.$OBSERVACION.'</td>
+                    </tr>
+                </table>
+                
+                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                    <tr>
+                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th width="15%" align="center">BK</th>
+                        <th width="30%" align="center" style="border: black 1px solid;">LOTE</th>
+                        <th width="55%" align="center" style="border: white 1px solid;">&nbsp;</th>
+                    </tr>';
+                    $resensayo = $this->mrecepcion->getpdfdatosotblancov($cinternocotizacion);
+                    if ($resensayo){
+                        foreach($resensayo as $rowensayo){
+                            $bk     = $rowensayo->bk;
+                            $lote   = $rowensayo->lote;
+                            $html .= '<tr>
+                                <td width="15%">&nbsp;'.$bk.'</td>
+                                <td width="30%">&nbsp;'.$lote.'</td>
+                                <td width="55%">&nbsp;</td>
+                            </tr>';
+                        }
+                    } 
+                $html .= '/table>
+            </main>';
+
+        $html .= '</body></html>';
+		$filename = 'OrdenTrabajo-';//.$namefile;
+		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'landscape');
+        //echo $html;
+    }
+
+    public function getetiquetasmuestras() {
+        $cinternoordenservicio 	= $this->input->post('cinternoordenservicio');
+        $resultado = $this->mrecepcion->getetiquetasmuestras($cinternoordenservicio);
+        echo json_encode($resultado);
     }
 }
 ?>

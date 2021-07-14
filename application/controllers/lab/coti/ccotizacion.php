@@ -37,6 +37,7 @@ class Ccotizacion extends CI_Controller {
 		$descr      = $this->input->post('descr');
 		$estado      = $this->input->post('estado');
 		$tieneot      = $this->input->post('tieneot');
+		$nroot      = $this->input->post('nroot');
 		$activo      = $this->input->post('activo');
         
         $parametros = array(
@@ -47,6 +48,7 @@ class Ccotizacion extends CI_Controller {
 			'@DESCR'		=> ($this->input->post('descr') == '') ? '%' : '%'.$descr.'%',
 			'@ESTADO'		=> ($this->input->post('estado') == '%') ? '%' : $estado,
 			'@TIENEOT'		=> ($this->input->post('tieneot') == '%') ? '%' : $tieneot,
+			'@NORDENSERVICIO' => ($this->input->post('nroot') == '') ? '%' : '%'.$nroot.'%',
 			'@ACTIVO'       => $activo,
         );
         $retorna = $this->mcotizacion->getbuscarcotizacion($parametros);
@@ -1563,5 +1565,19 @@ class Ccotizacion extends CI_Controller {
 
 		$writer->save('php://output');
     }
+
+    public function setduplicarcoti() { // Registrar informe PT
+		$varnull = '';
+		
+		$cinternocotizacion 	= $this->input->post('idcotizacion');
+		$nversioncotizacion 	= $this->input->post('nversion');
+        
+        $parametros = array(
+            '@cinternocotizacion'   =>  $cinternocotizacion,
+            '@nversioncotizacion'   =>  $nversioncotizacion
+        );
+        $retorna = $this->mcotizacion->setduplicarcoti($parametros);
+        echo json_encode($retorna);		
+	}
 }
 ?>

@@ -163,7 +163,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4"> 
+                                            <div class="col-md-6"> 
                                                 <label>Nro. Cotizacion/ Producto</label> 
                                                 <div>
                                                     <input type="text" id="txtdescri" name="txtdescri" class="form-control" onkeypress="pulsarListarCoti(event)"/>
@@ -189,6 +189,12 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-2"> 
+                                                <label>Nro. OT</label> 
+                                                <div>
+                                                    <input type="text" id="txtnroot" name="txtnroot" class="form-control" onkeypress="pulsarListarCoti(event)"/>
+                                                </div>
+                                            </div>  
                                         </div>
                                     </form>
                                     </div>                
@@ -215,8 +221,8 @@
                                             <div class="card-header">
                                                 <h3 class="card-title">Listado de Cotizaciones</h3>
                                             </div>                                        
-                                            <div class="card-body">
-                                                <table id="tblListCotizacion" class="table table-striped table-bordered" style="width:100%">
+                                            <div class="card-body" style="overflow-x: scroll;">
+                                                <table id="tblListCotizacion" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
                                                         <th>Cliente</th>
@@ -227,7 +233,6 @@
                                                         <th>Monto sin IGV</th>
                                                         <th>Monto Total</th>
                                                         <th>Elaborado por</th>
-                                                        <th></th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -477,7 +482,7 @@
                                                     <div class="card-header">
                                                         <h3 class="card-title">Listado de Productos</h3>
                                                     </div>                                        
-                                                    <div class="card-body">
+                                                    <div class="card-body" style="overflow-x: scroll;">
                                                         <table id="tblListProductos" class="table table-striped table-bordered compact" style="width:100%">
                                                             <thead>
                                                             <tr>
@@ -667,7 +672,7 @@
                                                         <h3 class="card-title"><i class="fas fa-microscope"></i>&nbsp;<b>Ensayos ::</b></h3>
                                                     </div>                                        
                                                     <div class="card-body" style="overflow-x: scroll;">
-                                                        <table id="tblListEnsayos" class="table table-striped table-bordered" style="width:100%">
+                                                        <table id="tblListEnsayos" class="table table-striped table-bordered compact" style="width:100%">
                                                             <thead>
                                                             <tr>
                                                                 <th></th>
@@ -755,7 +760,7 @@
             <br>
             <div class="row"> 
                 <div class="col-12">
-                    <table id="tblbuscarEnsayos" class="table table-striped table-bordered" style="width:100%">
+                    <table id="tblbuscarEnsayos" class="table table-striped table-bordered compact" style="width:100%">
                         <thead>
                         <tr>
                             <th>N°</th>

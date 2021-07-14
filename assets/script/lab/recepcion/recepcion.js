@@ -1,5 +1,5 @@
 
-var otblListRecepcion, otblListdetrecepcion, otblListProducto;
+var otblListRecepcion, otblListdetrecepcion, otblListProducto, otblListEtiquetasmuestras;
 var varfdesde = '%', varfhasta = '%';
 
 
@@ -194,36 +194,30 @@ listarBusqueda = function(){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "index col-xs",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0,
-            },
-            {"orderable": false, data: 'DCLIENTE', targets: 1},
-            {"orderable": false, data: null, defaultContent: '', "className":"details-control col-xs", targets: 2},
-            {"orderable": false, data: 'NROCOTI', targets: 3},
-            {"orderable": false, data: 'DFECHA', targets: 4},
-            {"orderable": false, data: 'ENTREGAINFO', targets: 5},
-            {"orderable": false, data: 'MONTOSINIGV', "class" : "col-s dt-body-right", targets: 6},
-            {"orderable": false, data: 'ITOTAL', "class" : "col-s dt-body-right", targets: 7},
-            {"orderable": false, data: 'ELABORADO', targets: 8},
-            {"orderable": false, 
+            {data: 'DCLIENTE'},
+            {data: null, defaultContent: '', "className":"details-control col-xs"},
+            {"orderable": false, "class" : "dt-body-center col-xs ", 
                 render:function(data, type, row){            
                     if(row.SCOTIZACION == "S"){
                         varCerrar = '<a title="Editar" style="cursor:pointer; color:green;" onClick="selRecep(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\',\'' + row.DCLIENTE + '\',\'' + row.NROCOTI + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'
                     }else{
                         varCerrar = '<a id="aCerrarCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" dclie="'+row.DCLIENTE+'" ncoti="'+row.NROCOTI+'" title="Recepción" style="cursor:pointer; color:red;"><span class="fas fa-folder-plus fa-2x" aria-hidden="true"> </span></a>'
                     };
-                    return '<div class="text-left" >' +
+                    return '<div class="text-center" >' +
                         varCerrar
                     '</div>';
                 }
-            }
+            },
+            {data: 'NROCOTI'},
+            {data: 'DFECHA'},
+            {data: 'ENTREGAINFO'},
+            {data: 'MONTOSINIGV', "class" : "col-s dt-body-right"},
+            {data: 'ITOTAL', "class" : "col-s dt-body-right"},
+            {data: 'ELABORADO'},
         ],  
         "columnDefs": [
             {
-                "targets": [2], 
+                "targets": [1], 
                 "createdCell": function (td, cellData, rowData, row, col) {
                         if (rowData.TIENEOT == 'N') {
                             $(td).removeClass( 'details-control' );
@@ -234,7 +228,7 @@ listarBusqueda = function(){
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
-                    '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
+                    '    <p><a title="Cotizacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
                     '</div>';
                 }
             }
@@ -245,8 +239,8 @@ listarBusqueda = function(){
             var last = null;
 			var grupo;
  
-            api.column([1], {} ).data().each( function ( ctra, i ) { 
-                grupo = api.column(1).data()[i];
+            api.column([0], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(0).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
                         '<tr class="group"><td colspan="8"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
@@ -256,14 +250,7 @@ listarBusqueda = function(){
             } );
         }
     }); 
-    otblListRecepcion.column(0).visible( false ); 
-    otblListRecepcion.column(1).visible( false );      
-    // Enumeracion 
-    otblListRecepcion.on( 'order.dt search.dt', function () { 
-        otblListRecepcion.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-          cell.innerHTML = i+1;
-          } );
-    }).draw(); 
+    otblListRecepcion.column(0).visible( false );  
 
     $("#btnexcel").prop("disabled",false);  
 };
@@ -287,21 +274,23 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
                 }
             })
             row.child( 
-            '<table id="tblListdetrecepcion" class="display compact" style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
-            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Nro OT</th><th>Fecha OT</th><th>Archivo</th><th></th></tr></thead><tbody>' +
+            '<table id="tblListdetrecepcion" class="display compact" style="width:100%; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Nro OT</th><th>Fecha OT</th><th>Archivo OT</th><th>Cargo Recepción</th><th>Etiqueta Muestra</th></tr></thead><tbody>' +
                 '</tbody></table>').show();
 
                 otblListdetrecepcion = $('#tblListdetrecepcion').DataTable({
+                    "processing"  	: true,
+                    'stateSave'     : true,
+                    'bDestroy'      : true,
                     "bJQueryUI"     : true,
-                    'bStateSave'    : true,
                     'scrollY'       : false,
                     'scrollX'       : true,
                     'scrollCollapse': false,
-                    'bDestroy'      : true,
+                    'AutoWidth'     : true,
                     'paging'        : false,
                     'info'          : false,
-                    'filter'        : false,   
-                    'stateSave'     : true,
+                    'filter'        : false,
+                    "select"        : false, 
                     'ajax'        : {
                         "url"   : baseurl+"lab/recepcion/crecepcion/getlistdetrecepcion",
                         "type"  : "POST", 
@@ -312,27 +301,30 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
                         dataSrc : ''        
                     },
                     'columns'     : [
-                        {
-                          "class"     :   "index col-xxs",
-                          orderable   :   false,
-                          data        :   null,
-                          targets     :   0
-                        },
-                        { "orderable": false,"data": "nordentrabajo", "class" : "col-sm", targets: 1},
-                        { "orderable": false,"data": "fordentrabajo", "class" : "col-sm", targets: 2},
-                        {"orderable": false, "class" : "col-m", 
+                        {orderable: false,data: null, "class" : "col-s dt-body-right"},
+                        {orderable: false,data: "nordentrabajo"},
+                        {orderable: false,data: "fordentrabajo"},
+                        {"orderable": false, "class" : "dt-body-center", 
                             render:function(data, type, row){  
                                 return '<div>'+
-                                '    <p><a title="OT" style="cursor:pointer;" onclick="pdfOT(\'' + row.cinternoordenservicio + '\');" class="pull-left"><i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
+                                '    <p><a title="OT" style="cursor:pointer;" onclick="pdfOT(\'' + row.cinternoordenservicio + '\');" class="pull-left"><i class="fas fa-file-pdf fa-2x" style="color:#FF0000;"></i></a><p>' +
                                 '</div>';
                             }
                         },
-                        {"orderable": false, "class" : "col-l", 
-                            render:function(data, type, row){
-                                return  '<div>'+                                  
-                                '</div>' 
+                        {"orderable": false, "class" : "dt-body-center",  
+                            render:function(data, type, row){  
+                                return '<div>'+
+                                '    <p><a title="Cargo" style="cursor:pointer;" onclick="pdfCargoOT(\'' + row.cinternoordenservicio + '\');" class="pull-left"><i class="fas fa-file-signature fa-2x" style="color:#0E2E93;"></i></a><p>' +
+                                '</div>';
                             }
-                        },        
+                        },
+                        {"orderable": false, "class" : "dt-body-center",  
+                            render:function(data, type, row){  
+                                return '<div>'+
+                                '    <p><a title="Etiqueta" style="cursor:pointer;" onClick="genEtiqueta(\'' + row.cinternoordenservicio + '\');"><span class="fas fa-receipt fa-2x" style="color:#DF6F3B;" aria-hidden="true"> </span> </a><p>' +
+                                '</div>';
+                            }
+                        },       
                     ], 
                 });
                 // Enumeracion 
@@ -357,10 +349,18 @@ pdfOT = function(cinternoordenservicio){
     window.open(baseurl+"lab/recepcion/crecepcion/pdfOrderServ/"+cinternoordenservicio);
 };
 
+pdfCargoOT = function(cinternoordenservicio){
+    window.open(baseurl+"lab/recepcion/crecepcion/pdfCargoOT/"+cinternoordenservicio);
+};
+
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
 };
 
+genEtiqueta = function(cinternoordenservicio){
+    $('#modalEtiqueta').modal({show:true});
+    listarEtiquetasmuestras(cinternoordenservicio);
+};
 
 fechaActualRecep = function(){
     var fecha = new Date();		
@@ -382,7 +382,6 @@ selRecep= function(IDCOTIZACION,NVERSION,DCLIENTE,NROCOTI){
     recuperaListproducto(IDCOTIZACION,NVERSION);
     /*$('#btnParticiopantes').show();*/
 };
-
   
 $("body").on("click","#aCerrarCoti",function(event){
     event.preventDefault();
@@ -512,23 +511,22 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
             {"orderable": false, data: 'dobservacion', targets: 14},
             {"orderable": false, data: 'dotraobservacion', targets: 15},
             {"orderable": false, data: 'IDORDEN', targets: 16},
-            {responsivePriority: 1,"orderable": false, 
-                render:function(data, type, row){
-                    return '<div class="text-left" >' +
-                        '<a href="javascript:;" data-toggle="modal" title="Editar" style="cursor:pointer; color:green;" data-target="#modalRecepcion" onClick="selCotiprodu(\'' + row.cinternocotizacion + '\',\'' + row.nversioncotizacion + '\',\'' + row.nordenproducto + '\',\'' + row.cmuestra + '\',\'' + row.frecepcionmuestra + '\',\'' + row.drealproducto + '\',\'' + row.dpresentacion + '\',\'' + row.dtemperatura + '\',\'' + row.dcantidad + '\',\'' + row.dproveedorproducto + '\',\'' + row.dlote + '\',\'' + row.fenvase + '\',\'' + row.fmuestra + '\',\'' + row.hmuestra + '\',\'' + row.stottus + '\',\'' + row.ntrimestre + '\',\'' + row.zctipomotivo + '\',\'' + row.careacliente + '\',\'' + row.zctipoitem + '\',\'' + row.dubicacion + '\',\'' + row.dcondicion + '\',\'' + row.dobservacion + '\',\'' + row.dotraobservacion + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
-                    '</div>';
-                }
-            }
+            {"orderable": false, data: 'FECHAORDEN', targets: 17},
         ],
-        "columnDefs": [
-            {
-                "targets": [1], 
-                "className": 'index select-checkbox',           
-                "checkboxes": {
-                    'selectRow': true
-                },
-                "orderable": false            
-            }
+        "columnDefs": [{
+            "targets": [1],
+            //"checkboxes": {
+              //  'selectRow': true
+            //}, 
+            "createdCell": function (td, cellData, rowData, row, col) {
+                    if (rowData.IDORDEN == '0') {
+                        $(td).addClass('index select-checkbox');
+                    }else{
+                        $(td).removeClass('select-checkbox');
+                    }
+            },
+            "orderable": false
+        }
         ],
         "select": {
             style:    'multi',  
@@ -542,10 +540,11 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
  
             api.column([2], {} ).data().each( function ( ctra, i ) { 
                 grupo = api.column(2).data()[i];                
-                grupo1 = api.column(16).data()[i];
+                grupo1 = api.column(16).data()[i];             
+                fechaot = api.column(17).data()[i];
                 if ( last !== ctra ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="1">'+grupo1+'</td><td colspan="8"><strong> OT :: '+ctra.toUpperCase()+'</strong></td></tr>'
+                        '<tr class="group"><td colspan="1">'+grupo1+'</td><td colspan="8"><strong> OT :: '+ctra.toUpperCase()+' :: '+fechaot+'</strong></td></tr>'
                     ); 
                     last = ctra;
                 }
@@ -554,7 +553,8 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
     }); 
 
     otblListProducto.column(2).visible( false );  
-    otblListProducto.column(16).visible( false );  
+    otblListProducto.column(16).visible( false ); 
+    otblListProducto.column(17).visible( false );   
     // Enumeracion 
     otblListProducto.on( 'order.dt search.dt', function () { 
         otblListProducto.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -565,10 +565,10 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
     $('#tblListProductos tbody').on( 'click', 'tr.group', function () {
         var val = $(this).closest('tr').find('td:eq(0)').text();        
         var nro = $(this).closest('tr').find('td:eq(1)').text().substr(7,17);
-        
+        var fot = $(this).closest('tr').find('td:eq(1)').text().substr(27,11);
+    
         $('#modalFechaOT').modal({show:true});
-        $('#mhdncinternoordenservicio').val(val);
-        $('#mhdnnroordenservicio').val(nro);
+        seleOT(val,nro,fot);
                
     } ); 
 };
@@ -597,7 +597,7 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
         })
         // Open this row
         row.child( 
-           '<table class="display compact" id = "child_details' + index + '"  style="width:100%; padding-left:75px; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
+           '<table class="display compact" id = "child_details' + index + '"  style="width:100%; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Codigo</th><th>Ensayo</th><th>Vias</th></tr></thead><tbody>' +
             '</tbody></table>').show();
         
@@ -638,13 +638,34 @@ $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
     }
 });
 
-$('#modalFechaOT').on('shown.bs.modal', function (e) {    
-    $('#txtFOT').datetimepicker({
+$('#tblListProductos tbody').on('dblclick', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblListProducto.row(tr);
+    var rowData = row.data();
+    $('#modalRecepcion').modal({show:true});
+    selCotiprodu(rowData.cinternocotizacion,rowData.nversioncotizacion,rowData.nordenproducto,rowData.cmuestra,rowData.frecepcionmuestra,rowData.drealproducto,rowData.dpresentacion,rowData.dtemperatura,rowData.dcantidad,rowData.dproveedorproducto,rowData.dlote,rowData.fenvase,rowData.fmuestra,rowData.hmuestra,rowData.stottus,rowData.ntrimestre,rowData.zctipomotivo,rowData.careacliente,rowData.zctipoitem,rowData.dubicacion,rowData.dcondicion,rowData.dobservacion,rowData.dotraobservacion);
+    
+
+});
+
+$('#modalFechaOT').on('shown.bs.modal', function (e) {  
+});
+
+seleOT = function(val,nro,fot){ 
+    $('#frmFechaOT').trigger("reset");
+    $('#frmGenConst').trigger("reset");
+
+    $('#txtFOT,#txtFConstancia').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es'
     });
-});
+
+    $('#mhdncinternoordenservicio').val(val);
+    $('#mhdnnroordenservicio').val(nro);
+    $('#txtForden').val(fot);
+    
+};
 
 $('#frmFechaOT').submit(function(event){
     event.preventDefault();
@@ -666,8 +687,6 @@ $('#frmFechaOT').submit(function(event){
         }
     });
 });
-
-
 
 $('#modalRecepcion').on('shown.bs.modal', function (e) {
     
@@ -737,7 +756,7 @@ selCotiprodu = function(cinternocotizacion,nversioncotizacion,nordenproducto,cmu
             stepping: 15
         });
     }
-
+    
     $('#mcbotottus').val(stottus);
     $('#mcbomonitoreo').val(ntrimestre);
     $('#mcbomotivo').val(zctipomotivo);
@@ -797,20 +816,6 @@ $('#btngenerarOT').click(function(){
         }
     })
 }); 
-generarOT = function(IDCOTIZACION,NVERSION,CUSU){      
-    $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajo", 
-    {
-        cinternocotizacion    : IDCOTIZACION,
-        nversioncotizacion    : NVERSION,
-        cusuario : CUSU,
-    },  
-    function(data){ 
-        var c = JSON.parse(data);
-        $.each(c,function(i,item){ 
-            return item.id; 
-        })      
-    });
-}
 generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU,IDOT,VARSOT){  
          
     $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajoresult", 
@@ -830,10 +835,110 @@ generarResult = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDMUESTRA,CUSU,IDOT,VA
         })      
     });
     
-}
+};
 generarOTMensajeOK = function(){ 
     otblListProducto.ajax.reload(null,false); 
     Vtitle = 'Se Genero Correctamente';
     Vtype = 'success';
     sweetalert(Vtitle,Vtype);
-}
+};
+/*generarOT = function(IDCOTIZACION,NVERSION,CUSU){      
+    $.post(baseurl+"lab/recepcion/crecepcion/setordentrabajo", 
+    {
+        cinternocotizacion    : IDCOTIZACION,
+        nversioncotizacion    : NVERSION,
+        cusuario : CUSU,
+    },  
+    function(data){ 
+        var c = JSON.parse(data);
+        $.each(c,function(i,item){ 
+            return item.id; 
+        })      
+    });
+}*/
+
+listarEtiquetasmuestras = function(vcinternoordenservicio){
+    otblListEtiquetasmuestras = $('#tblListEtiquetasmuestras').DataTable({         
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false,  
+        'ajax'	: {
+            "url"   : baseurl+"lab/recepcion/crecepcion/getetiquetasmuestras/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.cinternoordenservicio    = vcinternoordenservicio;  
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: 'CMUESTRA'},
+            {data: 'SPACE'},
+            {data : 'COPIA'},
+            //{data: 'frecepcionmuestra',"class" : "col-s"},
+        ],
+        "columnDefs": [{
+            "targets": [1],
+            "createdCell": function (td, cellData, rowData, row, col) {
+                    $(td).addClass('index select-checkbox');
+            },
+            "orderable": false
+        }
+        ],
+        "select": {
+            style:    'multi',  
+            selector: 'td:nth-child(2)'      
+        }
+    });
+}; 
+
+$('#mbtnPrint').click(function(){ 
+    event.preventDefault();
+    var table = $('#tblListEtiquetasmuestras').DataTable();
+    var seleccionados = table.rows({ selected: true }).indexes();
+
+    var array1 = table.cells(seleccionados, [0]).data().toArray();
+    var array2 = table.cells(seleccionados, [2]).data().toArray();
+    var plainArray = [array1, array2];
+
+    if (array1.length == 0){
+        alert("Tiene que seleccionar al menos una Muestra");
+    }else{
+        
+        $.post(baseurl+"coihomologaciones/getestadoshomo",
+        {
+            ccliente:plainArray,
+        },
+        function(data){   
+            var c = JSON.parse(data);
+            $.each(c,function(i,item){
+                $('#cboEstado').append('<option value="'+item.ctipo+'">'+item.dregistro+'</option>');
+            })
+        }
+        );
+
+
+
+        $.post('lab/recepcion/crecepcion/pdfEtiqueta.php', {
+            "linkNames": linkNamesList, //ESTE ES EL ARRAY, PERO PARECE QUE ASÍ DIRECTO NO FUNCIONA
+            "name": title
+        },function(data) {
+            console.log('¡Hecho!', data);
+        });
+        alert(plainArray);
+        console.log('¡Hecho!', plainArray);
+    }    
+
+    //window.open(baseurl+"lab/recepcion/crecepcion/pdfEtiqueta/"+cinternoordenservicio);
+});
