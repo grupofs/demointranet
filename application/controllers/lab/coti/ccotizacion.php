@@ -446,11 +446,11 @@ class Ccotizacion extends CI_Controller {
                             $idproduc = $rowproddet->nordenproducto;
                             $subtotal = $rowproddet->subtotal;
                             
-                            if ($verprecios  == 'S') :
+                            //if ($verprecios  == 'S') :
                                 $var_subtotal = $subtotal;
-                            else:
-                                $var_subtotal = null;
-                            endif;
+                            //else:
+                            //    $var_subtotal = null;
+                            //endif;
                             
                             $html .= '<tr>
                                 <td colspan="6" ><h3>'.$dproductodet.'</h3>
