@@ -25,7 +25,6 @@ class Cregresult extends CI_Controller {
     }
     
    /** COTIZACION **/
-
     public function getbuscaringresoresult() { // Buscar Cotizacion
 		$varnull = '';
 
@@ -40,7 +39,7 @@ class Cregresult extends CI_Controller {
 			'@CCLIENTE'     => ($this->input->post('ccliente') == '') ? '0' : $ccliente,
 			'@FINI'         => ($this->input->post('fini') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
 			'@FFIN'         => ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
-			'@DESCR'		=> ($this->input->post('descr') == '') ? '%' : '%'.$descr.'%',
+			'@DESCR'		=> ($this->input->post('numero') == '') ? '%' : '%'.$descr.'%',
 			'@TIPOBUSCAR'	=> ($this->input->post('tieneot') == '%') ? '%' : $tipobuscar,
         );
         $retorna = $this->mregresult->getbuscaringresoresult($parametros);
