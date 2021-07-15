@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Conditional;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Dompdf\Dompdf;
 
 class Crecepcion extends CI_Controller {
 	function __construct() {
@@ -399,6 +400,26 @@ class Crecepcion extends CI_Controller {
         $retorna = $this->mrecepcion->setupdateFechaOT($mhdncinternoordenservicio,$fordentrabajo,$nordentrabajo);
         echo json_encode($retorna);		
 	}
+
+    public function setgenerarconst() { // Registrar informe PT
+        $varnull = '';
+
+        $idconstrecepcion       = $this->input->post('mhdnidotconst');
+        $cinternoordenservicio  = $this->input->post('mhdncordenservicioconst');
+        $fingreso = $this->input->post('txtFConst');
+        $hingreso = $this->input->post('txtHConst');
+        $accion = $this->input->post('mhdnAccionConst');
+
+        $parametros = array(
+            '@idconstrecepcion'   	    =>  $idconstrecepcion,
+            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@fingreso'   	            =>  ($this->input->post('txtFConst') == '%') ? NULL : substr($fingreso, 6, 4).'-'.substr($fingreso,3 , 2).'-'.substr($fingreso, 0, 2), 
+            '@hingreso'      		    =>  $hingreso,
+            '@accion'    		        =>  $accion,
+        );
+        $retorna = $this->mrecepcion->setgenerarconst($parametros);
+        echo json_encode($retorna);	
+    }
     
     public function getlistdetrecepcion() {	// Visualizar
         $cinternocotizacion   = $this->input->post('cinternocotizacion');
@@ -671,7 +692,7 @@ class Crecepcion extends CI_Controller {
                         body{
                             font-family: Arial, Helvetica, sans-serif;
                             font-size: 9pt;
-                            margin-top: 2cm;
+                            margin-top: 1.7cm;
                             margin-left: 0cm;
                             margin-right: 0cm;
                             margin-bottom: 0cm;
@@ -681,9 +702,10 @@ class Crecepcion extends CI_Controller {
                             top: 0cm;
                             left: 0cm;
                             right: 0cm;
-                            height: 3cm;
+                            height: 0cm;
                         }
-                        .cuerpo {
+                        main {                            
+                            margin-top: 0.4cm;
                             text-align: justify;
                         }
                         img.izquierda {
@@ -705,20 +727,24 @@ class Crecepcion extends CI_Controller {
                             text-align: center; 
                             border: 1px solid black;
                         }
+                        td { 
+                            text-align: left; 
+                            border: 1px solid black;
+                        }
                     </style>
                 </head>
                 <body>
                 
                 <header>
-                    <table  width="1050px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
+                    <table  width="1050px" align="center" cellspacing="0" cellpadding="2">
                         <tr>
-                            <td width="20%" rowspan="4">
+                            <td width="20%" style="text-align: center;" rowspan="4">
                                 <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
                             </td>
-                            <td width="65%" align="center" rowspan="4">
+                            <td width="65%" style="text-align: center;" rowspan="4">
                                 <h2>CONSTANCIA DE RECEPCION DE MUESTRAS</h2>
                             </td>
-                            <td width="15%" align="center" colspan="2">
+                            <td width="15%" style="text-align: center;" colspan="2">
                                 FSC-F-LAB-08
                             </td>
                         </tr>
@@ -736,139 +762,77 @@ class Crecepcion extends CI_Controller {
                         </tr>
                     </table>
                 </header>';
-
-        			
-        $res = $this->mrecepcion->getpdfdatosot($cinternoordenservicio);
+       			
+        $res = $this->mrecepcion->getpdfdatosconst($cinternoordenservicio);
         if ($res){
             foreach($res as $row){
-				$nordentrabajo      = $row->nordentrabajo;
-				$fordentrabajo      = $row->fordentrabajo;
-				$cinternocotizacion = $row->cinternocotizacion;
-                $nversioncotizacion = $row->nversioncotizacion;
-                $OBSERVACION        = $row->OBSERVACION;
+				$fingreso       = $row->fingreso;
+				$hingreso       = $row->hingreso;
+				$nro_constancia = $row->nro_constancia;
+                $dcotizacion    = $row->dcotizacion;
+                $nombcliente    = $row->nombcliente;
+                $nombcontacto   = $row->nombcontacto;
+                $dmail          = $row->dmail;
+                $dtelefono      = $row->dtelefono;
 			}
-		}
+        }
                 
         $html .= '
             <main>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2" >
+                <table width="1050px" align="center" cellspacing="0" cellpadding="2" >
                     <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                        <td width="20%">FECHA INGRESO:</td>
+                        <td width="15%">'.$fingreso.'</td>
+                        <td width="10%">HORA: </td>
+                        <td width="20%">'.$hingreso.'</td>
+                        <td width="15%">N° CONSTANCIA:</td>
+                        <td width="20%">'.$nro_constancia.'</td>
                     </tr>
                     <tr>
-                        <td width="50%">&nbsp;</td>
-                        <td width="25%" align="right">N° '.$nordentrabajo.'</td>
-                        <td width="25%" align="right">Fecha '.$fordentrabajo.'</td>
+                        <td>CLIENTE:</td>
+                        <td colspan="3">'.$nombcliente.'</td>
+                        <td>N° COTIZ</td>
+                        <td>'.$dcotizacion.'</td>
                     </tr>
                     <tr>
-                        <td colspan="3" ><b>I AREA</b></td>
+                        <td>CONTACTO:</td>
+                        <td colspan="3">'.$nombcontacto.'</td>
+                        <td>TELEFONO:</td>
+                        <td>'.$dtelefono.'</td>
                     </tr>
                     <tr>
-                        <td>MICROBIOLOGÍA</td>
-                        <td>FISICOQUÍMICA</td>
-                        <td>SENSORIAL</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
+                        <td>EMAIL:</td>
+                        <td colspan="5" >'.$dmail.'</td>
                     </tr>
                 </table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
+                <table width="1050px" align="center" cellspacing="0" cellpadding="2" >
                     <tr>
-                        <td><b>II PRODUCTOS / PRESENTACIÓN / CANTIDAD</b></td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
-                    <tr>
-                        <th width="10%" align="center">CÓDIGO DE MUESTRA</th>
-                        <th width="35%" align="center">PRODUCTO</th>
-                        <th width="35%" align="center">PRESENTACIÓN / CANTIDAD</th>
-                        <th width="20%" align="center">CONDICIONES (*)</th>
+                        <th width="5%">N° MUESTRA</th>
+                        <th width="25%">DESCRIPCION DE LA MUESTRA</th>
+                        <th width="5%">N° PRECINTO</th>
+                        <th width="10%">UNIDADES POR MUESTRA</th>
+                        <th width="30%">CONDICIONES DE RECEPCIÓN DE LA MUESTRA (Temperatura, Peso, FP, FV, Lote, etc.)</th>
+                        <th width="15%">OBSERVACIONES</th>
                     </tr>';
-                    $resprod = $this->mrecepcion->getpdfdatosotprod($cinternoordenservicio);
+                    $resprod = $this->mrecepcion->getpdfdetalleconst($cinternoordenservicio);
+                    $i = 0;
                     if ($resprod){
                         foreach($resprod as $rowprod){
-                            $cmuestra       = $rowprod->cmuestra;
-                            $drealproducto  = $rowprod->drealproducto;
-                            $DPRESENTACION  = $rowprod->DPRESENTACION;
-                            $dtemperatura = $rowprod->dtemperatura;
+                            $drealproducto   = $rowprod->drealproducto;
+                            $dpresentacion  = $rowprod->dpresentacion;
+                            $i++;
+
                             $html .= '<tr>
-                                <td width="12%">&nbsp;'.$cmuestra.'</td>
-                                <td width="40%">&nbsp;'.$drealproducto.'</td>
-                                <td width="30%">&nbsp;'.$DPRESENTACION.'</td>
-                                <td width="18%">&nbsp;'.$dtemperatura.'</td>
+                                <td>&nbsp;'.$i.'</td>
+                                <td>&nbsp;'.$drealproducto.'</td>
+                                <td>&nbsp; No indica</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;'.$dpresentacion.'</td>
+                                <td>&nbsp;</td>
                             </tr>';
                         }
-                    }        
+                    }       
                 $html .= '</table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td><b>III SOLICITUD DE ENSAYO</b></td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
-                    <tr>
-                        <th width="12%" align="center">PRODUCTO(S)</th>
-                        <th width="8%" align="center">Código Metodo</th>
-                        <th width="30%" align="center">METODO DE ENSAYO</th>
-                        <th width="37%" align="center">NORMA / REFERENCIA</th>
-                        <th width="5%" align="center">Vías</th>
-                        <th width="5%" align="center">AC/ NOAC</th>
-                    </tr>';
-                    $resensayo = $this->mrecepcion->getpdfdatosotensayo($cinternoordenservicio);
-                    if ($resensayo){
-                        foreach($resensayo as $rowensayo){
-                            $CMUESTRA   = $rowensayo->CMUESTRA;
-                            $CENSAYOFS  = $rowensayo->CENSAYOFS;
-                            $DENSAYO    = $rowensayo->DENSAYO;
-                            $DNORMA     = $rowensayo->DNORMA;
-                            $SACNOAC    = $rowensayo->SACNOAC;
-                            $CANTIDAD   = $rowensayo->CANTIDAD;
-                            $html .= '<tr>
-                                <td width="12%">&nbsp;'.$CMUESTRA.'</td>
-                                <td width="8%">&nbsp;'.$CENSAYOFS.'</td>
-                                <td width="30%">&nbsp;'.$DENSAYO.'</td>
-                                <td width="37%">&nbsp;'.$DNORMA.'</td>
-                                <td width="5%">&nbsp;'.$CANTIDAD.'</td>
-                                <td width="5%">&nbsp;'.$SACNOAC.'</td>
-                            </tr>';
-                        }
-                    } 
-                    
-                           
-                $html .= '<tr>
-                        <td colspan="6" style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Observaciones:</td>
-                        <td colspan="4">'.$OBSERVACION.'</td>
-                    </tr>
-                </table>
-                
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <th width="15%" align="center">BK</th>
-                        <th width="30%" align="center" style="border: black 1px solid;">LOTE</th>
-                        <th width="55%" align="center" style="border: white 1px solid;">&nbsp;</th>
-                    </tr>';
-                    $resensayo = $this->mrecepcion->getpdfdatosotblancov($cinternocotizacion);
-                    if ($resensayo){
-                        foreach($resensayo as $rowensayo){
-                            $bk     = $rowensayo->bk;
-                            $lote   = $rowensayo->lote;
-                            $html .= '<tr>
-                                <td width="15%">&nbsp;'.$bk.'</td>
-                                <td width="30%">&nbsp;'.$lote.'</td>
-                                <td width="55%">&nbsp;</td>
-                            </tr>';
-                        }
-                    } 
-                $html .= '/table>
             </main>';
 
         $html .= '</body></html>';
@@ -877,18 +841,23 @@ class Crecepcion extends CI_Controller {
         //echo $html;
     }
 
-	public function pdfEtiqueta($cinternoordenservicio) { // recupera los cPTIZACION
-        $this->load->library('pdfgenerator');
-
-        $date = getdate();
-        $fechaactual = date("d") . "/" . date("m") . "/" . date("Y");
-
+    public function pdfEtiquetagen(){
+        
+        $len = $this->input->post('len');
+        $id  = $this->input->post('id');
+        $result = $this->mrecepcion->getpdfdatosot($id);
+		if ($result){
+			foreach($result as $row){
+                $nordentrabajo      = $row->nordentrabajo;
+            }
+        }
+        $this->load->library('pdf');
         $html = '<html>
                 <head>
-                    <title>Constancia</title>
+                    <title>Etiqueta</title>
                     <style>
                         @page {
-                             margin: 0.3in 0.3in 0.3in 0.3in;
+                             margin: 0in 0in 0in 0in;
                         }
                         .teacherPage {
                             page: teacher;
@@ -896,8 +865,8 @@ class Crecepcion extends CI_Controller {
                         }
                         body{
                             font-family: Arial, Helvetica, sans-serif;
-                            font-size: 9pt;
-                            margin-top: 2cm;
+                            font-size: 8pt;
+                            margin-top: 0.10cm;
                             margin-left: 0cm;
                             margin-right: 0cm;
                             margin-bottom: 0cm;
@@ -907,7 +876,7 @@ class Crecepcion extends CI_Controller {
                             top: 0cm;
                             left: 0cm;
                             right: 0cm;
-                            height: 3cm;
+                            height: 0cm;
                         }
                         .cuerpo {
                             text-align: justify;
@@ -927,180 +896,39 @@ class Crecepcion extends CI_Controller {
                         .page-number:before {
                           content: counter(page);
                         }
-                        th { 
-                            text-align: center; 
+                        td {  
                             border: 1px solid black;
                         }
                     </style>
                 </head>
-                <body>
-                
-                <header>
-                    <table  width="1050px" align="center" cellspacing="0" cellpadding="2" style="border: 1px solid black;">
-                        <tr>
-                            <td width="20%" rowspan="4">
-                                <img src="'.public_url_ftp().'Imagenes/formatos/2/logoFSC.jpg" width="100" height="60" />    
-                            </td>
-                            <td width="65%" align="center" rowspan="4">
-                                <h2>CONSTANCIA DE RECEPCION DE MUESTRAS</h2>
-                            </td>
-                            <td width="15%" align="center" colspan="2">
-                                FSC-F-LAB-08
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Versión</td>
-                            <td align="right">03</td>
-                        </tr>
-                        <tr>
-                            <td>Fecha</td>
-                            <td align="right">09/03/2017</td>
-                        </tr>
-                        <tr>
-                            <td>Página</td>
-                            <td align="right"><div class="page-number"></div></td>
-                        </tr>
-                    </table>
-                </header>';
-
-        			
-        $res = $this->mrecepcion->getpdfdatosot($cinternoordenservicio);
-        if ($res){
-            foreach($res as $row){
-				$nordentrabajo      = $row->nordentrabajo;
-				$fordentrabajo      = $row->fordentrabajo;
-				$cinternocotizacion = $row->cinternocotizacion;
-                $nversioncotizacion = $row->nversioncotizacion;
-                $OBSERVACION        = $row->OBSERVACION;
-			}
-		}
-                
-        $html .= '
-            <main>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2" >
-                    <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td width="50%">&nbsp;</td>
-                        <td width="25%" align="right">N° '.$nordentrabajo.'</td>
-                        <td width="25%" align="right">Fecha '.$fordentrabajo.'</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" ><b>I AREA</b></td>
-                    </tr>
-                    <tr>
-                        <td>MICROBIOLOGÍA</td>
-                        <td>FISICOQUÍMICA</td>
-                        <td>SENSORIAL</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td><b>II PRODUCTOS / PRESENTACIÓN / CANTIDAD</b></td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
-                    <tr>
-                        <th width="10%" align="center">CÓDIGO DE MUESTRA</th>
-                        <th width="35%" align="center">PRODUCTO</th>
-                        <th width="35%" align="center">PRESENTACIÓN / CANTIDAD</th>
-                        <th width="20%" align="center">CONDICIONES (*)</th>
-                    </tr>';
-                    $resprod = $this->mrecepcion->getpdfdatosotprod($cinternoordenservicio);
-                    if ($resprod){
-                        foreach($resprod as $rowprod){
-                            $cmuestra       = $rowprod->cmuestra;
-                            $drealproducto  = $rowprod->drealproducto;
-                            $DPRESENTACION  = $rowprod->DPRESENTACION;
-                            $dtemperatura = $rowprod->dtemperatura;
-                            $html .= '<tr>
-                                <td width="12%">&nbsp;'.$cmuestra.'</td>
-                                <td width="40%">&nbsp;'.$drealproducto.'</td>
-                                <td width="30%">&nbsp;'.$DPRESENTACION.'</td>
-                                <td width="18%">&nbsp;'.$dtemperatura.'</td>
-                            </tr>';
-                        }
-                    }        
-                $html .= '</table>
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td><b>III SOLICITUD DE ENSAYO</b></td>
-                    </tr>
-                </table>
-                <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
-                    <tr>
-                        <th width="12%" align="center">PRODUCTO(S)</th>
-                        <th width="8%" align="center">Código Metodo</th>
-                        <th width="30%" align="center">METODO DE ENSAYO</th>
-                        <th width="37%" align="center">NORMA / REFERENCIA</th>
-                        <th width="5%" align="center">Vías</th>
-                        <th width="5%" align="center">AC/ NOAC</th>
-                    </tr>';
-                    $resensayo = $this->mrecepcion->getpdfdatosotensayo($cinternoordenservicio);
-                    if ($resensayo){
-                        foreach($resensayo as $rowensayo){
-                            $CMUESTRA   = $rowensayo->CMUESTRA;
-                            $CENSAYOFS  = $rowensayo->CENSAYOFS;
-                            $DENSAYO    = $rowensayo->DENSAYO;
-                            $DNORMA     = $rowensayo->DNORMA;
-                            $SACNOAC    = $rowensayo->SACNOAC;
-                            $CANTIDAD   = $rowensayo->CANTIDAD;
-                            $html .= '<tr>
-                                <td width="12%">&nbsp;'.$CMUESTRA.'</td>
-                                <td width="8%">&nbsp;'.$CENSAYOFS.'</td>
-                                <td width="30%">&nbsp;'.$DENSAYO.'</td>
-                                <td width="37%">&nbsp;'.$DNORMA.'</td>
-                                <td width="5%">&nbsp;'.$CANTIDAD.'</td>
-                                <td width="5%">&nbsp;'.$SACNOAC.'</td>
-                            </tr>';
-                        }
-                    } 
-                    
-                           
-                $html .= '<tr>
-                        <td colspan="6" style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Observaciones:</td>
-                        <td colspan="4">'.$OBSERVACION.'</td>
-                    </tr>
-                </table>
-                
-                <table width="700px" align="center" cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td colspan="3" style="height:10px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <th width="15%" align="center">BK</th>
-                        <th width="30%" align="center" style="border: black 1px solid;">LOTE</th>
-                        <th width="55%" align="center" style="border: white 1px solid;">&nbsp;</th>
-                    </tr>';
-                    $resensayo = $this->mrecepcion->getpdfdatosotblancov($cinternocotizacion);
-                    if ($resensayo){
-                        foreach($resensayo as $rowensayo){
-                            $bk     = $rowensayo->bk;
-                            $lote   = $rowensayo->lote;
-                            $html .= '<tr>
-                                <td width="15%">&nbsp;'.$bk.'</td>
-                                <td width="30%">&nbsp;'.$lote.'</td>
-                                <td width="55%">&nbsp;</td>
-                            </tr>';
-                        }
-                    } 
-                $html .= '/table>
-            </main>';
+                <body>';
+                for ($i = 0; $i < $len; $i++) {
+                    $muestra = $this->input->post('0['.$i.']');
+                    $copias = $this->input->post('1['.$i.']');
+                    for ($ci = 0; $ci < $copias; $ci++) {
+                        $html .= '<div class="teacherPage">				
+                        <page>	
+                            <table width="220px" align="center" style="border-collapse: collapse;">
+                                <tr>
+                                    <td width="30%" style="height:30px;">Nro de OT</td>
+                                    <td width="70%" align="left">&nbsp;'.$nordentrabajo.'</td>
+                                </tr>
+                                <tr>
+                                    <td style="height:30px;">Nro de M</td>
+                                    <td align="left">&nbsp;'.$muestra.'</td>
+                                </tr>
+                                <tr>
+                                    <td style="height:30px;">Nro de vía</td>
+                                    <td align="left">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </page>
+                        </div>';
+                    }
+                }
 
         $html .= '</body></html>';
-		$filename = 'OrdenTrabajo-';//.$namefile;
-		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'landscape');
-        //echo $html;
+        $this->pdf->load_view($html);
     }
 
     public function getetiquetasmuestras() {

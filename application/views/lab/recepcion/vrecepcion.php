@@ -587,7 +587,7 @@
                         <div class="col-md-3">
                             <div class="text-info">Nro Constancia <span class="text-requerido">*</span></div>
                             <div>  
-                                <input type="text" id="txtnroconst" name="txtnroconst" class="form-control"/>
+                                <input type="text" id="txtnroconst" name="txtnroconst" class="form-control" disabled/>
                             </div>
                         </div> 
                         <div class="col-md-3">

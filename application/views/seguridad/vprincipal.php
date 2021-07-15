@@ -308,6 +308,7 @@
     </div>
 
     <!-- SCRIPTS -->
+        <!-- <script src="https://code.jquery.com/jquery-1.12.2.min.js" integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk=" crossorigin="anonymous"></script> -->
         <!-- jQuery -->
         <script src="<?php echo public_url(); ?>template/GUI/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
@@ -358,6 +359,8 @@
         <script src="<?php echo public_url(); ?>template/DataTable/RowGroup/js/dataTables.rowGroup.min.js"></script>  
         <script src="<?php echo public_url(); ?>template/DataTable/Buttons/js/dataTables.buttons.min.js"></script> 
         <script src="<?php echo public_url(); ?>template/DataTable/Buttons/js/buttons.html5.min.js"></script> 
+        
+        <script src="<?php echo public_url(); ?>template/DataTable/celleditmaster/js/dataTables.cellEdit.js"></script> 
         <!-- file input -->
         <script src="<?php echo public_url(); ?>template/plugins/fileinput/fileinput.min.js"></script>
         <!-- AdminLTE App -->

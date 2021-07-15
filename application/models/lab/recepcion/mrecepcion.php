@@ -191,5 +191,53 @@ class Mrecepcion extends CI_Model {
 			return False;
 		}		
     }
+    
+    public function setgenerarconst($parametros) { //
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setgenerarconst(?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }  
+    }
+
+    public function getpdfdatosconst($cinternoordenservicio) { // Listar Ensayos	
+        $sql = "select a.fingreso, a.hingreso, a.nro_constancia, c.dcotizacion, d.drazonsocial as 'nombcliente', (e.dnombre+' '+isnull(e.dapepat,'')+' '+isnull(e.dapemat,'')) as 'nombcontacto', e.dmail, e.dtelefono
+                from PCONSTRECEPCIONLAB a
+                    join PORDENSERVICIOTRABAJO b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO
+                    join PCOTIZACIONLABORATORIO c on c.CINTERNOCOTIZACION = b.CINTERNOCOTIZACION
+                    join MCLIENTE d on d.ccliente = c.ccliente
+                    left join MCONTACTO e on e.ccontacto = c.ccontacto
+                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
+
+    public function getpdfdetalleconst($cinternoordenservicio) { // Listar Ensayos	
+        $sql = "select b.drealproducto, b.dpresentacion
+                from PCONSTRECEPCIONLAB a
+                    join PRECEPCIONMUESTRA b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO
+                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
 }
 ?>

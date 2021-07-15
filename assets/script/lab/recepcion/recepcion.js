@@ -359,6 +359,8 @@ pdfCoti = function(idcoti,nversion){
 
 genEtiqueta = function(cinternoordenservicio){
     $('#modalEtiqueta').modal({show:true});
+    
+    $('#mhdncinternoordenservicio').val(cinternoordenservicio);
     listarEtiquetasmuestras(cinternoordenservicio);
 };
 
@@ -659,11 +661,17 @@ seleOT = function(val,nro,fot){
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es'
-    });
+    });    
+
+    $('#txtHConstancia').datetimepicker({
+        format: 'LT'
+    })
 
     $('#mhdncinternoordenservicio').val(val);
+    $('#mhdncordenservicioconst').val(val);
     $('#mhdnnroordenservicio').val(nro);
     $('#txtForden').val(fot);
+    $('#mhdnAccionConst').val('N');
     
 };
 
@@ -674,6 +682,27 @@ $('#frmFechaOT').submit(function(event){
         url:$('#frmFechaOT').attr("action"),
         type:$('#frmFechaOT').attr("method"),
         data:$('#frmFechaOT').serialize(),
+        error: function(){
+            Vtitle = 'No se puede registrar por error';
+            Vtype = 'error';
+            sweetalert(Vtitle,Vtype);
+        },
+        success: function(data) { 
+            Vtitle = 'Grabo Correctamente!!';
+            Vtype = 'success';
+            sweetalert(Vtitle,Vtype);        
+            $('#mbtnCFechaOT').click();
+        }
+    });
+});
+
+$('#frmGenConst').submit(function(event){
+    event.preventDefault();
+    
+    var request = $.ajax({
+        url:$('#frmGenConst').attr("action"),
+        type:$('#frmGenConst').attr("method"),
+        data:$('#frmGenConst').serialize(),
         error: function(){
             Vtitle = 'No se puede registrar por error';
             Vtype = 'error';
@@ -885,8 +914,7 @@ listarEtiquetasmuestras = function(vcinternoordenservicio){
         'columns'	: [
             {data: 'CMUESTRA'},
             {data: 'SPACE'},
-            {data : 'COPIA'},
-            //{data: 'frecepcionmuestra',"class" : "col-s"},
+            {data : 'SPACE'},
         ],
         "columnDefs": [{
             "targets": [1],
@@ -903,8 +931,18 @@ listarEtiquetasmuestras = function(vcinternoordenservicio){
     });
 }; 
 
+table = otblListEtiquetasmuestras;
+table.MakeCellsEditable({
+    "onUpdate": myCallbackFunction
+});
+
+function myCallbackFunction(updatedCell, updatedRow, oldValue) {
+    console.log("The new value for the cell is: " + updatedCell.data());
+    console.log("The old value for that cell was: " + oldValue);
+    console.log("The values for each cell in that row are: " + updatedRow.data());
+}
+
 $('#mbtnPrint').click(function(){ 
-    event.preventDefault();
     var table = $('#tblListEtiquetasmuestras').DataTable();
     var seleccionados = table.rows({ selected: true }).indexes();
 
@@ -912,33 +950,81 @@ $('#mbtnPrint').click(function(){
     var array2 = table.cells(seleccionados, [2]).data().toArray();
     var plainArray = [array1, array2];
 
-    if (array1.length == 0){
-        alert("Tiene que seleccionar al menos una Muestra");
-    }else{
-        
-        $.post(baseurl+"coihomologaciones/getestadoshomo",
-        {
-            ccliente:plainArray,
-        },
-        function(data){   
-            var c = JSON.parse(data);
-            $.each(c,function(i,item){
-                $('#cboEstado').append('<option value="'+item.ctipo+'">'+item.dregistro+'</option>');
-            })
-        }
-        );
-
-
-
-        $.post('lab/recepcion/crecepcion/pdfEtiqueta.php', {
-            "linkNames": linkNamesList, //ESTE ES EL ARRAY, PERO PARECE QUE ASÍ DIRECTO NO FUNCIONA
-            "name": title
-        },function(data) {
-            console.log('¡Hecho!', data);
-        });
-        alert(plainArray);
-        console.log('¡Hecho!', plainArray);
-    }    
-
-    //window.open(baseurl+"lab/recepcion/crecepcion/pdfEtiqueta/"+cinternoordenservicio);
+    var vcinternoordenservicio = $('#mhdncinternoordenservicio').val();
+    
+    var form = getForm(baseurl+"lab/recepcion/crecepcion/pdfEtiquetagen", "_blank", plainArray, vcinternoordenservicio, "post");
+    
+    document.body.appendChild(form);
+    form.submit();
+    form.parentNode.removeChild(form);
 });
+
+
+function getForm(url, target, values, idvalor, method) {
+    function grabValues(x) {
+      var path = [];
+      var depth = 0;
+      var results = [];
+  
+      function iterate(x) {
+        switch (typeof x) {
+          case 'function':
+          case 'undefined':
+          case 'null':
+            break;
+          case 'object':
+            if (Array.isArray(x))
+              for (var i = 0; i < x.length; i++) {
+                path[depth++] = i;
+                iterate(x[i]);
+              }
+            else
+              for (var i in x) {
+                path[depth++] = i;
+                iterate(x[i]);
+              }
+            break;
+          default:
+            results.push({
+              path: path.slice(0),
+              value: x
+            })
+            break;
+        }
+        path.splice(--depth);
+      }
+      iterate(x);
+      return results;
+    }
+    var form = document.createElement("form");
+    form.method = method;
+    form.action = url;
+    form.target = target;
+  
+    var values = grabValues(values);
+    
+    for (var j = 0; j < values.length; j++) {
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.value = values[j].value;
+      input.name = values[j].path[0];
+      for (var k = 1; k < values[j].path.length; k++) {
+        input.name += "[" + values[j].path[k] + "]";
+      }
+      form.appendChild(input);
+    }
+
+    var inputid = document.createElement("input");
+    inputid.type = "hidden";
+    inputid.value = idvalor;
+    inputid.name = "id";
+    form.insertBefore(inputid,input);
+
+    var inputlen = document.createElement("input");
+    inputlen.type = "hidden";
+    inputlen.value = values.length/2;
+    inputlen.name = "len";
+    form.insertBefore(inputlen,inputid);
+    
+    return form;
+  }
