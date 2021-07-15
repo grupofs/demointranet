@@ -914,7 +914,7 @@ listarEtiquetasmuestras = function(vcinternoordenservicio){
         'columns'	: [
             {data: 'CMUESTRA'},
             {data: 'SPACE'},
-            {data : 'SPACE'},
+            {data : 'COPIA'},
         ],
         "columnDefs": [{
             "targets": [1],
