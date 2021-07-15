@@ -33,6 +33,8 @@ class Cregresult extends CI_Controller {
 		$ffin       = $this->input->post('ffin');
 		$descr      = $this->input->post('numero');
         $tipobuscar = $this->input->post('buspor');
+		$prodmuestra      = $this->input->post('prodmuestra');
+		$ensayo      = $this->input->post('ensayo');
         
         $parametros = array(
 			'@CCIA'         => '2',
@@ -41,6 +43,8 @@ class Cregresult extends CI_Controller {
 			'@FFIN'         => ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
 			'@DESCR'		=> ($this->input->post('numero') == '') ? '%' : '%'.$descr.'%',
 			'@TIPOBUSCAR'	=> ($this->input->post('tieneot') == '%') ? '%' : $tipobuscar,
+			'@DESCRPRODMUESTRA'		=> ($this->input->post('prodmuestra') == '') ? '%' : '%'.$prodmuestra.'%',
+			'@DESCRENSAYO'  => ($this->input->post('ensayo') == '') ? '%' : '%'.$ensayo.'%',
         );
         $retorna = $this->mregresult->getbuscaringresoresult($parametros);
         echo json_encode($retorna);		

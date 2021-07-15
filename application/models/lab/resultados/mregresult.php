@@ -10,7 +10,7 @@ class Mregresult extends CI_Model {
    /** LISTADO **/ 
 
     public function getbuscaringresoresult($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getbuscaringresoresult(?,?,?,?,?,?)";
+        $procedure = "call usp_lab_coti_getbuscaringresoresult(?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 

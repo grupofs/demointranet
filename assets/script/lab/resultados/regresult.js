@@ -184,8 +184,8 @@ paramListarBusqueda = function (){
         "numero"        : $('#txtbuscarnro').val(), 
         "fini"          : varfdesde, 
         "ffin"          : varfhasta,   
-        //"descripcion"   : $('#txtdescri').val(), 
-        //"ensayo"        : $('#txtensayo').val(), 
+        "prodmuestra"   : $('#txtdescri').val(), 
+        "ensayo"        : $('#txtensayo').val(), 
         //"areaserv"      : $('#cboareaserv').val(),
     };  
 
