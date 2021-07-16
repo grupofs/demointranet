@@ -962,7 +962,7 @@ class Cinforme extends CI_Controller {
 		}
             
         $parametros = array(
-			'@cservicio'    => ($celservicio == $varnull) ? '0' :$celservicio,
+			'@cservicio'    => ($this->input->post('cboServ') == '') ? '0' : $cservicio,
 			'@fini'         => ($this->input->post('txtFIni') == '') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
 			'@ffin'         => ($this->input->post('txtFFin') == '') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
 			'@ccliente'     => ($this->input->post('cboClie') == '') ? '0' : $ccliente,

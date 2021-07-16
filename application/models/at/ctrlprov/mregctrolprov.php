@@ -465,7 +465,7 @@ class Mregctrolprov extends CI_Model {
             
             foreach ($query->result() as $row)
             {
-                $listas .= '<option value="'.$row->ctipo.'">'.$row->dregistro.'</option>';  
+                $listas .= '<option valor="'.$row->nvalor.'" value="'.$row->ctipo.'">'.$row->dregistro.'</option>';  
             }
                return $listas;
         }{

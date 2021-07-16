@@ -100,7 +100,8 @@ $(document).ready(function() {
             request.done(function( respuesta ) {
                 var posts = JSON.parse(respuesta);
                 
-                $.each(posts, function() {                    
+                $.each(posts, function() {    
+                    objPrincipal.liberarBoton(botonEvaluar);                 
                     $('#mhdnIdPropu').val(this.id_propuesta);
                     if($('#sArchivo').val() == 'S'){          
                         subirArchivo();
@@ -108,8 +109,7 @@ $(document).ready(function() {
                         $('#btnBuscar').click();     
                         Vtitle = 'Propuesta Guardada!!!';//this.respuesta;
                         Vtype = 'success';
-                        sweetalert(Vtitle,Vtype);
-                        objPrincipal.liberarBoton(botonEvaluar);         
+                        sweetalert(Vtitle,Vtype);                                
                         $('#mbtnCCreaPropu').click();
                     } 
                     $('#sArchivo').val('N');      

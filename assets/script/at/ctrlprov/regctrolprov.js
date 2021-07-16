@@ -1001,6 +1001,10 @@ fechaActualcierre = function(fservicio){
 
 };
 
+$("#cbocierreTipo").change(function(){
+    
+});
+
 $('#swplaninsp').on('switchChange.bootstrapSwitch',function (event, state) {
     if($('#swplaninsp').prop('checked')){
         $('#Btnplan').show(); 
