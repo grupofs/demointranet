@@ -338,19 +338,26 @@
                                                     <input type="hidden" name="mtxtregtipopagos" id="mtxtregtipopagos">
                                                 </div>
                                             </div>   
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Sub Total S/. </div>
                                                     <input type="text" name="txtmontsubtotal"id="txtmontsubtotal" class="form-control" placeholder="0.00">
                                                 </div>
                                             </div>                                          
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="form-group">                                                    
                                                     <div class="checkbox"><div class="text-info">
                                                     <input type="checkbox" id="chksmuestreo" name="chksmuestreo" />&nbsp;Muestreo </div> </div>   
                                                     <input type="number" name="txtmontmuestreo"id="txtmontmuestreo" class="form-control" placeholder="0.00" min="0.00">
                                                 </div>
-                                            </div>   
+                                            </div>                                          
+                                            <div class="col-md-2">
+                                                <div class="form-group">                                                    
+                                                    <div class="checkbox"><div class="text-info">
+                                                    <input type="checkbox" id="chksrecojo" name="chksrecojo" />&nbsp;Recojo </div> </div>   
+                                                    <input type="number" name="txtmontrecojo"id="txtmontrecojo" class="form-control" placeholder="0.00" min="0.00">
+                                                </div>
+                                            </div> 
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <div class="text-info">Dscto. (%) </div>

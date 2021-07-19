@@ -22,6 +22,17 @@ class Mhelpdesk extends CI_Model {
             return false;
         }		   
     }	
+
+    public function getlistarbanco() { // Visualizar listado de modulos
+        $sql = "select idbanco,nombanco,indvigencia from adm_banco;";
+        $query  = $this->db->query($sql);
+   
+        if ($query->num_rows() > 0) { 
+               return $query->result();
+        }{
+               return False;
+        }		
+    } 
     
 }
 ?>

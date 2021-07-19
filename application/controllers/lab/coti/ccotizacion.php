@@ -100,6 +100,8 @@ class Ccotizacion extends CI_Controller {
 		$dtipocambio 	        = $this->input->post('mtxtregtipocambio');
 		$smuestreo 	            = ($this->input->post('chksmuestreo') == '') ? 'N' : 'S';
 		$imuestreo 	            = $this->input->post('txtmontmuestreo');
+		$srecojo 	            = ($this->input->post('chksrecojo') == '') ? 'N' : 'S';
+		$irecojo 	            = $this->input->post('txtmontrecojo');
 		$isubtotal 	            = $this->input->post('txtmontsubtotal');
 		$pdescuento 	        = $this->input->post('txtporcdescuento');
 		$pigv 	                = 18;
@@ -131,6 +133,8 @@ class Ccotizacion extends CI_Controller {
             '@dtipocambio'              =>  $dtipocambio,
             '@smuestreo'                =>  $smuestreo,
             '@imuestreo'                =>  $imuestreo,
+            '@srecojo'                  =>  $srecojo,
+            '@irecojo'                  =>  $irecojo,
             '@isubtotal'                =>  $isubtotal,
             '@pdescuento'               =>  $pdescuento,
             '@pigv'                     =>  $pigv,
@@ -307,38 +311,41 @@ class Ccotizacion extends CI_Controller {
         $res = $this->mcotizacion->getpdfdatoscoti($idcoti,$nversion);
         if ($res){
             foreach($res as $row){
-				$dcotizacion         = $row->dcotizacion;
-				$drazonsocial         = $row->drazonsocial;
-				$nruc         = $row->nruc;
-				$ddireccioncliente         = $row->ddireccioncliente;
-				$dtelefono         = $row->dtelefono;
-				$dcontacto         = $row->dcontacto;
-				$dmail         = $row->dmail;
-                $fcotizacion         = $row->fcotizacion;
-                $imuestreo         = $row->imuestreo;
-                $isubtotal         = $row->isubtotal;
-                $subtotalimuestra = $row->subtotalimuestra;
-                $pigv         = $row->pigv;
+				$dcotizacion        = $row->dcotizacion;
+				$drazonsocial       = $row->drazonsocial;
+				$nruc               = $row->nruc;
+				$ddireccioncliente  = $row->ddireccioncliente;
+				$dtelefono          = $row->dtelefono;
+				$dcontacto          = $row->dcontacto;
+				$dmail              = $row->dmail;
+                $fcotizacion        = $row->fcotizacion;
+                $smuestreo          = $row->smuestreo;
+                $imuestreo          = $row->imuestreo;
+                $srecojo            = $row->srecojo;
+                $irecojo            = $row->irecojo;
+                $isubtotal          = $row->isubtotal;
+                $subtotalimuestra   = $row->subtotalimuestra;
+                $pigv               = $row->pigv;
                 $pdescuento         = $row->pdescuento;
-                $itotal         = $row->itotal;
-				$cantprod         = $row->cantprod;
+                $itotal             = $row->itotal;
+				$cantprod           = $row->cantprod;
 				$summuestra         = $row->summuestra;
-				$cforma_pago         = $row->cforma_pago;
-				$banco         = $row->banco;
+				$cforma_pago        = $row->cforma_pago;
+				$banco              = $row->banco;
 				$detraccion         = $row->detraccion;
-                $entrega         = $row->entrega;
-                $dcantidadminima         = $row->dcantidadminima;
-                $diaspermanecia         = $row->diaspermanecia;
-                $diascoti         = $row->diascoti;
-                $dobservacion         = $row->dobservacion;
-                $usuariocrea         = $row->usuariocrea;
+                $entrega            = $row->entrega;
+                $dcantidadminima    = $row->dcantidadminima;
+                $diaspermanecia     = $row->diaspermanecia;
+                $diascoti           = $row->diascoti;
+                $dobservacion       = $row->dobservacion;
+                $usuariocrea        = $row->usuariocrea;
                 $verprecios         = $row->verprecios;
-                $digv         = $row->digv;
+                $digv               = $row->digv;
                 $ddescuento         = $row->ddescuento;
-                $condescuento         = $row->condescuento;
-                $namefile         = $row->namefile;
-                $ctipocambio         = $row->ctipocambio;
-                $dtipocambio         = $row->dtipocambio;              
+                $condescuento       = $row->condescuento;
+                $namefile           = $row->namefile;
+                $ctipocambio        = $row->ctipocambio;
+                $dtipocambio        = $row->dtipocambio;              
                 
                 
                 if ($ctipocambio  == 'S') :
@@ -513,7 +520,7 @@ class Ccotizacion extends CI_Controller {
                     <table width="698px" align="center">';
                     
                 if ($ctipocambio  == 'S') :
-                    if($imuestreo > 0){
+                    if($smuestreo == 'S' && $imuestreo > 0){
                     $html .= '<tr>
                             <td width="470px" >AC: Método Acreditado<br>NO AC: Método No Acreditado</td>
                             <td width="130px" > Muestreo</td>
@@ -525,6 +532,13 @@ class Ccotizacion extends CI_Controller {
                                 <td width="130px" >&nbsp; </td>
                                 <td width="80px" align="right">&nbsp; </td>
                             </tr>';
+                    }
+                    if($srecojo == 'S' && $irecojo > 0){
+                    $html .= '<tr>
+                            <td width="470px" ></td>
+                            <td width="130px" > Recojo</td>
+                            <td width="80px" align="right">'.$irecojo.'</td>
+                        </tr>';
                     }
                     $html .= '<tr>
                             <td></td>
@@ -796,6 +810,7 @@ class Ccotizacion extends CI_Controller {
 				$dmail         = $row->dmail;
                 $fcotizacion         = $row->fcotizacion;
                 $imuestreo         = $row->imuestreo;
+                $irecojo         = $row->irecojo;
                 $isubtotal         = $row->isubtotal;
                 $subtotalimuestra = $row->subtotalimuestra;
                 $pigv         = $row->pigv;
@@ -1571,10 +1586,12 @@ class Ccotizacion extends CI_Controller {
 		
 		$cinternocotizacion 	= $this->input->post('idcotizacion');
 		$nversioncotizacion 	= $this->input->post('nversion');
+		$cusuariocrea 	        = $this->input->post('cusuario');
         
         $parametros = array(
             '@cinternocotizacion'   =>  $cinternocotizacion,
-            '@nversioncotizacion'   =>  $nversioncotizacion
+            '@nversioncotizacion'   =>  $nversioncotizacion,
+            '@cusuariocrea'         =>  $cusuariocrea
         );
         $retorna = $this->mcotizacion->setduplicarcoti($parametros);
         echo json_encode($retorna);		

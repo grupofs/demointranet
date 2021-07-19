@@ -8,6 +8,19 @@
         background: red !important;
         color: white !important;
     }
+    .table.user-select-none {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .glyphicon-pencil:before {
+        content: "\f044" !important;
+        background: red !important;
+        color: white !important;
+    }
 </style>
 
 <!-- content-header -->
@@ -79,15 +92,9 @@
                                                 <table id="tblListTicket" class="table table-striped table-bordered compact" style="width:100%">
                                                     <thead>
                                                     <tr>
-                                                        <th>Cliente</th>
-                                                        <th></th>
-                                                        <th>Cotizacion</th>
-                                                        <th>Fecha</th>
-                                                        <th>Orden Trabajo</th>
-                                                        <th>Monto sin IGV</th>
-                                                        <th>Monto Total</th>
-                                                        <th>Elaborado por</th>
-                                                        <th></th>
+                                                        <th>id</th>
+                                                        <th>nombre</th>
+                                                        <th>estado</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>

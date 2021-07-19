@@ -1,4 +1,4 @@
-var otblListCotizacion;
+var otblListTicket;
 var varfdesde = '%', varfhasta = '%';
 
 $(document).ready(function() {
@@ -19,6 +19,7 @@ $(document).ready(function() {
     $('#tabsis a[href="#tabsis-list"]').click(function(event){return false;});
     $('#tabsis a[href="#tabsis-reg"]').click(function(event){return false;});
  
+    listarbusqueda();
 });
 
 $('#btnNuevo').click(function(){    
@@ -50,3 +51,50 @@ listarEmpleados = function(){
         }
     });
 }
+
+listarbusqueda = function(){
+    otblListTicket = $('#tblListTicket').DataTable({  
+        "processing"  	: true,
+        "serverSide"    : true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollY"     	: "280px",
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: true,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : true, 
+        "order"         : [], 
+        'ajax'        : {
+            "url"   : baseurl+"adm/ti/chelpdesk/getlistarbanco/",
+            "type"  : "POST", 
+            "data"  : function (d) {  
+            },     
+            dataSrc : ''        
+        },
+        'columns'     : [
+            {data: 'idbanco'},
+            {data: 'nombanco'},
+            {data: 'indvigencia'}
+        ],
+    });
+};
+
+$('#tblListTicket').on('draw.dt', function(){
+    $('#tblListTicket').Tabledit({
+     url:baseurl+"adm/ti/chelpdesk/setactionbanco/",
+     //eventType: 'dblclick',
+     editButton: true,
+     deleteButton: false,
+     dataType:'json',
+     columns:{
+      identifier : [0, 'idbanco'],
+      editable:[[1, 'nombanco'], [2, 'indvigencia', '{"A":"Activo","I":"Inactivo"}']]
+     },
+     restoreButton:false,
+    });
+});

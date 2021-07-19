@@ -406,7 +406,7 @@ listarBusqueda = function(){
             {data: 'DCLIENTE'},
             {"orderable": false, "class": "col-xxs", 
               render:function(data, type, row){
-                if(row.SCOTIZACION == "S"){
+                /*if(row.SCOTIZACION == "S"){
                 return  '<div class="dropdown" style="text-align: center;">'+
                             '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
@@ -415,7 +415,7 @@ listarBusqueda = function(){
                                 '<li><a id="aAbrirCoti" href="'+row.IDCOTIZACION+'" nver="'+row.NVERSION+'" title="Abrir" style="cursor:pointer; color:blue;"><span class="far fa-folder-open" aria-hidden="true">&nbsp;</span>&nbsp;Abrir Cotización</a></li>'+
                             '</ul>'+
                         '</div>'
-                }else{
+                }else{*/
                 return  '<div class="dropdown" style="text-align: center;">'+
                             '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
@@ -423,7 +423,7 @@ listarBusqueda = function(){
                                 '<li><a title="PDF solo Detalle" style="cursor:pointer;" onclick="pdfCotisolodet(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left"><span class="fas fa-file-pdf" aria-hidden="true">&nbsp;</span>&nbsp;Vista solo Detalle</a></li>'+
                             '</ul>'+
                         '</div>'
-                }
+                //}
               }
             },
             {data: 'NROCOTI', "class" : "col-m"},
@@ -486,7 +486,7 @@ $('#tblListCotizacion tbody').on('dblclick', 'td', function () {
     var row = otblListCotizacion.row(tr);
     var rowData = row.data();
 
-    selCoti(rowData.IDCOTIZACION,rowData.NVERSION,rowData.DFECHA,rowData.NROCOTI,rowData.SCOTIZACION,rowData.VIGENCIACOTI,rowData.SREGISTRO,rowData.CCLIENTE,rowData.CPROVEEDOR,rowData.SUBSERVICIO,rowData.MONEDA,rowData.SMUESTREO,rowData.CONTACTO,rowData.PERMANMUESTRA,rowData.TIPOPAGO,rowData.OTROPAGO,rowData.NTIEMPOENTREGAINFO,rowData.STIEMPOENTREGAINFO,rowData.OBSERVA,rowData.VERPRECIO,rowData.IMUESTREO,rowData.DIGV,rowData.PDESCUENTO,rowData.ISUBTOTAL,rowData.ITOTAL,rowData.ZPERMANMUESTRA,rowData.DDESCUENTO,rowData.MONTOSINIGV);
+    selCoti(rowData.IDCOTIZACION,rowData.NVERSION,rowData.DFECHA,rowData.NROCOTI,rowData.SCOTIZACION,rowData.VIGENCIACOTI,rowData.SREGISTRO,rowData.CCLIENTE,rowData.CPROVEEDOR,rowData.SUBSERVICIO,rowData.MONEDA,rowData.SMUESTREO,rowData.SRECOJO,rowData.CONTACTO,rowData.PERMANMUESTRA,rowData.TIPOPAGO,rowData.OTROPAGO,rowData.NTIEMPOENTREGAINFO,rowData.STIEMPOENTREGAINFO,rowData.OBSERVA,rowData.VERPRECIO,rowData.IMUESTREO,rowData.IRECOJO,rowData.DIGV,rowData.PDESCUENTO,rowData.ISUBTOTAL,rowData.ITOTAL,rowData.ZPERMANMUESTRA,rowData.DDESCUENTO,rowData.MONTOSINIGV);
 
 });
 
@@ -614,7 +614,7 @@ $('#btnNuevo').click(function(){
     $('#regProductos').hide(); 
     $('#divBuscarEnsayo').hide();
         
-    $("#txtmontmuestreo").prop({readonly:true});
+    //$("#txtmontmuestreo").prop({readonly:true});
     $("#txtmontsubtotal").prop({readonly:true}); 
     $("#txtdescuento").prop({readonly:true});
     $("#txtmontsinigv").prop({readonly:true});
@@ -622,7 +622,7 @@ $('#btnNuevo').click(function(){
     $("#txtmonttotal").prop({readonly:true});
 });
 
-selCoti= function(IDCOTIZACION,NVERSION,DFECHA,NROCOTI,SCOTIZACION,VIGENCIACOTI,SREGISTRO,CCLIENTE,CPROVEEDOR,SUBSERVICIO,MONEDA,SMUESTREO,CONTACTO,PERMANMUESTRA,TIPOPAGO,OTROPAGO,NTIEMPOENTREGAINFO,STIEMPOENTREGAINFO,OBSERVA,VERPRECIO,IMUESTREO,DIGV,PDESCUENTO,ISUBTOTAL,ITOTAL,ZPERMANMUESTRA,DDESCUENTO,MONTOSINIGV){  
+selCoti= function(IDCOTIZACION,NVERSION,DFECHA,NROCOTI,SCOTIZACION,VIGENCIACOTI,SREGISTRO,CCLIENTE,CPROVEEDOR,SUBSERVICIO,MONEDA,SMUESTREO,SRECOJO,CONTACTO,PERMANMUESTRA,TIPOPAGO,OTROPAGO,NTIEMPOENTREGAINFO,STIEMPOENTREGAINFO,OBSERVA,VERPRECIO,IMUESTREO,IRECOJO,DIGV,PDESCUENTO,ISUBTOTAL,ITOTAL,ZPERMANMUESTRA,DDESCUENTO,MONTOSINIGV){  
     
     $('#tablab a[href="#tablab-reg"]').tab('show'); 
     $('#frmRegCoti').trigger("reset");
@@ -681,14 +681,18 @@ selCoti= function(IDCOTIZACION,NVERSION,DFECHA,NROCOTI,SCOTIZACION,VIGENCIACOTI,
 
     if(SMUESTREO == 'S'){
         $(document.getElementById('chksmuestreo')).prop('checked', true);
-        $("#txtmontmuestreo").prop({readonly:false});
     }else{
         $(document.getElementById('chksmuestreo')).prop('checked', false);
-        $("#txtmontmuestreo").prop({readonly:true});
     }  
+    if(SRECOJO == 'S'){
+        $(document.getElementById('chksrecojo')).prop('checked', true);
+    }else{
+        $(document.getElementById('chksrecojo')).prop('checked', false);
+    } 
    
     //$('#txtmontsubtotal').val(new Intl.NumberFormat("en-IN").format(ISUBTOTAL));
     $('#txtmontmuestreo').val(IMUESTREO);
+    $('#txtmontrecojo').val(IRECOJO);
     $('#txtmontsubtotal').val(ISUBTOTAL);
     $('#txtporcdescuento').val(PDESCUENTO);
     $('#txtdescuento').val(DDESCUENTO);
@@ -715,6 +719,8 @@ selCoti= function(IDCOTIZACION,NVERSION,DFECHA,NROCOTI,SCOTIZACION,VIGENCIACOTI,
 
 $("body").on("click","#aDuplicarCoti",function(event){
     event.preventDefault();
+
+    var VCUSUARIO = $('#mtxtcusuario').val();
     
     IDCOTI = $(this).attr("href");
     NVERSION = $(this).attr("nver");
@@ -733,6 +739,7 @@ $("body").on("click","#aDuplicarCoti",function(event){
             {
                 idcotizacion    : IDCOTI,
                 nversion        : NVERSION,
+                cusuario        : VCUSUARIO
             },      
             function(data){     
                 otblListCotizacion.ajax.reload(null,false); 
@@ -870,6 +877,7 @@ dolares=function(){
     $('#mtxtregtipocambio').val(0);
     
     $('#txtmontmuestreo').val(0.00);
+    $('#txtmontrecojo').val(0.00);
     $('#txtmontsubtotal').val(0.00);
     $('#txtporcdescuento').val(0.00);
     $('#txtdescuento').val(0.00);
@@ -879,7 +887,7 @@ dolares=function(){
     $("#txtmonttotal").prop({readonly:false});
     document.querySelector('#divtotal').innerText = 'Total $';
 };
-
+/*
 $("#chksmuestreo").on("change", function () {
     if($("#chksmuestreo").is(":checked") == true){ 
         $("#txtmontmuestreo").prop({readonly:false}); 
@@ -888,7 +896,7 @@ $("#chksmuestreo").on("change", function () {
         $('#txtmontmuestreo').val(0);
     }; 
 }); 
-
+*/
 $("#chkregverpago").on("change", function () {   
     var IDCOTIZACION = $('#mtxtidcotizacion').val();
     var NVERSION = $('#mtxtnroversion').val();

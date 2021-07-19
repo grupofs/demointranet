@@ -129,7 +129,7 @@ class Mcotizacion extends CI_Model {
     public function setcotizacion($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setcotizacion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setcotizacion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -265,8 +265,8 @@ class Mcotizacion extends CI_Model {
 
     public function getpdfdatoscoti($idcoti,$nversion) { // Listar Ensayos	
         $sql = "select a.dcotizacion, DATEFORMAT(a.fcotizacion,'dd/mm/yyyy') as 'fcotizacion', b.drazonsocial, b.nruc, b.ddireccioncliente,  (c.dnombre + ' ' + c.dapepat) as 'dcontacto', isnull(c.dmail,'') as 'dmail', isnull(c.dtelefono,'') as 'dtelefono',
-                        a.imuestreo, (a.isubtotal + a.imuestreo) as 'subtotalimuestra', a.isubtotal, a.pigv, a.digv, a.pdescuento, a.ddescuento, (a.isubtotal - a.ddescuento) as 'condescuento', a.itotal, cast(a.nvigencia as char(50))+ ' días' as 'diascoti', a.dobservacion,
-                        (UPPER(SUBSTRING(d.DNOMBRE, 1, 1 )+''+d.DAPEPAT)) as 'usuariocrea', a.ctipocambio, a.dtipocambio,
+                        a.imuestreo, a.irecojo, (a.isubtotal + a.imuestreo + a.irecojo) as 'subtotalimuestra', a.isubtotal, a.pigv, a.digv, a.pdescuento, a.ddescuento, (a.isubtotal - a.ddescuento) as 'condescuento', a.itotal, cast(a.nvigencia as char(50))+ ' días' as 'diascoti', a.dobservacion,
+                        (UPPER(SUBSTRING(d.DNOMBRE, 1, 1 )+''+d.DAPEPAT)) as 'usuariocrea', a.ctipocambio, a.dtipocambio, smuestreo, srecojo,
                         (cast(a.ntiempoentregainforme as char(50))+' '+if a.stiempoentregainforme = 'C' then 'dias Calendario' else 'dias Utiles' end if) as 'entrega',   
                         (select count(1) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion and z.nversioncotizacion = a.nversioncotizacion) as 'cantprod',
                         (select sum(nmuestra) from pproductoxcotizacion z where z.cinternocotizacion = a.cinternocotizacion and z.nversioncotizacion = a.nversioncotizacion) as 'summuestra',
@@ -467,7 +467,7 @@ class Mcotizacion extends CI_Model {
     public function setduplicarcoti($parametros) { // Buscar Cotizacion
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setduplicarcoti(?,?);";
+        $procedure = "call usp_lab_coti_setduplicarcoti(?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)

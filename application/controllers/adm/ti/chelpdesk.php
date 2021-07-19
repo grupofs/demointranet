@@ -26,5 +26,23 @@ class Chelpdesk extends CI_Controller {
 		$resultado = $this->mhelpdesk->getempleados();
 		echo json_encode($resultado);
 	}
+    
+    public function getlistarbanco() { // Recupera empleado CBO	 
+		$resultado = $this->mhelpdesk->getlistarbanco();
+		echo json_encode($resultado);
+	}
+    
+	public function setactionbanco() { // Recupera empleado CBO	 
+		if($_POST['action'] == 'edit')
+		{
+			$idbanco	= $_POST['idbanco'];
+			$nombanco	= $_POST['nombanco'];
+			$indvigencia	= $_POST['indvigencia'];
+			
+			$this->mhelpdesk->setactionbanco($idbanco,$nombanco,$indvigencia);
+		}
+		/*$resultado = $this->mhelpdesk->setactionbanco();
+		echo json_encode($resultado);*/
+	}
 }
 ?>
