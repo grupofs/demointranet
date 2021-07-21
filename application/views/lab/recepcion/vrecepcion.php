@@ -87,6 +87,19 @@
     tr.details td.details-control {
         background: url('<?php echo public_base_url(); ?>assets/images/details_close.png') no-repeat center center;
     }
+
+    .tabledit-edit-button{
+        color: #fff;
+        background-color: #138496 ;
+        border-color: #138496 ;
+        box-shadow: none;
+        content: "Reference: ";
+    }
+    .tabledit-edit-button::before{
+        font-weight: negrita;
+        color: navy;
+        content: "Editar";
+    }
 </style>
 
 <!-- content-header -->
@@ -334,13 +347,13 @@
                         
             <div class="form-group">
                 <div class="row">  
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <div class="text-info">Codigo</div>
                         <div>  
                             <input type="text" name="mtxtmcodigo" class="form-control" id="mtxtmcodigo"/>  
                         </div>
                     </div>                 
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <div class="text-info">F. Recepcion <span class="text-requerido">*</span></div>
                             <div class="input-group date" id="mtxtFRecep" data-target-input="nearest">
@@ -350,69 +363,52 @@
                                 </div>
                             </div>                        
                         </div> 
-                    </div>               
-                    <div class="col-sm-7">
+                    </div>             
+                    <div class="col-md-7">
                         <div class="text-info">Producto Real</div>
                         <div>
                             <input type="text" name="mtxtmproductoreal" class="form-control" id="mtxtmproductoreal"/>
                         </div>
-                    </div>   
+                    </div> 
                 </div>                
-            </div>  
+            </div>      
             <div class="form-group">
                 <div class="row">                   
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
                         <div class="text-info">Presentacion<span class="text-requerido">*</span></div>
                         <div>  
-                            <input type="text" name="mtxtmpresentacion" class="form-control" id="mtxtmpresentacion"/>  
+                            <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" name="mtxtmpresentacion" id="mtxtmpresentacion" rows="2" data-val-maxlength-max="500" data-validation="required"/> </textarea> 
                         </div>
                     </div> 
                 </div>                
             </div>         
             <div class="form-group">
                 <div class="row">    
-                    <div class="col-sm-3">
+                    <div class="col-md-4">
                         <div class="text-info">Temp. Recepcion</div>
                         <div>  
                             <input type="text" name="mtxttemprecep" class="form-control" id="mtxttemprecep"/>  
                         </div>
                     </div>  
-                    <div class="col-sm-3">
+                    <div class="col-md-4">
                         <div class="text-info">Cantidad Muestra</div>
                         <div>  
                             <input type="text" name="mtxtcantmuestra" class="form-control" id="mtxtcantmuestra"/>  
                         </div>
-                    </div>      
-                    <div class="col-sm-6">
-                        <div class="text-info">Proveedor</div>
-                        <div>  
-                            <input type="text" name="mtxtproveedor" class="form-control" id="mtxtproveedor"/>  
-                        </div>
                     </div>  
+                    <div class="col-md-4">
+                        <div class="text-info">Precinto</div>
+                        <div>  
+                            <input type="text" name="mtxtprecinto" class="form-control" id="mtxtprecinto"/>  
+                        </div>
+                    </div>    
                 </div>                
             </div> 
             <div class="form-group">
-                <div class="row">     
-                    <div class="col-sm-4">
-                        <div class="text-info">N° Lote</div>
-                        <div>  
-                            <input type="text" name="mtxtnrolote" class="form-control" id="mtxtnrolote"/>  
-                        </div>
-                    </div>  
-                    <div class="col-sm-3">
+                <div class="row">    
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <div class="text-info">F. Envase</div>
-                            <div class="input-group date" id="mtxtFEnv" data-target-input="nearest">
-                                <input type="text" id="mtxtFenvase" name="mtxtFenvase" class="form-control datetimepicker-input" data-target="#mtxtFEnv"/>
-                                <div class="input-group-append" data-target="#mtxtFEnv" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>                        
-                        </div>                       
-                    </div>  
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="text-info">F. Muestra</div>
+                            <div class="text-info">F. Muestreo</div>
                             <div class="input-group date" id="mtxtFMues" data-target-input="nearest">
                                 <input type="text" id="mtxtFmuestra" name="mtxtFmuestra" class="form-control datetimepicker-input" data-target="#mtxtFMues"/>
                                 <div class="input-group-append" data-target="#mtxtFMues" data-toggle="datetimepicker">
@@ -421,10 +417,16 @@
                             </div>                        
                         </div>                       
                     </div>   
-                    <div class="col-sm-2">
-                        <div class="text-info">Hora Muestra</div>
+                    <div class="col-md-3">
+                        <div class="text-info">Hora Muestreo</div>
                         <div>  
                             <input type="text" name="mtxthmuestra" class="form-control" id="mtxthmuestra"/>  
+                        </div>
+                    </div>    
+                    <div class="col-md-6">
+                        <div class="text-info">Proveedor</div>
+                        <div>  
+                            <input type="text" name="mtxtproveedor" class="form-control" id="mtxtproveedor"/>  
                         </div>
                     </div>  
                 </div>                
@@ -508,7 +510,18 @@
             </div>
             <div class="form-group">
                 <div class="row">                
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
+                        <div class="text-info">Observación Constancia</div>
+                        <div>   
+                            <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" id="mtxtObservaconst" name="mtxtObservaconst" rows="2" data-val-maxlength-max="500" data-validation="required"></textarea>
+                            <span class="help-inline" style="padding-left:0px; color:#999; font-size:0.9em;">Caracteres: 0 / 500</span>     
+                        </div> 
+                    </div> 
+                </div>                
+            </div> 
+            <div class="form-group">
+                <div class="row">                
+                    <div class="col-md-12">
                         <div class="text-info">Observación</div>
                         <div>   
                             <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" id="mtxtObserva" name="mtxtObserva" rows="2" data-val-maxlength-max="500" data-validation="required"></textarea>
@@ -519,7 +532,7 @@
             </div> 
             <div class="form-group">
                 <div class="row">                            
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
                         <div class="text-info">Observación Otros</div>
                         <div>   
                             <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" id="mtxtObsotros" name="mtxtObsotros" rows="2" data-val-maxlength-max="500" data-validation="required"></textarea>
@@ -616,6 +629,85 @@
                 </fieldset> 
             </div>
         </form>
+
+        <!--<form class="form-horizontal" id="frmBlancovia" name="frmBlancovia" action="<?= base_url('lab/recepcion/crecepcion/setblancoviajero')?>" method="POST" enctype="multipart/form-data" role="form">       -->
+            
+            <div class="form-group">
+                <fieldset class="scheduler-border-fsc" id="regConst">
+                    <legend class="scheduler-border-fsc text-primary">Blanco Viajero</legend>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card card-primary">
+                            <div class="card-header">
+                            </div> 
+                            <div class="card-body">
+                            <div class="table-responsive">
+                            <table class="table m-0" id="tblBlancoviajero">
+                            <thead>
+                            <tr>
+                                <th>BK</th>
+                                <th>LOTE</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            </table>
+                            </div>   
+                            </div>     
+                            </div> 
+                        </div>
+                        <div class="col-md-4">  
+                            <div class="card card-primary">  
+                            <div class="card-header">
+                            <h4 class="card-title">
+                                :: Registro
+                            </h4>
+                            </div>               
+                            <form class="form-horizontal" id="frmBlancovia" name="frmBlancovia" action="<?= base_url('lab/recepcion/crecepcion/setblancoviajero')?>" method="POST" enctype="multipart/form-data" role="form">              
+                            <div class="card-body">                    
+                                <input type="hidden" id="mhdnidblancoviajero" name="mhdnidblancoviajero"> <!-- ID -->
+                                <input type="hidden" id="mhdncordenservicioblancovia" name="mhdncordenservicioblancovia">
+                                <input type="hidden" id="mhdnAccionblancovia" name="mhdnAccionblancovia" >                                  
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="text-light-blue">BK</div>                
+                                            <select id="cbobk" name="cbobk" class="form-control" style="width: 100%;">
+                                                <option value="0" selected="selected">:: Elegir</option>
+                                                <option value="PBS">PBS</option>
+                                                <option value="BPW">BPW</option> 
+                                                <option value="D/E">D/E</option>
+                                                <option value="APC">APC</option>
+                                                <option value="OGYE">OGYE</option>
+                                                <option value="OXFORD">OXFORD</option>
+                                                <option value="MYP">MYP</option>
+                                                <option value="VRBA">VRBA</option>
+                                                <option value="XLD">XLD</option>
+                                                <option value="OTROS">OTROS</option>
+                                            </select>
+                                        </div>
+                                    </div>      
+                                    <div class="form-group">
+                                        <div class="col-sm-12"> 
+                                            <div class="text-light-blue">LOTE</div> 
+                                            <input class="form-control" id="mtxtlote" name="mtxtlote" type="text" value="" />                                
+                                        </div>
+                                    </div>       
+                            </div>                    
+                            <div class="card-footer">
+                                <div class="text-right">
+                                <button type="button" id="btnNuevobv" class="btn btn-primary">Nuevo</button>
+                                <button type="submit" id="btnGrabarbv" class="btn btn-success">Guardar</button>
+                                </div>
+                            </div>
+                            </form>
+                            </div> 
+                        </div>   
+                    </div>     
+                </fieldset> 
+            </div>
+        <!--</form>-->
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">

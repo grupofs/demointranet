@@ -1,5 +1,5 @@
 
-var otblListRecepcion, otblListdetrecepcion, otblListProducto, otblListEtiquetasmuestras;
+var otblListRecepcion, otblListdetrecepcion, otblListProducto, otblListEtiquetasmuestras, otblBlancoviajero;
 var varfdesde = '%', varfhasta = '%';
 
 
@@ -571,7 +571,7 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
     
         $('#modalFechaOT').modal({show:true});
         seleOT(val,nro,fot);
-               
+        listarBlancoviajero(val);       
     } ); 
 };
 $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
@@ -669,6 +669,7 @@ seleOT = function(val,nro,fot){
 
     $('#mhdncinternoordenservicio').val(val);
     $('#mhdncordenservicioconst').val(val);
+    $('#mhdncordenservicioblancovia').val(val);
     $('#mhdnnroordenservicio').val(nro);
     $('#txtForden').val(fot);
     $('#mhdnAccionConst').val('N');
@@ -957,6 +958,139 @@ $('#mbtnPrint').click(function(){
     document.body.appendChild(form);
     form.submit();
     form.parentNode.removeChild(form);
+});
+
+listarBlancoviajero = function(vcinternoordenservicio){
+    
+    //$('#tblBlancoviajero').DataTable().destroy();
+    //$('#tblBlancoviajero tbody').empty();
+
+    otblBlancoviajero = $('#tblBlancoviajero').DataTable({   
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "300px",
+        "scrollX"     	: false,
+        "scrollCollapse": true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false, 
+        //"serverSide"    : true,   
+        'ajax'	: {
+            "url"   : baseurl+"lab/recepcion/crecepcion/getlistblancoviajero/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.cinternoordenservicio    = vcinternoordenservicio;  
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: 'BK', "class" : "col-s"},
+            {data: 'LOTE', "class" : "col-sm"},                     
+            {"orderable": false, 
+                render:function(data, type, row){
+                    return '<div>' +
+                            '<a id="aDelBlanco" href="'+row.IDBLANCOVIAJERO+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+
+                            '</div>' ; 
+                }
+            }  
+        ]
+    });
+};
+    
+$("body").on("click","#aDelBlanco",function(event){
+    event.preventDefault();
+    idblancoviajero = $(this).attr("href");
+    
+    $.post(baseurl+"lab/recepcion/crecepcion/delblancoviajero", 
+    {
+        idblancoviajero   : idblancoviajero,
+    },      
+    function(data){   	
+        otblBlancoviajero.ajax.reload(null,false); 
+        $('#btnNuevobv').click(); 	
+    });
+}); 
+
+$('#tblBlancoviajero tbody').on('click', 'td', function () {
+    var tr = $(this).parents('tr');
+    var row = otblBlancoviajero.row(tr);
+    var rowData = row.data();
+    $('#frmBlancovia').trigger("reset");
+
+    $('#mhdnAccionblancovia').val('A');
+    $('#mhdnidblancoviajero').val(rowData.IDBLANCOVIAJERO);
+    $('#mhdncordenservicioblancovia').val(rowData.CINTERNOORDENSERVICIO);
+    $('#cbobk').val(rowData.BK).change();
+    $('#mtxtlote').val(rowData.LOTE);
+
+});
+
+$('#frmBlancovia').submit(function(event){
+    event.preventDefault();
+
+    $.ajax({
+        url:$('#frmBlancovia').attr("action"),
+        type:$('#frmBlancovia').attr("method"),
+        data:$('#frmBlancovia').serialize(),
+        success: function (respuesta){            
+            otblBlancoviajero.ajax.reload(null,false);
+            Vtitle = 'Se Grabo Correctamente';
+            Vtype = 'success';
+            sweetalert(Vtitle,Vtype);
+            $('#btnNuevobv').click();  
+        },
+        error: function(){
+            Vtitle = 'No se puede Grabar por error';
+            Vtype = 'error';
+            sweetalert(Vtitle,Vtype); 
+        }
+    });
+});
+$('#btnNuevobv').click(function(){
+    $('#frmBlancovia').trigger("reset");
+    $('#mhdnidblancoviajero').val(''); 
+    $('#mhdnAccionblancovia').val('N');
+    $('#cbobk').val('0').change();
+});
+
+$('#addRow1').on( 'click', function () {
+    var vcinternoordenservicio = $('#mhdncordenservicioblancovia').val();
+
+    event.preventDefault();
+        
+    $.post(baseurl+"lab/recepcion/crecepcion/setblancoviajero", 
+    {
+        cinternoordenservicio    : vcinternoordenservicio,
+        accion : 'N'
+    },  
+    function(data){ 
+        var c = JSON.parse(data);
+        $.each(c,function(i,item){ 
+            otblBlancoviajero.ajax.reload(null,false); 
+        })      
+    });
+} );
+
+$('#tblBlancoviajero1').on('draw.dt', function(){
+    $('#tblBlancoviajero').Tabledit({
+     url:baseurl+"lab/recepcion/crecepcion/setblancoviajero/",
+     //eventType: 'dblclick',
+     editButton: true,
+     deleteButton: false,
+     dataType:'json',
+     columns:{
+      identifier : [[2, 'IDBLANCOVIAJERO'],[3, 'IDBLANCOVIAJERO']],
+      editable:[[0, 'BK', '{"PBS":"PBS","BPW":"BPW","D/E":"D/E","APC":"APC","OGYE":"OGYE","OXFORD":"OXFORD","MYP":"MYP","VRBA":"VRBA","XLD":"XLD","OTROS":"OTROS"}'],[1, 'LOTE']]
+     },
+     restoreButton:false,
+    });
 });
 
 

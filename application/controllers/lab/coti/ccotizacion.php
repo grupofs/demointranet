@@ -460,9 +460,9 @@ class Ccotizacion extends CI_Controller {
                             //endif;
                             
                             $html .= '<tr>
-                                <td colspan="6" ><h3>'.$dproductodet.'</h3>
+                                <td colspan="6" ><h4>'.$dproductodet.'</h4>
                                 </td>
-                                <td align="right"><h3>'.$var_subtotal.'</h3>
+                                <td align="right"><h4>'.$var_subtotal.'</h4>
                                 </td>
                             </tr>';
                                 $resensadet = $this->mcotizacion->getlistarensayo($idcoti,$nversion,$idproduc);

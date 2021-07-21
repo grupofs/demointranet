@@ -35,7 +35,7 @@ class Mrecepcion extends CI_Model {
     public function setrecepcionmuestra($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setrecepcionmuestra(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setrecepcionmuestra(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -227,7 +227,7 @@ class Mrecepcion extends CI_Model {
     }
 
     public function getpdfdetalleconst($cinternoordenservicio) { // Listar Ensayos	
-        $sql = "select b.drealproducto, b.dpresentacion
+        $sql = "select b.drealproducto, b.dpresentacion, b.dobservacionesconst, b.dprecinto, b.dcantidad
                 from PCONSTRECEPCIONLAB a
                     join PRECEPCIONMUESTRA b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO
                 where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
@@ -239,5 +239,46 @@ class Mrecepcion extends CI_Model {
 			return False;
 		}		
     }
+
+    public function getlistblancoviajero($cinternoordenservicio) { // Listar Ensayos	
+        $sql = "select a.CINTERNOCOTIZACION, a.IDBLANCOVIAJERO, a.BK, a.LOTE, a.RESULTADO, a.CINTERNOORDENSERVICIO, '' as 'BLANCO'
+                from plabblancoviajero a
+                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
+
+    public function setblancoviajero($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setblancoviajero(?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+
+	public function delblancoviajero($idblancoviajero) { //Eliminar Registro	
+        $this->db->trans_begin();
+        $this->db->delete('plabblancoviajero', array('idblancoviajero' => $idblancoviajero));
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }else{
+            $this->db->trans_commit();
+            return true; 
+        } 
+	}
 }
 ?>

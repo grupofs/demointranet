@@ -63,8 +63,9 @@ class Crecepcion extends CI_Controller {
 		$dtemperatura 		    = $this->input->post('mtxttemprecep');
 		$dcantidad 		        = $this->input->post('mtxtcantmuestra');
 		$dproveedorproducto 	= $this->input->post('mtxtproveedor');
-		$dlote 	                = $this->input->post('mtxtnrolote');
-		$fenvase 	            = $this->input->post('mtxtFenvase');
+		$dlote 	                = null;
+		$fenvase 	            = null;
+		$dprecinto 	        = $this->input->post('mtxtprecinto');
 		$fmuestra 	            = $this->input->post('mtxtFmuestra');
 		$hmuestra 	            = $this->input->post('mtxthmuestra');
 		$stottus 		        = null;//$this->input->post('mcbotottus');
@@ -74,6 +75,7 @@ class Crecepcion extends CI_Controller {
 		$zctipoitem 	        = null;//$this->input->post('mcboitem');
 		$dubicacion 	        = null;//$this->input->post('mtxtubicacion');
 		$dcondicion 	        = null;//$this->input->post('mtxtestado');
+		$dobservacionconst      = $this->input->post('mtxtObservaconst');
 		$dobservacion 	        = $this->input->post('mtxtObserva');
 		$dotraobservacion 	    = $this->input->post('mtxtObsotros');
 
@@ -91,7 +93,8 @@ class Crecepcion extends CI_Controller {
 			'@dcantidad'   	            =>  $dcantidad,
 			'@dproveedorproducto'       =>  $dproveedorproducto,
 			'@dlote'    	            =>  $dlote,
-			'@fenvase'                  =>  ($this->input->post('mtxtFenvase') == $varnull) ? NULL : substr($fenvase, 6, 4).'-'.substr($fenvase,3 , 2).'-'.substr($fenvase, 0, 2),
+			'@fenvase'                  =>  $fenvase,
+			'@dprecinto'                =>  $dprecinto,
 			'@fmuestra'                 =>  ($this->input->post('mtxtFmuestra') == $varnull) ? NULL : substr($fmuestra, 6, 4).'-'.substr($fmuestra,3 , 2).'-'.substr($fmuestra, 0, 2),
 			'@hmuestra'    		        =>  ($this->input->post('mtxthmuestra') == $varnull) ? NULL : $hmuestra,
             '@stottus'      	        =>  $stottus,
@@ -101,6 +104,7 @@ class Crecepcion extends CI_Controller {
             '@zctipoitem'               =>  $zctipoitem,
             '@dubicacion'               =>  $dubicacion,
             '@dcondicion'               =>  $dcondicion,
+            '@dobservacionconst'        =>  $dobservacionconst,
             '@dobservacion'             =>  $dobservacion,
             '@dotraobservacion'         =>  $dotraobservacion,
             '@accion'           	    =>  $accion
@@ -708,6 +712,13 @@ class Crecepcion extends CI_Controller {
                             margin-top: 0.4cm;
                             text-align: justify;
                         }
+                        footer {
+                            position: fixed; 
+                            bottom: 5px; 
+                            left: 0px; 
+                            right: 0px;
+                            height: 0px; 
+                        }
                         img.izquierda {
                             float: left;
                         }
@@ -724,6 +735,7 @@ class Crecepcion extends CI_Controller {
                           content: counter(page);
                         }
                         th { 
+                            font-size: 8pt;
                             text-align: center; 
                             border: 1px solid black;
                         }
@@ -809,8 +821,8 @@ class Crecepcion extends CI_Controller {
                     <tr>
                         <th width="5%">N° MUESTRA</th>
                         <th width="25%">DESCRIPCION DE LA MUESTRA</th>
-                        <th width="5%">N° PRECINTO</th>
-                        <th width="10%">UNIDADES POR MUESTRA</th>
+                        <th width="8%">N° PRECINTO</th>
+                        <th width="7%">UNIDADES POR MUESTRA</th>
                         <th width="30%">CONDICIONES DE RECEPCIÓN DE LA MUESTRA (Temperatura, Peso, FP, FV, Lote, etc.)</th>
                         <th width="15%">OBSERVACIONES</th>
                     </tr>';
@@ -820,23 +832,50 @@ class Crecepcion extends CI_Controller {
                         foreach($resprod as $rowprod){
                             $drealproducto   = $rowprod->drealproducto;
                             $dpresentacion  = $rowprod->dpresentacion;
+                            $dobservacionesconst      = $rowprod->dobservacionesconst;
+                            $dprecinto      = $rowprod->dprecinto;
+                            $dcantidad      = $rowprod->dcantidad;
                             $i++;
 
                             $html .= '<tr>
                                 <td>&nbsp;'.$i.'</td>
                                 <td>&nbsp;'.$drealproducto.'</td>
-                                <td>&nbsp; No indica</td>
-                                <td>&nbsp;</td>
+                                <td>&nbsp;'.$dprecinto.'</td>
+                                <td>&nbsp;'.$dcantidad.'</td>
                                 <td>&nbsp;'.$dpresentacion.'</td>
-                                <td>&nbsp;</td>
+                                <td>&nbsp;'.$dobservacionesconst.'</td>
                             </tr>';
                         }
                     }       
                 $html .= '</table>
-            </main>';
+                <table width="1050px" align="center" cellspacing="0" cellpadding="2" >
+                    <tr>
+                        <td style="height:80px; border: 0;">&nbsp;</td>
+                        <td style="border: 0;"></td>
+                        <td style="border: 0;">&nbsp;</td>
+                        <td style="border: 0; text-align: center;"><img src="'.public_url_ftp().'Imagenes/firmas/FS000150.png" width="150" height="100" /> </td>
+                        <td style="border: 0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width:10%; border: 0;">&nbsp;</td>
+                        <td style="width:35%; text-align: center; border: 0; border-top: 1px;">Firma Cliente</td>
+                        <td style="width:10%; border: 0;">&nbsp;</td>
+                        <td style="width:35%; text-align: center; border: 0; border-top: 1px;">Firma FSC</td>
+                        <td style="width:10%; border: 0;">&nbsp;</td>
+                    </tr>
+                </table>
+            </main>           
+
+            <footer>
+                <table  width="1050px" align="center">
+                    <tr>
+                        <td style="border: 0;">NOTA: Este documento es la constancia del recibo de muestras según las condiciones descritas en el mismo.</td>
+                    </tr>
+                </table> 
+            </footer>';
 
         $html .= '</body></html>';
-		$filename = 'OrdenTrabajo-';//.$namefile;
+		$filename = 'Constancia-'.$nro_constancia;
 		$this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'landscape');
         //echo $html;
     }
@@ -936,5 +975,36 @@ class Crecepcion extends CI_Controller {
         $resultado = $this->mrecepcion->getetiquetasmuestras($cinternoordenservicio);
         echo json_encode($resultado);
     }
+
+    public function getlistblancoviajero() {
+        $cinternoordenservicio 	= $this->input->post('cinternoordenservicio');
+        $resultado = $this->mrecepcion->getlistblancoviajero($cinternoordenservicio);
+        echo json_encode($resultado);
+    }
+
+    public function setblancoviajero() { // Registrar informe PT
+        $varnull = '';
+
+        $cinternoordenservicio = $this->input->post('mhdncordenservicioblancovia');
+        $idblancoviajero = $this->input->post('mhdnidblancoviajero');
+        $bk = $this->input->post('cbobk');
+        $lote = $this->input->post('mtxtlote');
+        $accion = $this->input->post('mhdnAccionblancovia');
+
+        $parametros = array(
+            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@idblancoviajero'          =>  $idblancoviajero,
+            '@bk'           =>  $bk,
+            '@lote'         =>  $lote,
+            '@accion'    	=>  $accion,
+        );
+        $retorna = $this->mrecepcion->setblancoviajero($parametros);
+        echo json_encode($retorna);	
+    }
+	public function delblancoviajero(){
+		$idblancoviajero = $this->input->post('idblancoviajero');		
+		$resultado = $this->mrecepcion->delblancoviajero($idblancoviajero);
+		echo json_encode($resultado);
+	}
 }
 ?>
