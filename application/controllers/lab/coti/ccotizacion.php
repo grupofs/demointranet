@@ -497,10 +497,10 @@ class Ccotizacion extends CI_Controller {
                                         <td width="5%" align="center">
                                         '.$acre.'
                                         </td>
-                                        <td width="35%">
+                                        <td width="37%">
                                         '.$norma.'
                                         </td>
-                                        <td width="5%" align="center">
+                                        <td width="3%" align="center">
                                         '.$cantidad.'
                                         </td>
                                         <td width="10%" align="right">
@@ -707,6 +707,7 @@ class Ccotizacion extends CI_Controller {
         $html .= '</main></body></html>';
 		$filename = 'Cotizacion-'.$namefile;
         $this->pdfgenerator->generate($html, $filename, TRUE, 'A4', 'portrait');
+        //echo $html;
         
 	}
 

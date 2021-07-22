@@ -253,7 +253,8 @@ class Mcotizacion extends CI_Model {
                 where ( a.cinternocotizacion = '".$idcoti."' ) and  
                     ( a.nversioncotizacion = ".$nversion." ) and  
                     ( a.nordenproducto = '".$idproduc."' )  and  
-                    ( a.sregistro = 'A' );";
+                    ( a.sregistro = 'A' )
+                order by b.censayofs desc;";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 
