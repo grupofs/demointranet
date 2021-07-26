@@ -1173,7 +1173,12 @@ $(function() {
 
         v_NROCOTI = $('#mtxtregnumcoti').val();
         document.querySelector('#lblNrocoti').innerText = v_NROCOTI;
-        
+        var valorccliente = $('#cboregclie').val();
+        if (valorccliente == CCLIENTE){
+            CCLIENTE = CCLIENTE;
+        }else{
+            CCLIENTE = valorccliente;
+        }
         selCotiprodu(IDCOTIZACION,NVERSION,IDPROD,CLOCALCLIE,PRODUCTO,CCONDI,NMUESTRA,CPROCEDE,CANTMIN,ETIQUETA,CTIPOPROD,PORCION,CUM,CCLIENTE,IMONTO);
         recuperaListensayo(IDCOTIZACION,NVERSION,IDPROD) 
 
@@ -1257,7 +1262,6 @@ selCotiprodu= function(IDCOTIZACION,NVERSION,IDPROD,CLOCALCLIE,PRODUCTO,CCONDI,N
     $('#mtxtregtamporci').val(PORCION);
     $('#mcboregumeti').val(CUM);
     $('#mtxtmIMonto').val(IMONTO);
-
     iniRegCotiprodu(CCLIENTE,CLOCALCLIE,CCONDI,CPROCEDE);
 };
 
