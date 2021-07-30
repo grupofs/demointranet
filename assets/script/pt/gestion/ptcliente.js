@@ -22,90 +22,33 @@ $(function() {
     /**
      * Muestra el formulario ocultando la lista
      */
-    objFormulario.mostrarRegistro = function (ccliente,razonsocial,direccioncliente,dzip, cpais,dciudad,destado,cubigeo,dubigeo) {
+    objFormulario.mostrarRegEstable = function (ccliente,razonsocial,direccioncliente,dzip, cpais,dciudad,destado,cubigeo,dubigeo) {
         const boton = $('#btnAccionContenedorLista');
         const icon = boton.find('i');
         if (icon.hasClass('fa-plus')) icon.removeClass('fa-plus');
         icon.addClass('fa-minus');
         boton.click();
+
+        $('#cardRegestable').hide();
+        $('#cardListestable').show();
         
+        document.querySelector('#lblCliente').innerText = razonsocial;
+        document.querySelector('#lblDirclie').innerText = direccioncliente;
+
         $('#mhdnIdClie').val(ccliente);
-        $('#txtestableCI').val(razonsocial);
-        $('#txtestabledireccion').val(direccioncliente);
-        $('#txtestablezip').val(dzip);
 
-        $('#cboPaisEstable').val(cpais).trigger("change");
-        $('#txtCiudadEstable').val(dciudad);
-        $('#txtEstadoEstable').val(destado);
+        $('#mhdnestCcliente').val(ccliente);
+        $('#mhdnestDcliente').val(razonsocial);
+        $('#mhdnestDdireccion').val(direccioncliente);
+        $('#mhdnestDzid').val(dzip);
+        $('#mhdnestCpais').val(cpais);
+        $('#mhdnestDciudad').val(dciudad);
+        $('#mhdnestDestado').val(destado);
+        $('#mhdnestCubigeo').val(cubigeo);
+        $('#mhdnestDubigeo').val(dubigeo); 
+                  
+        listEstable(ccliente);
 
-        $('#hdnidubigeoEstable').val(cubigeo);
-        $('#mtxtUbigeoEstable').val(dubigeo); 
-        $('#mhdnAccionEstable').val('N');   
-        
-
-        
-        tblEstablecimiento = $('#tblEstablecimiento').DataTable({
-          "bJQueryUI": true,
-          'bStateSave': true,
-          'scrollY':        400,
-          'scrollX':        true,
-          'scrollCollapse': true,
-          "ordering": false,
-          'fixedColumns':{
-            'leftColumns': false,// Fijo primera columna
-            'rightColumns':1
-          },
-
-          'bDestroy'    : true,
-          'lengthMenu'  : [[10, 20, 30, -1], [10, 20, 30, "Todo"]],
-          'paging'      : true,
-          'info'        : true,
-          'filter'      : true,   
-          'stateSave'   : true,
-          'ajax'        : {
-                            "url"   : baseurl+"pt/cptcliente/getbuscarestablecimiento",
-                            "type"  : "POST", 
-                            "data": function ( d ) {
-                                d.IDCLIENTE = ccliente
-
-                            },     
-                            dataSrc : ''        
-                          },
-          'columns'     : [
-              
-                            {data: 'POS', targets: 0 },
-                            {data: 'DESCRIPESTABLE', targets: 1 },
-                            {data: 'DIRECCION', targets: 2 },
-                            {data: 'RESPONCALIDAD', targets: 3 },
-                            {data: 'TELEFONOCALIDAD', targets: 4 },
-                            {data: 'ESTADO', targets: 5},
-                            {"orderable": false, 
-                              render:function(data, type, row){
-                                return  '<div>'+  
-                                          '<a data-original-title="Editar" onClick="javascript:EditarEstablecimiento(\''+row.COD_ESTABLE+'\',\''+row.DESCRIPESTABLE+'\',\''+row.DIRECCION+'\',\''+row.DZIP+'\',\''+row.FCE+'\','+
-                                          '\''+row.ECP+'\',\''+row.FFRN+'\',\''+row.RESPONCALIDAD+'\',\''+row.CARGOCALIDAD+'\',\''+row.EMAILCALIDAD+'\',\''+row.ESTADO+'\',\''+row.TELEFONOCALIDAD+'\',\''+row.PAIS+'\',\''+row.CIUDAD+'\',\''+row.ESTESTABLE+'\',\''+row.UBIGEO+'\');"><i class="fa fa-edit fa-2x" data-original-title="Editar" data-toggle="tooltip"></i></a>'+
-                                          '&nbsp; &nbsp;'+
-                                          '<a data-original-title="Eliminar" data-toggle="modal" data-target="#modaldelestablecimiento" onClick="javascript:SelDeleteEstable(\''+row.COD_ESTABLE+'\');"><i class="fa fa-trash-o fa-2x" data-original-title="Eliminar" data-toggle="tooltip"></i></a>'+
-                                          '&nbsp; &nbsp;'+
-                                            '<a data-original-title="Agregar Contacto" data-toggle="modal" data-target="#modalestablecontacto" onClick="javascript:Selcontactoestable(\''+row.COD_ESTABLE+'\',\''+row.COD_CLIENTE+'\');"><i class="fa fa-users fa-2x" data-original-title="Agregar Contacto" data-toggle="tooltip"></i></a>'+
-                                        '</div>'   
-                              }
-                            }
-                          ], 
-          "columnDefs": [
-              {
-                "targets": [5], 
-                "data": "ESTADO", 
-                "render": function(data, type, row) {            
-                  if (data ==  "A") {
-                    return "<span class='label label-success'>Activo</span>";
-                  }else if (data == "I") {
-                    return "<span class='label label-danger'>Inactivo</span>";
-                  }              
-                }
-              }
-          ],
-        });
 /*
         $('#hdnIdaudi').val(cauditoriainspeccion);
         $('#hdnFaudi').val(fservicio);
@@ -131,6 +74,112 @@ $(function() {
         $('#contenedorRegestable').show();
         $('#contenedorBusqueda').hide();
     };
+});
+
+listEstable = function(ccliente){
+
+  tblEstablecimiento = $('#tblListEstablecimiento').DataTable({
+    "processing"  	: true,
+    "bDestroy"    	: true,
+    "stateSave"     : true,
+    "bJQueryUI"     : true,
+    'bStateSave'    : true,
+    "scrollY"     	: "400px",
+    "scrollX"     	: true,
+    'scrollCollapse': true, 
+    'AutoWidth'     : true,
+    "paging"      	: false,
+    "info"        	: true,
+    "filter"      	: true, 
+    "ordering"		  : false,
+    "responsive"    : false,
+    "select"        : true, 
+    //'fixedColumns':{
+    //  'leftColumns': false,// Fijo primera columna
+    //  'rightColumns':1
+    //},
+    //'lengthMenu'  : [[10, 20, 30, -1], [10, 20, 30, "Todo"]], 
+    'ajax'        : {
+                      "url"   : baseurl+"pt/cptcliente/getbuscarestablecimiento",
+                      "type"  : "POST", 
+                      "data": function ( d ) {
+                          d.IDCLIENTE = ccliente
+
+                      },     
+                      dataSrc : ''        
+                    },
+    'columns'     : [
+        
+                      {data: 'SPACE', "class": "col-xxs"},
+                      {data: 'DESCRIPESTABLE', "class": "col-lm"},
+                      {data: 'DIRECCION', "class": "col-lm"},
+                    ], 
+  });
+  // Enumeracion 
+  tblEstablecimiento.on( 'order.dt search.dt', function () { 
+    tblEstablecimiento.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+        } );
+  }).draw(); 
+};
+
+$('#tblListEstablecimiento tbody').on('dblclick', 'td', function () {
+  var tr = $(this).parents('tr');
+  var row = tblEstablecimiento.row(tr);
+  var rowData = row.data();
+
+  editarEstablecimiento(rowData.COD_ESTABLE,rowData.COD_CLIENTE,rowData.DESCRIPESTABLE,rowData.DIRECCION,rowData.DZIP,rowData.FCE,rowData.ECP,rowData.FFRN,rowData.RESPONCALIDAD,rowData.CARGOCALIDAD,rowData.EMAILCALIDAD,rowData.ESTADO,rowData.TELEFONOCALIDAD,rowData.PAIS,rowData.CIUDAD,rowData.ESTESTABLE,rowData.UBIGEO,rowData.DUBIGEO);
+  $('#cardRegestable').show();
+  $('#cardListestable').hide();
+});
+
+$('#btnCerrarEstable').click(function(){
+  $('#cardRegestable').hide();
+  $('#cardListestable').show();
+});
+
+
+editarEstablecimiento = function(cestablecimiento,ccliente,destablecimiento,direccion,dzip,fce,ecp,ffrn,responcalidad,cargocalidad,emailcalidad,estado,telefonocalidad,pais,ciudad,estestable,ubigeo,dubigeo){
+  
+  $('#mhdnIdEstable').val(cestablecimiento);    
+  $('#mhdnIdClie').val(ccliente);    
+  $('#txtestableCI').val(destablecimiento);    
+  $('#cboPaisEstable').val(pais).trigger("change"); 
+  $('#txtCiudadEstable').val(ciudad).trigger("change");    
+  $('#txtEstadoEstable').val(estestable).trigger("change");     
+  $('#hdnidubigeoEstable').val(ubigeo); 
+  $('#mtxtUbigeoEstable').val(dubigeo);     
+  $('#txtestablezip').val(dzip);    
+  $('#txtestabledireccion').val(direccion);    
+  $('#txtestableFce').val(fce);    
+  $('#txtestableEcp').val(ecp);      
+  $('#txtestableFfrn').val(ffrn);    
+  $('#txtestableresproceso').val(responcalidad); 
+  $('#txtestablecargo').val(cargocalidad); 
+  $('#txtestableEmail').val(emailcalidad);   
+  $('#txtestablecelu').val(telefonocalidad);  
+  $('#cboestableEstado').val(estado).trigger("change");  
+  $('#mhdnAccionEstable').val('A'); 
+};
+
+
+$('#btnEstableNuevo').click(function(){    
+  $('#cardRegestable').show();
+  $('#cardListestable').hide();
+
+  limpiarFormEstable();    
+
+  $('#mhdnIdClie').val($('#mhdnestCcliente').val());
+  $('#txtestableCI').val($('#mhdnestDcliente').val());
+  $('#txtestabledireccion').val($('#mhdnestDdireccion').val());
+  $('#txtestablezip').val($('#mhdnestDzid').val());
+  $('#cboPaisEstable').val($('#mhdnestCpais').val()).trigger("change"); 
+  $('#txtCiudadEstable').val($('#mhdnestDciudad').val());
+  $('#txtEstadoEstable').val($('#mhdnestDestado').val());
+  $('#hdnidubigeoEstable').val($('#mhdnestCubigeo').val());
+  $('#mtxtUbigeoEstable').val($('#mhdnestDubigeo').val()); 
+
+  $('#mhdnAccionEstable').val('N'); 
 });
 
 $(document).ready(function() {
@@ -178,7 +227,7 @@ $(document).ready(function() {
       async: true,
       success:function(result)
       {
-          $('#cboDepa').html(result);
+          $('#cboDepa,#cboDepaEsta').html(result);
       },
       error: function(){
         alert('Error, No se puede autenticar por error');
@@ -187,38 +236,38 @@ $(document).ready(function() {
 
     var btnCust = '';
   
-    $("#logo_image").fileinput({
+    $("#file-input").fileinput({
       overwriteInitial: true,
       maxFileSize: 1500,
       showClose: false,
       showCaption: false,
       browseLabel: '',
       removeLabel: '',
-      browseIcon: '<i class="far fa-file-image"></i>',
+      browseIcon: '<i class="fas fa-file-image"></i>',
       removeIcon: '<i class="fas fa-times-circle"></i>',
-      removeTitle: 'Cancel or reset changes',
+      removeTitle: 'Cancelar o remover',
       elErrorContainer: '#kv-avatar-errors-1',
       msgErrorClass: 'alert alert-block alert-danger',
       layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-      allowedFileExtensions: ["jpg", "png", "gif"]
+      allowedFileExtensions: ["jpeg", "jpg", "png", "gif"]
     });
 });
 
 listarcliente = function(){
     oTableCliente = $('#tblListPtcliente').DataTable({
-      "bJQueryUI": true,
-      'bStateSave': true,
-      'scrollY':        400,
-      'scrollX':        true,
-      'scrollCollapse': true,
-      "ordering": false,
-      'bDestroy'    : true,
-      'lengthMenu'  : [[10, 20, 30, -1], [10, 20, 30, "Todo"]],
-      'paging'      : true,
-      'info'        : true,
-      'filter'      : true,   
-      'stateSave'   : true,
-      'processing'  : true, 
+      "processing"  	: true,
+      "bDestroy"    	: true,
+      "stateSave"     : true,
+      "bJQueryUI"     : true,
+      "scrollY"     	: "500px",
+      "scrollX"     	: true, 
+      'AutoWidth'     : true,
+      "paging"      	: false,
+      "info"        	: true,
+      "filter"      	: true, 
+      "ordering"		  : false,
+      "responsive"    : false,
+      "select"        : true, 
       'ajax'        : {
         "url"   : baseurl+"pt/cptcliente/getbuscarclientes",
         "type"  : "POST", 
@@ -228,42 +277,66 @@ listarcliente = function(){
         dataSrc : ''        
       },
       'columns'     : [
-          {data: 'POS',targets: 0},
-          {data: 'NRUC',targets: 1 },
-          {data: 'DRAZONSOCIAL', targets: 2},
-          {data: 'DDIRECCIONCLIENTE', targets: 3},
-          {data: 'DTELEFONO', targets: 4},
-          {data: 'DREPRESENTANTE', targets: 5},  
-          {"orderable": false, 
+          {data: 'SPACE', "class": "col-xxs"},
+          {"orderable": false, "class": "col-xxs", 
             render:function(data, type, row){
+              return  '<div class="dropdown" style="text-align: center;">'+
+                          '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
+                          '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
+                              '<li><a title="Establecimientos" style="cursor:pointer; color:blue;" onClick="objFormulario.mostrarRegEstable(\''+row.CCLIENTE+'\',\''+row.DRAZONSOCIAL+'\',\''+row.DDIRECCIONCLIENTE+'\',\''+row.dzip+'\',\''+row.cpais+'\',\''+row.dciudad+'\',\''+row.destado+'\',\''+row.CUBIGEO+'\',\''+row.DUBIGEO+'\');"><span class="fas fa-map-marked-alt" aria-hidden="true">&nbsp;</span>&nbsp;Establecimientos</a></li>'+
+                              //'<li><a id="aCesecontrato" href="'+row.id_contrato+'" title="Cese"><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cese de Contrato</a></li>'+
+                          '</ul>'+
+                      '</div>'
+              
+            }
+          },
+          {"orderable": false, "class": "col-l",
+              render:function(data, type, row){
               if(row.DRUTA == ''){
-                return '<div>' +
-                '<img src="'+baseurl+'FTPfileserver/Imagenes/clientes/unknown.png"  width="120" height="60" class="img-circle">'+
-                '</div>' ; 
+                  return '<div class="user-block" style="float: none;">' +
+                  '<img src="'+baseurl+'FTPfileserver/Imagenes/clientes/unknown.png"  width="64" height="64" class="img-circle img-bordered-sm">&nbsp;&nbsp;&nbsp;'+
+                  '<span class="username"  style="vertical-align: middle; margin-top: -25px;">'+row.DRAZONSOCIAL+'</span><span class="description"><h6>'+row.NRUC+'</h6></span>'+
+                  '</div>' ; 
               }else{
-                return '<div>' +
-                '<img src="'+baseurl+'FTPfileserver/Imagenes/clientes/'+row.DRUTA+'"  width="120" height="60" class="img-circle">'+
-                '</div>' ; 
+                  return '<div class="user-block" style="float: none;">' +
+                  '<img src="'+baseurl+'FTPfileserver/Imagenes/clientes/'+row.DRUTA+'"  width="64" height="64" class="img-circle img-bordered-sm">&nbsp;&nbsp;&nbsp;'+
+                  '<span class="username" style="vertical-align: middle; margin-top: -25px;">'+row.DRAZONSOCIAL+'</span><span class="description"><h6>'+row.NRUC+'</h6></span>'+
+                  '</div>' ; 
               }
-            }
+              }
           },
-          {"orderable": false, 
-            render:function(data, type, row){
-              return '<div>' +
-              '<a title="Editar" onclick="editarCliente(\''+row.CCLIENTE+'\',\''+row.NRUC+'\',\''+row.DRAZONSOCIAL+'\',\''+row.cpais+'\',\''+row.dciudad+'\',\''+row.destado+'\',\''+row.dzip+'\',\''+row.CUBIGEO+'\',\''+row.DDIRECCIONCLIENTE+'\',\''+row.DTELEFONO+'\',\''+row.DFAX+'\',\''+row.dweb+'\',\''+row.ZCTIPOTAMANOEMPRESA+'\',\''+row.NTRABAJADOR+'\',\''+row.DREPRESENTANTE+'\',\''+row.DCARGOREPRESENTANTE+'\',\''+row.DEMAILREPRESENTANTE+'\',\''+row.DRUTA+'\',\''+row.TIPODOC+'\',\''+row.DUBIGEO+'\');"><i style="color:#088A08;" class="fa fa-edit fa-2x" data-original-title="EDITAR" data-toggle="tooltip"></i></a>' +
-              '</div>' ; 
-            }
+          {"orderable": false, "class": "col-lm",
+              render:function(data, type, row){
+              if(row.DRUTA == ''){
+                  return '<div>' +
+                  '<span class="username"  style="vertical-align: middle;">'+row.DDIRECCIONCLIENTE+'</span><br><span class="description"><small>'+row.DUBIGEO+'</small></span>'+
+                  '</div>' ; 
+              }else{
+                  return '<div>' +
+                  '<span class="username" style="vertical-align: middle;">'+row.DDIRECCIONCLIENTE+'</span><br><span class="description"><small>'+row.DUBIGEO+'</small></span>'+
+                  '</div>' ; 
+              }
+              }
           },
-          {"orderable": false, 
-            render:function(data, type, row){
-              return  '<div>'+  
-              '<a title="Establecimientos" style="cursor:pointer; color:blue;" onClick="objFormulario.mostrarRegistro(\''+row.CCLIENTE+'\',\''+row.DRAZONSOCIAL+'\',\''+row.DDIRECCIONCLIENTE+'\',\''+row.dzip+'\',\''+row.cpais+'\',\''+row.dciudad+'\',\''+row.destado+'\',\''+row.CUBIGEO+'\',\''+row.DUBIGEO+'\');"><span class="fa fa-plus-square fa-2x" aria-hidden="true"> </span> </a>'+
-              '</div>'   
-            }
-          }
+          {data: 'DTELEFONO', "class": "col-sm"},
+          {data: 'DREPRESENTANTE', "class": "col-m"}
       ], 
-    });     
+    });    
+    // Enumeracion 
+    oTableCliente.on( 'order.dt search.dt', function () { 
+      oTableCliente.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+          cell.innerHTML = i+1;
+          } );
+    }).draw();     
 };
+
+$('#tblListPtcliente tbody').on('dblclick', 'td', function () {
+  var tr = $(this).parents('tr');
+  var row = oTableCliente.row(tr);
+  var rowData = row.data();
+
+  editarCliente(rowData.CCLIENTE,rowData.NRUC,rowData.DRAZONSOCIAL,rowData.cpais,rowData.dciudad,rowData.destado,rowData.dzip,rowData.CUBIGEO,rowData.DDIRECCIONCLIENTE,rowData.DTELEFONO,rowData.DFAX,rowData.dweb,rowData.ZCTIPOTAMANOEMPRESA,rowData.NTRABAJADOR,rowData.DREPRESENTANTE,rowData.DCARGOREPRESENTANTE,rowData.DEMAILREPRESENTANTE,rowData.DRUTA,rowData.TIPODOC,rowData.DUBIGEO);
+});
 
 $('#btnBuscar').click(function(){
   listarcliente();
@@ -354,18 +427,18 @@ $('#btnSelUbigeo').click(function(){
 });
 
 registrar_imagen = function(){
-  var archivoInput = document.getElementById('logo_image').files[0].name;
+  var archivoInput = document.getElementById('file-input').files[0].name;
   var archivoRuta = archivoInput;
-  var extPermitidas = /(.gif|.jpg|.png)$/i;
+  var extPermitidas = /(.gif|.jpg|.png|.jpeg)$/i;
 
   if(!extPermitidas.exec(archivoRuta)){
-    alert('Asegurese de haber seleccionado un gif, jpg, png');
+    alert('Asegurese de haber seleccionado un GIF, JPG, PNG, JPEG');
     archivoInput.value = '';
     return false;
   }
   else
   {
-    var parametrotxt = new FormData($("#frmMantptClie")[0]);
+    var parametrotxt = new FormData($("#frmFileinputLogoclie")[0]);
       $.ajax({
         data: parametrotxt,
         method: 'post',
@@ -374,9 +447,10 @@ registrar_imagen = function(){
         async: true,
         contentType: false,
         processData: false,
-        success: function(response){
-          folderimage = response[0];
-          $('#utxtlogo').val(folderimage);          
+        success: function(response){  
+          $('#divlogo').show();
+          folderimage = response.nombreArch;
+          $('#utxtlogo').val(folderimage);        
         },
         error: function(){
           alert('Error, no se cargó el archivo');
@@ -415,8 +489,9 @@ editarCliente = function(ccliente,nruc,drazonsocial,cpais,dciudad,destado,dzip,c
   $('#cboTipoDoc').val(tipodoc);  
   document.getElementById("image_previa").src = ruta_imagen; 
   $('#tabptcliente a[href="#tabptcliente-reg"]').tab('show'); 
-  $('#divlogo').show();
+  $('#divlogo').hide();
   $("#mbtnsavecliente").prop('disabled',false);
+  $('#hdnCCliente').val(ccliente);
 };
 
 limpiarForm = function(){    
@@ -452,10 +527,6 @@ $('#btnRetornarLista').click(function(){
     objFormulario.mostrarBusqueda();
 });
 
-Agregarestable = function(ccliente,razonsocial,direccioncliente,dzip, cpais,dciudad,destado,cubigeo,dubigeo){
-  
-}
-
 $('#cboPaisEstable').change(function(){
     var v_cpais = $( "#cboPaisEstable option:selected").attr("value");
     
@@ -465,38 +536,17 @@ $('#cboPaisEstable').change(function(){
     if(v_cpais == '290'){
       $("#boxCiudadEstable").hide();
       $("#boxEstadoEstable").hide();
-      $("#boxDeparEstable").show();
-      $("#boxProvEstable").show();
-      $("#boxDistEstable").show(); 
-      
-      $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"cglobales/getdepartamentos",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cboDepaEsta').html(result);
-        },
-        error: function(){
-          alert('Error, No se puede autenticar por error');
-        }
-      });    
+      $("#boxUbigeoEstable").show(); 
     } else {
       $("#boxCiudadEstable").show();
       $("#boxEstadoEstable").show(); 
-      $("#boxDeparEstable").hide();
-      $("#boxProvEstable").hide();
-      $("#boxDistEstable").hide();
+      $("#boxUbigeoEstable").hide(); 
     }
 });
 
 $('#btnBuscarUbigeoEstable').click(function() {
-  $("#modalUbigeo").modal();	
+  $("#modalUbigeoest").modal();	
 });
-
-
 
 $('#cboDepaEsta').change(function(){
   var v_cdepa = $( "#cboDepaEsta option:selected").attr("value");
@@ -540,12 +590,28 @@ $('#cboProvEsta').change(function(){
   });
 });
 
-$('#cboProvEsta').change(function(){
-  var v_cubigeo = $( "#cboDist option:selected").attr("value");
+$('#cboDistEsta').change(function(){
+  var v_cubigeo = $( "#cboDistEsta option:selected").attr("value");
   $('#hdnidubigeoEstable').val(v_cubigeo);
 });
 
+$('#btnSelUbigeoEsta').click(function(){
+  var v_cubigeo = $( "#cboDistEsta option:selected").attr("value");
+  var v_depa = $("#cboDepaEsta").find('option:selected').text();
+  var v_prov = $("#cboProvEsta").find('option:selected').text();
+  var v_dist = $("#cboDistEsta").find('option:selected').text();
+  $('#mtxtUbigeoEstable').val(v_depa+' - '+v_prov+' - '+v_dist);
+  $('#hdnidubigeoEstable').val(v_cubigeo);
+  $("#btncerrarUbigeoEsta").click(); 
 
+});
+
+limpiarFormEstable = function(){    
+  $('#frmMantEstablecimiento').trigger("reset");
+  $('#mhdnIdEstable').val('');
+  $('#cboPaisEstable').val('').trigger("change"); 
+  $('#mtxtUbigeoEstable').val('').trigger("change");
+}
 
 $('#frmMantEstablecimiento').submit(function(event){
 
@@ -564,8 +630,12 @@ $('#frmMantEstablecimiento').submit(function(event){
           Vtitle = 'Datos Guardados correctamente';
           Vtype = 'success';
           sweetalert(Vtitle,Vtype);
-          limpiarForm();    
-          $('#tabptestable a[href="#tab_listaestable"]').tab('show'); 
+          limpiarFormEstable(); 
+          var v_ccliente = $('#mhdnIdClie').val();
+          listEstable(v_ccliente);   
+          
+          $('#cardRegestable').hide();
+          $('#cardListestable').show();
   });
 });
 

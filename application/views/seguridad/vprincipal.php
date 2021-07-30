@@ -123,6 +123,24 @@
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span id="spanAlertas" class="badge badge-warning navbar-badge">15</span>
+                    </a>
+                    <div id="divListAlertas" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Alertas</span>
+                        <div class="dropdown-divider"></div>
+                        <a id="alistInformes" href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 10 Informes Incompletos
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a id="alistRegistros" href="#" class="dropdown-item">
+                            <i class="fas fa-users mr-2"></i> 5 Registros Incompletos
+                        </a>
+                    </div>
+                </li>
                 <!-- PERFIL USUARIO -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?php echo base_url()?>perfil" >

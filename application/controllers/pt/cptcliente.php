@@ -47,24 +47,35 @@ class Cptcliente extends CI_Controller {
 
     public function upload_image() {
 
-        $config['upload_path'] = 'FTPfileserver/Imagenes/clientes';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '60048';
+        $newfilename = $this->input->post('hdnCCliente');
+        
+        $config['upload_path']      = 'FTPfileserver/Imagenes/clientes';
+        $config['allowed_types']    = 'gif|jpg|png|jpeg';
+        $config['max_size']         = '60048';
+		$config['overwrite'] 		= TRUE;
+		$config['file_name']        = $newfilename;
 
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
-        if (!$this->upload->do_upload('logo_image'))
+
+        if (!$this->upload->do_upload('file-input'))
         {
-            $error = $this->upload->display_errors();
+            $data['uploadError'] = $this->upload->display_errors();
+			$error = '';
             return $error;
         }
         else
         {
-            $data = $this->upload->data();
-            $path = array(
-                    $prueba1 =$data['file_name'],
-                );
-            echo json_encode($path);           
+            $data = $this->upload->data();            
+
+            /*$path = array(
+                $nombreArch =$data['file_name'],
+            );*/
+            						
+			$retorno = array(
+				'nombreArch' =>  $data['file_name'],
+			);
+            echo json_encode($retorno);           
         }
     }
     
