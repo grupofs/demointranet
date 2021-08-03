@@ -333,9 +333,24 @@
                                         <div class="col-6 text-left">
                                             <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                         </div>                                                          
-                                        <div class="col-6 text-right">
+                                        <div class="col-6 text-right">                                            
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-info" id="btnverinformes"><i class="fas fa-clipboard-list"></i> Inf. Ensayo</button>
+                                                <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <a class="dropdown-item" href="#">Vista Previa</a>
+                                                    <a class="dropdown-item" href="#">Preliminar</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Muestra</a>
+                                                    <a class="dropdown-item" href="#">Consolidado</a>
+                                                    <a class="dropdown-item" href="#">Resultado</a>
+                                                    <a class="dropdown-item" href="#">Result. Indiv.</a>
+                                                </div>
+                                                </button>
+                                            </div>
+
                                             <button type="button" class="btn btn-success" id="btngrabarResult"><i class="fas fa-clipboard-list"></i> Grabar</button>
-                                            <button type="button" class="btn btn-info" id="btnverinformes"><i class="fas fa-clipboard-list"></i> Inf. Ensayo</button>
                                         </div>    
                                     </div>
                                     </div>
@@ -350,23 +365,53 @@
                                                         <h3 class="card-title">Listado de Resultados</h3>
                                                     </div>                                        
                                                     <div class="card-body" style="overflow-x: scroll;">                                                        
-                                                        <div class="row">                                                         
-                                                            <div class="col-12"> 
+                                                        <div class="row">
+                                                            <div class="col-12 table-responsive" id="divtblListResultados"> 
                                                             <table id="tblListResultados" class="table table-striped table-bordered compact" style="width:100%">
                                                                 <thead>
                                                                 <tr>
-                                                                    <th>N°</th>
-                                                                    <th>Tipo Ensayo</th>
-                                                                    <th>Cod. Muestra</th>
-                                                                    <th>Muestra</th>
-                                                                    <th>Cod. Ensayo</th>
-                                                                    <th>Ensayo</th>
-                                                                    <th>Unidad</th>
-                                                                    <th>Especificación</th>
-                                                                    <th>Resultado</th>
-                                                                    <th>Conclusion</th>
+                                                                    <th>ID</th>
+                                                                    <th rowspan="2" style="min-width: 5px; width: 5px;">N°</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Cod. Ensayo</th>
+                                                                    <th rowspan="2" style="min-width: 120px; width: 120px;">Ensayo</th>
+                                                                    <th rowspan="2" style="min-width: 60px; width: 60px;">Unidad</th>
+                                                                    <th colspan="3" style="min-width: 160px; width: 160px;">Especificaciones</th>
+                                                                    <th colspan="3" style="min-width: 160px; width: 160px;">Resultados</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Conclusion</th>
+                                                                </tr>
+                                                                <tr>
                                                                     <th></th>
+                                                                    <th style="min-width: 40px; width: 40px;"></th>
+                                                                    <th style="min-width: 80px; width: 80px;"></th>
+                                                                    <th style="min-width: 40px; width: 40px;">x10</th>
+                                                                    <th style="min-width: 40px; width: 40px;"></th>
+                                                                    <th style="min-width: 80px; width: 80px;"></th>
+                                                                    <th style="min-width: 40px; width: 40px;">x10</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                            </div> 
+                                                            <div class="col-12" id="divtblListResultadosold"> 
+                                                            <table id="tblListResultadosold" class="table table-striped table-bordered compact" style="width:100%">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th rowspan="2" style="min-width: 5px; width: 5px;">N°</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Cod. Ensayo</th>
+                                                                    <th rowspan="2" style="min-width: 120px; width: 120px;">Ensayo</th>
+                                                                    <th rowspan="2" style="min-width: 60px; width: 60px;">Unidad</th>
+                                                                    <th colspan="2" style="min-width: 160px; width: 160px;">Especificaciones</th>
+                                                                    <th colspan="2" style="min-width: 160px; width: 160px;">Resultados</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Conclusion</th>
+                                                                </tr>
+                                                                <tr>
                                                                     <th></th>
+                                                                    <th style="min-width: 80px; width: 80px;"></th>
+                                                                    <th style="min-width: 40px; width: 40px;">x10</th>
+                                                                    <th style="min-width: 80px; width: 80px;"></th>
+                                                                    <th style="min-width: 40px; width: 40px;">x10</th>
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>

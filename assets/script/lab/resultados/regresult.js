@@ -1,3 +1,5 @@
+const objListaresult = {};
+const objListaresultold = {};
 var otblListServiciolab, otblListResultados;
 var varfdesde = '%', varfhasta = '%';
 var collapsedGroupsEq = {},collapsedGroupsEq1 = {},collapsedGroupsEq2 = {};
@@ -360,13 +362,124 @@ verResultados = function(id){
             $('#txtfot').val(this.fordenservicio);  
             $('#txtidcotizacion').val(this.cinternocotizacion);  
             $('#txtnroversion').val(this.nversioncotizacion);  
-            $('#txtidordenservicio').val(this.cinternoordenservicio);            
+            $('#txtidordenservicio').val(this.cinternoordenservicio); 
+            
+            if (this.conttipoprod > 0){                
+                $('#divtblListResultados').show();           
+                $('#divtblListResultadosold').hide();
+                objListaresult.viewList(id)
+            }else{           
+                $('#divtblListResultados').hide();           
+                $('#divtblListResultadosold').show();
+                objListaresultold.viewListold(id)
+            }
+                      
             
         });
     });
-    getListResultados(id);
+    //getListResultados(id);
 };
 
+
+/* ******** */
+/**
+* Listar de servicio
+*/
+
+objListaresult.viewList = function (id) {        
+    var parametros = {
+        "cinternoordenservicio" : id,
+    };
+    $.ajax({
+       url      :  baseurl+"lab/resultados/cregresult/getlistresultados",
+       method   : "GET",
+       data     : parametros, 
+    }).done(function(data){
+        $('#tblListResultados tbody').html(data)
+        objListaresult.tableData()
+        
+        $("#tblListResultados thead .tabledit-edit-button").hide();
+        $("#tblListResultados tbody .trcab .tabledit-edit-button").hide();
+        $("#tblListResultados tbody .trtipo .tabledit-edit-button").hide();
+    })
+};
+objListaresult.tableData = function () {
+    $('#tblListResultados').Tabledit({
+        url:'lab/resultados/cregresult/setresultados',
+        eventType: 'dblclick',
+        editButton: true,
+        deleteButton: false,
+        saveButton: false,
+        autoFocus: false,
+        hideIdentifier: true,
+		restoreButton: false,
+        buttons: {
+            edit: {
+                class: 'btn btn-sm btn-primary',
+                html: '<span class="fas fa-pencil-alt"></span>',
+                action: 'edit'
+            }
+        },
+        columns:{
+            identifier : [0,'ID'],
+            editable:[[4, 'unidadmedida', '{"565":"-","561":"%","784":"% (Ac. acético)","776":"% (Ac. cítrico)","611":"% (Ac. Láctico)","A43":"% (Ác. málico)","612":"% (Ac. Sulfúrico)","781":"% (Al 15% Humedad)","B61":"% (Amoniaco)","B29":"% del extracto seco","E76":"% Vol.","743":"%(Ac. Oleico)","849":"%(Ac. Palmitico)","941":"%p/p","999":"%V","850":"(20ºC)","872":"(25º)","A44":"(g/100g) Base Seca","782":"(mg KOH)/g)","943":"\ Hg","938":"°D","940":"°Z","991":"µg retinol/100g","873":"µs/cm","880":"Ausencia / 100 ml","563":"Ausencia / Presencia","906":"Ausencia en 25g / Presencia en 25g","976":"Ausencia o Presencia / 25 g","977":"Ausencia o Presencia/100g","A57":"Ausencia o Presencia/1L ","A42":"B. cereus / superficie","989":"CIO2 - mg/L","988":"CIO3 - mg/L","773":"cm","982":"Coliform bacilli en 25 g","945":"Coliformes / 1 g","912":"cp","944":"CP (25ºC)","A82":"cps (20ºC)","A54":"cps (25ºC)","629":"cps (50ºC)","A55":"cps (65ºC)","A56":"cps (97ºC)","631":"cTs (100ºC)","J12":"dS/m","851":"E. coli / 1 g","968":"E. coli / 1 g","918":"E. coli / 100cm2","I67":"E. coli / 25 g","626":"E. coli / área","627":"E. coli / cm2","760":"E. coli / manos","837":"E. coli / superficie","613":"E. coli O 157:H7 / 25 g","A48":"E. coli O 157:H7 / 25 ml","E74":"E. coli O 157:H7/325 g","981":"Enterobacterias / 1 g","610":"Estéril / No Estéril","737":"g","961":"g / L","957":"g/100g","845":"g/100g (Límite de Cuantificación: 0.08)","974":"g/100ml","955":"g/115g","956":"g/130g","I91":"g/200mL","946":"g/Kg","B28":"g/L (Ác. acético)","A60":"g/m2","771":"g/ml","783":"g/ml (20ºC)","630":"g/ml (53ºC)","628":"g/ml (65ºC)","980":"g/paquete","954":"g/porción","993":"gr/dm3","A53":"gr/ml ( 97ºC)","A51":"gr/ml (25ºC)","A52":"gr/ml (65ºC)","775":"Kcal/100g","J55":"Kcal/100ml","I92":"Kcal/200mL","990":"Kg","E75":"Kg/m3","437":"Listeria / 100 Cm2","436":"Listeria / 25 g","I72":"Listeria / 25ml ","994":"Listeria / manos","438":"Listeria / superficie","E73":"Listeria monocytogenes/325 g","I79":"Listeria spp.","992":"Lt.","A58":"LUX","I65":"mcg/100g","I66":"mcgRE/g","744":"meq de Ácido/Kg","741":"meq Peróxido /Kg Aceite","934":"meq/Kg","J13":"meq/L","562":"meqPeroxido / Kg Grasa","939":"mg","960":"mg / 100 ml AA","888":"mg Ac Ascorbico/100g","J10":"mg Ac Ascorbico/100ml","I78":"mg Ácido sórbico","I68":"mg C3H6O3","886":"mg CaCO3/L","947":"mg Imidacloprid/Kg","772":"mg Nitrógeno Amoniacal/100g","887":"mg Nitrógeno Amoniacal/L","J16":"mg/100 gr (Ac. Sulfúrico)","963":"mg/100 mL","867":"mg/100g","I74":"mg/100ml","I88":"mg/200mL","I75":"mg/240ml","J15":"mg/dm2","625":"mg/Kg","618":"mg/L","619":"mgCaO3/L","J57":"miliequivalentes/Kg","972":"min. 10^7","774":"ml","A41":"ml/L","967":"mm","995":"mmHg","435":"N° / 100 Ml","785":"NBV/100g","J14":"ng/g","J11":"NMP / 100 g","054":"NMP / 100 ml","052":"NMP / g","053":"NMP / ml","620":"NTU","623":"NUO","624":"NUS","919":"ºBaumé","738":"ºBe","566":"ºBrix","840":"ºC","966":"ºHaugh","962":"Org / 100 mL","609":"Org/L","996":"ºZ","740":"pH (10ºBrix)","739":"pH Solución 50%","632":"Positivo/Negativo","839":"ppb","564":"ppm","E78":"ppm de Oleato de Sodio","848":"Presencia/Ausencia","969":"Pseudomonas aeruginosa / 1 g","I70":"Pseudomonas aeruginosa/ 1g","987":"Pseudomonas/100ml","I69":"Pulg-Hg","838":"S. aureus / superficie","060":"Salmonella / 100Cm2","A49":"Salmonella / 25 ml","058":"Salmonella / 25g","998":"Salmonella / 4 superficies","868":"Salmonella / 50 g","959":"Salmonella / 750 g","059":"Salmonella / área","B24":"Salmonella / cm2","745":"Salmonella / manos","780":"Salmonella / superficie","A59":"Salmonella sp./ 25g","E72":"Salmonella/325 g","878":"Samonella / 100 ml","846":"Shigella/25 g","970":"Staphylococcus aureus / 1 g","753":"Staphylococcus aureus / 100 cm2","752":"Staphylococcus aureus / área","879":"Staphylococcus aureus / manos","933":"Staphylococcus aureus / superficie ","971":"Streptococcus / 10 g","622":"UCV escala Pt/Co","434":"UFC / 15 Min","997":"UFC / 4 superficies","056":"UFC / área","055":"UFC / Cm2","049":"UFC / g ","983":"UFC / g (Est.)","057":"UFC / manos","050":"UFC / ml","985":"UFC / ml (Est.)","750":"UFC / placa 40 cm2","758":"UFC / placa 60 cm2","779":"UFC / superficie","051":"UFC/ 100 ml","A47":"UFC/ 100g","978":"UFC/ ml 35ºC/48 h R2A","608":"UFC/15","616":"UFP/ml","927":"ug/100g","I76":"ug/100ml","I73":"ug/200ml","I89":"ug/200mL","I77":"ug/240ml","964":"ug/g","770":"ug/Kg","I71":"ug/L","A84":"ug/mL","I64":"ugRE/g","742":"UI","913":"UI/100g","I90":"UI/200mL","621":"umho/cm","J56":"unidades kertesz","986":"V. cholerae/manos","942":"Vibrio cholerae / 100 cm2","617":"Vibrio cholerae / 25 g","909":"Vibrio parahaemolyticus / 25 g"}'],
+                      [5,'condi_espe', '{"Ausencia": "Ausencia", "=": "=", "<": "<", ">": ">", "<=": "<=", ">=": ">="}'],[6,'valor_espe'],[7,'valexpo_espe'],[8,'condi_resul', '{"Ausencia": "Ausencia", "=": "=", "<": "<", ">": ">", "<=": "<=", ">=": ">="}'],[9,'valor_resul'],[10,'valexpo_resul'],[11,'sresultado', '{"N": "NO CONFORME", "C": "CONFORME", "NA": "NO APLICA", "AA": "ALTO EN AZUCAR", "AS": "ALTO EN SODIO", "GS": "ALTO EN GRASAS SATURADAS", "GT": "CONTIENE GRASAS TRANS"}']]
+        },
+        onSuccess: function(data, textStatus, jqXHR) {
+            objListaresult.viewList
+        },
+    });
+};
+
+
+objListaresultold.viewListold = function (id) {  
+    var parametros = {
+        "cinternoordenservicio" : id,
+    };
+    $.ajax({
+       url      :  baseurl+"lab/resultados/cregresult/getlistresultadosold",
+       method   : "GET",
+       data     : parametros, 
+    }).done(function(data){
+        $('#tblListResultadosold tbody').html(data)
+        objListaresultold.tableDataold();
+        
+        $("#tblListResultadosold thead .tabledit-edit-button").hide();
+        $("#tblListResultadosold tbody .trcab .tabledit-edit-button").hide();
+        $("#tblListResultadosold tbody .trtipo .tabledit-edit-button").hide();
+    })
+};
+objListaresultold.tableDataold = function () {
+    $('#tblListResultadosold').Tabledit({
+        url:'lab/resultados/cregresult/setresultadosold',
+        eventType: 'dblclick',
+        editButton: true,
+        deleteButton: false,
+        saveButton: false,
+        autoFocus: false,
+        hideIdentifier: true,
+		restoreButton: false,
+        buttons: {
+            edit: {
+                class: 'btn btn-sm btn-primary',
+                html: '<span class="fas fa-pencil-alt"></span>',
+                action: 'edit'
+            }
+        },
+        columns:{
+            identifier : [0,'ID'],
+            editable:[[4, 'unidadmedida', '{"565":"-","561":"%","784":"% (Ac. acético)","776":"% (Ac. cítrico)","611":"% (Ac. Láctico)","A43":"% (Ác. málico)","612":"% (Ac. Sulfúrico)","781":"% (Al 15% Humedad)","B61":"% (Amoniaco)","B29":"% del extracto seco","E76":"% Vol.","743":"%(Ac. Oleico)","849":"%(Ac. Palmitico)","941":"%p/p","999":"%V","850":"(20ºC)","872":"(25º)","A44":"(g/100g) Base Seca","782":"(mg KOH)/g)","943":"\ Hg","938":"°D","940":"°Z","991":"µg retinol/100g","873":"µs/cm","880":"Ausencia / 100 ml","563":"Ausencia / Presencia","906":"Ausencia en 25g / Presencia en 25g","976":"Ausencia o Presencia / 25 g","977":"Ausencia o Presencia/100g","A57":"Ausencia o Presencia/1L ","A42":"B. cereus / superficie","989":"CIO2 - mg/L","988":"CIO3 - mg/L","773":"cm","982":"Coliform bacilli en 25 g","945":"Coliformes / 1 g","912":"cp","944":"CP (25ºC)","A82":"cps (20ºC)","A54":"cps (25ºC)","629":"cps (50ºC)","A55":"cps (65ºC)","A56":"cps (97ºC)","631":"cTs (100ºC)","J12":"dS/m","851":"E. coli / 1 g","968":"E. coli / 1 g","918":"E. coli / 100cm2","I67":"E. coli / 25 g","626":"E. coli / área","627":"E. coli / cm2","760":"E. coli / manos","837":"E. coli / superficie","613":"E. coli O 157:H7 / 25 g","A48":"E. coli O 157:H7 / 25 ml","E74":"E. coli O 157:H7/325 g","981":"Enterobacterias / 1 g","610":"Estéril / No Estéril","737":"g","961":"g / L","957":"g/100g","845":"g/100g (Límite de Cuantificación: 0.08)","974":"g/100ml","955":"g/115g","956":"g/130g","I91":"g/200mL","946":"g/Kg","B28":"g/L (Ác. acético)","A60":"g/m2","771":"g/ml","783":"g/ml (20ºC)","630":"g/ml (53ºC)","628":"g/ml (65ºC)","980":"g/paquete","954":"g/porción","993":"gr/dm3","A53":"gr/ml ( 97ºC)","A51":"gr/ml (25ºC)","A52":"gr/ml (65ºC)","775":"Kcal/100g","J55":"Kcal/100ml","I92":"Kcal/200mL","990":"Kg","E75":"Kg/m3","437":"Listeria / 100 Cm2","436":"Listeria / 25 g","I72":"Listeria / 25ml ","994":"Listeria / manos","438":"Listeria / superficie","E73":"Listeria monocytogenes/325 g","I79":"Listeria spp.","992":"Lt.","A58":"LUX","I65":"mcg/100g","I66":"mcgRE/g","744":"meq de Ácido/Kg","741":"meq Peróxido /Kg Aceite","934":"meq/Kg","J13":"meq/L","562":"meqPeroxido / Kg Grasa","939":"mg","960":"mg / 100 ml AA","888":"mg Ac Ascorbico/100g","J10":"mg Ac Ascorbico/100ml","I78":"mg Ácido sórbico","I68":"mg C3H6O3","886":"mg CaCO3/L","947":"mg Imidacloprid/Kg","772":"mg Nitrógeno Amoniacal/100g","887":"mg Nitrógeno Amoniacal/L","J16":"mg/100 gr (Ac. Sulfúrico)","963":"mg/100 mL","867":"mg/100g","I74":"mg/100ml","I88":"mg/200mL","I75":"mg/240ml","J15":"mg/dm2","625":"mg/Kg","618":"mg/L","619":"mgCaO3/L","J57":"miliequivalentes/Kg","972":"min. 10^7","774":"ml","A41":"ml/L","967":"mm","995":"mmHg","435":"N° / 100 Ml","785":"NBV/100g","J14":"ng/g","J11":"NMP / 100 g","054":"NMP / 100 ml","052":"NMP / g","053":"NMP / ml","620":"NTU","623":"NUO","624":"NUS","919":"ºBaumé","738":"ºBe","566":"ºBrix","840":"ºC","966":"ºHaugh","962":"Org / 100 mL","609":"Org/L","996":"ºZ","740":"pH (10ºBrix)","739":"pH Solución 50%","632":"Positivo/Negativo","839":"ppb","564":"ppm","E78":"ppm de Oleato de Sodio","848":"Presencia/Ausencia","969":"Pseudomonas aeruginosa / 1 g","I70":"Pseudomonas aeruginosa/ 1g","987":"Pseudomonas/100ml","I69":"Pulg-Hg","838":"S. aureus / superficie","060":"Salmonella / 100Cm2","A49":"Salmonella / 25 ml","058":"Salmonella / 25g","998":"Salmonella / 4 superficies","868":"Salmonella / 50 g","959":"Salmonella / 750 g","059":"Salmonella / área","B24":"Salmonella / cm2","745":"Salmonella / manos","780":"Salmonella / superficie","A59":"Salmonella sp./ 25g","E72":"Salmonella/325 g","878":"Samonella / 100 ml","846":"Shigella/25 g","970":"Staphylococcus aureus / 1 g","753":"Staphylococcus aureus / 100 cm2","752":"Staphylococcus aureus / área","879":"Staphylococcus aureus / manos","933":"Staphylococcus aureus / superficie ","971":"Streptococcus / 10 g","622":"UCV escala Pt/Co","434":"UFC / 15 Min","997":"UFC / 4 superficies","056":"UFC / área","055":"UFC / Cm2","049":"UFC / g ","983":"UFC / g (Est.)","057":"UFC / manos","050":"UFC / ml","985":"UFC / ml (Est.)","750":"UFC / placa 40 cm2","758":"UFC / placa 60 cm2","779":"UFC / superficie","051":"UFC/ 100 ml","A47":"UFC/ 100g","978":"UFC/ ml 35ºC/48 h R2A","608":"UFC/15","616":"UFP/ml","927":"ug/100g","I76":"ug/100ml","I73":"ug/200ml","I89":"ug/200mL","I77":"ug/240ml","964":"ug/g","770":"ug/Kg","I71":"ug/L","A84":"ug/mL","I64":"ugRE/g","742":"UI","913":"UI/100g","I90":"UI/200mL","621":"umho/cm","J56":"unidades kertesz","986":"V. cholerae/manos","942":"Vibrio cholerae / 100 cm2","617":"Vibrio cholerae / 25 g","909":"Vibrio parahaemolyticus / 25 g"}'],
+                      [5,'despecificacion'],[6,'despecificacionexp'],[7,'dresultado'],[8,'dresultadoexp'],[9,'sresultado', '{"N": "NO CONFORME", "C": "CONFORME", "NA": "NO APLICA", "AA": "ALTO EN AZUCAR", "AS": "ALTO EN SODIO", "GS": "ALTO EN GRASAS SATURADAS", "GT": "CONTIENE GRASAS TRANS"}']]
+        },
+        onSuccess: function(data, textStatus, jqXHR) {
+            objListaresultold.viewListold
+        },
+    });
+};
+
+
+
+/*
 getListResultados = function(id){         
     var parametros = {
         "cinternoordenservicio" : id,
@@ -579,6 +692,7 @@ $('#modalIngresult').on('show.bs.modal', function (e) {
     
 
 });
+*/
 
 $('#btnRetornarLista').click(function(){
     $('#tablab a[href="#tablab-list"]').tab('show');  

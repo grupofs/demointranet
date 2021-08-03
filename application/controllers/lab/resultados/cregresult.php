@@ -58,7 +58,58 @@ class Cregresult extends CI_Controller {
 	}
 
     public function getlistresultados() { // Buscar Cotizacion
-		$varnull = '';
+        
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+        $cinternoordenservicio = $this->input->get('cinternoordenservicio');
+
+        $retornacab = $this->mregresult->getlistresultadoscab($cinternoordenservicio);
+        foreach ($retornacab as $rowcab){
+            ?>
+            <tr class="trcab">
+                <td></td>
+                <td colspan="11"><b><?php echo $rowcab->codmuestra .' :: '. $rowcab->drealproducto?></b></td>
+            </tr>
+            <?php
+            $cmuestra = $rowcab->cmuestra;
+            $retornatipo = $this->mregresult->getlistresultadoscabtipo($cinternoordenservicio,$cmuestra);
+            foreach ($retornatipo as $rowtipo){
+                ?>
+                <tr class="trtipo">
+                    <td></td>
+                    <td></td>
+                    <td colspan="10"><b><?php echo $rowtipo->tipoensayo?></b></td>
+                </tr>
+                <?php
+                $parametros = array(
+                    '@cinternoordenservicio'     => $cinternoordenservicio,
+                    '@cmuestra'     => $rowcab->cmuestra,
+                    '@zctipoensayo'     => $rowtipo->zctipoensayo,
+                );
+                $retorna = $this->mregresult->getlistresultados($parametros);
+                foreach ($retorna as $row){
+                    ?>
+                    <tr>
+                        <td><?php echo $row->cinternoordenservicio.';'.$row->nordenproducto.';'.$row->cmuestra.';'.$row->censayo ?></td>
+                        <td><?php echo $row->POS ?></td>
+                        <td><?php echo $row->censayofs ?></td>
+                        <td><?php echo $row->densayo ?></td>
+                        <td><?php echo $row->unidadmedida ?></td>
+                        <td><?php echo $row->condi_espe ?></td>
+                        <td><?php echo round($row->valor_espe, 3); ?></td>
+                        <td><?php echo round($row->valexpo_espe, 0); ?></td>
+                        <td><?php echo $row->condi_resul ?></td>
+                        <td><?php echo round($row->valor_resul, 3); ?></td>
+                        <td><?php echo round($row->valexpo_resul, 0);  ?></td>
+                        <td><?php echo $row->sresultado ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+        }
+        
+		/*$varnull = '';
 
 		$cinternoordenservicio   = $this->input->post('cinternoordenservicio');
         
@@ -66,12 +117,68 @@ class Cregresult extends CI_Controller {
 			'@cinternoordenservicio'     => $cinternoordenservicio,
         );
         $retorna = $this->mregresult->getlistresultados($parametros);
-        echo json_encode($retorna);		
+        echo json_encode($retorna);	*/	
     }
 
+    public function getlistresultadosold() { // Buscar Cotizacion
+        
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+        $cinternoordenservicio = $this->input->get('cinternoordenservicio');
+
+        $retornacab = $this->mregresult->getlistresultadoscab($cinternoordenservicio);
+        foreach ($retornacab as $rowcab){
+            ?>
+            <tr class="trcab">
+                <td></td>
+                <td colspan="9"><b><?php echo $rowcab->codmuestra .' :: '. $rowcab->drealproducto?></b></td>
+            </tr>
+            <?php
+            $cmuestra = $rowcab->cmuestra;
+            $retornatipo = $this->mregresult->getlistresultadoscabtipo($cinternoordenservicio,$cmuestra);
+            foreach ($retornatipo as $rowtipo){
+                ?>
+                <tr class="trtipo">
+                    <td></td>
+                    <td></td>
+                    <td colspan="8" ><b><?php echo $rowtipo->tipoensayo?></b></td>
+                </tr>
+                <?php
+                $parametros = array(
+                    '@cinternoordenservicio'     => $cinternoordenservicio,
+                    '@cmuestra'     => $rowcab->cmuestra,
+                    '@zctipoensayo'     => $rowtipo->zctipoensayo,
+                );
+                $retorna = $this->mregresult->getlistresultados($parametros);
+                foreach ($retorna as $row){
+                    ?>
+                    <tr>
+                        <td><?php echo $row->cinternoordenservicio.';'.$row->nordenproducto.';'.$row->cmuestra.';'.$row->censayo ?></td>
+                        <td><?php echo $row->POS ?></td>
+                        <td><?php echo $row->censayofs ?></td>
+                        <td><?php echo $row->densayo ?></td>
+                        <td><?php echo $row->unidadmedida ?></td>
+                        <td><?php echo $row->despecificacion ?></td>
+                        <td><?php echo $row->despecificacionexp ?></td>
+                        <td><?php echo $row->dresultado ?></td>
+                        <td><?php echo $row->dresultadoexp ?></td>
+                        <td><?php echo $row->sresultado ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+        }
+    }
+    
     public function getcboum() {	// Visualizar los Tipo Equipos de Registro	
 		
 		$resultado = $this->mregresult->getcboum();
+		echo json_encode($resultado);
+	}
+    public function getum() {	// Visualizar los Tipo Equipos de Registro	
+		
+		$resultado = $this->mregresult->getum();
 		echo json_encode($resultado);
 	}
 
@@ -680,45 +787,69 @@ class Cregresult extends CI_Controller {
     
     public function setresultados() { // Registrar informe PT
 		$varnull = '';
-		
-        $cinternoordenservicio  = $this->input->post('mhdncinternoordenservicio');
-		$cinternocotizacion 	= $this->input->post('mhdncinternocotizacion');
-		$nversioncotizacion 	= $this->input->post('mhdnnversioncotizacion');
-		$nordenproducto 	    = $this->input->post('mhdnnordenproducto');
-        $cmuestra 	            = $this->input->post('mhdncmuestra');
-        $censayo 	            = $this->input->post('mhdncensayo');
-        $nviausado 	            = $this->input->post('mhdnnviausado');
-        $zctipounidadmedida     = $this->input->post('mcboum');
-        $condi_espe 	        = $this->input->post('mhdncondi');
-        $valor_espe 	        = $this->input->post('mtxtvalor_esp');
-        $esexpo_espe            = $this->input->post('mcbosexponente_esp');
-        $valexpo_espe 	        = $this->input->post('mtxtvalorexpo_esp');
-        $condi_resul 	        = $this->input->post('mhdncondi_res');
-        $valor_resul 	        = $this->input->post('mtxtvalor_resul');
-        $esexpo_resul 	        = $this->input->post('mcbosexponente_resul');
-        $valexpo_resul 	        = $this->input->post('mtxtvalorexpo_resul');
-        $sresultado 	        = $this->input->post('mcboresultado');
+		$id_ser = $this->input->post('ID');
+        $id_array = preg_split("/;/",$id_ser);
+
+        $cinternoordenservicio  = $id_array[0];
+		$nordenproducto 	    = $id_array[1];
+        $cmuestra 	            = $id_array[2];
+        $censayo 	            = $id_array[3];
+        $zctipounidadmedida     = $this->input->post('unidadmedida');
+        $condi_espe 	        = $this->input->post('condi_espe');
+        $valor_espe 	        = $this->input->post('valor_espe');
+        $valexpo_espe 	        = $this->input->post('valexpo_espe');
+        $condi_resul 	        = $this->input->post('condi_resul');
+        $valor_resul 	        = $this->input->post('valor_resul');
+        $valexpo_resul 	        = $this->input->post('valexpo_resul');
+        $sresultado 	        = $this->input->post('sresultado');
 
         $parametros = array(
             '@cinternoordenservicio'    =>  $cinternoordenservicio,
-            '@cinternocotizacion'   	=>  $cinternocotizacion,
-            '@nversioncotizacion'   	=>  $nversioncotizacion,
             '@nordenproducto'      		=>  $nordenproducto,
             '@cmuestra'    		        =>  $cmuestra,
             '@censayo'    		        =>  $censayo,
-            '@nviausado'    		    =>  $nviausado,
             '@zctipounidadmedida'    	=>  $zctipounidadmedida,
             '@condi_espe'    		    =>  $condi_espe,
             '@valor_espe'    		    =>  $valor_espe,
-            '@esexpo_espe'    		    =>  $esexpo_espe,
             '@valexpo_espe'    		    =>  $valexpo_espe,
             '@condi_resul'    		    =>  $condi_resul,
             '@valor_resul'    		    =>  $valor_resul,
-            '@esexpo_resul'    		    =>  $esexpo_resul,
             '@valexpo_resul'    		=>  $valexpo_resul,
             '@sresultado'    		    =>  $sresultado,
         );
         $retorna = $this->mregresult->setresultados($parametros);
+        echo json_encode($retorna);	
+    }
+    
+    public function setresultadosold() { // Registrar informe PT
+		$varnull = '';
+		$id_ser = $this->input->post('ID');
+        $id_array = preg_split("/;/",$id_ser);
+
+        $cinternoordenservicio  = $id_array[0];
+		$nordenproducto 	    = $id_array[1];
+        $cmuestra 	            = $id_array[2];
+        $censayo 	            = $id_array[3];
+        $zctipounidadmedida     = $this->input->post('unidadmedida');
+        $despecificacion 	    = $this->input->post('despecificacion');
+        $despecificacionexp     = $this->input->post('despecificacionexp');
+        $dresultado 	        = $this->input->post('dresultado');
+        $dresultadoexp 	        = $this->input->post('dresultadoexp');
+        $sresultado 	        = $this->input->post('sresultado');
+
+        $parametros = array(
+            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@nordenproducto'      		=>  $nordenproducto,
+            '@cmuestra'    		        =>  $cmuestra,
+            '@censayo'    		        =>  $censayo,
+            '@zctipounidadmedida'    	=>  $zctipounidadmedida,
+            '@despecificacion'          =>  $despecificacion,
+            '@despecificacionexp'       =>  $despecificacionexp,
+            '@dresultado'    		    =>  $dresultado,
+            '@dresultadoexp'            =>  $dresultadoexp,
+            '@sresultado'    		    =>  $sresultado,
+        );
+        $retorna = $this->mregresult->setresultadosold($parametros);
         echo json_encode($retorna);	
     }
 
