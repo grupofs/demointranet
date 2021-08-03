@@ -441,10 +441,10 @@ class Ccotizacion extends CI_Controller {
                         <th width="10%" align="center">Codigo Metodo</th>
                         <th width="30%" align="center">METODO DE ENSAYO</th>
                         <th width="8%" align="center">AC / NOAC</th>
-                        <th width="25%" align="center">NORMA / REFERENCIA</th>
+                        <th width="27%" align="center">NORMA / REFERENCIA</th>
                         <th width="7%" align="center">Cant.</th>
-                        <th width="10%" align="center">P.UNI '.$var_moneda.'</th>
-                        <th width="10%" align="center">Precio Total '.$var_moneda.'</th>
+                        <th width="9%" align="center">P.UNI '.$var_moneda.'</th>
+                        <th width="9%" align="center">Precio Total '.$var_moneda.'</th>
                     </tr>';
                     $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
                     if ($resproddet){
