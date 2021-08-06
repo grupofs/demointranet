@@ -20,7 +20,7 @@ $(document).ready(function() {
     $('#tabctrlprov a[href="#tabctrlprov-list"]').click(function(event){return false;});
     $('#tabctrlprov a[href="#tabctrlprov-det"]').click(function(event){return false;});
 
-    $('#txtFDesde,#txtFHasta,#txtFInspeccion').datetimepicker({
+    $('#txtFDesde,#txtFHasta').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es',
@@ -195,6 +195,55 @@ $(document).ready(function() {
             return false;
         }
     });
+    $('#frmCierreespecial').validate({
+        rules: {
+        },
+        messages: {
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGCierreesp');
+            var request = $.ajax({
+                url:$('#frmCierreespecial').attr("action"),
+                type:$('#frmCierreespecial').attr("method"),
+                data:$('#frmCierreespecial').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    //$('#mhdnregIdinsp').val(this.cauditoriainspeccion);
+                    
+                    Vtitle = 'Inspección Cerrada!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);                       
+                    objPrincipal.liberarBoton(botonEvaluar);
+                    $('#mbtnCCierreesp').click();  
+                    $('#btnBuscar').click();   
+                });
+            });
+            return false;
+        }
+    });
 });
 
 fechaActual = function(){
@@ -241,10 +290,11 @@ $("#cboclieserv").change(function(){
 
     var select = document.getElementById("cboclieserv"), //El <select>
     value = select.value, //El valor seleccionado
+    valor = select.valor,
     text = select.options[select.selectedIndex].innerText;
     document.querySelector('#lblCliente').innerText = text;
 
-    var v_cboclieserv = $('#cboclieserv').val();
+    /*var v_cboclieserv = $('#cboclieserv').val();
     var params = { "ccliente":v_cboclieserv };
     $.ajax({
         type: 'ajax',
@@ -262,31 +312,11 @@ $("#cboclieserv").change(function(){
         }
     });   
     
-    /*if(v_cboclieserv != 0){
+    if(v_cboclieserv != 0){
         $("#btnNuevo").prop("disabled",false);
     }else{
         $("#btnNuevo").prop("disabled",true);
     }*/
-});
-
-$("#cboprovxclie").change(function(){
-
-    var v_cboprov = $('#cboprovxclie').val();
-    var params = { "cproveedor":v_cboprov };
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"at/ctrlprov/cregctrolprov/getcbomaqxprov",
-        dataType: "JSON",
-        async: true,
-        data: params,
-        success:function(result){
-            $("#cbomaqxprov").html(result);           
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error = cbomaqxprov');
-        }
-    });    
 });
 
 $("#btnBuscar").click(function (){
@@ -317,8 +347,7 @@ $("#btnBuscar").click(function (){
                 d.ccliente      = $('#cboclieserv').val();
                 d.fdesde        = varfdesde; 
                 d.fhasta        = varfhasta;   
-                d.cclienteprov  = $('#cboprovxclie').val();
-                d.cclientemaq   = $('#cbomaqxprov').val();
+                d.dclienteprovmaq  = $('#txtprovmaq').val();
                 d.inspector     = $('#cboinspector').val();  
             },     
             dataSrc : ''        
@@ -334,8 +363,15 @@ $("#btnBuscar").click(function (){
                             '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
                                 '<li><a title="Programar" style="cursor:pointer; color:#3c763d;" onClick="javascript:fprogramar(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.cusuarioconsultor+'\',\''+row.periodo+'\',\''+row.finspeccion+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="far fa-calendar-alt" aria-hidden="true">&nbsp;</span>&nbsp;Programar</a></li>'+
-                                '<li><a data-toggle="modal" title="Covalidar" style="cursor:pointer; color:#3c763d;" data-target="#modalConvalidacion" ><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Convalidar</a></li>'+
+                                '<li><a data-toggle="modal" title="Covalidar" style="cursor:pointer; color:#3c763d;" data-target="#modalConvalidacion" onClick="javascript:fconvalidar(\''+row.cauditoriainspeccion+'\',\''+row.finspeccion+'\');"><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Convalidar</a></li>'+
                                 '<li><a data-toggle="modal" title="Cierre" style="cursor:pointer; color:#3c763d;" data-target="#modalCierreespecial" onClick="javascript:fcierreespecial(\''+row.cauditoriainspeccion+'\',\''+row.desc_gral+'\',\''+row.areacli+'\',\''+row.lineaproc+'\',\''+row.finspeccion+'\',\''+row.zctipoestadoservicio+'\',\''+row.destado+'\',\''+row.ccliente+'\');"><span class="far fa-window-close" aria-hidden="true">&nbsp;</span>&nbsp;Cierres Especiales</a></li>'+
+                            '</ul>'+
+                        '</div>'  
+                } else if(row.valorestado == '0' && row.sultimo == 'S'){
+                    return  '<div class="dropdown" style="text-align: center;">'+
+                            '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
+                            '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
+                                '<li><a id="aReaperturar" href="'+row.cauditoriainspeccion+'" fservicio="'+row.finspeccion+'" title="Reaperturar" style="cursor:pointer; color:#3c763d;"><span class="far fa-folder-open" aria-hidden="true"> </span>&nbsp;Reaperturar</a></li>'+
                             '</ul>'+
                         '</div>'  
                 }else{
@@ -957,19 +993,51 @@ fprogramar = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,cusuarioc
     $('#Btnplan').show();
 };
 
-
-$('#modalCierreespecial').on('shown.bs.modal', function (e) { 
-    $("#txtcierreidinsp").prop({readonly:true}); 
-    $("#txtcierrefservicio").prop({readonly:true});
+$('#modalConvalidacion').on('shown.bs.modal', function (e) { 
+    $("#txtconvaliidinsp").prop({readonly:true}); 
+    $("#txtconvalifservicio").prop({readonly:true});
+        
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"at/ctrlprov/cregctrolprov/getcbocertificadora",
+        dataType: "JSON",
+        async: true,
+        success:function(result){
+            $("#cbocierreTipo").html(result); 
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error = cbocierreTipo');
+        }
+    })
     
-    $('#txtcierreFProgramado').datetimepicker({
+    
+});
+fconvalidar = function(cauditoriainspeccion,fservicio){
+    $('#txtconvaliidinsp').val(cauditoriainspeccion);
+    $('#txtconvalifservicio').val(fservicio);
+    $('#mhdnAccionconvali').val('N');
+    
+    $('#txtcierreFConvalidacion').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es',
         autoclose: true,
         todayBtn: true
-    });
+    });  
+    fechaActualconval();
+};
+fechaActualconval = function(fservicio){    
+    var fecha = new Date();		
+    var fechatring = ("0" + (fecha.getDate()+1)).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
+    $('#txtcierreFConvalidacion').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY'));
+    $('#txtcierreFConvalidacion').datetimepicker('minDate',  moment(fservicio, 'DD/MM/YYYY')); 
+};
 
+$('#modalCierreespecial').on('shown.bs.modal', function (e) { 
+    $("#txtcierreidinsp").prop({readonly:true}); 
+    $("#txtcierrefservicio").prop({readonly:true});
+        
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -986,24 +1054,102 @@ $('#modalCierreespecial').on('shown.bs.modal', function (e) {
     
     
 });
-fcierreespecial = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,fservicio,zctipoestadoservicio,destado,ccliente){
-   
+fcierreespecial = function(cauditoriainspeccion,desc_gral,areacli,lineaproc,fservicio,zctipoestadoservicio,destado,ccliente){  
     $('#txtcierreidinsp').val(cauditoriainspeccion);
-    $('#mhdnfservicio').val(fservicio);
+    $('#mhdncierrefservicio').val(fservicio);
     $('#mhdnAccioncierre').val('N');
+    
+    $('#txtcierreFProgramado,#txtcierrefservicio').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es',
+        autoclose: true,
+        todayBtn: true
+    });  
     fechaActualcierre();
-};
-fechaActualcierre = function(fservicio){    
-    var fecha = new Date();		
-    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
-    $('#txtcierreFProg').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') ); 
-    $('#txtcierrefservicio').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );    
+    $('#divcierreprograma').hide();
 
 };
 
 $("#cbocierreTipo").change(function(){
-    
+    var valor = $("option:selected", this).attr("data-lat");
+    if(valor == '0'){
+        $('#divcierreprograma').hide();
+        $('#txtcierreFProg').val('');
+        $('#mhdnfprog').val('0');        
+    }else{    
+        $('#divcierreprograma').show();
+        fechaActualcierreprog();
+        $('#mhdnfprog').val('1');
+    }
 });
+
+fechaActualcierre = function(fservicio){    
+    var fecha = new Date();		
+    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
+    $('#txtcierrefservicio').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') ); 
+};
+fechaActualcierreprog = function(fservicio){    
+    var fecha = new Date();		
+    var fechatring = ("0" + (fecha.getDate()+1)).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear();
+    $('#txtcierreFProgramado').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY'));
+    $('#txtcierreFProgramado').datetimepicker('minDate',  moment(fechatring, 'DD/MM/YYYY')); 
+};
+
+
+    
+$("body").on("click","#aReaperturar",function(event){
+    event.preventDefault();
+
+    cauditoriainspeccion = $(this).attr("href");
+    fservicio = $(this).attr("fservicio");
+    cusuario = $('#hdncusuario').val();
+
+    var params = { 
+        "cauditoriainspeccion"  : cauditoriainspeccion,
+        "fservicio"             : fservicio,
+        "cusuario"              : cusuario,
+    };
+    
+    Swal.fire({
+        title: 'Confirmar Reaperturar Inspeccion',
+        text: "¿Está seguro de Reaperturar Inspeccion?",
+        type: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Reaperturar!'
+    }).then((result) => {
+        if (result.value) {
+            var request = $.ajax({
+                type: 'POST',
+                url: baseurl+"at/ctrlprov/cregctrolprov/setreaperturar/",
+                async: true,
+                data: params,
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Re-aperturo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);         
+                    $('#btnBuscar').click(); 
+                });
+            });
+        }
+    }) 
+
+}); 
+f = function(cauditoriainspeccion,fservicio){
+
+};
+
 
 $('#swplaninsp').on('switchChange.bootstrapSwitch',function (event, state) {
     if($('#swplaninsp').prop('checked')){

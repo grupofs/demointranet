@@ -863,8 +863,7 @@ listcboSubarea_cont = function(v_ccia,v_carea,v_subarea){
             $('#mcbosubarea_cont').val(v_subarea).trigger("change"); 
         },
         error: function(){
-            a
-            lert('Error, No se puede autenticar por error = mcbosubarea');
+            alert('Error, No se puede autenticar por error = mcbosubarea');
         }
     });
 };

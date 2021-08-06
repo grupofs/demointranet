@@ -117,7 +117,7 @@ class Mregctrolprov extends CI_Model {
         }	
     }
     public function getbuscarctrlprov($parametros) { // Recupera Listado de Propuestas        
-		$procedure = "call usp_at_ctrlprov_getbuscarctrlprov(?,?,?,?,?,?,?,?,?)";
+		$procedure = "call usp_at_ctrlprov_getbuscarctrlprov(?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -465,7 +465,7 @@ class Mregctrolprov extends CI_Model {
             
             foreach ($query->result() as $row)
             {
-                $listas .= '<option valor="'.$row->nvalor.'" value="'.$row->ctipo.'">'.$row->dregistro.'</option>';  
+                $listas .= '<option value="'.$row->ctipo.'" data-lat="'.$row->nvalor.'">'.$row->dregistro.'</option>';  
             }
                return $listas;
         }{
@@ -475,7 +475,7 @@ class Mregctrolprov extends CI_Model {
     public function setcierreespecial($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
 
-        $procedure = "call usp_at_ctrlprov_setcierreespecial(?,?,?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_at_ctrlprov_setcierreespecial(?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -488,6 +488,40 @@ class Mregctrolprov extends CI_Model {
             return $query->result(); 
         }   
     } 
+    public function setreaperturar($parametros) {  // Registrar evaluacion PT
+        $this->db->trans_begin();
+
+        $procedure = "call usp_at_ctrlprov_setreaperturar(?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    } 
+    
+    public function getcbocertificadora() { // Listar Ensayos	
+        $sql = "select ccertificadora, drazonsocial from mcertificadora order by drazonsocial ASC ;";
+        $query  = $this->db->query($sql);
+        
+        if ($query->num_rows() > 0) {
+
+            $listas = '<option value="" selected="selected">::Elegir</option>';
+            
+            foreach ($query->result() as $row)
+            {
+                $listas .= '<option value="'.$row->ccertificadora.'" >'.$row->drazonsocial.'</option>';  
+            }
+               return $listas;
+        }{
+            return false;
+        }		
+    }
 
 }
 ?>

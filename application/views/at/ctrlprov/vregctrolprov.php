@@ -119,23 +119,19 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Proveedor</label>
-                                                    <select class="form-control select2bs4" id="cboprovxclie" name="cboprovxclie" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
+                                                <div class="form-group"> 
+                                                    <label>Proveedor / Maquilador</label>
+                                                    <!--<div class="checkbox"><label>
+                                                        <div class="d-inline">
+                                                            <input type="radio" id="rdBProv" value="%" name="rBuscar"/> <b>Proveedor</b>
+                                                        </div>
+                                                        <div class="d-inline">
+                                                            <input type="radio" id="rdBMaqu" value="%" name="rBuscar"/> <b>Maquilador</b>
+                                                        </div>
+                                                    </label></div>-->
+                                                    <input type="text" class="form-control" id="txtprovmaq" name="txtprovmaq">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Maquilador</label>
-                                                    <select class="form-control select2bs4" id="cbomaqxprov" name="cbomaqxprov" style="width: 100%;">
-                                                        <option value="" selected="selected">Cargando...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Inspector</label>
@@ -551,6 +547,7 @@
         <form class="form-horizontal" id="frmCierreespecial" name="frmCierreespecial" action="<?= base_url('at/ctrlprov/cregctrolprov/setcierreespecial')?>" method="POST" enctype="multipart/form-data" role="form">         
             <input type="hidden" id="mhdncierrefservicio" name="mhdncierrefservicio">   
             <input type="hidden" id="mhdnAccioncierre" name="mhdnAccioncierre">
+            <input type="hidden" id="mhdnfprog" name="mhdnfprog">
             <input type="hidden" id="hdncusuario" name="hdncusuario" value="<?php echo $cusuario ?>">                       
             <div class="form-group">  
                 <div class="row">
@@ -575,8 +572,8 @@
                         </div>
                     </div>
                 </div>   
-                <div class="row" id="cierreprograma">
-                    <div class="col-md-3"> 
+                <div class="row" id="divcierreprograma">
+                    <div class="col-md-6"> 
                         <div class="text-info">F. Programado</div>                     
                         <div class="input-group date" id="txtcierreFProgramado" data-target-input="nearest">
                             <input type="text" id="txtcierreFProg" name="txtcierreFProg" class="form-control datetimepicker-input" data-target="#txtcierreFProgramado"/>
@@ -632,28 +629,82 @@
             </button>
         </div>
 
-        <div class="modal-body">          
-            <input type="hidden" id="mhdnAccionconvali" name="mhdnAccionconvali">                          
+        <div class="modal-body">         
+            <input type="hidden" id="mhdnAccionconvali" name="mhdnAccionconvali">  
+            <input type="hidden" id="hdncusuarioconvali" name="hdncusuarioconvali" value="<?php echo $cusuario ?>">                          
             <div class="form-group">  
                 <div class="row">
-                    <div class="col-md-3"> 
+                    <div class="col-md-4"> 
                         <div class="text-info">Codigo</div>
                         <div>    
-                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control"><!-- ID -->
+                            <input type="text" name="txtconvaliidinsp"id="txtconvaliidinsp" class="form-control">
                         </div>
                     </div> 
-                    <div class="col-md-3"> 
-                        <div class="text-info">Fecha</div>
+                    <div class="col-md-4"> 
+                        <div class="text-info">Fecha Servicio</div>
                         <div>    
-                            <input type="text" name="txtcierrefservicio"id="txtcierrefservicio" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask><!-- ID -->
+                            <input type="text" name="txtconvalifservicio"id="txtconvalifservicio" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                         </div>
                     </div> 
                 </div> 
             </div>                         
             <div class="form-group">  
                 <div class="row">
+                    <div class="col-md-4"> 
+                        <div class="text-info">F. Convalidacion</div>                     
+                        <div class="input-group date" id="txtcierreFConvalidacion" data-target-input="nearest">
+                            <input type="text" id="txtcierreFConva" name="txtcierreFConva" class="form-control datetimepicker-input" data-target="#txtcierreFConvalidacion"/>
+                            <div class="input-group-append" data-target="#txtcierreFConvalidacion" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                             </div>
+                        </div>
+                    </div> 
+                    <div class="col-md-8"> 
+                        <div class="text-info">Nro Documento</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control">
+                        </div>
+                    </div> 
+                </div> 
+            </div>          
+            <div class="form-group">  
+                <div class="row">
                     <div class="col-md-6">
-                        <div class="text-info">Tipo de Cierre </div>
+                        <div class="text-info">Certificadora </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocertificadora" name="cbocertificadora" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-info">Certificaciones </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocierreTipo" name="cbocierreTipo" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+            <div class="form-group">  
+                <div class="row"> 
+                    <div class="col-md-3">
+                        <div class="text-info">Resultado </div>
+                        <div>
+                            <select class="form-control select2bs4" id="cbocierreTipo" name="cbocierreTipo" style="width: 100%;">
+                                <option value="" selected="selected">Cargando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="text-info">Result. Certificadora </div>
+                        <div>    
+                            <input type="number" name="txtcierreviatico"id="txtcierreviatico" class="form-control" min="0" value="0">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-info">Aprobado FS-FSC </div>
                         <div>
                             <select class="form-control select2bs4" id="cbocierreTipo" name="cbocierreTipo" style="width: 100%;">
                                 <option value="" selected="selected">Cargando...</option>
@@ -661,6 +712,58 @@
                         </div>
                     </div>
                 </div> 
+            </div> 
+            <div class="form-group">  
+                <div class="row"> 
+                    <div class="col-md-4"> 
+                        <div class="text-info">Criterio Result.</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control">
+                        </div>
+                    </div> 
+                    <div class="col-md-4"> 
+                        <div class="text-info">Valor</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control">
+                        </div>
+                    </div> 
+                    <div class="col-md-4"> 
+                        <div class="text-info">Mes</div>
+                        <div>    
+                            <input type="text" name="txtcierreidinsp"id="txtcierreidinsp" class="form-control">
+                        </div>
+                    </div> 
+                </div> 
+            </div>  
+            <div class="form-group"> 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-info">Archivo</div>                        
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="mtxtNomarchpropu" id="mtxtNomarchpropu">                            
+                            <span class="input-group-append">                                
+                                <div class="fileUpload btn btn-secondary">
+                                    <span>Subir Archivo</span>
+                                    <input type="file" class="upload" id="mtxtArchivopropu" name="mtxtArchivopropu" onchange="escogerArchivo()"/>                      
+                                </div> 
+                            </span>  
+                        </div>
+                        <span style="color: red; font-size: 13px;">+ Los archivos deben estar en formato pdf, docx o xlsx y no deben pesar mas de 60 MB</span>                        
+                        <input type="hidden" name="mtxtRutapropu" id="mtxtRutapropu">
+                        <input type="hidden" name="mtxtarchivo" id="mtxtarchivo">
+                        <input type="hidden" name="sArchivo" id="sArchivo" value="N"> 
+                    </div>
+                </div>  
+            </div>  
+            <div class="form-group"> 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-info">Observaciones</div>
+                        <div>  
+                            <textarea class="form-control" cols="20" id="mtxtcierrecomentario" name="mtxtcierrecomentario" rows="2" ></textarea>
+                        </div>
+                    </div>
+                </div>  
             </div>   
         </div>
 

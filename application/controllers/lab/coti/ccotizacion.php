@@ -433,18 +433,18 @@ class Ccotizacion extends CI_Controller {
                         <td>'.$summuestra.'</td>
                     </tr>
                     <tr>
-                        <td colspan="4" style="height:30px;"></td>
+                        <td colspan="4" style="height:20px;"></td>
                     </tr>
                 </table>
                 <table width="700px" align="center" cellspacing="1" cellpadding="0" FRAME="void" RULES="rows">
                     <tr >
-                        <th width="10%" align="center">Codigo Metodo</th>
-                        <th width="30%" align="center">METODO DE ENSAYO</th>
-                        <th width="8%" align="center">AC / NOAC</th>
-                        <th width="27%" align="center">NORMA / REFERENCIA</th>
-                        <th width="7%" align="center">Cant.</th>
-                        <th width="9%" align="center">P.UNI '.$var_moneda.'</th>
-                        <th width="9%" align="center">Precio Total '.$var_moneda.'</th>
+                        <th width="8%" align="center">Codigo Metodo</th>
+                        <th width="28%" align="center">METODO DE ENSAYO</th>
+                        <th width="7%" align="center">AC / NOAC</th>
+                        <th width="37%" align="center">NORMA / REFERENCIA</th>
+                        <th width="5%" align="center">Cant.</th>
+                        <th width="7%" align="center">P.UNI '.$var_moneda.'</th>
+                        <th width="8%" align="center">Precio Total '.$var_moneda.'</th>
                     </tr>';
                     $resproddet = $this->mcotizacion->getpdfdatosprod($idcoti,$nversion);
                     if ($resproddet){
@@ -516,7 +516,7 @@ class Ccotizacion extends CI_Controller {
                         }
                     }
                     //<table width="698px" align="center" cellspacing="1" cellpadding="0" style="border: 1px solid black;">';
-                    $html .= '</table>                    
+                    $html .= '</table>                 
                     <table width="698px" align="center">';
                     
                 if ($ctipocambio  == 'S') :

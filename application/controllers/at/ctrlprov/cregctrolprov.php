@@ -61,8 +61,7 @@ class Cregctrolprov extends CI_Controller {
 		$fini       	= $this->input->post('fdesde');
 		$ffin       	= $this->input->post('fhasta');
 		$ccliente   	= $this->input->post('ccliente');
-		$cclienteprov   = $this->input->post('cclienteprov');
-		$cclientemaq   	= $this->input->post('cclientemaq');
+		$dclienteprovmaq   = $this->input->post('dclienteprovmaq');
 		$inspector    	= $this->input->post('inspector');
             
         $parametros = array(
@@ -72,8 +71,7 @@ class Cregctrolprov extends CI_Controller {
 			'@fini'         => ($this->input->post('fdesde') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
 			'@ffin'         => ($this->input->post('fhasta') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
 			'@ccliente'     => $ccliente,
-			'@cclienteprov' => ($this->input->post('cclienteprov') == '') ? '%' : $cclienteprov, 
-			'@cclientemaq'  => ($this->input->post('cclientemaq') == '') ? '%' : $cclientemaq,
+			'@dclienteprovmaq' => ($this->input->post('dclienteprovmaq') == '') ? '%' : '%'.$dclienteprovmaq.'%', 
 			'@inspector'	=> ($this->input->post('inspector') == '') ? '%' : $inspector,
 		);		
 		$resultado = $this->mregctrolprov->getbuscarctrlprov($parametros);
@@ -261,6 +259,7 @@ class Cregctrolprov extends CI_Controller {
 		$fservicio 				= $this->input->post('mhdncierrefservicio');
 		$fechacierre 			= $this->input->post('txtcierrefservicio');	
 		$zctipoestadoservicio	= $this->input->post('cbocierreTipo');
+		$valorestado			= $this->input->post('mhdnfprog');
 		$fechaprogramada		= $this->input->post('txtcierreFProg');		
 		$itrunco 				= $this->input->post('txtcierremonto');	
 		$ngastogeneral 			= $this->input->post('txtcierreviatico');	
@@ -271,8 +270,9 @@ class Cregctrolprov extends CI_Controller {
         $parametros = array(
             '@cauditoriainspeccion' => $cauditoriainspeccion,
             '@fservicio' 			=> ($this->input->post('mhdncierrefservicio') == '') ? '1900-01-01' : substr($fservicio, 6, 4).'-'.substr($fservicio,3 , 2).'-'.substr($fservicio, 0, 2),
-            '@fechacierre'   		=> ($this->input->post('txtcierrefservicio') == '') ? '1900-01-01' : substr($fechaservicio, 6, 4).'-'.substr($fechaservicio,3 , 2).'-'.substr($fechaservicio, 0, 2),
-            '@zctipoestadoservicio' => $zctipoestadoservicio,
+            '@fechacierre'   		=> ($this->input->post('txtcierrefservicio') == '') ? '1900-01-01' : substr($fechacierre, 6, 4).'-'.substr($fechacierre,3 , 2).'-'.substr($fechacierre, 0, 2),
+			'@zctipoestadoservicio' => $zctipoestadoservicio,
+			'@valorestado' 			=> $valorestado,
             '@fechaprogramada'   	=> ($this->input->post('txtcierreFProg') == '') ? '1900-01-01' : substr($fechaprogramada, 6, 4).'-'.substr($fechaprogramada,3 , 2).'-'.substr($fechaprogramada, 0, 2),
             '@itrunco'   			=> $itrunco,
             '@ngastogeneral'   		=> $ngastogeneral,
@@ -281,6 +281,26 @@ class Cregctrolprov extends CI_Controller {
             '@accion'   			=> $accion 
         );
 		$resultado = $this->mregctrolprov->setcierreespecial($parametros);
+		echo json_encode($resultado);
+	}
+    public function setreaperturar() {	// Visualizar Inspectores en CBO
+		$varnull = '';
+		
+		$cauditoriainspeccion 	= $this->input->post('cauditoriainspeccion');	
+		$fservicio 				= $this->input->post('fservicio');	
+		$cusuario 				= $this->input->post('cusuario');
+        
+        $parametros = array(
+            '@cauditoriainspeccion' => $cauditoriainspeccion,
+            '@fservicio' 			=> ($this->input->post('fservicio') == '') ? '1900-01-01' : substr($fservicio, 6, 4).'-'.substr($fservicio,3 , 2).'-'.substr($fservicio, 0, 2),
+            '@cusuario' 			=> $cusuario,
+        );
+		$resultado = $this->mregctrolprov->setreaperturar($parametros);
+		echo json_encode($resultado);
+	}
+    public function getcbocertificadora() {	// Visualizar Proveedor por cliente en CBO	
+        
+        $resultado 	= $this->mregctrolprov->getcbocertificadora();
 		echo json_encode($resultado);
 	}
 	
