@@ -285,7 +285,7 @@ class ccons_insp extends FS_Controller
 			}
 		}
 		// Contenedor de la ficha tecnica
-		$content = $this->load->view('at/ctrlprov/vcons_insp_pdf', [
+		$content = $this->load->view('oi/ctrlprov/vcons_insp_pdf', [
 			'caratula' => $caratula,
 			'parrafo1Pt1' => $parrafo1Pt1,
 			'parrafo1Pt2' => $parrafo1Pt2,

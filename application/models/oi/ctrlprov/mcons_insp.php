@@ -599,7 +599,7 @@ class mcons_insp extends CI_Model
 	 */
 	public function getAreaCliente(array $params)
 	{
-		$query = $this->db->query("CALL sp_consulta_ctrlprov_area_cliente(?)", $params);
+		$query = $this->db->query("CALL usp_oi_ctrlprov_areacliente(?)", $params);
 		if (!$query) {
 			return [];
 		}
