@@ -18,7 +18,7 @@ class mcons_insp extends CI_Model
 	 */
 	public function buscarInspecciones(array $data): array
 	{
-		$query = $this->db->query('CALL sp_consulta_inspeccionprov(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', $data);
+		$query = $this->db->query('CALL sp_consulta_inspeccionprov_fs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', $data);
 		if (!$query) {
 			return [];
 		}

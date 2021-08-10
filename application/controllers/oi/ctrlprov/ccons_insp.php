@@ -10,7 +10,7 @@ class ccons_insp extends FS_Controller
 	/**
 	 * CODIGO CIA
 	 */
-	const CIA = '2';
+	const CIA = '1';
 
 	/**
 	 * CODIGO DE AREA
@@ -20,7 +20,7 @@ class ccons_insp extends FS_Controller
 	/**
 	 * CODIGO DE SERVICIO
 	 */
-	const SERVICIO = '01';
+	const SERVICIO = '02';
 
 	/**
 	 * ccons_insp constructor.
@@ -29,7 +29,7 @@ class ccons_insp extends FS_Controller
 	{
 		parent::__construct();
 		$this->load->helper('consinsp');
-		$this->load->model('oi/ctrlprov/mcons_insp', 'mcons_insp');
+		$this->load->model('at/ctrlprov/mcons_insp', 'mcons_insp');
 	}
 
 	/**
@@ -285,7 +285,7 @@ class ccons_insp extends FS_Controller
 			}
 		}
 		// Contenedor de la ficha tecnica
-		$content = $this->load->view('oi/ctrlprov/vcons_insp_pdf', [
+		$content = $this->load->view('at/ctrlprov/vcons_insp_pdf', [
 			'caratula' => $caratula,
 			'parrafo1Pt1' => $parrafo1Pt1,
 			'parrafo1Pt2' => $parrafo1Pt2,
