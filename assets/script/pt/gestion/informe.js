@@ -4026,3 +4026,95 @@ $('#btnRetornarEval').click(function(){
     recuperaListregistro($idptinforme,$nro_informe);
 });
 
+
+
+listcboFabricante = function(v_RegEstu,vidfabricante){    
+    var params = { 
+        "idptregestudio":v_RegEstu 
+    };    
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"pt/cinforme/getFabricante",
+        dataType: "JSON",
+        async: true,
+        data: params,
+        success:function(result){
+            if(v_RegEstu == '1'){
+                $("#cboFabricanteReg01").html(result);  
+                $('#cboFabricanteReg01').val(vidfabricante).trigger("change"); 
+            }
+        },
+        error: function(){
+            alert('Error, no se puede cargar la lista desplegable de fabricante');
+        }
+    });
+};
+$("#mbtnnewfabricante").click(function (){
+    $('#frmMantfabricante').trigger("reset");
+
+    $("#modalMantfabricante").modal('show');
+
+    $('#mhdnAccionfabricante').val('N');
+    $('#mhdnidptregserv').val($('#cboRegEstudio').val());
+});
+$('#modalMantfabricante').on('show.bs.modal', function (e) {
+    $('#frmMantfabricante').validate({        
+        rules: {
+            txtdescripcion: {
+              required: true,
+            },
+        },
+        messages: {
+            txtdescripcion: {
+              required: "Por Favor ingrese Nombre del fabricante"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },        
+        submitHandler: function (form) {
+            const botonEvaluar = $('#mbtnGMantfabricante');
+            var request = $.ajax({
+                url:$('#frmMantfabricante').attr("action"),
+                type:$('#frmMantfabricante').attr("method"),
+                data:$('#frmMantfabricante').serialize(),
+                error: function(){
+                    Vtitle = 'Error en Guardar!!!';
+                    Vtype = 'error';
+                    sweetalert(Vtitle,Vtype); 
+                    objPrincipal.liberarBoton(botonEvaluar);
+                },
+                beforeSend: function() {
+                    objPrincipal.botonCargando(botonEvaluar);
+                }
+            });
+            request.done(function( respuesta ) {
+                var posts = JSON.parse(respuesta);
+                
+                $.each(posts, function() {
+                    Vtitle = 'Se Grabo Correctamente!!!';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype); 
+                      
+                    var vRegEstu = $('#mhdnidptregserv').val();
+                    var vidfabricante = this.id
+                    listcboFabricante(vRegEstu,vidfabricante);
+
+                    objPrincipal.liberarBoton(botonEvaluar);    
+                    $('#mbtnCMantfabricante').click();    
+                });
+            });
+            return false;
+        }
+    });
+});
+

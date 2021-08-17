@@ -812,5 +812,25 @@ class Minforme extends CI_Model {
         }   
     }     
 
+
+    
+	public function setfabricante($parametros) { // Registrar Vacaciones		
+        $this->db->trans_begin();
+    
+        $procedure = "call sp_appweb_pt_setfabricante(?,?,?,?)";
+        $query = $this->db-> query($procedure,$parametros); 
+           
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        }
+        else{
+            $this->db->trans_commit();
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            }{
+                return False;
+            }	
+        }   
+    }
 }
 ?>

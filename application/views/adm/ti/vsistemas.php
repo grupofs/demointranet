@@ -54,8 +54,6 @@
                                 <th>AREA</th> 
                                 <th>ID</th> 
                                 <th>DESCRIPCION</th>
-                                <th>TIPO</th> 
-                                <th></th> 
                               </tr>
                               </thead>
                               <tbody>
@@ -69,7 +67,7 @@
                     <h3>Mantenimiento</h3>
                     <div class="card">                      
                     <form class="form-horizontal" id="frmRegModulo" action="<?= base_url('adm/ti/csistemas/setmodulo')?>" method="POST" enctype="multipart/form-data" role="form">              
-                      <div class="card-body">                    
+                      <div id="divModelo" class="card-body">                    
                           <input type="hidden" id="mhdnIdmodulo" name="mhdnIdmodulo" > <!-- ID -->   
                           <input type="hidden" id="mhdnAccionMod" name="mhdnAccionMod" value="N"> <!-- ACCION -->                                  
                               <div class="form-group">

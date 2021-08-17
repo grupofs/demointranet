@@ -1,6 +1,7 @@
 
 var oTable_listamodulo, oTable_listaopcion, oTable_listarol, oTable_listaperm;
 var oTable_listaOpcmod;
+var collapsedGroupsmod = {};
 
 $(document).ready(function () {
     
@@ -15,11 +16,11 @@ $(document).ready(function () {
             "bDestroy"    	: true,
             "stateSave"     : true,
             "bJQueryUI"     : true,
-            "scrollY"     	: "280px",
+            "scrollY"     	: "365px",
             "scrollX"     	: true, 
-            'AutoWidth'     : true,
-            "paging"      	: true,
-            "info"        	: true,
+            'AutoWidth'     : false,
+            "paging"      	: false,
+            "info"        	: false,
             "filter"      	: true, 
             "ordering"		: false,
             "responsive"    : false,
@@ -32,19 +33,11 @@ $(document).ready(function () {
                 dataSrc : ''        
             },
             'columns'     : [
-                {"class" : "index", orderable : false, data : null},
+                {data : null, "class": "col-xxs dtrg"},
                 {data: 'CIA'},
-                {data: 'AREA'},
-                {data: 'id_modulo'},
-                {data: 'desc_modulo'},
-                {data: 'TIPO'},                           
-                {"orderable": false, 
-                    render:function(data, type, row){
-                        return '<div>' + 
-                            '<a title="Editar" style="cursor:pointer; color:#3c763d;" onclick="javascript:seleModulo(\''+row.id_modulo+'\',\''+row.ccompania+'\',\''+row.carea+'\',\''+row.desc_modulo+'\',\''+row.tipo_modulo+'\',\''+row.class_icono+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>' +
-                            '</div>' ; 
-                    }
-                }
+                {data: 'AREA', "class": "dtrg"},
+                {data: 'id_modulo', "class": "dtrg"},
+                {data: 'desc_modulo', "class": "dtrg"},
             ],
             "columnDefs": [{
                 "targets": [4], 
@@ -53,75 +46,19 @@ $(document).ready(function () {
                     return '<p><i class="'+row.class_icono+'">&nbsp;</i>&nbsp;'+row.desc_modulo+'<p>';
                 }
             }],
-            "drawCallback": function ( settings ) {
-                var api = this.api();
-                var rows = api.rows( {page:'current'} ).nodes();
-                var last = null;
-                var sublast = null;
-                var groupadmin = [];
-                var subgroupadmin = [];
-                var a = 0;
-                var b = 0
-                //api.column([1], {page:'current'} ).data().each( function ( group, i ) {   
-                $(rows).each( function (i) {
-                    group = this.cells[1].innerHTML;                     
-                    if ( last !== group ) {
-                        a++ ;
-                        //$(rows).eq( i ).before(
-                            //'<tr class="group" id="'+i+'"><td colspan="7">'+group.toUpperCase()+'</td></tr>'
-                            $(this ).before('<tr class="group" id="'+a+'"><td colspan="7">'+group.toUpperCase()+'</td></tr>');
-                        //); 
-                        groupadmin.push(a);
-                        last = group;
-                    }
-                } );
-
-                b = a;
-                $(rows).each( function (i) {
-                    
-                    subgroup = this.cells[2].innerHTML;   
-                    if ( sublast !== subgroup ) {
-                        b++;
-                        $(this ).before('<tr class="subgroup" id="'+b+'"><td colspan="7">'+subgroup.toUpperCase()+'</td></tr>');
-                        subgroupadmin.push(b);
-                        sublast = subgroup;
-                    }
-                } );
-                
-                
-                for( var k=0; k < groupadmin.length ; k++){
-                      $("#"+groupadmin[k]).nextUntil("#"+groupadmin[k+1]).addClass(' group_'+groupadmin[k]); 
-                      $("#"+groupadmin[k]).click(function(){
-                            var gid = $(this).attr("id");
-                             $(".group_"+gid).slideToggle(300);
-                      });
-                }
-                for( var k=0; k < subgroupadmin.length ; k++){
-                      $("#"+subgroupadmin[k]).nextUntil("#"+subgroupadmin[k+1]).addClass(' subgroup'+subgroupadmin[k]); 
-                      $("#"+subgroupadmin[k]).click(function(){
-                            var gid = $(this).attr("id");
-                            alert(".subgroup"+gid.style.display);
-                             $(".subgroup"+gid).slideToggle(300);
-                      });
-                }
-                                
-                /*for( var sk=0; sk < subgroupadmin.length; sk++){
-                      $("#"+subgroupadmin[sk]).nextUntil("#"+subgroupadmin[sk+1],".odd").addClass(' subgroup_'+subgroupadmin[sk]); 
-                      $("#"+subgroupadmin[sk]).nextUntil("#"+subgroupadmin[sk+1],".even").addClass(' subgroup_'+subgroupadmin[sk]); 
-
-                      //$("#"+subgroupadmin[sk]).click(function(){
-                      $("#"+subgroupadmin[sk]).on("click", ".subgroupo", function(){
-                          alert("eder");
-                            var sgid = $(this).attr("id");
-                            alert(sgid);
-                             $(".subgroup_"+sgid).slideToggle(300);
-                      });
-                }*/
-                
-            },
-            "initComplete": function (settings, json) {
-                //$("#tablalistaModulos tbody tr.group").click(); 
-                //$("#tablalistaModulos tbody tr.subgroup").click();
+            rowGroup: {
+                startRender : function ( rows, group ) {
+                    var collapsed = !!collapsedGroupsmod[group];
+        
+                    rows.nodes().each(function (r) {
+                        r.style.display = collapsed ? 'none' : '';
+                    }); 
+                    return $('<tr/>')
+                    .append('<td colspan="5" style="cursor: pointer;">' + group + ' (' + rows.count() + ')</td>')
+                    .attr('data-name', group)
+                    .toggleClass('collapsed', collapsed);
+                },
+                dataSrc: "CIA"
             },
         });
         // Enumeracion 
@@ -131,8 +68,35 @@ $(document).ready(function () {
             } );
         }).draw();  
         
-        oTable_listamodulo.column( 1 ).visible( true );  
+        oTable_listamodulo.column(1).visible( false );  
     };
+    /* COMPRIMIR GRUPO */
+    $('#tablalistaModulos tbody').on('click', 'tr.dtrg-group', function () {
+        var name = $(this).data('name');
+        collapsedGroupsmod[name] = !collapsedGroupsmod[name];
+        oTable_listamodulo.draw(true);
+    }); 
+
+    $('#tablalistaModulos tbody').on('click', 'td.dtrg', function () {
+        var tr = $(this).parents('tr');
+        var row = oTable_listamodulo.row(tr);
+        var rowData = row.data();
+
+        const divEvaluar = $('#divModelo');
+        objPrincipal.divCargando(divEvaluar);
+        
+        $('#mhdnIdmodulo').val(rowData.id_modulo);   
+        $('#cboCia').val(rowData.ccompania);     
+        $('#mtxtDescrMod').val(rowData.desc_modulo);    
+        $('#cbotipo').val(rowData.tipo_modulo);
+        $('#mtxticono').val(rowData.class_icono);  
+
+        cambiarCboAreaCia(rowData.ccompania,rowData.carea);    
+
+        $('#mhdnAccionMod').val('A');
+
+        objPrincipal.liberarDiv(divEvaluar); 
+    });
 
     $('#collapseModulo').on('show.bs.collapse', function () {
         listarModulos();
@@ -166,33 +130,26 @@ $(document).ready(function () {
         }); 
     };
 
-    seleModulo = function(id_modulo,ccompania,carea,desc_modulo,tipo_modulo,class_icono){   
-        $('#mhdnIdmodulo').val(id_modulo);   
-        $('#cboCia').val(ccompania);     
-        $('#mtxtDescrMod').val(desc_modulo);    
-        $('#cbotipo').val(tipo_modulo);
-        $('#mtxticono').val(class_icono);     
-
-        $('#mhdnAccionMod').val('A');
-        
-        cambiarCboAreaCia(ccompania,carea);    
-    };
-
     $('#frmRegModulo').submit(function(event){
         event.preventDefault();
-
+        const botonEvaluar = $('#btnGrabarMod');
         $.ajax({
+			beforeSend: function() {
+                objPrincipal.botonCargando(botonEvaluar);
+            },
             url:$('#frmRegModulo').attr("action"),
             type:$('#frmRegModulo').attr("method"),
             data:$('#frmRegModulo').serialize(),
             success: function (respuesta){            
                 oTable_listamodulo.ajax.reload(null,false);
+                objPrincipal.liberarBoton(botonEvaluar); 
                 Vtitle = 'Se Grabo Correctamente';
                 Vtype = 'success';
                 sweetalert(Vtitle,Vtype);
-                $('#btnNuevoMod').click();  
+                $('#btnNuevoMod').click(); 
             },
             error: function(){
+                objPrincipal.liberarBoton(botonEvaluar);
                 Vtitle = 'No se puede Grabar por error';
                 Vtype = 'error';
                 sweetalert(Vtitle,Vtype); 

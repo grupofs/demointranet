@@ -165,6 +165,30 @@ $(function() {
 	}
 
 	/**
+	 * Muestra una carga a una ventana y lo desactiva
+	 * @param div
+     */
+	objPrincipal.divCargando = function(div) {
+		alert(1);
+		const icon = div.find('i.fa');
+		if (icon.length) icon.hide();
+		div.prepend('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>');
+		div.prop('disabled', true);
+	};
+
+	/**
+	 * Libera el div de la carga y lo activa
+	 * @param div
+     */
+	objPrincipal.liberarDiv = function(div) {
+		const carga = div.find('span.spinner-border');
+		const icon = div.find('i.fa');
+		if (carga.length) carga.remove();
+		if (icon.length) icon.show();
+		div.prop('disabled', false);
+	}
+
+	/**
 	 * Messages alert
 	 * Type: error, info, success, warning
 	 * @param {string} type

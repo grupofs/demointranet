@@ -1016,5 +1016,23 @@ class Cinforme extends CI_Controller {
 
 		$writer->save('php://output');
 	}
+
+	
+	public function setfabricante() {	// Registrar Vacaciones		
+
+		$idfabricante	= $this->input->post('mhdnidfabricante');
+		$idptregestudio	= $this->input->post('mhdnidptregserv');
+		$descripcion	= $this->input->post('txtdesfabricante');
+		$accion		= $this->input->post('mhdnAccionfabricante');
+
+		$parametros = array(
+			'@idfabricante'	=>  $idfabricante,
+			'@idptregestudio'	=>  $idptregestudio,
+			'@descripcion'	=>  $descripcion,
+			'@accion'	=>  $accion,
+		);				
+		$respuesta = $this->minforme->setfabricante($parametros);
+		echo json_encode($respuesta);
+	}
 }
 ?>

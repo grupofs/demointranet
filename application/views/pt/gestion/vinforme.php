@@ -333,9 +333,14 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Fabricante</label>
-                                                        <select class="form-control select2bs4" id="cboFabricanteReg01" name="cboFabricanteReg01" style="width: 100%;">
-                                                            <option value="" selected="selected">Cargando...</option>
-                                                        </select>
+                                                        <div class="input-group input-group-select-button">
+                                                            <select class="form-control select2bs4" id="cboFabricanteReg01" name="cboFabricanteReg01" style="width: 100%;">
+                                                                <option value="" selected="selected">Cargando...</option>
+                                                            </select>
+                                                            <div class="input-group-addon input-group-button">
+                                                                <button type="button" role="button" class="btn btn-outline-info" id="mbtnnewfabricante" data-toggle="modal" data-target="#modalMantfabricante"><i class="fas fa-plus-circle"></i></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1936,6 +1941,51 @@
   </div>
 </div> 
 <!-- /.modal-->
+
+
+
+<!-- /.modal-Mante Fabricante --> 
+<div class="modal fade" id="modalMantfabricante" role="dialog" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-success">
+            <h4 class="modal-title w-100 font-weight-bold">Registrar Fabricante</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body"> 
+        <form class="form-horizontal" id="frmMantfabricante" name="frmMantfabricante" action="<?= base_url('pt/cinforme/setfabricante')?>" method="POST" enctype="multipart/form-data" role="form"> 
+            <input type="hidden" id="mhdnidfabricante" name="mhdnidfabricante">
+            <input type="hidden" id="mhdnAccionfabricante" name="mhdnAccionfabricante">
+            <input type="hidden" id="mhdnidptregserv" name="mhdnidptregserv">
+            <div class="form-group">        
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <div class="text-info">Fabricante <span class="text-requerido">*</span></div>
+                        <div>    
+                            <input type="text" name="txtdesfabricante"id="txtdesfabricante" class="form-control"><!-- disable -->
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer w-100 d-flex flex-row" style="background-color: #D4EAFC;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <button type="reset" class="btn btn-default" id="mbtnCMantfabricante" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="frmMantfabricante" class="btn btn-info" id="mbtnGMantfabricante">Grabar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
 
 <!-- Script Generales -->
 <script type="text/javascript">

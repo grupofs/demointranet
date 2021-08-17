@@ -122,7 +122,7 @@ getListConscertifprov = function(param){
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a>'+
+                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'CV\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a>'+
                     '</div>';
                 }
             },
