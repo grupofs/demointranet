@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cconsinf extends CI_Controller {
+class Cconsultas extends CI_Controller {
 	function __construct() {
 		parent:: __construct();	
-		$this->load->model('lab/consinf/mconsinf');
+		$this->load->model('lab/consultas/mconsultas');
 		$this->load->model('mglobales');
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));
@@ -23,7 +23,7 @@ class Cconsinf extends CI_Controller {
 			'@descripcion'		=> ($this->input->post('descripcion') == '') ? '%' : '%'.$descripcion.'%',
 			'@tipobuscar'       => $tipobuscar,
         );
-        $retorna = $this->mconsinf->getbuscar($parametros);
+        $retorna = $this->mconsultas->getbuscar($parametros);
         echo json_encode($retorna);		
     }
     
@@ -86,7 +86,7 @@ class Cconsinf extends CI_Controller {
 			'@cinternoordenservicio'         => $cinternoordenservicio,
 			'@cmuestra'       => $cmuestra,
         );
-        $res = $this->mconsinf->getinfxmuestras_caratula($parametros);
+        $res = $this->mconsultas->getinfxmuestras_caratula($parametros);
         if ($res){
             foreach($res as $row){
 				$NROINFORME        = $row->NROINFORME;
@@ -209,7 +209,7 @@ class Cconsinf extends CI_Controller {
                         </tr>
                     </table>';
                     /*RESULTADOS MICROBIOLOGIA*/
-                    $resmicro = $this->mconsinf->getinfxmuestras_resmicro($parametros);
+                    $resmicro = $this->mconsultas->getinfxmuestras_resmicro($parametros);
                     if ($resmicro){
                         $html .= '<table width="600px" align="center" cellpadding="2" style="border: 1px solid black;">
                         <tr>
@@ -241,7 +241,7 @@ class Cconsinf extends CI_Controller {
                         $html .= '</table><br>';
                     }  
                     /*RESULTADOS FISICOQUIMICO*/
-                    $resfq = $this->mconsinf->getinfxmuestras_resfq($parametros);
+                    $resfq = $this->mconsultas->getinfxmuestras_resfq($parametros);
                     if ($resfq){
                         $html .= '<table width="600px" align="center" cellpadding="2" style="border: 1px solid black;">
                         <tr>
@@ -265,7 +265,7 @@ class Cconsinf extends CI_Controller {
                         $html .= '</table><br>'.$DLCLAB;
                     }
         
-        $resNOTA1 = $this->mconsinf->getinfxmuestras_nota01($parametros);
+        $resNOTA1 = $this->mconsultas->getinfxmuestras_nota01($parametros);
         if ($resNOTA1){
             foreach($resNOTA1 as $rowNOTA1){
 				$NOTA01        = $rowNOTA1->NOTA01;
@@ -290,7 +290,7 @@ class Cconsinf extends CI_Controller {
                     </table> <br>';
     
         /*RESULTADOS METODOS DE ENSAYO*/
-        $resmetensa = $this->mconsinf->getmetodosensayos($parametros);
+        $resmetensa = $this->mconsultas->getmetodosensayos($parametros);
         if ($resmetensa){
             $html .= '<table width="600px" align="center" cellpadding="2" style="border: 1px solid black;"  FRAME="void" RULES="cols">
                         <tr>
@@ -329,6 +329,30 @@ class Cconsinf extends CI_Controller {
 		$filename = 'coti';
 		$this->pdfgenerator->generate($html, $filename);
         //echo $html;
+    }
+    
+    public function infinacal() { // Buscar Cotizacion
+		$varnull = '';
+
+		$anio       = $this->input->post('anio');
+		$mes        = $this->input->post('mes');
+		$fini       = $this->input->post('fini');
+		$ffin       = $this->input->post('ffin');
+		$sem        = $this->input->post('sem');
+		$tipodesc   = $this->input->post('tipodesc');
+		$descripcion    = $this->input->post('descripcion');
+        
+        $parametros = array(
+			'@ANIO'     => $anio,
+			'@MES'      => $mes,
+			'@FINI'     => ($this->input->post('fini') == '%') ? NULL : substr($fini, 6, 4).'-'.substr($fini,3 , 2).'-'.substr($fini, 0, 2),
+			'@FFIN'     => ($this->input->post('ffin') == '%') ? NULL : substr($ffin, 6, 4).'-'.substr($ffin,3 , 2).'-'.substr($ffin, 0, 2),
+			'@SEM'      => $sem,
+			'@TIPODESC' => $tipodesc,
+			'@DESCRIPCION'  => ($this->input->post('descripcion') == '') ? '%' : '%'.$descripcion.'%',
+        );
+        $retorna = $this->mconsultas->infinacal($parametros);
+        echo json_encode($retorna);		
     }
 }
 ?>

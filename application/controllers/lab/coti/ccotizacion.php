@@ -232,7 +232,7 @@ class Ccotizacion extends CI_Controller {
                     <style>
                         @page {
                              margin: 0.3in 0.3in 0.3in 0.3in;
-                        }
+                        } 
                         .teacherPage {
                             page: teacher;
                             page-break-after: always;
@@ -599,6 +599,16 @@ class Ccotizacion extends CI_Controller {
             <tr>
                 <td colspan="3"></td>
                 <td>'.$detraccion.'</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td align="left">Razón social</td>
+                <td>FS CERTIFICACIONES S.A.C.</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td align="left">RUC</td>
+                <td>20514553719</td>
             </tr>
             <tr>
                 <td colspan="4" style="height:10px;">

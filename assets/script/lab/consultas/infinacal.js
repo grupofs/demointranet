@@ -101,7 +101,7 @@ $('input[type=radio][name=rFbuscar]').change(function() {
         varsemestre = '0';
         $('#hrdbuscar').val('F'); 
     }else if ($('#rdSemestre').prop('checked')){  
-        $('#divAnio').hide();
+        $('#divAnio').show();
         $('#divMes').hide();
         $('#divDesde').hide();
         $('#divHasta').hide();
@@ -117,15 +117,19 @@ $('input[type=radio][name=rFbuscar]').change(function() {
 $('input[type=radio][name=rBDesc]').change(function() {
     if($('#rdBInf').prop('checked')){   
         vartipodesc = 'INF';
+        $('#hrdtipodes').val('INF'); 
     }else if ($('#rdBOT').prop('checked')){    
         vartipodesc = 'OT';
+        $('#hrdtipodes').val('OT'); 
     }else if ($('#rdBCliente').prop('checked')){  
         vartipodesc = 'CLI';
+        $('#hrdtipodes').val('CLI'); 
     } 
 });
 
-$("#btnBuscar").click(function (){
-    listarBusqueda();
+$("#btnBuscar").click(function (){ 
+    parametros = paramListinfinacal();
+    listarBusqueda(parametros); 
 });
 
 paramListinfinacal = function (){    
@@ -143,6 +147,7 @@ paramListinfinacal = function (){
     } 
 
     if(varsemestre != '0'){ 
+        v_anio = $('#cboAnio').val(); 
         v_sem = $('#cboSem').val(); 
     }else{
         v_sem = 0;
@@ -184,59 +189,19 @@ listarBusqueda = function(){
             dataSrc : ''        
         },
         'columns'	: [
-            {"class":"col-xs", orderable : false, data : null},
+            {data : null,"class":"col-xs"},
             {data: 'NROINFORME', "class" : "col-sm"},
-            {data: 'FEMISION', "class" : "col-s dt-body-center"},
-            {data: 'PRODUCTO', "class" : "col-lm"},
-            {"orderable": false, data: 'NROOT', targets: 4},
-            {"orderable": false, data: 'FOT', "class" : "col-s dt-body-center", targets: 5},
-            {"orderable": false, data: 'INFORMES', "class" : "col-xm", targets: 7},
-            {"orderable": false, data: 'ELABORADO', targets: 6},
-            {"orderable": false, 
-                render:function(data, type, row){      
-                    return '<div>' +
-                        '</div>';
-                }
-            }
-        ],  
-        "columnDefs": [{
-            "targets": [2], 
-            "data": null, 
-            "render": function(data, type, row) {
-                return '<div>'+
-                '    <p><a title="Cotozacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf fa-2x" style="color:#FF0000;"></i></a><p>' +
-                '</div>';
-            }
-        }],
-        "drawCallback": function ( settings ) {
-            var api = this.api();
-            var rows = api.rows( {page:'all'} ).nodes();
-            var last = null;
-			var grupo;
- 
-            api.column([1], {} ).data().each( function ( ctra, i ) { 
-                grupo = api.column(1).data()[i];
-                if ( last !== ctra ) {
-                    $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="7"><strong>'+ctra.toUpperCase()+'</strong></td></tr>'
-                    ); 
-                    last = ctra;
-                }
-            } );
-        }
-    }); 
-    otblListconsinf.column(1).visible( false );      
+            {data: 'FEMISION', "class" : "col-sm dt-body-center"},
+            {data: 'PRODUCTO', "class" : "col-xl"},
+            {data: 'DISCIPLINA'},
+        ],
+    });   
     // Enumeracion 
-    otblListconsinf.on( 'order.dt search.dt', function () { 
-        otblListconsinf.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    otblListinfinacal.on( 'order.dt search.dt', function () { 
+        otblListinfinacal.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
-    }).draw();  
-};
-
-pdfCoti = function(idcoti,nversion){
-    window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
-};
-pdfInforme = function(cinternoordenservicio,cmuestra){
-    window.open(baseurl+"lab/consinf/cconsinf/pdfInforme/"+cinternoordenservicio+"/"+cmuestra);
+    }).draw(); 
+    
+    $("#btnexcel").prop("disabled",false); 
 };

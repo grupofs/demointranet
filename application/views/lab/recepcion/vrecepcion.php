@@ -299,7 +299,7 @@
                                                                     <th>F. Envase</th>
                                                                     <th>F. Muestreo</th>
                                                                     <th>Hora Muestreo</th>
-                                                                    <th>Observacion</th>
+                                                                    <th>Observacion para Informe</th>
                                                                     <th>Observacion Otros</th>
                                                                     <th></th>
                                                                     <th></th>
@@ -511,7 +511,7 @@
             <div class="form-group">
                 <div class="row">                
                     <div class="col-md-12">
-                        <div class="text-info">Observación Constancia</div>
+                        <div class="text-info">Observación para Constancia</div>
                         <div>   
                             <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" id="mtxtObservaconst" name="mtxtObservaconst" rows="2" data-val-maxlength-max="500" data-validation="required"></textarea>
                             <span class="help-inline" style="padding-left:0px; color:#999; font-size:0.9em;">Caracteres: 0 / 500</span>     
@@ -522,7 +522,7 @@
             <div class="form-group">
                 <div class="row">                
                     <div class="col-md-12">
-                        <div class="text-info">Observación</div>
+                        <div class="text-info">Observacion para Informe</div>
                         <div>   
                             <textarea class="form-control" cols="20" data-val="true" data-val-length="No debe superar los 500 caracteres." data-val-length-max="500" id="mtxtObserva" name="mtxtObserva" rows="2" data-val-maxlength-max="500" data-validation="required"></textarea>
                             <span class="help-inline" style="padding-left:0px; color:#999; font-size:0.9em;">Caracteres: 0 / 500</span>     

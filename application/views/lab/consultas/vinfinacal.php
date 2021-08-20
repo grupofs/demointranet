@@ -36,7 +36,7 @@
             </div>
           
             <div class="card-body">
-            <form class="form-horizontal" id="frmconsseguiaacc" name="frmconsseguiaacc" action="<?= base_url('at/ctrlprovclie/cctrlprovclieExport/excelconsseguiaacc')?>" method="POST" enctype="multipart/form-data" role="form">
+            <form class="form-horizontal" id="frminfinacal" name="frminfinacal" action="<?= base_url('lab/consultas/cconsexcel/excelinfinacal')?>" method="POST" enctype="multipart/form-data" role="form">
                 <input type="hidden" id="hdnIdUsuario" name="hdnIdUsuario" value="<?php echo $idusu ?>">
                 <input type="hidden" id="hdnCUsuario" name="hdnCUsuario" value="<?php echo $cusu ?>">
                 <div class="row"> 
@@ -73,14 +73,6 @@
                                 </div>
                             </div> 
                         </div>
-                        <div class="form-group" id="divSemestre"> 
-                            <label>Semestre</label>
-                            <select class="form-control" id="cboSem" name="cboSem" style="width: 100%;">
-                                <option value = 0 selected="selected">Todos</option>
-                                <option value = 1> 1er Semestre</option>
-                                <option value = 2> 2do Semestre</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group" id="divMes">
@@ -97,6 +89,14 @@
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group" id="divSemestre"> 
+                            <label>Semestre</label>
+                            <select class="form-control" id="cboSem" name="cboSem" style="width: 100%;">
+                                <option value = 0 selected="selected">Todos</option>
+                                <option value = 1> 1er Semestre</option>
+                                <option value = 2> 2do Semestre</option>
+                            </select>
                         </div>
                     </div>       
                 </div>                
@@ -116,6 +116,7 @@
                                     <input type="radio" id="rdBCliente" value="%" name="rBDesc"/> <b>Cliente</b>
                                 </div>
                             </label></div>
+                            <input type="hidden" class="form-control" id="hrdtipodes" name="hrdtipodes" value="INF">
                             <input type="text" class="form-control" id="txtdescripcion" name="txtdescripcion">
                         </div>
                     </div>      
@@ -127,7 +128,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="text-right">
-                            <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>    
+                            <button type="button" class="btn btn-primary" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>   
+                            <button type="submit" class="btn btn-success" form="frminfinacal" id="btnexcel" disabled="true"><i class="far fa-file-excel"></i> Exportar Excel</button>   
                         </div>
                     </div>
                 </div>

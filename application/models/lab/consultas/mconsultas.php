@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Mconsinf extends CI_Model {
+class Mconsultas extends CI_Model {
 	function __construct() {
 		parent:: __construct();	
 		$this->load->library('session');
@@ -69,6 +69,17 @@ class Mconsinf extends CI_Model {
     }
     public function getinfxmuestras_firmas($parametros) { // Buscar Cotizacion	
         $procedure = "call usp_lab_consinf_getinfxmuestras_firmas(?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+	}	
+    
+    public function infinacal($parametros) { // Buscar Cotizacion	
+        $procedure = "call usp_lab_consulta_infinacal(?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 

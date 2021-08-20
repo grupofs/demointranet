@@ -17,7 +17,7 @@ class Cregresult extends CI_Controller {
 		parent:: __construct();	
 		$this->load->model('lab/resultados/mregresult');
 		$this->load->model('lab/coti/mcotizacion');
-		$this->load->model('lab/consinf/mconsinf');
+		$this->load->model('lab/consultas/mconsinf');
 		$this->load->model('mglobales');
 		$this->load->library('encryption');
 		$this->load->helper(array('form','url','download','html','file'));

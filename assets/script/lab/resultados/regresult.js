@@ -374,7 +374,7 @@ $('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-1', function () {
     collapsedGroupsEq1[name] = !collapsedGroupsEq1[name];
     otblListServiciolab.draw(true);
 }); */
-$('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-2', function () {    
+$('#tblListServiciolab tbody').on('click', 'tr.dtrg-level-2', function () {  
     var name = $(this).data('name');
     collapsedGroupsEq2[name] = !collapsedGroupsEq2[name];
     otblListServiciolab.draw(true);

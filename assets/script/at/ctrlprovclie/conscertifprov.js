@@ -82,48 +82,72 @@ getListConscertifprov = function(param){
         },
         "columns"	: [
             {data: 'CERTIFICADORA', "class": "col-sm"},
-            {data: 'CERTIFICACION', "class": "col-lm"},
+            {data: 'CERTIFICACION'},
             {data: 'NOAPLICA', "class": "dt-body-center col-s"},
             {data: 'NOTIENE', "class": "dt-body-center col-s"},
             {data: 'SITIENE', "class": "dt-body-center col-s"},
             {data: 'CONVALIDADO', "class": "dt-body-center col-s"},
-            {data: 'TOTAL', "class": "dt-body-center col-s"},
+            {data: 'TOTAL', "class": "dt-body-center col-s dt-total"},
         ], 
         "columnDefs": [
             {
                 "targets": [2], 
                 "data": null, 
                 "render": function(data, type, row) {
-                    return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NA\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOAPLICA+'</a>'+
-                    '</div>';
+                    if(row.CERTIFICADORA == 'TOTAL'){
+                        return '<div style="background-color:#D5D8DC !important;">'+
+                            '<b><a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NA\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOAPLICA+'</a></b>'+
+                        '</div>';
+                    }else{ 
+                        return '<div>'+
+                            '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NA\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOAPLICA+'</a>'+
+                        '</div>';
+                    }
                 }
             },
             {
                 "targets": [4], 
                 "data": null, 
                 "render": function(data, type, row) {
-                    return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.SITIENE+'</a>'+
-                    '</div>';
+                    if(row.CERTIFICADORA == 'TOTAL'){
+                        return '<div style="background-color:#D5D8DC !important;">'+
+                            '<b><a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.SITIENE+'</a></b>'+
+                        '</div>';
+                    }else{ 
+                        return '<div>'+
+                            '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'ST\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.SITIENE+'</a>'+
+                        '</div>';
+                    }
                 }
             },
             {
                 "targets": [3], 
                 "data": null, 
                 "render": function(data, type, row) {
-                    return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NT\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOTIENE+'</a>'+
-                    '</div>';
+                    if(row.CERTIFICADORA == 'TOTAL'){
+                        return '<div style="background-color:#D5D8DC !important;">'+
+                            '<b><a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NT\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOTIENE+'</a></b>'+
+                        '</div>';
+                    }else{ 
+                        return '<div>'+
+                            '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'NT\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'I\');">'+row.NOTIENE+'</a>'+
+                        '</div>';
+                    }
                 }
             },
             {
                 "targets": [5], 
                 "data": null, 
-                "render": function(data, type, row) {
-                    return '<div>'+
-                        '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'CV\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a>'+
-                    '</div>';
+                "render": function(data, type, row) {                    
+                    if(row.CERTIFICADORA == 'TOTAL'){
+                        return '<div style="background-color:#D5D8DC !important;">'+
+                            '<b><a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'CV\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a></b>'+
+                        '</div>';
+                    }else{ 
+                        return '<div>'+
+                            '<a data-toggle="modal" style="cursor:pointer; color:black;" data-target="#modalDet" onClick="mostrarDetalle(\'' + row.CCLIENTE + '\',\'S\',\'CV\',\'' + row.ANIO + '\', \'' + row.MES + '\', \'' + row.TCCERTIFICACION + '\', \'C\');">'+row.CONVALIDADO+'</a>'+
+                        '</div>';
+                    }
                 }
             },
         ],

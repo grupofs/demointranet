@@ -5,6 +5,9 @@
 ?>
 
 <style>
+    .dt-total{
+        background-color:#D5D8DC !important;
+    }
 </style>
 
 <!-- content-header -->
