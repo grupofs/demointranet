@@ -161,6 +161,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th>N° Informe</th>
+                                                        <th>Estado</th>
                                                         <th>Cliente</th>
                                                         <th>Responsable</th>
                                                         <th>Fecha</th>

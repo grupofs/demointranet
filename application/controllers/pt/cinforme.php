@@ -1034,5 +1034,15 @@ class Cinforme extends CI_Controller {
 		$respuesta = $this->minforme->setfabricante($parametros);
 		echo json_encode($respuesta);
 	}
+
+    public function setestadoinf() { // Registrar informe PT
+		$varnull = '';
+		
+		$idptinforme 	= $this->input->post('idptinforme');
+		$estado_inf 	= $this->input->post('estado_inf');
+        
+        $retorna = $this->minforme->setestadoinf($idptinforme,$estado_inf);
+        echo json_encode($retorna);		
+	}
 }
 ?>

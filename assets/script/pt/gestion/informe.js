@@ -115,14 +115,23 @@ $("#chkFreg").on("change", function () {
         
         varfdesde = '';
         varfhasta = '';
+
+        var fecha = new Date();		
+        var fechatring1 = "01/01/" +fecha.getFullYear() ;
+        var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
+        $('#txtFDesde').datetimepicker('date', fechatring1);
+        $('#txtFHasta').datetimepicker('date', fechatring2);
     }else if($("#chkFreg").is(":checked") == false){ 
         $("#txtFIni").prop("disabled",true);
         $("#txtFFin").prop("disabled",true);
         
         varfdesde = '%';
         varfhasta = '%';
+
+        fechaActual();
     }; 
 });
+
 
 $("#btnBuscar").click(function (){
     var vlvigencia;
@@ -174,12 +183,19 @@ $("#btnBuscar").click(function (){
               data        :   null,
               targets     :   0
             },
-            {"orderable": false, data: 'NROINFOR', targets: 1, "class": "col-sm"},
-            {"orderable": false, data: 'RAZONSOCIAL', targets: 2, "class": "col-xm"},
-            {"orderable": false, data: 'RESPONSABLE', targets: 3, "class": "col-sm"},
-            {"orderable": false, data: 'FECHINFOR',responsivePriority: 1, targets: 4, "class": "col-s"},
-            {"orderable": false, data: 'DESCRIPSERV',responsivePriority: 1, targets: 5, "class": "col-lm"},
-            {"orderable": false, data: 'NROPROPU', targets: 6, "class": "col-xm"},
+            {data: 'NROINFOR',responsivePriority: 1,  "class": "col-sm"},
+            {data: 'ESTADOINF',responsivePriority: 1,  "class": "col-s",  searchable: false, render: function( data, type, row ){
+                if (data == 'F') {
+                    return '<input data="username" type="checkbox" name="my-checkbox" checked> Finalizado';
+                }else {
+                    return '<input data="username" type="checkbox" name="my-checkbox"> Pendiente';
+                }
+            }},
+            {data: 'RAZONSOCIAL',"class": "col-xm"},
+            {data: 'RESPONSABLE', "class": "col-sm"},
+            {data: 'FECHINFOR',responsivePriority: 1, "class": "col-s"},
+            {data: 'DESCRIPSERV',responsivePriority: 1, "class": "col-lm"},
+            {data: 'NROPROPU', "class": "col-xm"},
             {responsivePriority: 3, "orderable": false, "class": "col-xs", 
               render:function(data, type, row){                
                   return  '<div>'+ 
@@ -214,7 +230,10 @@ $("#btnBuscar").click(function (){
                     return '<p>'+row.NROINFOR+'</p>';
                 }                      
             }
-        }]
+        }],
+        fnDrawCallback: function() {
+            //$("[name='my-checkbox']").bootstrapSwitch();
+        },
     });   
     // Enumeracion 
     otblListInforme.on( 'order.dt search.dt', function () { 
@@ -223,6 +242,46 @@ $("#btnBuscar").click(function (){
           } );
     }).draw();  
 });
+
+$('#tblListInforme').on('change','input[name="my-checkbox"]', function(event, state) {
+    var tipocheck;
+
+    if(this.checked) {
+        tipocheck = 'F'
+    }else{
+        tipocheck = 'P'
+    }
+
+    event.preventDefault();
+    var table = $('#tblListInforme').DataTable();
+    var seleccionados = table.rows({ selected: true });   
+    seleccionados.every(function(key,data){
+        IDINFORME = this.data().IDINFOR;
+        Swal.fire({
+            title: 'Confirmar Cambiar de Estado',
+            text: "¿Está seguro de Cambiar de Estado?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Cambiar!'
+        }).then((result) => {
+            if (result.value) {
+                $.post(baseurl+"pt/cinforme/setestadoinf/", 
+                {
+                    idptinforme : IDINFORME,
+                    estado_inf  : tipocheck,
+                },      
+                function(data){     
+                    otblListInforme.ajax.reload(null,false); 
+                    Vtitle = 'Se Cambio Correctamente';
+                    Vtype = 'success';
+                    sweetalert(Vtitle,Vtype);      
+                });
+            }
+        })  
+    });
+ });
 
 $('#modalEditInfor').on('shown.bs.modal', function (e) {    
     $("#mtxtNroinforedit").prop({readonly:true}); 

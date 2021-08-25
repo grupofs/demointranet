@@ -812,7 +812,6 @@ class Minforme extends CI_Model {
         }   
     }     
 
-
     
 	public function setfabricante($parametros) { // Registrar Vacaciones		
         $this->db->trans_begin();
@@ -831,6 +830,16 @@ class Minforme extends CI_Model {
                 return False;
             }	
         }   
+    }
+
+    public function setestadoinf($idptinforme,$estado_inf) { // 		
+        $data = array(
+            "estado_inf" => $estado_inf
+        );
+        $this->db->where("idptinforme", $idptinforme);
+		if($this->db->update("pt_informe", $data)){
+			return TRUE;
+		}
     }
 }
 ?>
