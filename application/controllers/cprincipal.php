@@ -210,4 +210,81 @@ class Cprincipal extends CI_Controller
         session_destroy();
     }
 
+    public function getalerta(){
+        $idempleado = $this->input->post('idempleado');	
+        $resultado = $this->mprincipal->getalerta($idempleado);
+        echo json_encode($resultado);
+    }
+    public function getlistalerta(){	
+        $idempleado = $this->input->post('idempleado');
+        $resultado = $this->mprincipal->getlistalerta($idempleado);
+        echo json_encode($resultado);
+    }
+    public function viewAlertaInf()
+    { 
+        if (!$this->session->userdata("login")) {
+            redirect('clogin');
+        }
+        $this->session->time = time();
+
+        $this->layout->js(array(public_url('script/pt/gestion/alertainf.js')));
+
+        $idempleado = $this->session->userdata('s_idempleado');
+        $parametros = array(
+            '@idempleado' => $idempleado
+        );
+        $this->load->model('mperfilusuario');
+        $resumenperfil = $this->mperfilusuario->getresumenperfil($parametros);
+
+        $data['vista'] = 'DInternos';
+        $data['datos_perfil'] = $resumenperfil;
+        $data['content_for_layout'] = 'pt/gestion/valertainf';
+        $this->parser->parse('seguridad/vprincipal', $data);
+
+    }
+    public function viewAlertaEst()
+    { 
+        if (!$this->session->userdata("login")) {
+            redirect('clogin');
+        }
+        $this->session->time = time();
+
+        $this->layout->js(array(public_url('script/pt/gestion/alertaest.js')));
+
+        $idempleado = $this->session->userdata('s_idempleado');
+        $parametros = array(
+            '@idempleado' => $idempleado
+        );
+        $this->load->model('mperfilusuario');
+        $resumenperfil = $this->mperfilusuario->getresumenperfil($parametros);
+
+        $data['vista'] = 'DInternos';
+        $data['datos_perfil'] = $resumenperfil;
+        $data['content_for_layout'] = 'pt/gestion/valertaest';
+        $this->parser->parse('seguridad/vprincipal', $data);
+
+    }
+    public function viewAlertaReg()
+    { 
+        if (!$this->session->userdata("login")) {
+            redirect('clogin');
+        }
+        $this->session->time = time();
+
+        $this->layout->js(array(public_url('script/pt/gestion/alertareg.js')));
+
+        $idempleado = $this->session->userdata('s_idempleado');
+        $parametros = array(
+            '@idempleado' => $idempleado
+        );
+        $this->load->model('mperfilusuario');
+        $resumenperfil = $this->mperfilusuario->getresumenperfil($parametros);
+
+        $data['vista'] = 'DInternos';
+        $data['datos_perfil'] = $resumenperfil;
+        $data['content_for_layout'] = 'pt/gestion/valertareg';
+        $this->parser->parse('seguridad/vprincipal', $data);
+
+    }
+
 }

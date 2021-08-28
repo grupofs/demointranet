@@ -68,6 +68,77 @@ class Mprincipal extends CI_Model{
 			return False;
 		}	
 	}
+	
+	public function getalerta($idempleado) { //Recuperar Areas del Usuario
+		$sql = "select alertas, sum(cantidad) as 'cantidad'
+				from
+				(
+					select 'A' as 'alertas', count(1) as 'cantidad' 
+					from pt_informe a
+					where a.idresponsable = ".$idempleado."
+					and a.vigencia = 'A'
+					and a.ruta_informe is null
+				union
+					select 'A' as 'alertas', count(1) as 'cantidad' 
+					from pt_informe a
+					left join pt_evalregistro b on b.idptinforme = a.idptinforme
+					where a.idresponsable = ".$idempleado."
+					and a.vigencia = 'A'
+					and b.idptinforme is null
+				union
+					select 'A' as 'alertas', count(1) as 'cantidad' 
+					from pt_informe a
+					where a.idresponsable = ".$idempleado."
+					and a.vigencia = 'A'
+					and a.estado_inf = 'P'
+				) as T
+				group by alertas;";
+		$query = $this->db-> query($sql);
 
+		if ($query->num_rows() > 0) {
+            		$data = $query->result();
+			$query->free_result(); 
+			return $data;
+		}{
+			return False;
+		}	
+    }
+    public function getlistalerta($idempleado) { // Buscar Cotizacion	        
+        $sql = "select 'Informes' as 'alertas', 'fa-file-alt' as 'clase', 'alertaInf' as 'ventana', count(1) as 'cantidad' 
+				from pt_informe a
+				where a.idresponsable = ".$idempleado."
+				and a.vigencia = 'A'
+				and a.ruta_informe is null
+					union
+				select 'Registros' as 'alertas', 'fa-folder-plus' as 'clase', 'alertaReg' as 'ventana', count(1) as 'cantidad' 
+				from pt_informe a
+				left join pt_evalregistro b on b.idptinforme = a.idptinforme
+				where a.idresponsable = ".$idempleado."
+				and a.vigencia = 'A'
+				and b.idptinforme is null
+					union
+				select 'Estados' as 'alertas', 'fa-file' as 'clase', 'alertaEst' as 'ventana', count(1) as 'cantidad' 
+				from pt_informe a
+				where a.idresponsable = ".$idempleado."
+				and a.vigencia = 'A'
+				and a.estado_inf = 'P'";
+		$query = $this->db-> query($sql);
+        
+        if ($query->num_rows() > 0) {
+
+            $listas = '';
+            
+            foreach ($query->result() as $row)
+            {
+				$listas .= '<div class="dropdown-divider"></div>';  
+				$listas .= '<a href="'.base_url().''.$row->ventana.'" class="dropdown-item">'; 
+				$listas .= '<i class="fas '.$row->clase.' mr-2"></i> '.$row->cantidad.' '.$row->alertas.' Incompletos'; 
+				$listas .= '</a>'; 
+            }
+               return $listas;
+        }{
+            return false;
+        }	
+    }
 }
 ?>

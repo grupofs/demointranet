@@ -208,6 +208,17 @@ listarBusqueda = function(){
                     '</div>';
                 }
             },
+            {"orderable": false, "class": "col-xxs", 
+              render:function(data, type, row){
+                return  '<div class="dropdown" style="text-align: center;">'+
+                            '<a  data-toggle="dropdown" href="#"><span class="fas fa-bars"></span></a>'+
+                            '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
+                                '<li><a title="Cotización" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left"><span class="fas fa-file-pdf" aria-hidden="true">&nbsp;</span>&nbsp;Cotización</a></li>'+
+                                '<li><a title="Cotización solo Detalle" style="cursor:pointer;" onclick="pdfCotisolodet(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');" class="pull-left"><span class="fas fa-file-pdf" aria-hidden="true">&nbsp;</span>&nbsp;Cotización solo Detalle</a></li>'+
+                            '</ul>'+
+                        '</div>'
+              }
+            },
             {data: 'NROCOTI'},
             {data: 'DFECHA'},
             {data: 'ENTREGAINFO'},
@@ -222,14 +233,6 @@ listarBusqueda = function(){
                         if (rowData.TIENEOT == 'N') {
                             $(td).removeClass( 'details-control' );
                         }
-                }
-            },{
-                "targets": [3], 
-                "data": null, 
-                "render": function(data, type, row) {
-                    return '<div>'+
-                    '    <p><a title="Cotizacion" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left">'+row.NROCOTI+'&nbsp;&nbsp;<i class="fas fa-file-pdf" style="color:#FF0000;"></i></a><p>' +
-                    '</div>';
                 }
             }
         ],
@@ -355,6 +358,10 @@ pdfCargoOT = function(cinternoordenservicio){
 
 pdfCoti = function(idcoti,nversion){
     window.open(baseurl+"lab/coti/ccotizacion/pdfCoti/"+idcoti+"/"+nversion);
+};
+
+pdfCotisolodet = function(idcoti,nversion){
+    window.open(baseurl+"lab/coti/ccotizacion/pdfCotisolodet/"+idcoti+"/"+nversion);
 };
 
 genEtiqueta = function(cinternoordenservicio){

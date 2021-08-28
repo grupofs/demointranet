@@ -62,6 +62,9 @@ $route['frontdesk'] = 'cprincipal/ventanasClie';
 $route['perfil'] = 'cprincipal/perfilusuario';
 $route['perfilclie'] = 'cprincipal/perfilcliente';
 
+$route['alertaInf'] = 'cprincipal/viewAlertaInf';
+$route['alertaEst'] = 'cprincipal/viewAlertaEst';
+$route['alertaReg'] = 'cprincipal/viewAlertaReg';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

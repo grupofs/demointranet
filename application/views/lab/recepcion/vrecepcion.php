@@ -235,6 +235,7 @@
                                                         <th>Cliente</th>
                                                         <th></th>
                                                         <th></th>
+                                                        <th></th>
                                                         <th>Cotizacion</th>
                                                         <th>Fecha</th>
                                                         <th>Entrega</th>

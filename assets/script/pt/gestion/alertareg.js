@@ -1,42 +1,27 @@
 
-var otblListInforme, otblListRegInforme, otblListRegitro, otblListReg03equipo, otblListReg06equipo, otblListReg08equipo;
+var otblListRegInforme, otblListRegitro, otblListReg03equipo, otblListReg06equipo, otblListReg08equipo;
 var varfdesde = '%', varfhasta = '%';
 var iduser = $('#mtxtidusuinfor').val();
 
 $(document).ready(function() { 
     
-    $('#tabinforme a[href="#tabinforme-list-tab"]').attr('class', 'disabled');
-    $('#tabinforme a[href="#tabinforme-eval-tab"]').attr('class', 'disabled active');
+    $('#tabinforme a[href="#tabinforme-eval-tab"]').attr('class', 'disabled');
     $('#tabinforme a[href="#tabinforme-reg-tab"]').attr('class', 'disabled active');
 
-    $('#tabinforme a[href="#tabinforme-list-tab"]').not('#store-tab.disabled').click(function(event){
-        $('#tabinforme a[href="#tabinforme-list"]').attr('class', 'active');
-        $('#tabinforme a[href="#tabinforme-eval"]').attr('class', '');
-        $('#tabinforme a[href="#tabinforme-reg"]').attr('class', '');
-        return true;
-    });
     $('#tabinforme a[href="#tabinforme-eval-tab"]').not('#bank-tab.disabled').click(function(event){
         $('#tabinforme a[href="#tabinforme-eval"]').attr('class' ,'active');
-        $('#tabinforme a[href="#tabinforme-list"]').attr('class', '');
         $('#tabinforme a[href="#tabinforme-reg"]').attr('class', '');
         return true;
     });
     $('#tabinforme a[href="#tabinforme-reg-tab"]').not('#bank-tab.disabled').click(function(event){
         $('#tabinforme a[href="#tabinforme-reg"]').attr('class' ,'active');
-        $('#tabinforme a[href="#tabinforme-list"]').attr('class', '');
         $('#tabinforme a[href="#tabinforme-eval"]').attr('class', '');
         return true;
     });
     
-    $('#tabinforme a[href="#tabinforme-list"]').click(function(event){return false;});
     $('#tabinforme a[href="#tabinforme-eval"]').click(function(event){return false;});
     $('#tabinforme a[href="#tabinforme-reg"]').click(function(event){return false;});
-    
-    $('#txtFDesde,#txtFHasta').datetimepicker({
-        format: 'DD/MM/YYYY',
-        daysOfWeekDisabled: [0],
-        locale:'es'
-    });
+   
 
     $('#mtxtFreginforme').datetimepicker({
         format: 'DD/MM/YYYY',
@@ -50,750 +35,65 @@ $(document).ready(function() {
         locale:'es'
     });	
 
-    fechaActual();
+    parametros = paramListalertareg();
+    getlistalertareg(parametros);  
     
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"pt/cinforme/getServicio",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cboServ').html(result);
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error');
-        }
-    });
-    
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"pt/cinforme/getclienteinfor",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cboClie').html(result);
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error');
-        }
-    });
-           
 });
 
-fechaActual = function(){
-    var fecha = new Date();		
-    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-
-    $('#txtFDesde').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
-    $('#txtFHasta').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
-
-};
-	
-$('#txtFDesde').on('change.datetimepicker',function(e){	
-    
-    $('#txtFHasta').datetimepicker({
-        format: 'DD/MM/YYYY',
-        daysOfWeekDisabled: [0],
-        locale:'es'
-    });	
-
-    var fecha = moment(e.date).format('DD/MM/YYYY');		
-    
-    $('#txtFHasta').datetimepicker('minDate', fecha);
-    $('#txtFHasta').datetimepicker('date', fecha);
-
-});
-
-$("#chkFreg").on("change", function () {
-    if($("#chkFreg").is(":checked") == true){ 
-        $("#txtFIni").prop("disabled",false);
-        $("#txtFFin").prop("disabled",false);
-        
-        varfdesde = '';
-        varfhasta = '';
-
-        var fecha = new Date();		
-        var fechatring1 = "01/01/" +fecha.getFullYear() ;
-        var fechatring2 = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-        $('#txtFDesde').datetimepicker('date', fechatring1);
-        $('#txtFHasta').datetimepicker('date', fechatring2);
-    }else if($("#chkFreg").is(":checked") == false){ 
-        $("#txtFIni").prop("disabled",true);
-        $("#txtFFin").prop("disabled",true);
-        
-        varfdesde = '%';
-        varfhasta = '%';
-
-        fechaActual();
+paramListalertareg = function (){    
+       
+    var param = {
+        "idempleado"  : $('#hdidempleado').val(),
     }; 
-});
+    return param;    
+};
 
+getlistalertareg = function(parametros){
+    document.querySelector('#lblInforme').innerText = '';
 
-$("#btnBuscar").click(function (){
-    var vlvigencia;
-    if($('#swVigencia').prop('checked')){
-        vlvigencia = 'A';
-    }else{
-        vlvigencia = 'I';
-    }
-
-    if(varfdesde != '%'){ varfdesde = $('#txtFIni').val(); }
-    if(varfhasta != '%'){ varfhasta = $('#txtFFin').val(); }  
-
-    $("#btnexcel").removeAttr("disabled");
-    
-    otblListInforme = $('#tblListInforme').DataTable({           
+    otblListRegInforme = $('#tblListRegInforme').DataTable({  
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
         "bJQueryUI"     : true,
-        "scrollResize"  : true,
         "scrollY"     	: "400px",
-        "scrollX"     	: true,
-        "scrollCollapse": false, 
-        'AutoWidth'     : false,
-        "paging"      	: true,
+        "scrollX"     	: true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
         "info"        	: true,
         "filter"      	: true, 
         "ordering"		: false,
-        "responsive"    : true,
+        "responsive"    : false,
         "select"        : true, 
         'ajax'	: {
-            "url"   : baseurl+"pt/cinforme/getbuscarinforme/",
-            "type"  : "POST", 
-            "data": function ( d ) {
-                d.cservicio     = $('#cboServ').val();
-                d.fdesde        = varfdesde; 
-                d.fhasta        = varfhasta;   
-                d.ccliente      = $('#cboClie').val();
-                d.dnropropu     = $('#txtnropropu').val(); 
-                d.dnroinfor     = $('#txtnroinfor').val();
-                d.vigente       = vlvigencia; 
-            },     
+            "url"   : baseurl+"pt/calerta/getlistalertareg/",
+            "type"  : "POST",         
+            "data"  : parametros, 
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "col-xs",
-              orderable   :   false,
-              data        :   null,
-              targets     :   0
-            },
-            {data: 'NROINFOR',responsivePriority: 1,  "class": "col-sm"},
-            {data: 'ESTADOINF',responsivePriority: 1,  "class": "col-s",  searchable: false, render: function( data, type, row ){
-                if (data == 'F') {
-                    return '<input data="username" type="checkbox" name="my-checkbox" checked> Finalizado';
-                }else {
-                    return '<input data="username" type="checkbox" name="my-checkbox"> Pendiente';
-                }
-            }},
-            {data: 'RAZONSOCIAL',"class": "col-xm"},
-            {data: 'RESPONSABLE', "class": "col-sm"},
-            {data: 'FECHINFOR',responsivePriority: 1, "class": "col-s"},
-            {data: 'DESCRIPSERV',responsivePriority: 1, "class": "col-lm"},
-            {data: 'NROPROPU', "class": "col-xm"},
-            {responsivePriority: 3, "orderable": false, "class": "col-xs", 
-              render:function(data, type, row){                
-                  return  '<div>'+ 
-                    '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalEditInfor" onClick="javascript:selInformeedit(\''+row.IDINFOR+'\',\''+row.idptevaluacion+'\',\''+row.NROINFOR+'\',\''+row.FECHINFOR+'\',\''+row.idresponsable+'\',\''+row.ARCHIVO+'\',\''+row.ruta_informe+'\',\''+row.descripcion+'\',\''+row.descripcion_archivo+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                    '&nbsp;'+
-                    '<a id="aDelInfor" href="'+row.IDINFOR+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
-                    '&nbsp;'+
-                    ' <a data-toggle="modal" title="Evaluación" style="cursor:pointer; color:#3c763d;" onClick="javascript:selEval(\''+row.idptevaluacion+'\',\''+row.idptpropuesta+'\',\''+row.ccliente+'\',\''+row.idptservicio+'\',\''+row.DESCRIPSERV+'\',\''+row.NROPROPU+'\',\''+row.RAZONSOCIAL+'\');"><span class="fas fa-external-link-alt" aria-hidden="true"> </span></a>'+
-                    '</div>'
-              }
-            },            
-            {"orderable": false, 
-              render:function(data, type, row){ 
-                bfind = true;   
-                  return ' <div>'+
-                    ' <a data-toggle="modal" title="Adjuntar" style="cursor:pointer; color:#3c763d;" data-target="#modalDetaPropu" onClick="javascript:listarDetPropuesta(\''+row.IDPROPU+'\');"class="btn btn-outline-primary btn-sm hidden-xs hidden-sm"><span class="fas fa-folder-open" aria-hidden="true"> </span> DOCUMENTOS ADJUNTOS</a>'+
-                    ' &nbsp; &nbsp;'+
-                    ' <a data-toggle="modal" title="Extender" style="cursor:pointer; color:#3c763d;" data-target="#modalCreaInfor" onClick="javascript:SelExtenderpropu(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\');"class="btn btn-outline-primary btn-sm hidden-xs hidden-sm"><span class="fas fa-external-link-alt" aria-hidden="true"> </span> EXTENDER INFORME</a>'+
-                    ' &nbsp; &nbsp;'+
-                    ' <a data-toggle="modal" title="Duplicar" style="cursor:pointer; color:#3c763d;" data-target="#modalCreaInfor" onClick="javascript:SelDuplicarpropu(\''+row.IDPROPU+'\',\''+row.CODCLIENTE+'\',\''+row.NROPROPU+'\',\''+row.FECHPROPU+'\',\''+row.IDSERV+'\',\''+row.DETAPROPU+'\',\''+row.COSTOTOTAL+'\',\''+row.ESTPROPU+'\',\''+row.CONTACTO+'\',\''+row.OBSPROPU+'\',\''+row.SERVNEW+'\',\''+row.CLIPOTEN+'\',\''+row.IDUSUARIO+'\',\''+row.TIPOCOSTO+'\',\''+row.ARCHIVO+'\',\''+row.CODESTABLE+'\',\''+row.RUTA+'\');"class="btn btn-outline-primary btn-sm hidden-xs hidden-sm"><span class="fas fa-clone" aria-hidden="true"> </span> DUPLICAR INFORME</a>'+
-                  '</div>' 
-              }
-            }
-        ],
-        "columnDefs": [{
-            "targets": [1], 
-            "data": null, 
-            "render": function(data, type, row) { 
-                if(row.ARCHIVO != "") {
-                    return '<p><a href="'+baseurl+row.ruta_informe+row.ARCHIVO+'" target="_blank" class="pull-left">'+row.NROINFOR+'&nbsp;<i class="fas fa-cloud-download-alt" data-original-title="Descargar" data-toggle="tooltip"></i></a><p>';
-                }else{
-                    return '<p>'+row.NROINFOR+'</p>';
-                }                      
-            }
-        }],
-        fnDrawCallback: function() {
-            //$("[name='my-checkbox']").bootstrapSwitch();
-        },
-    });   
-    // Enumeracion 
-    otblListInforme.on( 'order.dt search.dt', function () { 
-        otblListInforme.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-          cell.innerHTML = i+1;
-          } );
-    }).draw();  
-});
-
-$('#tblListInforme').on('change','input[name="my-checkbox"]', function(event, state) {
-    var tipocheck;
-
-    if(this.checked) {
-        tipocheck = 'F'
-    }else{
-        tipocheck = 'P'
-    }
-
-    event.preventDefault();
-    var table = $('#tblListInforme').DataTable();
-    var seleccionados = table.rows({ selected: true });   
-    seleccionados.every(function(key,data){
-        IDINFORME = this.data().IDINFOR;
-        Swal.fire({
-            title: 'Confirmar Cambiar de Estado',
-            text: "¿Está seguro de Cambiar de Estado?",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Cambiar!'
-        }).then((result) => {
-            if (result.value) {
-                $.post(baseurl+"pt/cinforme/setestadoinf/", 
-                {
-                    idptinforme : IDINFORME,
-                    estado_inf  : tipocheck,
-                },      
-                function(data){     
-                    otblListInforme.ajax.reload(null,false); 
-                    Vtitle = 'Se Cambio Correctamente';
-                    Vtype = 'success';
-                    sweetalert(Vtitle,Vtype);      
-                });
-            }
-        })  
-    });
-});
-
-$('#modalEditInfor').on('shown.bs.modal', function (e) {    
-    $("#mtxtNroinforedit").prop({readonly:true}); 
-});
-
-selInformeedit= function(idptinforme,idptevaluacion,nro_informe,fecha_informe,idresponsable,archivo_informe,ruta_informe,descripcion,descripcion_archivo){
-    $('#mhdnAccionInforedit').val('A');
-        
-    $('#mhdnIdInforedit').val(idptinforme);
-    $('#mhdnIdptevaledit').val(idptevaluacion);
-    $('#mtxtNroinforedit').val(nro_informe);
-    $('#mtxtFinforedit').val(fecha_informe);
-    $('#mcboContacInforedit').val(idresponsable).trigger("change");
-    $('#mtxtNomarchinforedit').val(descripcion_archivo);
-    $('#mtxtRutainforedit').val(ruta_informe);
-    $('#mtxtDetaInforedit').val(descripcion);
-    $('#mtxtArchinforedit').val(archivo_informe);
-    
-    $('#lbchkinfedit').show();
-}; 
-
-$("#chkNroAntiguoedit").on("change", function () {
-    if($("#chkNroAntiguoedit").is(":checked") == true){ 
-        $("#mtxtNroinforedit").prop({readonly:false}); 
-    }else if($("#chkNroAntiguoedit").is(":checked") == false){ 
-        $("#mtxtNroinforedit").prop({readonly:true}); 
-    }; 
-});
-
-escogerArchivoedit = function(){    
-    var archivoInput = document.getElementById('mtxtArchivoinforedit');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.pdf|.docx|.xlsx|.doc|.xls)$/i;
-    
-    var filename = $('#mtxtArchivoinforedit').val().replace(/.*(\/|\\)/, '');
-    $('#mtxtNomarchinforedit').val(filename);
-
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado un PDF, DOCX, XSLX');
-        archivoInput.value = '';  
-        $('#mtxtNomarchinforedit').val('');
-        return false;
-    }      
-    $('#sArchivoedit').val('S');
-};
-    
-$('#frmEditInfor').submit(function(event){
-    event.preventDefault();
-    
-    var request = $.ajax({
-        url:$('#frmEditInfor').attr("action"),
-        type:$('#frmEditInfor').attr("method"),
-        data:$('#frmEditInfor').serialize(),
-        error: function(){
-            Vtitle = 'No se puede registrar por error';
-            Vtype = 'error';
-            sweetalert(Vtitle,Vtype);
-        }
-    });
-    request.done(function( respuesta ) {
-        var posts = JSON.parse(respuesta);        
-        $.each(posts, function() {   
-            $('#mhdnIdInforedit').val(this.id_informe);
-            if($('#sArchivoedit').val() == 'S'){          
-                subirArchivoEdit();
-            }else{                   
-                $('#mbtnCEditInfor').click();     
-                Vtitle = this.respuesta;
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);        
-                otblListInforme.ajax.reload(null,false);
-            } 
-            $('#sArchivoedit').val('N');  
-        });
-
-    });
-});
-
-subirArchivoEdit=function(){
-    var parametrotxt = new FormData($("#frmEditInfor")[0]);
-    var request = $.ajax({
-        data: parametrotxt,
-        method: 'post',
-        url: baseurl+"pt/cinforme/subirArchivoEdit/",
-        dataType: "JSON",
-        async: true,
-        contentType: false,
-        processData: false,
-        error: function(){
-            alert('Error, no se cargó el archivo');
-        }
-    });
-    request.done(function( respuesta ) {         
-        Vtitle = 'Guardo Correctamente';
-        Vtype = 'success';
-        sweetalert(Vtitle,Vtype);
-        otblListInforme.ajax.reload(null,false);
-        $('#mbtnCEditInfor').click();
-    });
-};
-   
-$("body").on("click","#aDelInforEdit",function(event){
-    event.preventDefault();
-    idptinforme = $(this).attr("href");
-
-    Swal.fire({
-        title: 'Confirmar Eliminación',
-        text: "¿Está seguro de eliminar el Informe?",
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, bórralo!'
-    }).then((result) => {
-        if (result.value) {
-            $.post(baseurl+"pt/cinforme/delinforme/", 
-            {
-                idptinforme   : idptinforme,
-            },      
-            function(data){     
-                otblListInforme.ajax.reload(null,false); 
-                Vtitle = 'Se Elimino Correctamente';
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);      
-            });
-        }
-    }) 
-});
-
-$('#btnNuevo').click(function(){
-    
-    $('#tabinforme a[href="#tabinforme-eval"]').tab('show'); 
-    $('#frmMantEval').trigger("reset");
-    $('#hdnAccionpteval').val('G');
-    $('#cboRegClie').val('').trigger("change");  
-    $('#hdnIdpteval').val(null);
-    $('#txtRegClie').hide();
-    $('#divRegClie').show(); 
-    $('#txtRegPropu').hide();
-    $('#divRegPropu').show();  
-    $('#btnEvaluar').show(); 
-    $('#btnRetornarLista').show();    
-    
-    document.getElementById('addinforme').style.visibility = 'hidden';
-    
-    $('#tblListRegInforme').DataTable().clear();
-    $('#tblListRegInforme').DataTable().destroy();
-    $('#tblListRegitro').DataTable().clear();
-    $('#tblListRegitro').DataTable().destroy();
-      
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"pt/cpropuesta/getclientepropu",
-        dataType: "JSON",
-        async: true,
-        success:function(result)
-        {
-            $('#cboRegClie').html(result);
-        },
-        error: function(){
-            alert('Error, No se puede autenticar por error');
-        }
-    }); 
-});
-
-$("#cboRegClie").change(function(){
-    var v_RegClie = $('#cboRegClie').val();
-    var params = { 
-        "ccliente":v_RegClie 
-    };
-    $.ajax({
-        type: 'ajax',
-        method: 'post',
-        url: baseurl+"pt/cinforme/getpropuevaluar",
-        dataType: "JSON",
-        async: true,
-        data: params,
-        success:function(result)
-        {
-          $("#cboRegPropu").html(result);  
-          $('#txtservicio').val('');
-          $('#hdnidserv').val('');	
-        },
-        error: function(){
-          alert('Error, no se puede cargar la lista desplegable de establecimiento');
-        }
-    });
-}); 
-
-$("#cboRegPropu").change(function(){
-    var v_RegPropu = $('#cboRegPropu').val();
-    var v_accion = $('#hdnAccionpteval').val(); 
-    var params = { 
-        "idptpropu":v_RegPropu 
-    };
-
-    if (v_accion == 'G') {
-        var request = $.ajax({
-            type: 'ajax',
-            method: 'post',
-            url: baseurl+"pt/cinforme/getservicioevaluar",
-            dataType: "JSON",
-            async: true,
-            data: params,
-            error: function(){
-            alert('Error, no se puede cargar la lista desplegable de establecimiento');
-            }
-        });
-        request.done(function( respuesta ) {
-            $.each(respuesta, function() {    
-                $('#txtservicio').val(this.DESCSERV);
-                $('#hdnidserv').val(this.IDPTSERV);	
-                if(this.IDEVALUACION != 0){
-                    $('#hdnIdpteval').val(this.IDEVALUACION);
-                    $('#btnEvaluar').hide(); 
-                    document.getElementById('addinforme').style.visibility = 'visible';
-                }
-            });
-        });
-    }
-}); 
-
-selEval= function(idptevaluacion,idptpropuesta,ccliente,idptservicio,DESCRIPSERV,NROPROPU,RAZONSOCIAL){
-    $('#tabinforme a[href="#tabinforme-eval"]').tab('show'); 
-    $('#hdnAccionpteval').val('A');    
-    document.getElementById('addinforme').style.visibility = 'visible';
-    
-    $('#hdnIdpteval').val(idptevaluacion);
-    $('#txtRegClie').val(RAZONSOCIAL);
-    $('#cboRegClie').val(ccliente);
-    $('#hdnidserv').val(idptservicio);
-    $('#txtservicio').val(DESCRIPSERV);
-    $('#cboRegPropu').val(idptpropuesta);
-    $('#txtRegPropu').val(NROPROPU);
-    
-    $('#txtRegClie').show();
-    $('#divRegClie').hide(); 
-    $('#txtRegPropu').show();
-    $('#divRegPropu').hide();
-
-    $('#btnEvaluar').hide(); 
-    $('#btnRetornarLista').show();
-
-    recuperaListinforme()
-    
-    $('#tblListRegitro').DataTable().clear();
-    $('#tblListRegitro').DataTable().destroy();
-};
-   
-$('#frmMantEval').submit(function(event){
-    event.preventDefault();
-    
-    var request = $.ajax({
-        url:$('#frmMantEval').attr("action"),
-        type:$('#frmMantEval').attr("method"),
-        data:$('#frmMantEval').serialize(),
-        error: function(){
-          alert('Error, No se puede autenticar por error');
-        }
-    });
-    request.done(function( respuesta ) {
-        var posts = JSON.parse(respuesta);
-        
-        $.each(posts, function() {
-            $('#btnEvaluar').hide(); 
-            $('#btnRetornarLista').hide(); 
-            $('#hdnIdpteval').val(this.id_evaluacion);
-            document.getElementById('addinforme').style.visibility = 'visible';
-            Vtitle = 'Siga evaluando';
-            Vtype = 'success';
-            sweetalert(Vtitle,Vtype);     
-        });
-    });
-});
-
-$('#addinforme').click(function(){
-    $('#frmCreaInfor').trigger("reset");
-    var hdnIdpteval = $('#hdnIdpteval').val();
-
-    $('#mhdnIdpteval').val(hdnIdpteval);
-    $('#mhdnAccionInfor').val('N');
-    fechaActualinfor();
-    nro_informe(); 
-    
-    $('#lbchkinf').show();
-});
-
-$('#modalCreaInfor').on('shown.bs.modal', function (e) {    
-    $("#mtxtNroinfor").prop({readonly:true}); 
-});
-
-fechaActualinfor= function(){
-    var fecha = new Date();	
-    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
-    
-    $('#mtxtFreginforme').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );	
-};
-
-$("#chkNroAntiguo").on("change", function () {
-    var v_fecha = $('#mtxtFinfor').val().substr(6);
-    var v_fechaactual = new Date().getFullYear();
-    if (v_fechaactual == v_fecha){
-        alert("Debe de Seleccionar una fecha anterior");
-        $(document.getElementById('chkNroAntiguo')).prop('checked', false);
-    }else{
-        if($("#chkNroAntiguo").is(":checked") == true){ 
-            $("#mtxtNroinfor").prop({readonly:false}); 
-        }else if($("#chkNroAntiguo").is(":checked") == false){ 
-            $("#mtxtNroinfor").prop({readonly:true}); 
-        }; 
-        
-        if ($('#mhdnAccionInfor').val()=='N'){
-            nro_informe();
-        }
-    }
-
-    
-}); 
-
-function nro_informe(){
-    var vyearPropu = $('#mtxtFinfor').val().substr(6);
-    var params = { 
-        "yearPropu" : vyearPropu
-    }; 
-
-    $.ajax({
-      type: 'ajax',
-      method: 'post',
-      url: baseurl+"pt/cinforme/getnroinforme",
-      dataType: "JSON",
-      async: true,
-      data: params,
-      success: function (result){
-        var c = (result);
-        $.each(c,function(i,item){
-          $('#mtxtNroinfor').val(item.NRO_INFO);
-        })
-      },
-      error: function(){
-        alert('Error, no se genero Nro. Propuesta');
-      }
-    })
-};
-
-escogerArchivo = function(){    
-    var archivoInput = document.getElementById('mtxtArchivoinfor');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.pdf|.docx|.xlsx|.doc|.xls)$/i;
-    
-    var filename = $('#mtxtArchivoinfor').val().replace(/.*(\/|\\)/, '');
-    $('#mtxtNomarchinfor').val(filename);
-
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado un PDF, DOCX, XSLX');
-        archivoInput.value = '';  
-        $('#mtxtNomarchinfor').val('');
-        return false;
-    }      
-    $('#sArchivo').val('S');
-};
-
-$('#frmCreaInfor').submit(function(event){
-    event.preventDefault();
-    
-    var request = $.ajax({
-        url:$('#frmCreaInfor').attr("action"),
-        type:$('#frmCreaInfor').attr("method"),
-        data:$('#frmCreaInfor').serialize(),
-        error: function(){
-            Vtitle = 'No se puede registrar por error';
-            Vtype = 'error';
-            sweetalert(Vtitle,Vtype);
-        }
-    });
-    request.done(function( respuesta ) {
-        var posts = JSON.parse(respuesta);        
-        $.each(posts, function() {   
-            $('#mhdnIdInfor').val(this.id_informe);
-            if($('#sArchivo').val() == 'S'){          
-                subirArchivo();
-            }else{                   
-                $('#btnRetornarLista').show();
-                $('#mbtnCCreaInfor').click();     
-                Vtitle = this.respuesta;
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype); 
-                recuperaListinforme();       
-                //otblListRegInforme.ajax.reload(null,false);
-            } 
-            $('#sArchivo').val('N');  
-        });
-    });
-});
-
-subirArchivo=function(){
-    var parametrotxt = new FormData($("#frmCreaInfor")[0]);
-    var request = $.ajax({
-        data: parametrotxt,
-        method: 'post',
-        url: baseurl+"pt/cinforme/subirArchivo/",
-        dataType: "JSON",
-        async: true,
-        contentType: false,
-        processData: false,
-        error: function(){
-            alert('Error, no se cargó el archivo');
-        }
-    });
-    request.done(function( respuesta ) {         
-        Vtitle = 'Guardo Correctamente';
-        Vtype = 'success';
-        sweetalert(Vtitle,Vtype);
-        otblListRegInforme.ajax.reload(null,false);
-        $('#mbtnCCreaInfor').click();
-    });
-};
-   
-$("body").on("click","#aDelInfor",function(event){
-    event.preventDefault();
-    idptinforme = $(this).attr("href");
-
-    Swal.fire({
-        title: 'Confirmar Eliminación',
-        text: "¿Está seguro de eliminar el Informe?",
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, bórralo!'
-    }).then((result) => {
-        if (result.value) {
-            $.post(baseurl+"pt/cinforme/delinforme/", 
-            {
-                idptinforme   : idptinforme,
-            },      
-            function(data){     
-                otblListRegInforme.ajax.reload(null,false); 
-                Vtitle = 'Se Elimino Correctamente';
-                Vtype = 'success';
-                sweetalert(Vtitle,Vtype);      
-            });
-        }
-    }) 
-});
-
-recuperaListinforme = function(){
-    document.querySelector('#lblInforme').innerText = '';
-
-    otblListRegInforme = $('#tblListRegInforme').DataTable({ 
-        'bJQueryUI'     : true, 
-        'scrollY'     	: '200px',
-        'scrollX'     	: true, 
-        'paging'      	: false,
-        'processing'  	: true,      
-        'bDestroy'    	: true,
-        'info'        	: true,
-        'filter'      	: false,
-        'stateSave'     : true, 
-        "ordering"		: false, 
-        'ajax'	: {
-            "url"   : baseurl+"pt/cinforme/getlistinforme/",
-            "type"  : "POST", 
-            "data": function ( d ) {
-                d.idptevaluacion  = $('#hdnIdpteval').val(); 
-            },     
-            dataSrc : ''        
-        },
-        'columns'	: [
-            {"orderable": false, data: 'nro_informe', targets: 0, "class": "col-m"},
-            {"orderable": false, data: 'fecha_informe', targets: 1, "class": "col-sm"},
-            {"orderable": false, data: 'RESPONSABLE', targets: 2, "class": "col-lm"},
-            {"orderable": false, "class": "col-s", 
-              render:function(data, type, row){                
-                  return  '<div>'+
-                  '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:#3c763d;" data-target="#modalCreaInfor" onClick="javascript:selInforme(\''+row.idptinforme+'\',\''+row.idptevaluacion+'\',\''+row.nro_informe+'\',\''+row.fecha_informe+'\',\''+row.idresponsable+'\',\''+row.archivo_informe+'\',\''+row.ruta_informe+'\',\''+row.descripcion+'\',\''+row.descripcion_archivo+'\');"><span class="fas fa-edit" aria-hidden="true"> </span> </a>'+
-                  '&nbsp;'+
-                  '<a id="aDelInforEdit" href="'+row.idptinforme+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt" aria-hidden="true"> </span></a>'+      
-                  '</div>'
-              }
-            },
+            {data : null, "class" : "col-xxs", orderable : false},
+            {data: 'nro_informe',"class": "col-sm"},
+            {data: 'fecha_informe',"class": "col-xs"},
+            {data: 'RAZONSOCIAL', "class": "col-lm"},
+            {data: 'descripcion_serv', "class": "col-m"},
             {"orderable": false, "class": "col-xl", 
               render:function(data, type, row){ 
-                if(row.idptservicio == 2 || row.idptservicio == 4 || row.idptservicio == 3){
-                    if(row.idpttramite == 0){
-                        v_sid = ' <a data-toggle="modal" title="Registrar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-plus-circle" style="cursor:pointer;"> #SID </i></a>'
-                    }else{
-                        v_sid = ' <a data-toggle="modal" title="Editar" style="cursor:pointer;" data-target="#modalCreaTram" onClick="javascript:tramiteSid(\''+row.idptinforme+'\',\''+row.ccliente+'\',\''+row.idptpropuesta+'\',\''+row.idptservicio+'\',\''+row.idpttramite+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-eye" style="cursor:pointer;"> #SID </i></a>'
-                    }                    
-                }else{
-                    v_sid = ''
-                }               
+                             
                   return  '<div>'+    
                     ' <a onClick="javascript:insertRegistro(\''+row.idptinforme+'\',\''+row.idptevaluacion+'\',\''+row.idptservicio+'\',\''+row.descripcion_serv+'\',\''+row.nro_informe+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-plus-circle" style="cursor:pointer;"> Agregar Registro </i>  </a>'+
                     ' <a onClick="javascript:recuperaListregistro(\''+row.idptinforme+'\',\''+row.nro_informe+'\');"class="btn btn-outline-success btn-sm hidden-xs hidden-sm"><i class="fas fa-eye" style="cursor:pointer;"> Ver Registro </i>  </a>'+
-                    v_sid
-                  '</div>'
+                    '</div>'
               }
             }
-        ],
-        "columnDefs": [{
-            "targets": [0], 
-            "data": null, 
-            "render": function(data, type, row) { 
-                if(row.archivo_informe != "") {
-                    return '<p><a href="'+baseurl+row.ruta_informe+row.archivo_informe+'" target="_blank" class="pull-left">'+row.nro_informe+'&nbsp;<i class="fas fa-cloud-download-alt" data-original-title="Descargar" data-toggle="tooltip"></i></a><p>';
-                }else{
-                    return '<p>'+row.nro_informe+'</p>';
-                }                      
-            }
-        }]
+        ]
     });
+    // Enumeracion 
+    otblListRegInforme.on( 'order.dt search.dt', function () { 
+        otblListRegInforme.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+          cell.innerHTML = i+1;
+          } );
+    }).draw(); 
 };
 
 
@@ -2800,7 +2100,7 @@ $('#frmMantRegistro').submit(function(event){
             $('#hdnIdregproducto').val(); 
             $('#hdnIdregrecinto').val();
             $('#hdnIdregprocestudio').val();
-            otblListRegitro.ajax.reload(null,false);  
+            //otblListRegitro.ajax.reload(null,false);  
         });
     });
 });

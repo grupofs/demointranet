@@ -1,6 +1,29 @@
 /********************************************************************/
 /*               CSS ESTILO GENERAL                                 */
 /********************************************************************/  
+@import url('../template/GUI/plugins/fontawesome-free/css/all.min.css');/*Font Awesome*/
+@import url('../template/Ionicons/css/ionicons.min.css');/*Ionicons*/
+@import url('../template/GUI/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');/*Tempusdominus Bootstrap 4*/
+@import url('../template/GUI/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css');/*SweetAlert2*/
+@import url('../template/GUI/plugins/daterangepicker/daterangepicker.css');/*date-range-picker*/
+@import url('../template/GUI/plugins/icheck-bootstrap/icheck-bootstrap.min.css');/*iCheck*/
+@import url('../template/GUI/plugins/jqvmap/jqvmap.min.css');/*JQVMap*/
+@import url('../template/GUI/dist/css/adminlte.min.css');/*Theme style*/
+@import url('../template/GUI/plugins/overlayScrollbars/css/OverlayScrollbars.min.css');/*overlayScrollbars*/
+@import url('../template/GUI/plugins/select2/css/select2.min.css');/*Select2*/
+@import url('../template/GUI/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css');/*Select2 Bootstrap 4*/
+@import url('../template/GUI/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css');/*Duallistbox Bootstrap 4*/
+@import url('../template/GUI/plugins/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css');/*bootstrap-switch*/
+@import url('../template/GUI/plugins/ekko-lightbox/ekko-lightbox.css');/*Ekko Lightbox*/
+@import url('../template/GUI/plugins/summernote/summernote-bs4.css');/*summernote*/
+@import url('../template/plugins/fileinput/fileinput.min.css');/*file input*/
+@import url('fontsgoogleapis.css');/*Google Font: Source Sans Pro*/
+/*DataTable.net*/
+@import url('../template/DataTable/DataTables/css/jquery.dataTables.min.css');/*jquery*/
+@import url('../template/DataTable/Responsive/css/responsive.dataTables.min.css');/*responsive*/
+@import url('../template/DataTable/Select/css/select.dataTables.min.css');/*select*/
+@import url('../template/DataTable/Checkboxes/css/dataTables.checkboxes.css');/*checkboxes*/
+@import url('../template/DataTable/RowGroup/css/rowGroup.dataTables.min.css');/*rowGroup*/
 
 /*** DISEÑO PLANTILLA ***/  
     .content-header{

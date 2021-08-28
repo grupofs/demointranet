@@ -1,5 +1,45 @@
 var Vtitle, Vtype, vccia, timeExpira; 
-var oTable_listaadministrado;
+
+$(document).ready(function() {
+	var vidrol = $('#hdnidrol').val();
+	var vidempleado = $('#hdidempleado').val();
+	    
+    $.post(baseurl+"cprincipal/getalerta", 
+    {
+        idempleado	:	vidempleado,
+    },  
+    function(data){ 
+        var c = JSON.parse(data);
+        $.each(c,function(i,item){ 
+            if(item.cantidad > 0 ){ 
+				document.querySelector('#spanAlertas').innerText = item.cantidad;
+				document.querySelector('#spanNroAlertas').innerText = item.cantidad+' Alertas';
+				
+				var params = { 
+					"idempleado" : vidempleado
+				};
+				$.ajax({
+					type: 'ajax',
+					method: 'post',
+					url: baseurl+"cprincipal/getlistalerta",
+					dataType: "JSON",
+					async: true,
+					data: params,
+					success:function(result)
+					{
+						$('#divalertas').html(result);
+					},
+					error: function(){
+						alert('Error, No se puede autenticar por error');
+					}
+				});
+				$('#dropAlerta').show(); 
+			}else{ 
+				$('#dropAlerta').hide();
+			}
+        })      
+    });
+});
 
 vccia = $('#hdnccia').val();
 vsessionAct = $('#hdsessionAct').val();
@@ -108,6 +148,60 @@ cerrarModal = function() {
 	$('[data-mask]').inputmask()
 
 	$('.duallistbox').bootstrapDualListbox();
+
+
+    //Date picker
+    $('.datepicker').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        autoclose: true,
+        theme: 'bootstrap4',
+        locale: {
+            format: 'DD/MM/YYYY',
+            daysOfWeek: [
+                'Do',
+                'Lu',
+                'Ma',
+                'Mi',
+                'Ju',
+                'Vi',
+                'Sa'
+            ],
+            monthNames: [
+                'Enero',
+                'Febrero',
+                'Marzo',
+                'Abril',
+                'Mayo',
+                'Junio',
+                'Julio',
+                'Agosto',
+                'Setiembre',
+                'Octubre',
+                'Noviembre',
+                'Diciembre'
+            ]
+        }
+    });
+
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox({
+            alwaysShowClose: true
+        });
+    });
+
+    //Add text editor
+    $('.summernotebasic').summernote({
+        tabsize: 2,
+        height: 120,
+        lang: 'es-ES',
+        toolbar: [
+            ['font', ['bold', 'underline']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']]
+        ]
+    });	
 /* /. Script Formularios */
 
 
