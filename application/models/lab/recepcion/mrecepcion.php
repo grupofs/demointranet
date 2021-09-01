@@ -10,7 +10,7 @@ class Mrecepcion extends CI_Model {
    /** LISTADO **/ 
 
     public function getbuscarrecepcion($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getbuscarrecepcion(?,?,?,?,?,?,?)";
+        $procedure = "call usp_lab_coti_getbuscarrecepcion(?,?,?,?,?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -31,6 +31,17 @@ class Mrecepcion extends CI_Model {
 			return False;
 		}		
     }
+    public function getrecepcionmuestraconst($parametros) { // Buscar Cotizacion	
+        $procedure = "call usp_lab_coti_getrecepcionmuestra_const(?,?)";
+		$query = $this->db-> query($procedure,$parametros);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}		
+    }
+    
 
     public function setrecepcionmuestra($parametros) {  // Registrar evaluacion PT
         $this->db->trans_begin();
@@ -99,8 +110,24 @@ class Mrecepcion extends CI_Model {
     }
     
     public function getlistdetrecepcion($cinternocotizacion, $nversioncotizacion) { // Visualizar 
-        $sql = "select nordentrabajo, DATEFORMAT(fordentrabajo, 'DD/MM/YYYY') as 'fordentrabajo', cinternoordenservicio from pordenserviciotrabajo 
+        $sql = "select isnull(nordentrabajo,nordenservicio) as 'nordentrabajo', DATEFORMAT(isnull(fordentrabajo,fordenservicio), 'DD/MM/YYYY') as 'fordentrabajo', cinternoordenservicio  
+                from pordenserviciotrabajo 
                 where cinternocotizacion = '".$cinternocotizacion."' and nversioncotizacion = ".$nversioncotizacion.";";
+        $query  = $this->db->query($sql);
+
+		if ($query->num_rows() > 0) { 
+			return $query->result();
+		}{
+			return False;
+		}			   
+    }
+
+    public function getlistconstrecep($cinternocotizacion, $nversioncotizacion) { // Visualizar 
+        $sql = "select distinct isnull(d.idconstrecepcion,0) as 'IDCONST', isnull(d.nro_constancia,'')+'-'+cast(year(d.fingreso) as char(10)) as 'nro_constancia', isnull(convert(varchar,d.fingreso,103),null) as 'fingreso', '' as 'SPACE'
+                from pconstrecepcionlab d     
+                where (d.cinternocotizacion = '".$cinternocotizacion."' ) AND  
+                      (d.nversioncotizacion = ".$nversioncotizacion." )    
+                order by  nro_constancia ASC;";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 
@@ -195,7 +222,24 @@ class Mrecepcion extends CI_Model {
     public function setgenerarconst($parametros) { //
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setgenerarconst(?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setgenerarconst(?,?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }  
+    }
+    
+    public function setgenerarconstdet($parametros) { //
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_setgenerarconstdet(?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)
@@ -209,14 +253,13 @@ class Mrecepcion extends CI_Model {
         }  
     }
 
-    public function getpdfdatosconst($cinternoordenservicio) { // Listar Ensayos	
+    public function getpdfdatosconst($cidconst) { // Listar Ensayos	
         $sql = "select a.fingreso, a.hingreso, a.nro_constancia, c.dcotizacion, d.drazonsocial as 'nombcliente', (e.dnombre+' '+isnull(e.dapepat,'')+' '+isnull(e.dapemat,'')) as 'nombcontacto', e.dmail, e.dtelefono
                 from PCONSTRECEPCIONLAB a
-                    join PORDENSERVICIOTRABAJO b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO
-                    join PCOTIZACIONLABORATORIO c on c.CINTERNOCOTIZACION = b.CINTERNOCOTIZACION
+                    join PCOTIZACIONLABORATORIO c on c.CINTERNOCOTIZACION = a.CINTERNOCOTIZACION
                     join MCLIENTE d on d.ccliente = c.ccliente
                     left join MCONTACTO e on e.ccontacto = c.ccontacto
-                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+                where a.idconstrecepcion = ".$cidconst.";";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 
@@ -226,11 +269,12 @@ class Mrecepcion extends CI_Model {
 		}		
     }
 
-    public function getpdfdetalleconst($cinternoordenservicio) { // Listar Ensayos	
+    public function getpdfdetalleconst($cidconst) { // Listar Ensayos	
         $sql = "select b.drealproducto, b.dpresentacion, b.dobservacionesconst, b.dprecinto, b.dcantidad
                 from PCONSTRECEPCIONLAB a
-                    join PRECEPCIONMUESTRA b on b.CINTERNOORDENSERVICIO = a.CINTERNOORDENSERVICIO
-                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+                    join pconstrecepdetlab c on c.idconstrecepcion = a.idconstrecepcion
+                    join PRECEPCIONMUESTRA b on b.CINTERNOCOTIZACION = a.CINTERNOCOTIZACION and b.nordenproducto = c.nordenproducto
+                where a.idconstrecepcion = ".$cidconst.";";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 
@@ -240,10 +284,10 @@ class Mrecepcion extends CI_Model {
 		}		
     }
 
-    public function getlistblancoviajero($cinternoordenservicio) { // Listar Ensayos	
+    public function getlistblancoviajero($cinternocotizacion) { // Listar Ensayos	
         $sql = "select a.CINTERNOCOTIZACION, a.IDBLANCOVIAJERO, a.BK, a.LOTE, a.RESULTADO, a.CINTERNOORDENSERVICIO, '' as 'BLANCO'
                 from plabblancoviajero a
-                where a.CINTERNOORDENSERVICIO = ".$cinternoordenservicio.";";
+                where a.cinternocotizacion = '".$cinternocotizacion."';";
         $query  = $this->db->query($sql);
 
 		if ($query->num_rows() > 0) { 

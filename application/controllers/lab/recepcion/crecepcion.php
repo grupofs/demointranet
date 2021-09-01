@@ -35,6 +35,7 @@ class Crecepcion extends CI_Controller {
 		$descr      = $this->input->post('descr');
 		$estado      = $this->input->post('estado');
 		$tieneot      = $this->input->post('tieneot');
+		$nroot      = $this->input->post('nroot');
         
         $parametros = array(
 			'@CCIA'         => '2',
@@ -44,6 +45,7 @@ class Crecepcion extends CI_Controller {
 			'@DESCR'		=> ($this->input->post('descr') == '') ? '%' : '%'.$descr.'%',
 			'@ESTADO'		=> ($this->input->post('estado') == '%') ? '%' : $estado,
 			'@TIENEOT'		=> ($this->input->post('tieneot') == '%') ? '%' : $tieneot,
+			'@NROOT'		=> ($this->input->post('nroot') == '') ? '%' : '%'.$nroot.'%',
         );
         $retorna = $this->mrecepcion->getbuscarrecepcion($parametros);
         echo json_encode($retorna);		
@@ -123,6 +125,18 @@ class Crecepcion extends CI_Controller {
             '@nversioncotizacion'   	=>  $nversioncotizacion
         );
         $resultado = $this->mrecepcion->getrecepcionmuestra($parametros);
+        echo json_encode($resultado);
+    } 
+    public function getrecepcionmuestraconst() {	// Visualizar Servicios en CBO	
+             
+		$cinternocotizacion 	= $this->input->post('idcoti');
+        $nversioncotizacion 	= $this->input->post('nversion');
+        
+        $parametros = array(
+            '@cinternocotizacion'   	=>  $cinternocotizacion,
+            '@nversioncotizacion'   	=>  $nversioncotizacion
+        );
+        $resultado = $this->mrecepcion->getrecepcionmuestraconst($parametros);
         echo json_encode($resultado);
     } 
     
@@ -408,15 +422,17 @@ class Crecepcion extends CI_Controller {
     public function setgenerarconst() { // Registrar informe PT
         $varnull = '';
 
-        $idconstrecepcion       = $this->input->post('mhdnidotconst');
-        $cinternoordenservicio  = $this->input->post('mhdncordenservicioconst');
+        $idconstrecepcion       = $this->input->post('mhdnidconstr');
+        $cinternocotizacion     = $this->input->post('mhdnidcotiConstr');
+        $nversioncotizacion     = $this->input->post('mhdnnroverConstr');
         $fingreso = $this->input->post('txtFConst');
         $hingreso = $this->input->post('txtHConst');
-        $accion = $this->input->post('mhdnAccionConst');
+        $accion = $this->input->post('mhdnAccionConstr');
 
         $parametros = array(
             '@idconstrecepcion'   	    =>  $idconstrecepcion,
-            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@cinternocotizacion'    =>  $cinternocotizacion,
+            '@nversioncotizacion'    =>  $nversioncotizacion,
             '@fingreso'   	            =>  ($this->input->post('txtFConst') == '%') ? NULL : substr($fingreso, 6, 4).'-'.substr($fingreso,3 , 2).'-'.substr($fingreso, 0, 2), 
             '@hingreso'      		    =>  $hingreso,
             '@accion'    		        =>  $accion,
@@ -424,6 +440,24 @@ class Crecepcion extends CI_Controller {
         $retorna = $this->mrecepcion->setgenerarconst($parametros);
         echo json_encode($retorna);	
     }
+    public function setgenerarconstdet() { // Registrar informe PT
+        $varnull = '';
+
+        $cinternocotizacion     = $this->input->post('idcotizacion');
+        $nversioncotizacion     = $this->input->post('nversion');
+        $nordenproducto       = $this->input->post('idcotiproducto');
+        $idconstrecepcion       = $this->input->post('idconstancia');
+
+        $parametros = array(
+            '@cinternocotizacion'    =>  $cinternocotizacion,
+            '@nversioncotizacion'    =>  $nversioncotizacion,
+            '@nordenproducto'   	    =>  $nordenproducto,
+            '@idconstrecepcion'   	    =>  $idconstrecepcion,
+        );
+        $retorna = $this->mrecepcion->setgenerarconstdet($parametros);
+        echo json_encode($retorna);	
+    }
+    
     
     public function getlistdetrecepcion() {	// Visualizar
         $cinternocotizacion   = $this->input->post('cinternocotizacion');
@@ -431,6 +465,14 @@ class Crecepcion extends CI_Controller {
         $resultado = $this->mrecepcion->getlistdetrecepcion($cinternocotizacion, $nversioncotizacion);
         echo json_encode($resultado);
     }
+
+    public function getlistconstrecep() {	// Visualizar
+        $cinternocotizacion   = $this->input->post('cinternocotizacion');
+        $nversioncotizacion   = $this->input->post('nversioncotizacion');
+        $resultado = $this->mrecepcion->getlistconstrecep($cinternocotizacion, $nversioncotizacion);
+        echo json_encode($resultado);
+    }
+    
 
     public function exportexcellistcoti(){
 		/*Estilos */
@@ -676,7 +718,7 @@ class Crecepcion extends CI_Controller {
 		$writer->save('php://output');
     }
 
-	public function pdfCargoOT($cinternoordenservicio) { // recupera los cPTIZACION
+	public function pdfCargoOT($cidconst) { // recupera los cPTIZACION
         $this->load->library('pdfgenerator');
 
         $date = getdate();
@@ -775,7 +817,7 @@ class Crecepcion extends CI_Controller {
                     </table>
                 </header>';
        			
-        $res = $this->mrecepcion->getpdfdatosconst($cinternoordenservicio);
+        $res = $this->mrecepcion->getpdfdatosconst($cidconst);
         if ($res){
             foreach($res as $row){
 				$fingreso       = $row->fingreso;
@@ -821,12 +863,11 @@ class Crecepcion extends CI_Controller {
                     <tr>
                         <th width="5%">N° MUESTRA</th>
                         <th width="25%">DESCRIPCION DE LA MUESTRA</th>
-                        <th width="8%">N° PRECINTO</th>
                         <th width="7%">UNIDADES POR MUESTRA</th>
                         <th width="30%">CONDICIONES DE RECEPCIÓN DE LA MUESTRA (Temperatura, Peso, FP, FV, Lote, etc.)</th>
                         <th width="15%">OBSERVACIONES</th>
                     </tr>';
-                    $resprod = $this->mrecepcion->getpdfdetalleconst($cinternoordenservicio);
+                    $resprod = $this->mrecepcion->getpdfdetalleconst($cidconst);
                     $i = 0;
                     if ($resprod){
                         foreach($resprod as $rowprod){
@@ -840,7 +881,6 @@ class Crecepcion extends CI_Controller {
                             $html .= '<tr>
                                 <td>&nbsp;'.$i.'</td>
                                 <td>&nbsp;'.$drealproducto.'</td>
-                                <td>&nbsp;'.$dprecinto.'</td>
                                 <td>&nbsp;'.$dcantidad.'</td>
                                 <td>&nbsp;'.$dpresentacion.'</td>
                                 <td>&nbsp;'.$dobservacionesconst.'</td>
@@ -944,7 +984,9 @@ class Crecepcion extends CI_Controller {
                 for ($i = 0; $i < $len; $i++) {
                     $muestra = $this->input->post('0['.$i.']');
                     $copias = $this->input->post('1['.$i.']');
+                    $nvia = 0;
                     for ($ci = 0; $ci < $copias; $ci++) {
+                        $nvia++;
                         $html .= '<div class="teacherPage">				
                         <page>	
                             <table width="220px" align="center" style="border-collapse: collapse;">
@@ -958,7 +1000,7 @@ class Crecepcion extends CI_Controller {
                                 </tr>
                                 <tr>
                                     <td style="height:30px;">Nro de vía</td>
-                                    <td align="left">&nbsp;</td>
+                                    <td align="center">'.$nvia.'</td>
                                 </tr>
                             </table>
                         </page>
@@ -977,22 +1019,22 @@ class Crecepcion extends CI_Controller {
     }
 
     public function getlistblancoviajero() {
-        $cinternoordenservicio 	= $this->input->post('cinternoordenservicio');
-        $resultado = $this->mrecepcion->getlistblancoviajero($cinternoordenservicio);
+        $cinternocotizacion 	= $this->input->post('idcoti');
+        $resultado = $this->mrecepcion->getlistblancoviajero($cinternocotizacion);
         echo json_encode($resultado);
     }
 
     public function setblancoviajero() { // Registrar informe PT
         $varnull = '';
 
-        $cinternoordenservicio = $this->input->post('mhdncordenservicioblancovia');
+        $cinternocotizacion = $this->input->post('mhdnidcotibv');
         $idblancoviajero = $this->input->post('mhdnidblancoviajero');
         $bk = $this->input->post('cbobk');
         $lote = $this->input->post('mtxtlote');
         $accion = $this->input->post('mhdnAccionblancovia');
 
         $parametros = array(
-            '@cinternoordenservicio'    =>  $cinternoordenservicio,
+            '@cinternocotizacion'    =>  $cinternocotizacion,
             '@idblancoviajero'          =>  $idblancoviajero,
             '@bk'           =>  $bk,
             '@lote'         =>  $lote,

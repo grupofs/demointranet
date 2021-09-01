@@ -1,5 +1,6 @@
 
-var otblListRecepcion, otblListdetrecepcion, otblListProducto, otblListEtiquetasmuestras, otblBlancoviajero;
+var otblListRecepcion, otblListdetrecepcion, otblListProducto, otblListEtiquetasmuestras; 
+var otblListProdConstImp, otblBlancoviajero, otblListProdConst;
 var varfdesde = '%', varfhasta = '%';
 
 
@@ -190,6 +191,7 @@ listarBusqueda = function(){
                 d.descr     = $('#txtdescri').val(); 
                 d.estado    = $('#cboestado').val(); 
                 d.tieneot   = $('#cbotieneot').val(); 
+                d.nroot   = $('#txtnroot').val();
             },     
             dataSrc : ''        
         },
@@ -215,6 +217,7 @@ listarBusqueda = function(){
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">'+
                                 '<li><a title="Cotización" style="cursor:pointer;" onclick="pdfCoti(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');"  class="pull-left"><span class="fas fa-file-pdf" aria-hidden="true">&nbsp;</span>&nbsp;Cotización</a></li>'+
                                 '<li><a title="Cotización solo Detalle" style="cursor:pointer;" onclick="pdfCotisolodet(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');" class="pull-left"><span class="fas fa-file-pdf" aria-hidden="true">&nbsp;</span>&nbsp;Cotización solo Detalle</a></li>'+
+                                '<li><a title="Constancia de Recepción" style="cursor:pointer;" onclick="verConstancias(\'' + row.IDCOTIZACION + '\',\'' + row.NVERSION + '\');" class="pull-left"><span class="fas fa-file-signature" aria-hidden="true">&nbsp;</span>&nbsp;Constancia de Recepción</a></li>'+
                             '</ul>'+
                         '</div>'
               }
@@ -278,7 +281,7 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
             })
             row.child( 
             '<table id="tblListdetrecepcion" class="display compact" style="width:100%; background-color:#D3DADF; padding-top: -10px; border-bottom: 2px solid black;">'+
-            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Nro OT</th><th>Fecha OT</th><th>Archivo OT</th><th>Cargo Recepción</th><th>Etiqueta Muestra</th></tr></thead><tbody>' +
+            '<thead style="background-color:#FFFFFF;"><tr><th></th><th>Nro OT</th><th>Fecha OT</th><th>Archivo OT</th><th>Etiqueta Muestra</th></tr></thead><tbody>' +
                 '</tbody></table>').show();
 
                 otblListdetrecepcion = $('#tblListdetrecepcion').DataTable({
@@ -317,13 +320,6 @@ $('#tblListRecepcion tbody').on( 'click', 'td.details-control', function () {
                         {"orderable": false, "class" : "dt-body-center",  
                             render:function(data, type, row){  
                                 return '<div>'+
-                                '    <p><a title="Cargo" style="cursor:pointer;" onclick="pdfCargoOT(\'' + row.cinternoordenservicio + '\');" class="pull-left"><i class="fas fa-file-signature fa-2x" style="color:#0E2E93;"></i></a><p>' +
-                                '</div>';
-                            }
-                        },
-                        {"orderable": false, "class" : "dt-body-center",  
-                            render:function(data, type, row){  
-                                return '<div>'+
                                 '    <p><a title="Etiqueta" style="cursor:pointer;" onClick="genEtiqueta(\'' + row.cinternoordenservicio + '\');"><span class="fas fa-receipt fa-2x" style="color:#DF6F3B;" aria-hidden="true"> </span> </a><p>' +
                                 '</div>';
                             }
@@ -352,8 +348,8 @@ pdfOT = function(cinternoordenservicio){
     window.open(baseurl+"lab/recepcion/crecepcion/pdfOrderServ/"+cinternoordenservicio);
 };
 
-pdfCargoOT = function(cinternoordenservicio){
-    window.open(baseurl+"lab/recepcion/crecepcion/pdfCargoOT/"+cinternoordenservicio);
+pdfCargoConst = function(idConst){
+    window.open(baseurl+"lab/recepcion/crecepcion/pdfCargoOT/"+idConst);
 };
 
 pdfCoti = function(idcoti,nversion){
@@ -368,7 +364,65 @@ genEtiqueta = function(cinternoordenservicio){
     $('#modalEtiqueta').modal({show:true});
     
     $('#mhdncinternoordenservicio').val(cinternoordenservicio);
+
+    document.getElementById("txtEtiqueta").style.visibility = "hidden";
+
     listarEtiquetasmuestras(cinternoordenservicio);
+};
+
+$('input[type=radio][name=rFEtiqueta]').change(function() {
+    if($('#rdgeneral').prop('checked')){  
+        document.getElementById("txtEtiqueta").style.visibility = "hidden";
+    }else if ($('#rdlote').prop('checked')){    
+        document.getElementById("txtEtiqueta").style.visibility = "visible";
+    }
+    $('#txtEtiqueta').val(1);
+});
+
+verConstancias = function(idcoti,nversion){
+    $('#modalImpConstancia').modal({show:true});
+    recuperaListprodconstImp(idcoti,nversion);
+}
+
+recuperaListprodconstImp = function(IDCOTIZACION,NVERSION){
+    otblListProdConstImp = $('#tblListProdConstImp').DataTable({         
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false,  
+        'ajax'	: {
+            "url"   : baseurl+"lab/recepcion/crecepcion/getlistconstrecep/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.cinternocotizacion    = IDCOTIZACION; 
+                d.nversioncotizacion  = NVERSION;  
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: 'nro_constancia', "className": 'col-s'},
+            {data: 'fingreso'},
+            {"orderable": false, "class" : "dt-body-center col-xs ", 
+                render:function(data, type, row){  
+                    return '<div class="text-center" >' +
+                    '<a style="cursor:pointer;" onclick="pdfCargoConst(\'' + row.IDCONST+ '\');" class="pull-left"><span class="fas fa-file-signature" aria-hidden="true"></span></a>'+
+                    '</div>';
+                }
+            },
+            
+        ],
+    }); 
 };
 
 fechaActualRecep = function(){
@@ -384,12 +438,14 @@ selRecep= function(IDCOTIZACION,NVERSION,DCLIENTE,NROCOTI){
     $('#hdnAccionregcoti').val('A'); 
     $('#mtxtidcotizacion').val(IDCOTIZACION); 
     $('#mtxtnroversion').val(NVERSION);
+    
+    $('#mhdnidcoticonst').val(IDCOTIZACION); 
+    $('#mhdnverconst').val(NVERSION); 
   
     document.querySelector('#lblclie').innerText = DCLIENTE;
     document.querySelector('#lblcoti').innerText = NROCOTI;
-     
+
     recuperaListproducto(IDCOTIZACION,NVERSION);
-    /*$('#btnParticiopantes').show();*/
 };
   
 $("body").on("click","#aCerrarCoti",function(event){
@@ -470,8 +526,48 @@ $('#btnRetornarLista').click(function(){
     //$('#btnBuscar').click();
 });
 
-recuperaListproducto = function(IDCOTIZACION,NVERSION){
-    otblListProducto = $('#tblListProductos').DataTable({         
+
+$("#btnconstancia").click(function (){
+    $("#modalConstancia").modal('show');
+    
+    $('#frmGenConst').trigger("reset");
+
+    $('#txtFConstancia').datetimepicker({
+        format: 'DD/MM/YYYY',
+        daysOfWeekDisabled: [0],
+        locale:'es'
+    });    
+
+    $('#txtHConstancia').datetimepicker({
+        //format: 'LT',
+        datepicker: false,
+        format: 'hh:mm A',
+        pickDate: false,
+        locale:'es'
+    })
+
+    
+    
+    var fecha = new Date();		
+    var fechatring = ("0" + fecha.getDate()).slice(-2) + "/" + ("0"+(fecha.getMonth()+1)).slice(-2) + "/" +fecha.getFullYear() ;
+    var timestring = fecha.getHours() + ":" + fecha.getMinutes();
+
+    $('#txtFConstancia').datetimepicker('date', moment(fechatring, 'DD/MM/YYYY') );
+    $('#txtHConstancia').datetimepicker('date', moment(timestring, 'hh:mm A') );
+
+    $('#mhdnidconst').val();
+
+    vidcoticonst = $('#mhdnidcoticonst').val(); 
+    vverconst = $('#mhdnverconst').val(); 
+
+    $('#mhdnidcotiConstr').val(vidcoticonst); 
+    $('#mhdnnroverConstr').val(vverconst); 
+
+    recuperaListprodconst(vidcoticonst,vverconst);
+});
+
+recuperaListprodconst = function(IDCOTIZACION,NVERSION){
+    otblListProdConst = $('#tblListProdConst').DataTable({         
         "processing"  	: true,
         "bDestroy"    	: true,
         "stateSave"     : true,
@@ -481,6 +577,196 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
         "scrollX"     	: true,
         "scrollCollapse": true, 
         'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: true,
+        "filter"      	: true, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false,  
+        'ajax'	: {
+            "url"   : baseurl+"lab/recepcion/crecepcion/getrecepcionmuestraconst/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.idcoti    = IDCOTIZACION; 
+                d.nversion  = NVERSION;  
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: 'SPACE', "className": 'col-xxs'},
+            {data : 'nro_constancia'},
+            {data: 'frecepcionmuestra', "class" : "col-s"},
+            {data: 'cmuestra'},
+            {data: 'drealproducto', "class" : "col-l"},
+            {data: 'dpresentacion', "class" : "col-l"},
+            {data: 'dobservacionesconst'},
+            {data: 'IDCONST'},
+            {data: 'nordenproducto'},
+        ],
+        "columnDefs": [{
+            "targets": [0],
+            "createdCell": function (td, cellData, rowData, row, col) {
+                    if (rowData.IDCONST == '0') {
+                        $(td).addClass('index select-checkbox');
+                    }else{
+                        $(td).removeClass('select-checkbox');
+                    }
+            },
+            "orderable": false
+        }
+        ],
+        "select": {
+            style:    'multi',  
+            selector: 'td:nth-child(1)'      
+        },
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'all'} ).nodes();
+            var last = null;
+			var grupo;
+ 
+            api.column([1], {} ).data().each( function ( ctra, i ) { 
+                grupo = api.column(1).data()[i];                
+                grupo1 = api.column(7).data()[i];  
+                if ( last !== ctra ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="1">'+grupo1+'</td><td colspan="8"><strong> '+ctra.toUpperCase()+'</strong></td></tr>'
+                    ); 
+                    last = ctra;
+                }
+            } );
+        },
+    }); 
+
+    otblListProdConst.column(1).visible( false );
+    otblListProdConst.column(7).visible( false );
+    otblListProdConst.column(8).visible( false );
+
+    // Enumeracion 
+    otblListProdConst.on( 'order.dt search.dt', function () { 
+        otblListProdConst.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+          cell.innerHTML = i+1;
+          } );
+    }).draw();
+};
+
+$('#frmGenConst').submit(function(event){
+    
+    event.preventDefault();
+
+    var tableconst = $('#tblListProdConst').DataTable();
+    var seleccionados = tableconst.rows({ selected: true });
+
+    var IDCOTIZACION = $('#mhdnidcotiConstr').val();
+    var NVERSION = $('#mhdnnroverConstr').val();
+    var IDPRODUCTO;
+
+    var request = $.ajax({
+        url:$('#frmGenConst').attr("action"),
+        type:$('#frmGenConst').attr("method"),
+        data:$('#frmGenConst').serialize(),
+        error: function(){
+            Vtitle = 'No se puede Grabar por error';
+            Vtype = 'error';
+            sweetalert(Vtitle,Vtype); 
+        }
+    });
+    request.done(function( respuesta ) {
+        var posts = JSON.parse(respuesta);        
+        $.each(posts, function() {
+            IDCONSTANCIA = this.idconstrecepcion; 
+            seleccionados.every(function(key,data){
+                IDPRODUCTO = this.data().nordenproducto;
+                addProductoConst(IDCOTIZACION,NVERSION,IDPRODUCTO,IDCONSTANCIA); 
+            });
+            addProductoConstMensajeOK(IDCOTIZACION,NVERSION);
+        });
+    });
+});
+addProductoConst = function(IDCOTIZACION,NVERSION,IDPRODUCTO,IDCONSTANCIA){  
+    $.post(baseurl+"lab/recepcion/crecepcion/setgenerarconstdet", 
+    {
+        idcotizacion    : IDCOTIZACION,
+        nversion        : NVERSION,
+        idcotiproducto  : IDPRODUCTO,
+        idconstancia    :IDCONSTANCIA,
+    });
+}
+addProductoConstMensajeOK = function(varidcoticonst,varverconst){ 
+    //otblListProdConst.ajax.reload(null,false);
+    recuperaListprodconst(varidcoticonst,varverconst); 
+    Vtitle = 'Se grabo Correctamente';
+    Vtype = 'success';
+    sweetalert(Vtitle,Vtype);
+}
+
+$("#btnblancov").click(function (){
+    $("#modalBlancov").modal('show');
+    
+    $('#frmBlancovia').trigger("reset");
+    
+    vidcoticonst = $('#mhdnidcoticonst').val(); 
+
+    $('#mhdnidcotibv').val(vidcoticonst); 
+    $('#mhdnAccionblancovia').val('N');
+    
+    listarBlancoviajero(vidcoticonst); 
+});
+listarBlancoviajero = function(vidcoticonst){
+    
+    //$('#tblBlancoviajero').DataTable().destroy();
+    //$('#tblBlancoviajero tbody').empty();
+
+    otblBlancoviajero = $('#tblBlancoviajero').DataTable({   
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : true,
+        "scrollY"     	: "300px",
+        "scrollX"     	: false,
+        "scrollCollapse": true, 
+        'AutoWidth'     : true,
+        "paging"      	: false,
+        "info"        	: false,
+        "filter"      	: false, 
+        "ordering"		: false,
+        "responsive"    : false,
+        "select"        : false, 
+        //"serverSide"    : true,   
+        'ajax'	: {
+            "url"   : baseurl+"lab/recepcion/crecepcion/getlistblancoviajero/",
+            "type"  : "POST", 
+            "data": function ( d ) {
+                d.idcoti    = vidcoticonst; 
+            },     
+            dataSrc : ''        
+        },
+        'columns'	: [
+            {data: 'BK', "class" : "col-s"},
+            {data: 'LOTE', "class" : "col-sm"},                     
+            {"orderable": false, 
+                render:function(data, type, row){
+                    return '<div>' +
+                            '<a id="aDelBlanco" href="'+row.IDBLANCOVIAJERO+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+
+                            '</div>' ; 
+                }
+            }  
+        ]
+    });
+};
+
+recuperaListproducto = function(IDCOTIZACION,NVERSION){
+    otblListProducto = $('#tblListProductos').DataTable({         
+        "processing"  	: true,
+        "bDestroy"    	: true,
+        "stateSave"     : true,
+        "bJQueryUI"     : true,
+        "scrollResize"  : false,
+        "scrollY"     	: "400px",
+        "scrollX"     	: true,
+        "scrollCollapse": false, 
+        'AutoWidth'     : false,
         "paging"      	: false,
         "info"        	: true,
         "filter"      	: true, 
@@ -506,7 +792,7 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
             },
             {"orderable": false, data: 'SPACE', targets: 1},
             {"orderable": false, data : 'NROORDEN', targets : 2},
-            {"orderable": false, data: 'frecepcionmuestra', targets: 3, "class" : "col-s"},
+            {"orderable": false, data: 'frecepcionmuestra', targets: 3, "class" : "col-sm"},
             {"orderable": false, data: 'cmuestra', targets: 4},
             {"orderable": false, data: 'drealproducto', targets: 5, "class" : "col-l"},
             {"orderable": false, data: 'dpresentacion', targets: 6, "class" : "col-l"},
@@ -517,8 +803,8 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
             {"orderable": false, data: 'fenvase', targets: 11},
             {"orderable": false, data: 'fmuestra', targets: 12},
             {"orderable": false, data: 'hmuestra', targets: 13},
-            {"orderable": false, data: 'dobservacion', targets: 14},
-            {"orderable": false, data: 'dotraobservacion', targets: 15},
+            {"orderable": false, data: 'dobservacion', "class" : "col-sm", targets: 14},
+            {"orderable": false, data: 'dotraobservacion', "class" : "col-sm", targets: 15},
             {"orderable": false, data: 'IDORDEN', targets: 16},
             {"orderable": false, data: 'FECHAORDEN', targets: 17},
         ],
@@ -577,8 +863,7 @@ recuperaListproducto = function(IDCOTIZACION,NVERSION){
         var fot = $(this).closest('tr').find('td:eq(1)').text().substr(27,11);
     
         $('#modalFechaOT').modal({show:true});
-        seleOT(val,nro,fot);
-        listarBlancoviajero(val);       
+        seleOT(val,nro,fot);      
     } ); 
 };
 $('#tblListProductos tbody').on( 'click', 'td.details-control', function () {
@@ -662,25 +947,14 @@ $('#modalFechaOT').on('shown.bs.modal', function (e) {
 
 seleOT = function(val,nro,fot){ 
     $('#frmFechaOT').trigger("reset");
-    $('#frmGenConst').trigger("reset");
 
-    $('#txtFOT,#txtFConstancia').datetimepicker({
+    $('#txtFOT').datetimepicker({
         format: 'DD/MM/YYYY',
         daysOfWeekDisabled: [0],
         locale:'es'
     });    
 
-    $('#txtHConstancia').datetimepicker({
-        //format: 'LT',
-        datepicker: false,
-        format: 'hh:mm A',
-        pickDate: false,
-        locale:'es'
-    })
-
     $('#mhdncinternoordenservicio').val(val);
-    $('#mhdncordenservicioconst').val(val);
-    $('#mhdncordenservicioblancovia').val(val);
     $('#mhdnnroordenservicio').val(nro);
     $('#txtForden').val(fot);
     $('#mhdnAccionConst').val('N');
@@ -708,26 +982,6 @@ $('#frmFechaOT').submit(function(event){
     });
 });
 
-$('#frmGenConst').submit(function(event){
-    event.preventDefault();
-    
-    var request = $.ajax({
-        url:$('#frmGenConst').attr("action"),
-        type:$('#frmGenConst').attr("method"),
-        data:$('#frmGenConst').serialize(),
-        error: function(){
-            Vtitle = 'No se puede registrar por error';
-            Vtype = 'error';
-            sweetalert(Vtitle,Vtype);
-        },
-        success: function(data) { 
-            Vtitle = 'Grabo Correctamente!!';
-            Vtype = 'success';
-            sweetalert(Vtitle,Vtype);        
-            $('#mbtnCFechaOT').click();
-        }
-    });
-});
 
 $('#modalRecepcion').on('shown.bs.modal', function (e) {
     
@@ -926,7 +1180,6 @@ listarEtiquetasmuestras = function(vcinternoordenservicio){
         'columns'	: [
             {data: 'CMUESTRA'},
             {data: 'SPACE'},
-            {data : 'COPIA'},
         ],
         "columnDefs": [{
             "targets": [1],
@@ -959,9 +1212,9 @@ $('#mbtnPrint').click(function(){
     var seleccionados = table.rows({ selected: true }).indexes();
 
     var array1 = table.cells(seleccionados, [0]).data().toArray();
-    var array2 = table.cells(seleccionados, [2]).data().toArray();
+    var array2 = $('#txtEtiqueta').val();
     var plainArray = [array1, array2];
-
+    
     var vcinternoordenservicio = $('#mhdncinternoordenservicio').val();
     
     var form = getForm(baseurl+"lab/recepcion/crecepcion/pdfEtiquetagen", "_blank", plainArray, vcinternoordenservicio, "post");
@@ -971,49 +1224,6 @@ $('#mbtnPrint').click(function(){
     form.parentNode.removeChild(form);
 });
 
-listarBlancoviajero = function(vcinternoordenservicio){
-    
-    //$('#tblBlancoviajero').DataTable().destroy();
-    //$('#tblBlancoviajero tbody').empty();
-
-    otblBlancoviajero = $('#tblBlancoviajero').DataTable({   
-        "processing"  	: true,
-        "bDestroy"    	: true,
-        "stateSave"     : true,
-        "bJQueryUI"     : true,
-        "scrollResize"  : true,
-        "scrollY"     	: "300px",
-        "scrollX"     	: false,
-        "scrollCollapse": true, 
-        'AutoWidth'     : true,
-        "paging"      	: false,
-        "info"        	: false,
-        "filter"      	: false, 
-        "ordering"		: false,
-        "responsive"    : false,
-        "select"        : false, 
-        //"serverSide"    : true,   
-        'ajax'	: {
-            "url"   : baseurl+"lab/recepcion/crecepcion/getlistblancoviajero/",
-            "type"  : "POST", 
-            "data": function ( d ) {
-                d.cinternoordenservicio    = vcinternoordenservicio;  
-            },     
-            dataSrc : ''        
-        },
-        'columns'	: [
-            {data: 'BK', "class" : "col-s"},
-            {data: 'LOTE', "class" : "col-sm"},                     
-            {"orderable": false, 
-                render:function(data, type, row){
-                    return '<div>' +
-                            '<a id="aDelBlanco" href="'+row.IDBLANCOVIAJERO+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+
-                            '</div>' ; 
-                }
-            }  
-        ]
-    });
-};
     
 $("body").on("click","#aDelBlanco",function(event){
     event.preventDefault();
@@ -1070,6 +1280,10 @@ $('#btnNuevobv').click(function(){
     $('#mhdnAccionblancovia').val('N');
     $('#cbobk').val('0').change();
 });
+
+
+
+
 
 $('#addRow1').on( 'click', function () {
     var vcinternoordenservicio = $('#mhdncordenservicioblancovia').val();

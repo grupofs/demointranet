@@ -207,6 +207,12 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-3"> 
+                                                <label>Nro. Orden Trabajo</label> 
+                                                <div>
+                                                    <input type="text" id="txtnroot" name="txtnroot" class="form-control"  onkeypress="pulsarListarCoti(event)"/>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>                
                                                 
@@ -259,7 +265,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <h4>
-                                                    <i class="fas fa-weight"></i> <label id="lblclie"></label>
+                                                    <i class="fas fa-weight"></i> <label id="lblclie"></label> - 
                                                     <small id="lblcoti"> </small>
                                                 </h4>
                                             </div> 
@@ -268,16 +274,21 @@
                                             <div class="col-12">
                                                 <div class="card card-outline card-primary">
                                                     <div class="card-header">
-                                                        <h3 class="card-title">Listado de Recepcion</h3>
+                                                        <h3 class="card-title">Listado de Recepción de Muestras</h3>
                                                     </div>                                        
                                                     <div class="card-body">
                                                     <input type="hidden" name="mtxtcusuario" class="form-control" id="mtxtcusuario" value="<?php echo $cusuario ?>">
+                                                    <input type="hidden" name="mhdnidcoticonst" class="form-control" id="mhdnidcoticonst">
+                                                    <input type="hidden" name="mhdnverconst" class="form-control" id="mhdnverconst">
+                                                    
                                                         <div class="row" style="background-color: #dff0d8;">                                                         
                                                             <div class="col-6 text-left">
                                                                 <button type="button" class="btn btn-secondary" id="btnRetornarLista"><i class="fas fa-undo-alt"></i> Retornar</button>
                                                             </div>                                                          
                                                             <div class="col-6 text-right">
                                                                 <button type="button" class="btn btn-success" id="btngenerarOT"><i class="fas fa-clipboard-list"></i> Generar OT</button>
+                                                                <button type="button" class="btn btn-info" id="btnconstancia"><i class="fas fa-file-signature"></i> Constancia Recepción</button>
+                                                                <button type="button" class="btn btn-primary" id="btnblancov"><i class="fab fa-elementor"></i> Blanco Viajero</button>
                                                             </div>    
                                                         </div>
                                                         <br>
@@ -333,7 +344,7 @@
     <div class="modal-content">
       <form class="form-horizontal" id="frmRecepcion" name="frmRecepcion" action="<?= base_url('lab/recepcion/crecepcion/setrecepcionmuestra')?>" method="POST" enctype="multipart/form-data" role="form"> 
 
-        <div class="modal-header text-center bg-success">
+        <div class="modal-header text-center bg-primary">
             <h4 class="modal-title w-100 font-weight-bold">Registro de Recepcion</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -558,7 +569,7 @@
 <div class="modal fade" id="modalFechaOT" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        <div class="modal-header text-center bg-success">
+        <div class="modal-header text-center bg-primary">
             <h4 class="modal-title w-100 font-weight-bold">Orden de Trabajo</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -588,12 +599,99 @@
                 </div>
             </div>
         </form>  
+        </div>
 
-        <form class="form-horizontal" id="frmGenConst" name="frmGenConst" action="<?= base_url('lab/recepcion/crecepcion/setgenerarconst')?>" method="POST" enctype="multipart/form-data" role="form">       
-            <input type="hidden" id="mhdnidotconst" name="mhdnidotconst"> <!-- ID -->
-            <input type="hidden" id="mhdncordenservicioconst" name="mhdncordenservicioconst">
-            <input type="hidden" id="mhdnAccionConst" name="mhdnAccionConst" >
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCFechaOT" data-dismiss="modal">Cancelar</button>            
+        </div>
+      
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
 
+<!-- /.modal-Etiqueta --> 
+<div class="modal fade" id="modalEtiqueta" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-primary">
+            <h4 class="modal-title w-100 font-weight-bold">Etiquetas para Muestras</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">
+            <div class="row">
+                <div class="col-md-6">                     
+                    <div class="form-group clearfix text-left">
+                        <div class="icheck-primary d-inline">
+                            <input type="radio" id="rdgeneral" name="rFEtiqueta" checked>
+                            <label for="rdgeneral">General</label>
+                        </div>
+                        <div class="icheck-primary d-inline">
+                            <input type="radio" id="rdlote" name="rFEtiqueta" >
+                            <label for="rdlote">Por Lote</label>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="col-md-3">  
+                    <input type="number" class="form-control" id="txtEtiqueta" name="txtEtiqueta" min="1" max="5">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12"> 
+                    <div class="card card-outline card-lightblue">
+                        <div class="card-header">
+                            <h3 class="card-title">Listado de Muestras</h3>
+                        </div>                                        
+                        <div class="card-body" style="overflow-x: scroll;">
+                            <table id="tblListEtiquetasmuestras" class="table table-striped table-bordered compact" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Nro Muestra</th>
+                                    <th>Seleccion</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCancelar" data-dismiss="modal">Cancelar</button>   
+            <button type="submit" class="btn btn-info" id="mbtnPrint">Vista Previa</button>           
+        </div>
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-Constancia --> 
+<div class="modal fade" id="modalConstancia" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-primary">
+            <h4 class="modal-title w-100 font-weight-bold">Constancia de Recepción</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+        <form class="form-horizontal" id="frmGenConst" name="frmGenConst" action="<?= base_url('lab/recepcion/crecepcion/setgenerarconst')?>" method="POST" enctype="multipart/form-data" role="form"> 
+            <input type="hidden" name="mhdnidcotiConstr" id="mhdnidcotiConstr" class="form-control">
+            <input type="hidden" name="mhdnnroverConstr" id="mhdnnroverConstr" class="form-control"> 
+            <input type="hidden" name="mhdnidconstr" id="mhdnidconstr" class="form-control">
+            <input type="hidden" name="mhdnAccionConstr" id="mhdnAccionConstr" class="form-control" value="N">
+
+             
             <div class="form-group">
                 <fieldset class="scheduler-border-fsc" id="regConst">
                     <legend class="scheduler-border-fsc text-primary">Constancia de recepcion de muestras</legend>
@@ -630,13 +728,108 @@
                 </fieldset> 
             </div>
         </form>
-
-        <!--<form class="form-horizontal" id="frmBlancovia" name="frmBlancovia" action="<?= base_url('lab/recepcion/crecepcion/setblancoviajero')?>" method="POST" enctype="multipart/form-data" role="form">       -->
-            
             <div class="form-group">
-                <fieldset class="scheduler-border-fsc" id="regConst">
-                    <legend class="scheduler-border-fsc text-primary">Blanco Viajero</legend>
                     
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-primary">
+                            <div class="card-header">
+                            </div> 
+                            <div class="card-body">
+                            <div class="table-responsive">
+                            <table id="tblListProdConst" class="table table-striped table-bordered compact" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>N°</th>
+                                <th>F. Recepcion</th>
+                                <th>Codigo</th>
+                                <th>Producto</th>
+                                <th>Presentacion</th>
+                                <th>Observacion</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            </table>
+                            </div>   
+                            </div>     
+                            </div> 
+                        </div> 
+                    </div>    
+            </div>
+        <!--</form>-->
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCConstancia" data-dismiss="modal">Cancelar</button>            
+        </div>
+      
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal-Imprimir Constancia --> 
+<div class="modal fade" id="modalImpConstancia" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-primary">
+            <h4 class="modal-title w-100 font-weight-bold">Imprimir Constancia de Recepción</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" name="mhdnidcotiConstImp" id="mhdnidcotiConstImp" class="form-control">
+            <input type="hidden" name="mhdnnroverConstImp" id="mhdnnroverConstImp" class="form-control"> 
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table id="tblListProdConstImp" class="table table-striped table-bordered compact" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>N° Constancia</th>
+                                <th>F. Constancia</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            </table>
+                        </div>   
+                    </div> 
+                </div>    
+            </div>
+        <!--</form>-->
+        </div>
+
+        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
+            <button type="reset" class="btn btn-default" id="mbtnCConstancia" data-dismiss="modal">Cancelar</button>            
+        </div>
+      
+    </div>
+  </div>
+</div> 
+<!-- /.modal-->
+
+<!-- /.modal- Blanco Viajero --> 
+<div class="modal fade" id="modalBlancov" data-backdrop="static" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header text-center bg-primary">
+            <h4 class="modal-title w-100 font-weight-bold">Blanco Viajero</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card card-primary">
@@ -669,7 +862,7 @@
                             <form class="form-horizontal" id="frmBlancovia" name="frmBlancovia" action="<?= base_url('lab/recepcion/crecepcion/setblancoviajero')?>" method="POST" enctype="multipart/form-data" role="form">              
                             <div class="card-body">                    
                                 <input type="hidden" id="mhdnidblancoviajero" name="mhdnidblancoviajero"> <!-- ID -->
-                                <input type="hidden" id="mhdncordenservicioblancovia" name="mhdncordenservicioblancovia">
+                                <input type="hidden" id="mhdnidcotibv" name="mhdnidcotibv">
                                 <input type="hidden" id="mhdnAccionblancovia" name="mhdnAccionblancovia" >                                  
                                     <div class="form-group">
                                         <div class="col-sm-12">
@@ -705,69 +898,14 @@
                             </form>
                             </div> 
                         </div>   
-                    </div>     
-                </fieldset> 
+                    </div>   
             </div>
-        <!--</form>-->
         </div>
 
         <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
             <button type="reset" class="btn btn-default" id="mbtnCFechaOT" data-dismiss="modal">Cancelar</button>            
         </div>
       
-    </div>
-  </div>
-</div> 
-<!-- /.modal-->
-
-<!-- /.modal-Etiqueta --> 
-<div class="modal fade" id="modalEtiqueta" data-backdrop="static" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header text-center bg-success">
-            <h4 class="modal-title w-100 font-weight-bold">Etiquetas para Muestras</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        <div class="modal-body">
-            <input type="hidden" id="mhdncinternoordenservicio" name="mhdncinternoordenservicio">
-            <div class="row">
-                <div class="col-md-6"> 
-                    <div class="text-info">Tipo de Etiqueta</div>
-                    <input type="checkbox" name="swCasos" id="swCasos" checked data-bootstrap-switch  data-on-text="General" data-off-text="Lote">
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12"> 
-                    <div class="card card-outline card-lightblue">
-                        <div class="card-header">
-                            <h3 class="card-title">Listado de Muestras</h3>
-                        </div>                                        
-                        <div class="card-body" style="overflow-x: scroll;">
-                            <table id="tblListEtiquetasmuestras" class="table table-striped table-bordered compact" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>Nro Muestra</th>
-                                    <th>Seleccion</th>
-                                    <th>Nro Copias</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-footer justify-content-between" style="background-color: #dff0d8;">
-            <button type="reset" class="btn btn-default" id="mbtnCancelar" data-dismiss="modal">Cancelar</button>   
-            <button type="submit" class="btn btn-info" id="mbtnPrint">Vista Previa</button>           
-        </div>
     </div>
   </div>
 </div> 
