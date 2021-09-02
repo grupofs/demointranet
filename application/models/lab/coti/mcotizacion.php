@@ -246,7 +246,7 @@ class Mcotizacion extends CI_Model {
     public function getlistarensayo($idcoti,$nversion,$idproduc) { // Listar Ensayos	
         $sql = "select a.cinternocotizacion, a.nversioncotizacion, a.nordenproducto, a.censayo as 'CENSAYO', b.censayofs as 'CODIGO', b.densayo as 'DENSAYO', b.naniopublicacion as 'ANIO', b.dnorma as 'NORMA',
                     a.icostoclienteparcial as 'CONSTOENSAYO', a.nvias as 'NVIAS', a.ncantidad as 'CANTIDAD', a.icostorealparcial as 'COSTO', a.ctipoproducto as 'TIPOPROD',
-                    if sacnoac = 'N' then 'NO AC' ELSE 'AC' end if as 'ACRE', c.dproducto, a.claboratorio, '' as 'SPACE', number(*) as 'ENUMERAR'
+                    if sacnoac = 'N' then 'NO AC' ELSE 'AC' end if as 'ACRE', c.dproducto, a.claboratorio, '' as 'SPACE', number(*) as 'ENUMERAR', a.cinternocotizacion+';'+cast(a.nordenproducto as char(20))+';'+a.censayo as 'ID'
                 from pensayoproducto a   
                     join mensayo b on b.censayo = a.censayo
                     join pproductoxcotizacion c on c.cinternocotizacion = a.cinternocotizacion and c.nversioncotizacion = a.nversioncotizacion and c.nordenproducto = a.nordenproducto   
@@ -370,7 +370,40 @@ class Mcotizacion extends CI_Model {
     public function setregensayoxprod($parametros) { // Buscar Cotizacion
         $this->db->trans_begin();
 
-        $procedure = "call usp_lab_coti_setregensayoxprod(?,?,?,?,?,?,?,?);";
+        $procedure = "call usp_lab_coti_setregensayoxprod(?,?,?,?,?,?,?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    }
+
+    public function seteditensayoxprod_costo($parametros) { // Buscar Cotizacion
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_seteditensayoxprod_costo(?,?,?,?);";
+        $query = $this->db->query($procedure,$parametros);
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $query->result(); 
+        }   
+    }
+    public function seteditensayoxprod_via($parametros) { // Buscar Cotizacion
+        $this->db->trans_begin();
+
+        $procedure = "call usp_lab_coti_seteditensayoxprod_via(?,?,?,?);";
         $query = $this->db->query($procedure,$parametros);
 
         if ($this->db->trans_status() === FALSE)

@@ -59,19 +59,21 @@ class Mregresult extends CI_Model {
             return false;
         }	
     }
-    public function getlistresultadoscab($cinternoordenservicio)
+    public function getlistresultadoscab($cinternoordenservicio,$zctipoensayo,$sacnoac)
     {
         $sql = "select distinct A.cmuestra, (A.cmuestra +'-'+ cast(A.nviausado as char(10))) as 'codmuestra', B.drealproducto 
                 from presultado A   
                     join precepcionmuestra B ON B.cinternocotizacion = A.cinternocotizacion and B.nversioncotizacion = A.nversioncotizacion and B.nordenproducto = A.nordenproducto and B.cmuestra = A.cmuestra
-                where A.cinternoordenservicio = ".$cinternoordenservicio."
+                where A.cinternoordenservicio = ".$cinternoordenservicio."                    
+                    and (select count(1) from mensayo C where A.censayo = C.censayo and (zctipoensayo = '".$zctipoensayo."' or '".$zctipoensayo."' = '%')) > 0
+                    and (select count(1) from mensayo C where A.censayo = C.censayo and (sacnoac = '".$sacnoac."' or '".$sacnoac."' = '%')) > 0
                 order by A.cmuestra;";
         $query  = $this->db->query($sql);
         
         if (!$query) return [];
         return ($query->num_rows() > 0) ? $query->result() : [];
     }
-    public function getlistresultadoscabtipo($cinternoordenservicio,$cmuestra)
+    public function getlistresultadoscabtipo($cinternoordenservicio,$cmuestra,$zctipoensayo,$sacnoac)
     {
         $sql = "select distinct C.zctipoensayo, D.dregistro as 'tipoensayo' 
                 from presultado A   
@@ -80,6 +82,8 @@ class Mregresult extends CI_Model {
                     join ttabla D ON D.ctipo = C.zctipoensayo
                 where A.cinternoordenservicio = ".$cinternoordenservicio."
                     and A.cmuestra = '".$cmuestra."'
+                    and C.zctipoensayo like '".$zctipoensayo."'
+                    and C.sacnoac like '".$sacnoac."'   
                 order by D.dregistro;";
         $query  = $this->db->query($sql);
         
@@ -87,7 +91,7 @@ class Mregresult extends CI_Model {
         return ($query->num_rows() > 0) ? $query->result() : [];
     }
     public function getlistresultados($parametros) { // Buscar Cotizacion	
-        $procedure = "call usp_lab_coti_getlistresultados(?,?,?)";
+        $procedure = "call usp_lab_coti_getlistresultados(?,?,?,?)";
 		$query = $this->db-> query($procedure,$parametros);
 
 		if ($query->num_rows() > 0) { 
@@ -126,7 +130,7 @@ class Mregresult extends CI_Model {
 		}
     }
 
-    public function setresultados($parametros) { // Buscar Cotizacion
+    public function setresultados1($parametros) { // Buscar Cotizacion
         $this->db->trans_begin();
 
         $procedure = "call usp_lab_resultados_setresultados(?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -143,7 +147,7 @@ class Mregresult extends CI_Model {
         }   
     }
 
-    public function setresultadosold($parametros) { // Buscar Cotizacion
+    public function setresultadosold1($parametros) { // Buscar Cotizacion
         $this->db->trans_begin();
 
         $procedure = "call usp_lab_resultados_setresultadosold(?,?,?,?,?,?,?,?,?,?);";
@@ -169,5 +173,35 @@ class Mregresult extends CI_Model {
             'ctipoinforme' => $ctipoinforme,
         ], ['cinternoordenservicio' => $cinternoordenservicio]);
     }
+    
+
+
+	public function setresultados($parametros = array()) { // Comprobar Email
+		$this->db->where("cinternoordenservicio",$parametros["cinternoordenservicio"]);
+		$this->db->where("nordenproducto",$parametros["nordenproducto"]);
+		$this->db->where("cmuestra",$parametros["cmuestra"]);
+        $this->db->where("censayo",$parametros["censayo"]);
+        
+		if($this->db->update("presultado", $parametros)){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
+
+	public function setresultadosold($parametros = array()) { // Comprobar Email
+		$this->db->where("cinternoordenservicio",$parametros["cinternoordenservicio"]);
+		$this->db->where("nordenproducto",$parametros["nordenproducto"]);
+		$this->db->where("cmuestra",$parametros["cmuestra"]);
+        $this->db->where("censayo",$parametros["censayo"]);
+        
+		if($this->db->update("presultado", $parametros)){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
+
+    
 }
 ?>

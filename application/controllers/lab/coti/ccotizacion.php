@@ -1254,6 +1254,8 @@ class Ccotizacion extends CI_Controller {
 		$claboratorio 		    = $this->input->post('mtxtmCLab');
 		$nvias 		            = $this->input->post('mtxtmvias');
 		$icostoclienteparcial 	= $this->input->post('mtxtmCosto');
+		$censayoedit 	        = $this->input->post('mhdnmcensayoedit');
+		$editclase 	            = $this->input->post('mhdnmeditclase');
 		$accion 		        = $this->input->post('hdnmAccion');
         
         $parametros = array(
@@ -1264,9 +1266,48 @@ class Ccotizacion extends CI_Controller {
             '@claboratorio'   	    =>  $claboratorio,
             '@nvias'   	            =>  $nvias,
             '@icostoclienteparcial' =>  $icostoclienteparcial,
+            '@censayoedit'          =>  $censayoedit,
+            '@editclase'            =>  $editclase,
             '@accion'   	        =>  $accion
         );
         $retorna = $this->mcotizacion->setregensayoxprod($parametros);
+        echo json_encode($retorna);		
+	}
+
+    public function seteditensayoxprod_coti() { // Registrar informe PT
+		$varnull = '';
+		$id_ser = $this->input->post('ID');
+        $id_array = preg_split("/;/",$id_ser);
+
+        $cinternocotizacion     = $id_array[0];
+		$nordenproducto 	    = $id_array[1];
+        $censayo 	            = $id_array[2];
+        $accion                 = $this->input->post('action');
+        $icostoclienteparcial   = $this->input->post('CONSTOENSAYO');
+        $nvias 	                = $this->input->post('NVIAS');
+
+        if ($accion == 'edit') {
+            if(isset($icostoclienteparcial)) {
+                $parametros = array(
+                    'cinternocotizacion'     =>  $cinternocotizacion,
+                    'nordenproducto'      		=>  $nordenproducto,
+                    'censayo'    		        =>  $censayo,
+                    'icostoclienteparcial'    	=>  $icostoclienteparcial,
+                );
+                
+                $retorna = $this->mcotizacion->seteditensayoxprod_costo($parametros);
+            } else if(isset($nvias)) {
+                $parametros = array(
+                    'cinternocotizacion'     =>  $cinternocotizacion,
+                    'nordenproducto'      		=>  $nordenproducto,
+                    'censayo'    		        =>  $censayo,
+                    'nvias'                     =>  $nvias,
+                );
+                
+                $retorna = $this->mcotizacion->seteditensayoxprod_via($parametros);
+            }
+        }
+       
         echo json_encode($retorna);		
 	}
 

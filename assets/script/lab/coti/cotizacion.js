@@ -196,6 +196,7 @@ $(document).ready(function() {
                     $('#mtxtmIMonto').val(this.var_imonto);
 
                     recuperaListensayo(this.cinternocotizacion,this.nversioncotizacion,this.nordenproducto);
+                    //objListaensayos.viewList(this.cinternocotizacion,this.nversioncotizacion,this.nordenproducto);
                     
                     Vtitle = 'Producto Guardado!!!';
                     Vtype = 'success';
@@ -262,7 +263,9 @@ $(document).ready(function() {
 
                     $('#mtxtmIMonto').val(varimonto);
                     
-                    recuperaListensayo(varIDCOTIZACION,varNVERSION,varIDPROD);
+                    recuperaListensayo(varIDCOTIZACION,varNVERSION,varIDPROD);                    
+                    //objListaensayos.viewList(varIDCOTIZACION,varNVERSION,varIDPROD);
+
                     Vtitle = 'Ensayo registrado Guardada!!!';
                     Vtype = 'success';
                     sweetalert(Vtitle,Vtype); 
@@ -1154,7 +1157,8 @@ $(function() {
         var v_idcliente = $('#cboregclie').val();
         iniRegCotiprodu(v_idcliente,0,0,0);
         
-        recuperaListensayo(v_IDCOTIZACION,v_NVERSION,0) 
+        recuperaListensayo(v_IDCOTIZACION,v_NVERSION,0)               
+        //objListaensayos.viewList(v_IDCOTIZACION,v_NVERSION,0); 
 
         $('#contenedorCotizacion').hide();
         $('#contenedorRegensayo').show();
@@ -1180,7 +1184,8 @@ $(function() {
             CCLIENTE = valorccliente;
         }
         selCotiprodu(IDCOTIZACION,NVERSION,IDPROD,CLOCALCLIE,PRODUCTO,CCONDI,NMUESTRA,CPROCEDE,CANTMIN,ETIQUETA,CTIPOPROD,PORCION,CUM,CCLIENTE,IMONTO);
-        recuperaListensayo(IDCOTIZACION,NVERSION,IDPROD) 
+        recuperaListensayo(IDCOTIZACION,NVERSION,IDPROD)           
+        //objListaensayos.viewList(IDCOTIZACION,NVERSION,IDPROD);
 
         $('#contenedorCotizacion').hide();
         $('#contenedorRegensayo').show();
@@ -1371,38 +1376,33 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
             dataSrc : ''        
         },
         'columns'	: [
-            {
-              "class"     :   "col-xxs",
-              orderable   :   false,
-              data        :   'SPACE',
-              targets     :   0,
-            },
-            {"orderable": false, data: 'SPACE', targets: 1},
-            {"orderable": false, data: 'CODIGO', targets: 2},
-            {"orderable": false, data: 'ACRE', targets: 3},
-            {"orderable": false, data: 'DENSAYO', targets: 4},
-            {"orderable": false, data: 'ANIO', targets: 5},
-            {"orderable": false, data: 'NORMA', targets: 6, "class": "col-lm"},
-            {"orderable": false, data: 'CONSTOENSAYO', targets: 7},
-            {"orderable": false, data: 'NVIAS', targets: 8},
-            {"orderable": false, data: 'CANTIDAD', targets: 9},
-            {"orderable": false, data: 'COSTO', targets: 10},
+            {"orderable": false, data: 'SPACE'},
+            {"orderable": false, data: 'CODIGO'},
+            {"orderable": false, data: 'ACRE'},
+            {"orderable": false, data: 'DENSAYO'},
+            {"orderable": false, data: 'ANIO'},
+            {"orderable": false, data: 'NORMA', "className": "col-lm"},
             {"orderable": false, 
                 render:function(data, type, row){
-                    return '<div class="text-left" >' +
-                        '<a data-toggle="modal" title="Editar" style="cursor:pointer; color:green;" data-target="#modalselensayo" onClick="selCotiensayo(\'' + row.cinternocotizacion + '\',\'' + row.nversioncotizacion + '\',\'' + row.nordenproducto + '\',\'' + row.dproducto + '\',\'' + row.CENSAYO + '\',\'' + row.CODIGO + '\',\'' + row.DENSAYO + '\',\'' + row.CONSTOENSAYO + '\',\'' + row.claboratorio + '\',\'' + row.NVIAS + '\');"><span class="fas fa-edit fa-2x" aria-hidden="true"> </span> </a>'+
+                    return '<div class="text-center" >' +
+                        '<a data-toggle="modal" title="Cambiar ensayo" style="cursor:pointer; color:blue;" data-target="#modaladdEnsayo" onClick="editSelEnsayo(\'' + row.cinternocotizacion + '\',\'' + row.nordenproducto + '\',\'' + row.CENSAYO + '\');"><span class="fas fa-ellipsis-v" aria-hidden="true"> </span> </a>'+
                     '</div>';
                 }
             },
+            {"orderable": false, data: 'CONSTOENSAYO'},
+            {"orderable": false, data: 'NVIAS'},
+            {"orderable": false, data: 'CANTIDAD'},
+            {"orderable": false, data: 'COSTO'},
             {"orderable": false, 
                 render:function(data, type, row){
                     return '<div>'+
                         '<a id="aDelEnsayoprod" href="'+row.CENSAYO+'" idcoti="'+row.cinternocotizacion+'" nver="'+row.nversioncotizacion+'" idprod="'+row.nordenproducto+'" title="Eliminar" style="cursor:pointer; color:#FF0000;"><span class="fas fa-trash-alt fa-2x" aria-hidden="true"> </span></a>'+      
                     '</div>';
                 }
-            }
+            },
+            {"orderable": false, data: 'ID', "className": "ocultar col-xxs"},
         ], 
-        "columnDefs": [
+        /*"columnDefs": [
             {
                 "targets": [6],
                 "render": function ( data, type, row ) {
@@ -1412,7 +1412,7 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
                 }
             },{
                 "targets": [1], 
-                "className": 'index select-checkbox',           
+                "className": 'select-checkbox',           
                 "checkboxes": {
                     'selectRow': true
                 },
@@ -1422,7 +1422,7 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
         "select": {
             style:    'multi',  
             selector: 'td:nth-child(1)'      
-        },
+        },*/
         dom: 'Bfrtip',
         buttons: [
             {
@@ -1440,16 +1440,66 @@ recuperaListensayo = function(vIDCOTIZACION,vNVERSION,vIDPROD){
             }
         ]
     });  
-    otblListEnsayos.column(0).visible( false ); 
+
     // Enumeracion 
     otblListEnsayos.on( 'order.dt search.dt', function () { 
-        otblListEnsayos.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        otblListEnsayos.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
           cell.innerHTML = i+1;
           } );
-    }).draw();
+    }).draw();  
+
+    $('#tblListEnsayos').on('draw.dt', function(){
+        $('#tblListEnsayos').Tabledit({
+            url:'lab/coti/ccotizacion/seteditensayoxprod_coti',
+            eventType: 'dblclick',
+            editButton: false,
+            deleteButton: false,
+            saveButton: false,
+            autoFocus: false,
+            hideIdentifier: true,
+            restoreButton: false,
+            columns:{
+                identifier : [12,'ID'],
+                editable:[[7,'CONSTOENSAYO'],[8,'NVIAS']]
+            },
+            restoreButton:false,
+            onSuccess: function(data, textStatus, jqXHR) {
+                otblListEnsayos.ajax.reload(null,false); 
+            },
+        });
+    });
+    
 };
 
+
 addEnsayo = function(){  
+    
+    $('#hdnbusclaseb').val('A');
+    $('#hdnbuscensayo').val('');
+
+    $.ajax({
+        type: 'ajax',
+        method: 'post',
+        url: baseurl+"lab/coti/ccotizacion/getmcbobustipoensayo",
+        dataType: "JSON",
+        async: true,
+        success:function(result)
+        {
+            $('#mcbobustipoensayo').html(result); 
+        },
+        error: function(){
+            alert('Error, No se puede autenticar por error');
+        }
+    });
+}
+
+editSelEnsayo = function(cinternocotizacion,nordenproducto,censayo){
+    
+    $('#hdnbusclaseb').val('E');
+    $('#hdnbusIdcoti').val(cinternocotizacion);
+    $('#hdnbusIdprod').val(nordenproducto);
+    $('#hdnbuscensayo').val(censayo);
+
     $.ajax({
         type: 'ajax',
         method: 'post',
@@ -1563,18 +1613,15 @@ buscarEnsayos = function(){
     otblbuscarEnsayos.column(9).visible( false ); 
 };
 
-// COMPRIMIR GRUPO 
-/*$('#tblbuscarEnsayos tbody').on('click', 'tr.dtrg-group', function () {
-    var name = $(this).data('name');
-    collapsedGroupsEq[name] = !collapsedGroupsEq[name];
-    otblbuscarEnsayos.draw(true);
-}); */
 
 selEnsayo = function(CENSAYO,CENSAYOFS,DENSAYO,ICOSTO,CLAB){
     var idcoti = $('#mhdnidcotizacion').val();
     var nvers = $('#mhdnnroversion').val();
     var idprod = $('#mhdnIdProduc').val();
     var dprod = $('#mtxtregProducto').val();
+
+    var vhdnbusclaseb = $('#hdnbusclaseb').val(); 
+    var vcensayoedit = $('#hdnbuscensayo').val();
     
     $('#hdnmAccion').val('N');
 
@@ -1585,6 +1632,9 @@ selEnsayo = function(CENSAYO,CENSAYOFS,DENSAYO,ICOSTO,CLAB){
     $('#mtxtmCosto').val(ICOSTO);
     $('#mtxtmCLab').val(CLAB);
     $('#mtxtmvias').val(1);
+    
+    $('#mhdnmeditclase').val(vhdnbusclaseb);
+    $('#mhdnmcensayoedit').val(vcensayoedit);
     
     document.querySelector('#lblmProducto').innerText = dprod;
     document.querySelector('#lblmCodigo').innerText = CENSAYOFS;

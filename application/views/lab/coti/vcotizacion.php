@@ -39,7 +39,10 @@
             width: 1500px !important;
             max-width: 1500px !important;
         }
+       }
     
+    .ocultar {
+        color: white !important;
     }
       
     
@@ -682,13 +685,13 @@
                                                         <table id="tblListEnsayos" class="table table-striped table-bordered compact" style="width:100%">
                                                             <thead>
                                                             <tr>
-                                                                <th></th>
                                                                 <th>N°</th>
                                                                 <th>Codigo</th>
                                                                 <th>Acred.</th>
                                                                 <th>Ensayo</th>
                                                                 <th>Año</th>
                                                                 <th>Norma</th>
+                                                                <th></th>
                                                                 <th>Precio S/.</th>
                                                                 <th>Vias</th>
                                                                 <th>Cant.</th>
@@ -733,7 +736,10 @@
             <input type="hidden" id="hdnbusIdcoti" name="hdnbusIdcoti" >
             <input type="hidden" id="hdnbusNvers" name="hdnbusNvers" >
             <input type="hidden" id="hdnbusIdprod" name="hdnbusIdprod" >
-            <input type="hidden" id="hdnbusprod" name="hdnbusprod" >   
+            <input type="hidden" id="hdnbusprod" name="hdnbusprod" > 
+
+            <input type="hidden" id="hdnbusclaseb" name="hdnbusclaseb" > 
+            <input type="hidden" id="hdnbuscensayo" name="hdnbuscensayo" >  
 
             <div class="row">
                 <div class="col-sm-3">                                                 
@@ -797,6 +803,7 @@
 <!-- /.Modal-->
 
 
+
 <!-- /.modal- Insertar EnsayosLab --> 
 <div class="modal fade" id="modalselensayo" data-backdrop="static" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -818,6 +825,9 @@
             
             <input type="hidden" id="mtxtmCLab" name="mtxtmCLab" >
             <input type="hidden" id="hdnmAccion" name="hdnmAccion" >
+
+            <input type="hidden" id="mhdnmcensayoedit" name="mhdnmcensayoedit">
+            <input type="hidden" id="mhdnmeditclase" name="mhdnmeditclase">
             <div class="form-group">
                 <div class="row"> 
                     <div class="col-12">

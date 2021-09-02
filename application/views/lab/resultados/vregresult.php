@@ -197,7 +197,7 @@
                                                     <input type="text" id="txtensayo" name="txtensayo" class="form-control"  onkeypress="pulsarListarCoti(event)"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <!--<div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Area de Servicio</label>
                                                     <select class="form-control select2bs4" id="cboareaserv" name="cboareaserv" multiple="multiple" data-placeholder="Seleccionar" style="width: 100%;">
@@ -207,7 +207,7 @@
                                                         <option value="I">Instrumental</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>                
                                                 
@@ -383,12 +383,22 @@
                                                         <h3 class="card-title">Listado de Resultados</h3>
                                                     </div> 
                                                     <div class="card-footer">  
-                                                        <div class="row">                                                        
+                                                        <div class="row">
                                                             <div class="col-md-3">
                                                                 <div class="text-info">Tipo ensayo</div>
                                                                 <div>
                                                                     <select class="form-control select2bs4" id="mcbotipoensayo" name="mcbotipoensayo">
-                                                                        <option value="" selected="selected">Elegir...</option>
+                                                                        <option value="%" selected="selected">Elegir...</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div> 
+                                                            <div class="col-md-2">
+                                                                <div class="text-info">Acreditado</div>
+                                                                <div>
+                                                                    <select class="form-control select2bs4" id="mcboacreditado" name="mcboacreditado">
+                                                                        <option value="%" selected="selected">Elegir...</option>
+                                                                        <option value="A">Acreditado</option>
+                                                                        <option value="N">No Acreditado</option>
                                                                     </select>
                                                                 </div>
                                                             </div> 
@@ -408,6 +418,7 @@
                                                                     <th colspan="3" style="min-width: 160px; width: 160px;">Especificaciones</th>
                                                                     <th colspan="3" style="min-width: 160px; width: 160px;">Resultados</th>
                                                                     <th rowspan="2" style="min-width: 15px; width: 15px;">Conclusion</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Observacion</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th></th>
@@ -435,6 +446,7 @@
                                                                     <th colspan="2" style="min-width: 160px; width: 160px;">Especificaciones</th>
                                                                     <th colspan="2" style="min-width: 160px; width: 160px;">Resultados</th>
                                                                     <th rowspan="2" style="min-width: 15px; width: 15px;">Conclusion</th>
+                                                                    <th rowspan="2" style="min-width: 15px; width: 15px;">Observacion</th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th></th>
